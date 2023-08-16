@@ -1,0 +1,24 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h1>Linux-Arbeitsplatz Zentrale</h1>
+
+<h2>Anmelden</h2>
+
+<form>
+    <label for="text">Kontoname oder E-Mail</label>
+    <input type="text" id="username" name="username">
+
+    <label for="text">Passwort</label>
+    <input type="password" id="password" name="password">
+
+    <input type="submit" value="Anmelden">
+    
+    <div style="text-align: center;">
+        <a  href="{% url 'password_reset' %}">
+            Passwort vergessen?
+        </a>
+    </div>
+</form>
+
+{% endblock %}

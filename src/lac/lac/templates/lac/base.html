@@ -1,0 +1,45 @@
+{% load static %}
+{% load i18n %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% trans "Linux-Arbeitsplatz Zentrale" %} </title>
+    <link rel="stylesheet" href="{% static 'lac/css/pico.min.css' %}">
+    <style>
+      .table > tbody > tr > td {
+        vertical-align: middle;
+      }
+      .table > tbody > tr > th {
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    {% comment %} {% include 'global/navbar.html' %}  {% endcomment %}
+    {% comment %} <nav>
+      <ul>
+        <li><strong>Linux-Arbeitsplatz Zentrale</strong></li>
+      </ul>
+      <ul>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#" role="button">Button</a></li>
+      </ul>
+    </nav> {% endcomment %}
+
+    <br/>
+    <br/>
+
+    <div class="container">
+  
+        {% block content %}
+        {% endblock %}
+
+        <br>
+        <br>
+  
+    </div>
+  </body>
+</html>
