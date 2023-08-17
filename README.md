@@ -8,11 +8,13 @@ Copy the content of env.example into your ~/.bashrc file and adjust it to your n
 
 ```bash
 sudo apt-get install libldap2-dev python3-venv libsasl2-dev
-cd src
+cd src/lac/
 python3 -m venv .env
 
 source .env/bin/activate
 pip install django python-ldap django-auth-ldap
+python manage.py migrate
+
 python manage.py runserver
 
 deactivate
