@@ -1,0 +1,7 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<p>Willkommen, {{ request.user.username }}.</p>
+
+{% endblock %}

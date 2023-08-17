@@ -18,16 +18,21 @@
   </head>
   <body>
     {% comment %} {% include 'global/navbar.html' %}  {% endcomment %}
-    {% comment %} <nav>
-      <ul>
-        <li><strong>Linux-Arbeitsplatz Zentrale</strong></li>
-      </ul>
-      <ul>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#" role="button">Button</a></li>
-      </ul>
-    </nav> {% endcomment %}
+
+    <nav style="padding-left: 20px; padding-right: 20px;">
+      <a href="/">
+        <ul>
+          <li><strong>Linux-Arbeitsplatz Zentrale</strong></li>
+        </ul>
+      </a>
+      {% if request.user.is_authenticated %}
+        <ul>
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+          <li><a href="/logout" role="button">Ausloggen</a></li>
+        </ul>
+      {% endif %}
+    </nav> 
 
     <br/>
     <br/>

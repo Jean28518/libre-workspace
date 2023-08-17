@@ -1,21 +1,25 @@
 {% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
-
-<h1>Linux-Arbeitsplatz Zentrale</h1>
 
 <h2>Anmelden</h2>
 
-<form>
+
+<form method="post">
     <label for="text">Kontoname oder E-Mail</label>
     <input type="text" id="username" name="username">
-
+    
     <label for="text">Passwort</label>
     <input type="password" id="password" name="password">
-
+    
+    {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    
     <input type="submit" value="Anmelden">
     
     <div style="text-align: center;">
-        <a  href="{% url 'password_reset' %}">
+        <a  href="{% url 'user_password_reset' %}">
             Passwort vergessen?
         </a>
     </div>
