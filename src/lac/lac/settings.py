@@ -11,9 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 import ldap
-from django_auth_ldap.config import LDAPSearch
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -76,10 +76,17 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = ["django_auth_ldap.backend.LDAPBackend"]
 
 # FreeIPA Config
-AUTH_LDAP_SERVER_URI = "ldap://ipa.int.de"
-# AUTH_LDAP_BIND_DN = "uid=authuser,cn=users,cn=accounts,dc=int,dc=de"
-# AUTH_LDAP_BIND_PASSWORD = "####"
-AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,cn=users,cn=accounts,dc=int,dc=de"
+AUTH_LDAP_SERVER_URI = os.getenv("AUTH_LDAP_SERVER_URI")
+AUTH_LDAP_BIND_DN = os.getenv("AUTH_LDAP_BIND_DN")
+AUTH_LDAP_BIND_PASSWORD = os.getenv("AUTH_LDAP_BIND_PASSWORD")
+AUTH_LDAP_USER_DN_TEMPLATE = os.getenv("AUTH_LDAP_USER_DN_TEMPLATE")
+
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    os.getenv("AUTH_LDAP_GROUP_SEARCH_BASE"),
+    ldap.SCOPE_SUBTREE
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+
 
 LOGGING = {
     "version": 1,
@@ -153,3 +160,11 @@ STATICFILES_DIRS = [
 STATIC_ROOT = '/static/'
 
 ALLOWED_HOSTS = ['*']
+
+# Email Settings
+EMAIL_HOST = os.getenv("EMAIL_HOST")                    # <- host name [e.g. smtp.gmail.com for gmail]
+EMAIL_PORT = int(os.getenv("EMAIL_PORT"))               # <- smtp port [e.g. 587]
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")          # <- username
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # <- password
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")

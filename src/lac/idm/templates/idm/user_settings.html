@@ -1,0 +1,20 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Benutzereinstellungen</h2>
+
+<a href="{% url "change_password" %}" role="button" class="secondary outline">Passwort ändern</a>
+
+<hr>
+
+<form method="post">
+    {{ form }}
+    <div class="grid">
+        <a href="{% url "index" %}" role="button" class="secondary">Zurück</a>
+        <input type="submit" value="Änderungen speichern">
+    </div>
+</form>
+
+        
+{% endblock %}

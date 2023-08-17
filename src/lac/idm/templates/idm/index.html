@@ -2,6 +2,20 @@
 {% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
-<p>Willkommen, {{ request.user.username }}.</p>
+<h2>Willkommen, {{ user_information.cn }}.</h2>
+
+<div class="grid">
+    <a class="secondary" href="{% url "user_settings" %}"><article>Profileinstellungen</article></a>
+</div>
+
+{% if user_information.admin %}
+
+<h3>Administration</h3>
+<div class="grid">
+    <a class="secondary" href="{% url "user_administration_overview" %}"><article>Benutzeradministration</article></a>
+</div>
+
+{% endif %}
+
 
 {% endblock %}
