@@ -1,6 +1,6 @@
 # Linux-Arbeitsplatz Zentrale
 
-WIP
+Using Samba as domain controller.
 
 ## How to develop
 
