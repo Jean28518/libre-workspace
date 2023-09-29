@@ -2,7 +2,7 @@
 {% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
-<h2>Willkommen, {{ user_information.cn }}.</h2>
+<h2>Willkommen, {{ user_information.displayName }}.</h2>
 
 <div class="grid">
     <a class="secondary" href="{% url "user_settings" %}"><article>Profileinstellungen</article></a>

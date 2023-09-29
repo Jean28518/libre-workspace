@@ -1,14 +1,17 @@
 import ldap
 import ldap.modlist as modlist
 from django.conf import settings
+import base64
 
 
 def get_user_information_of_ldap(ldap_user):
-    i =  {
-        "username": ldap_user.attrs.get("uid", ""),
+    if ldap_user is None:
+        return None
+    print(ldap_user.__dict__)
+    i =  {"username": ldap_user.attrs.get("cn", ""),
         "first_name": ldap_user.attrs.get("givenName", ""),
         "last_name": ldap_user.attrs.get("sn", ""),
-        "cn": ldap_user.attrs.get("cn", ""),
+        "displayName": ldap_user.attrs.get("displayName", ""),
         "mail": ldap_user.attrs.get("mail", ""),
     }
 
@@ -19,8 +22,13 @@ def get_user_information_of_ldap(ldap_user):
             i[key].append("")
             return_value[key] = i[key][0]
 
-    return_value["groups"] = ldap_user.group_names
-    return_value["admin"] = "admins" in return_value["groups"]
+    return_value["groups"] = ldap_user.attrs.get("memberOf", [])
+    admin = False
+    for group in return_value["groups"]:
+        if "Administrators" in group:
+            admin = True
+            break
+    return_value["admin"] = admin
     return return_value
 
 
@@ -32,12 +40,12 @@ def update_user_information_ldap(ldap_user, user_information):
     # Build modlist
     old = {'givenName': ldap_user.attrs.get("givenName", ""),
            'sn': ldap_user.attrs.get("sn", ""),
-           'cn': ldap_user.attrs.get("cn", ""),
+           'displayName': ldap_user.attrs.get("displayName", ""),
            'mail': ldap_user.attrs.get("mail", ""),
            }
     new = {'givenName': [user_information["first_name"].encode('utf-8')],
             'sn': [user_information["last_name"].encode('utf-8')],
-            'cn': [user_information["cn"].encode('utf-8')],
+            'displayName': [user_information["displayName"].encode('utf-8')],
             'mail': [user_information["mail"].encode('utf-8')],
            }
     ldif = modlist.modifyModlist(old, new)
@@ -64,7 +72,10 @@ def set_ldap_user_new_password(user_dn, password):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
-    conn.modify_s(user_dn, [(ldap.MOD_REPLACE, 'userPassword', [password.encode('utf-8')])])
+    # Encode password as base64
+    # (Maybe this also doesn't work because of the encoding)
+    encoded_password = base64.b64encode(password.encode('utf-16-le'))
+    conn.modify_s(user_dn, [(ldap.MOD_REPLACE, 'unicodePwd', [encoded_password])])
     conn.unbind_s()
 
 
@@ -74,7 +85,7 @@ def get_user_dn_by_email(email):
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
     # Search for user
-    result = conn.search_s("cn=users,cn=accounts,dc=int,dc=de", ldap.SCOPE_SUBTREE, "mail=" + email)
+    result = conn.search_s("cn=users,dc=int,dc=de", ldap.SCOPE_SUBTREE, "mail=" + email)
     conn.unbind_s()
     if len(result) != 1:
         return None
