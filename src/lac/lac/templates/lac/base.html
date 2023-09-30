@@ -19,7 +19,7 @@
   <body>
     {% comment %} {% include 'global/navbar.html' %}  {% endcomment %}
 
-    <nav style="padding-left: 20px; padding-right: 20px;">
+    <nav style="padding-left: 20px; padding-right: 20px; ">
       <a href="/">
         <ul>
           <li><strong>Linux-Arbeitsplatz Zentrale</strong></li>
@@ -29,7 +29,18 @@
         <ul>
           {% comment %} <li><a href="#">Link</a></li>
           <li><a href="#">Link</a></li> {% endcomment %}
-          <li><a href="/logout" role="button" class="secondary">Ausloggen</a></li>
+          {% comment %}  {% endcomment %}
+          <li>
+            <details role="list" dir="rtl">
+              <summary aria-haspopup="listbox" role="link" class="secondary">
+                  {{ request.user.username }}
+              </summary>
+              <ul role="listbox">
+                <li><a href="/change_password">Passwort ändern</a></li>
+                <li><a href="/logout">Ausloggen</a></li>
+              </ul>
+            </details>
+          </li>
         </ul>
       {% endif %}
     </nav> 
