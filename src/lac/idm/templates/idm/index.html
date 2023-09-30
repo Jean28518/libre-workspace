@@ -2,10 +2,23 @@
 {% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
-<h2>Willkommen, {{ user_information.displayName }}.</h2>
+<h2>Willkommen, {{ user_information.displayName }}</h2>
 
 <div class="grid">
-    <a class="secondary" href="{% url "user_settings" %}"><article>Profileinstellungen</article></a>
+    <a class="secondary" href="{% url "user_settings" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-128">account_circle</span> 
+            <br> 
+            Profileinstellungen
+        </article>
+    </a>
+    <a class="secondary" href="{% url "change_password" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-128">password</span> 
+            <br> 
+            Passwort ändern
+        </article>
+    </a>
 </div>
 
 {% if user_information.admin %}
