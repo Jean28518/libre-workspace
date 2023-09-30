@@ -2,7 +2,24 @@
 {% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
-<h2>Willkommen, {{ user_information.displayName }}</h2>
+<h2>Willkommen {{ user_information.displayName }}</h2>
+
+{% if user_information.admin %}
+
+<h3>Administration</h3>
+<div class="grid">
+    <a class="secondary" href="{% url "user_overview" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-128">manage_accounts</span> 
+            <br> 
+            Benutzeradministration
+        </article>
+    </a>
+</div>
+
+{% endif %}
+
+<h3>Eigene Einstellungen</h3>
 
 <div class="grid">
     <a class="secondary" href="{% url "user_settings" %}">
@@ -20,15 +37,6 @@
         </article>
     </a>
 </div>
-
-{% if user_information.admin %}
-
-<h3>Administration</h3>
-<div class="grid">
-    <a class="secondary" href="{% url "user_administration_overview" %}"><article>Benutzeradministration</article></a>
-</div>
-
-{% endif %}
 
 
 {% endblock %}

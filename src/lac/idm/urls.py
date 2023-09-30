@@ -10,5 +10,8 @@ urlpatterns = [
     path("change_password", views.change_password, name="change_password"),
     path("user_settings", views.user_settings, name="user_settings"),
 
-    path("user_administration_overview", views.user_administration_overview, name="user_administration_overview"),
+    path("user_overview", views.user_overview, name="user_overview"),
+    path("create_user", views.create_user, name="create_user"),
+    path("edit_user/<str:cn>", views.edit_user, name="edit_user"),
+    path("delete_user/<str:cn>", views.delete_user, name="delete_user"),
 ]

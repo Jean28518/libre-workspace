@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import ldap
-from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType, LDAPGroupQuery
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,12 +80,18 @@ AUTH_LDAP_SERVER_URI = os.getenv("AUTH_LDAP_SERVER_URI")
 AUTH_LDAP_BIND_DN = os.getenv("AUTH_LDAP_BIND_DN")
 AUTH_LDAP_BIND_PASSWORD = os.getenv("AUTH_LDAP_BIND_PASSWORD")
 AUTH_LDAP_USER_DN_TEMPLATE = os.getenv("AUTH_LDAP_USER_DN_TEMPLATE")
+AUTH_LDAP_GROUP_ADMIN_DN = os.getenv("AUTH_LDAP_GROUP_ADMIN_DN")
 
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
     os.getenv("AUTH_LDAP_GROUP_SEARCH_BASE"),
     ldap.SCOPE_SUBTREE
 )
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    # "is_active": "cn=active,ou=groups,dc=example,dc=com",
+    "is_staff": AUTH_LDAP_GROUP_ADMIN_DN,
+    "is_superuser": AUTH_LDAP_GROUP_ADMIN_DN,
+}
 # Allow self signed certificates
 ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
 

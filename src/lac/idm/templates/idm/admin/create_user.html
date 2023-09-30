@@ -1,0 +1,24 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Benutzer hinzufügen</h2>
+
+{% if message != "" %}
+<p><strong>{{ message }}</strong></p>
+{% endif %}
+
+<form method="post">
+    <div class="grid">
+        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Benutzer hinzufügen">
+    </div>
+    {{ form }}
+    <div class="grid">
+        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Benutzer hinzufügen">
+    </div>
+</form>
+
+        
+{% endblock %}
