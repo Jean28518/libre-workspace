@@ -72,9 +72,8 @@ def set_ldap_user_new_password(user_dn, password):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
-    # Encode password as base64
-    # (Maybe this also doesn't work because of the encoding)
-    encoded_password = base64.b64encode(password.encode('utf-16-le'))
+    # password has to be set as a UTF-16 string surrounded by a UTF-16 " (yes really!) value on each side.  
+    encoded_password = ('"%s"' % password).encode('utf-16-le')
     conn.modify_s(user_dn, [(ldap.MOD_REPLACE, 'unicodePwd', [encoded_password])])
     conn.unbind_s()
 

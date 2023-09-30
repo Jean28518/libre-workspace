@@ -86,6 +86,8 @@ AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
     ldap.SCOPE_SUBTREE
 )
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+# Allow self signed certificates
+ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
 
 
 LOGGING = {
