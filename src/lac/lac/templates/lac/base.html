@@ -19,12 +19,12 @@
   <body>
     {% comment %} {% include 'global/navbar.html' %}  {% endcomment %}
 
-    <nav style="padding-left: 20px; padding-right: 20px; ">
-      <a href="/">
-        <ul>
-          <li><strong>Linux-Arbeitsplatz Zentrale</strong></li>
-        </ul>
-      </a>
+    <nav class="container-fluid">
+      <ul>
+        <li>
+          <a href="/" class="contrast"><strong>Linux-Arbeitsplatz Zentrale</strong></a>
+        </li>
+      </ul>
       {% if request.user.is_authenticated %}
         <ul>
           {% comment %} <li><a href="#">Link</a></li>
