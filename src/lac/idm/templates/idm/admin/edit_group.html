@@ -11,18 +11,14 @@
 <button class="contrast outline"
 data-target="modal-deletion"
 onClick="toggleModal(event)">
-BENUTZER LÖSCHEN
+GRUPPE LÖSCHEN
 </button>
 
 <form method="post">
-    <div class="grid">
-        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
-        <input type="submit" value="Änderungen speichern">
-    </div>
     {{ form }}
     <br><br>
     <div class="grid">
-        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <a href="{% url "group_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
         <input type="submit" value="Änderungen speichern">
     </div>
 </form>
@@ -38,8 +34,9 @@ BENUTZER LÖSCHEN
         data-target="modal-deletion"
         onClick="toggleModal(event)">
         </a>
-        <h3>Benutzer wirklich löschen?</h3>
+        <h3>Gruppe wirklich löschen?</h3>
         <p>
+        Die Benutzer werden nicht gelöscht, sondern nur aus der Gruppe entfernt.
         Dieser Vorgang ist nicht mehr umkehrbar!
         </p>
         <footer>
@@ -50,7 +47,7 @@ BENUTZER LÖSCHEN
             onClick="toggleModal(event)">
             Abbrechen
         </a>
-        <a href="{% url "delete_user" cn %}"role="button" class="contrast" style="height: 62px">BENUTZER LÖSCHEN</a>
+        <a href="{% url "delete_group" cn %}"role="button" class="contrast" style="height: 62px">GRUPPE LÖSCHEN</a>
         </footer>
     </article>
 </dialog>

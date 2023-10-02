@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
-from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm
-from .ldap import get_user_information_of_cn, update_user_information_ldap, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user
+from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm
+from .ldap import get_user_information_of_cn, update_user_information_ldap, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group
 from .idm import reset_password_for_email
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -125,7 +125,9 @@ def create_user(request):
             message = form.errors
             form_data = form.cleaned_data
 
-    form = AdministratorUserForm(form_data)
+    form = AdministratorUserForm()
+    if form_data != {}:
+        form = AdministratorUserForm(form_data)
     return render(request, "idm/admin/create_user.html", {"form": form, "message": message})
 
     
@@ -144,10 +146,105 @@ def edit_user(request, cn):
         else:
             message = form.errors
         form_data = form.cleaned_data
-    form = AdministratorUserEditForm(form_data)
+    form = AdministratorUserEditForm()
+    if form_data != {}:
+        form = AdministratorUserEditForm(form_data)
     return render(request, "idm/admin/edit_user.html", {"form": form, "message": message, "cn": cn})#
 
 @staff_member_required
 def delete_user(request, cn):
     ldap_delete_user(cn)
     return redirect(user_overview)
+
+@staff_member_required
+def group_overview(request):
+    groups = ldap_get_all_groups()
+    return render(request, "idm/admin/group_overview.html", {"groups": groups})
+
+@staff_member_required
+def create_group(request):
+    message = ""
+    form_data = {}
+    if request.method == 'POST':
+        form = GroupCreateForm(request.POST)
+        if form.is_valid():
+            group_information = form.cleaned_data
+            message = ldap_create_group(group_information)
+            if message == None:
+                cn = group_information.get("cn", "")
+                message = f"Gruppe '{cn}' erfolgreich erstellt!"
+        else:
+            print("Form is not valid")
+            print(form.errors)
+            message = form.errors
+            form_data = form.cleaned_data
+    
+    form = GroupCreateForm()
+    if form_data != {}:
+        form = GroupCreateForm(form_data)
+    return render(request, "idm/admin/create_group.html", {"form": form, "message": message})
+    
+
+@staff_member_required
+def edit_group(request, cn):
+    message = ""
+    form_data = ldap_get_group_information_of_cn(cn)
+    if request.method == 'POST':
+        form = GroupEditForm(request.POST)
+        if form.is_valid():
+            group_information = form.cleaned_data
+            message = ldap_update_group(cn, group_information)
+            if message == None:
+                message = f"Änderungen erfolgreich gespeichert!"
+        else:
+            message = form.errors
+        form_data = form.cleaned_data
+    form = GroupEditForm()
+    if form_data != {}:
+        form = GroupEditForm(form_data)
+    return render(request, "idm/admin/edit_group.html", {"form": form, "message": message, "cn": cn})
+
+@staff_member_required
+def delete_group(request, cn):
+    ldap_delete_group(cn)
+    return redirect(group_overview)
+
+@staff_member_required
+def assign_users_to_group(request, cn):
+    users = ldap_get_all_users()
+    group_dn = ldap_get_group_information_of_cn(cn)["dn"]
+    message = ""
+    for user in users:
+        user["memberOfCurrentGroup"] = is_user_in_group(user, cn)
+    if request.method == 'POST':
+        for user in users:
+            # Add user to group
+            if request.POST.get(user["cn"], "") == "On" and not is_user_in_group(user, cn):
+                print("Add user " + user["cn"] + " to group " + cn)
+                message = ldap_add_user_to_group(user["dn"], group_dn)
+                user["memberOfCurrentGroup"] = True
+            # Remove user from group
+            elif request.POST.get(user["cn"], "") == "" and is_user_in_group(user, cn):
+                print("Remove user " + user["cn"] + " from group " + cn)
+                message = ldap_remove_user_from_group(user["dn"], group_dn)
+                user["memberOfCurrentGroup"] = False
+        if message == None or message == "":
+            message = "Mitgliedschaften erfolgreich aktualisiert!"
+    
+    if request.method == 'GET':
+        if request.GET.get("select_all", "") != "":
+            for user in users:
+                if not is_user_in_group(user, cn):
+                    message = ldap_add_user_to_group(user["dn"], group_dn)
+                    user["memberOfCurrentGroup"] = True
+            return redirect(assign_users_to_group, cn=cn)
+        if request.GET.get("deselect_all", "") != "":
+            for user in users:
+                if is_user_in_group(user, cn):
+                    message = ldap_remove_user_from_group(user["dn"], group_dn)
+                    user["memberOfCurrentGroup"] = False
+            return redirect(assign_users_to_group, cn=cn)
+
+        
+
+    return render(request, "idm/admin/assign_users_to_group.html", {"users": users, "cn": cn, "message": message})

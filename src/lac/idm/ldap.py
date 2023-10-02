@@ -28,42 +28,20 @@ def get_user_information_of_cn(cn):
     user_information["displayName"] = ldap_reply[0][1].get("displayName", [b""])[0].decode('utf-8')
     user_information["mail"] = ldap_reply[0][1].get("mail", [b""])[0].decode('utf-8')
 
-    admin = False
-    for group in ldap_reply[0][1].get("memberOf", []):
-        if b"Administrators" in group:
-            admin = True
-            break
-    user_information["admin"] = admin
+    user_information["groups"] = ldap_reply[0][1].get("memberOf", [])
+    for i in range(len(user_information["groups"])):
+        user_information["groups"][i] = user_information["groups"][i].decode('utf-8')
+
+    user_information["admin"] = is_user_in_group(user_information, "Administrators")
 
     return user_information
 
 
-
-    # if ldap_user is None:
-    #     return None
-    # print(ldap_user.__dict__)
-    # i =  {"username": ldap_user.attrs.get("cn", ""),
-    #     "first_name": ldap_user.attrs.get("givenName", ""),
-    #     "last_name": ldap_user.attrs.get("sn", ""),
-    #     "displayName": ldap_user.attrs.get("displayName", ""),
-    #     "mail": ldap_user.attrs.get("mail", ""),
-    # }
-
-    # # If some values are empty, set them to "" and return a dict without lists
-    # return_value = {}
-    # for key, value in i.items():
-    #     if type(i[key]) == list:
-    #         i[key].append("")
-    #         return_value[key] = i[key][0]
-
-    # return_value["groups"] = ldap_user.attrs.get("memberOf", [])
-    # admin = False
-    # for group in return_value["groups"]:
-    #     if "Administrators" in group:
-    #         admin = True
-    #         break
-    # return_value["admin"] = admin
-    # return return_value
+def is_user_in_group(user_information, group_cn):
+    for group in user_information["groups"]:
+        if group_cn in group:
+            return True
+    return False
 
 
 def update_user_information_ldap(ldap_user, user_information):
@@ -193,16 +171,24 @@ def ldap_get_all_users():
             displayName = user.get("displayName", [b''])[0].decode('utf-8')
             mail = user.get("mail", [b''])[0].decode('utf-8')
             cn = user.get("cn", [b''])[0].decode('utf-8')
+            groups = user.get("memberOf", [])
+            for i in range(len(groups)):
+                groups[i] = groups[i].decode('utf-8')
 
             if ldap_is_system_user(cn):
                 continue
 
-            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn})
+            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups})
     return users
 
 def ldap_is_system_user(cn):
     cn = cn.lower()
     return cn == "guest" or cn == "krbtgt" or cn == "administrator" or cn == "admin"
+
+def ldap_is_system_group(cn):
+    system_groups = ["administrators", "domain admins", "domain computers", "domain guests", "domain users", "enterprise admins", "group policy creator owners", "schema admins", "cert publishers", "dnsadmins", "dnsupdateproxy", "ras and ias servers", "allowed rodc password replication group", "denied rodc password replication group", "read-only domain controllers", "protected users", "enterprise read-only domain controllers", "domain controllers"]
+    cn = cn.lower()
+    return cn in system_groups
 
 def ldap_update_user(cn, user_information):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
@@ -260,3 +246,127 @@ def ldap_delete_user(cn):
         return f"Fehler: {str(e)}"
 
     conn.unbind_s()
+
+
+def ldap_get_all_groups():
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+
+    # Get all Groups: (objectClass=group)
+    result = conn.search_s("cn=users,dc=int,dc=de", ldap.SCOPE_SUBTREE, "(objectClass=group)", ["cn", "description"])
+    conn.unbind_s()
+   
+    groups = []
+    for group in result:
+        group = group[1]
+        dn = group.get("dn", [b''])[0].decode('utf-8')
+        cn = group.get("cn", [b''])[0].decode('utf-8')
+        description = group.get("description", [b''])[0].decode('utf-8')
+        if ldap_is_system_group(cn):
+            continue
+        groups.append({"dn": dn, "cn": cn, "description": description})
+    return groups
+
+def ldap_create_group(group_information):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+
+    # Build modlist
+    dn = "cn=" + group_information["cn"] + ",cn=users,dc=int,dc=de"
+    attrs = {}
+    attrs['objectclass'] = [b'top', b'group']
+    attrs['cn'] = [group_information["cn"].encode('utf-8')]
+    if group_information.get("description", "") != "":
+        attrs['description'] = [group_information["description"].encode('utf-8')]
+    ldif = modlist.addModlist(attrs)
+
+    # Add group
+    try:
+        conn.add_s(dn, ldif)
+    except LDAPError as e:
+        return f"Fehler: {str(e)}"
+
+    conn.unbind_s()
+
+def ldap_update_group(cn, group_information):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+
+    # Build modlist
+    dn = ldap_get_dn_of_cn(cn)
+    attrs = {}
+    attrs['description'] = [group_information.get("description", "").encode('utf-8')]
+
+    old_group_information = ldap_get_group_information_of_cn(cn)
+    old_attrs = {}
+    if old_group_information.get("description", "") != "":
+        old_attrs['description'] = [old_group_information.get("description", "").encode('utf-8')]
+
+    ldif = modlist.modifyModlist(old_attrs, attrs)
+
+    # Modify group
+    try:
+        conn.modify_s(dn, ldif)
+    except LDAPError as e:
+        return f"Fehler: {str(e)}"
+
+    conn.unbind_s()
+
+def ldap_get_group_information_of_cn(cn):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+
+    dn = ldap_get_dn_of_cn(cn)
+
+    # Get group with dn
+    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "description"])
+
+    
+    conn.unbind_s()
+
+
+    if len(ldap_reply) != 1:
+        return None
+    
+    group_information = {}
+    group_information["dn"] = dn
+    group_information["cn"] = ldap_reply[0][1].get("cn", [b""])[0].decode('utf-8')
+    group_information["description"] = ldap_reply[0][1].get("description", [b""])[0].decode('utf-8')
+
+    return group_information
+
+def ldap_delete_group(cn):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+
+    # Build modlist
+    dn = ldap_get_dn_of_cn(cn)
+
+    # Delete group
+    try:
+        conn.delete_s(dn)
+    except LDAPError as e:
+        return f"Fehler: {str(e)}"
+
+    conn.unbind_s()
+
+def ldap_remove_user_from_group(user_dn, group_dn):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    mod_attrs = [(ldap.MOD_DELETE, 'member', [user_dn.encode('utf-8')])]
+    try:
+        conn.modify_s(group_dn, mod_attrs)
+    except LDAPError as e:
+        return f"Fehler: {str(e)}"
+    conn.unbind_s()
+
+def ldap_add_user_to_group(user_dn, group_dn):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    mod_attrs = [(ldap.MOD_ADD, 'member', [user_dn.encode('utf-8')])]
+    try:
+        conn.modify_s(group_dn, mod_attrs)
+    except LDAPError as e:
+        return f"Fehler: {str(e)}"
+    conn.unbind_s()
+

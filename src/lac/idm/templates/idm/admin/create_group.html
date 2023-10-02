@@ -1,0 +1,21 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Gruppe hinzufügen</h2>
+
+{% if message != "" %}
+<p><strong>{{ message }}</strong></p>
+{% endif %}
+
+<form method="post">
+    {{ form }}
+    <br><br>
+    <div class="grid">
+        <a href="{% url "group_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Gruppe hinzufügen">
+    </div>
+</form>
+
+        
+{% endblock %}

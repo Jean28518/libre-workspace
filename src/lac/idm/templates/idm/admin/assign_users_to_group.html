@@ -1,0 +1,34 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2>Mitglieder der Gruppe {{cn}}</h2>
+
+{% if message != "" %}
+<p><strong>{{ message }}</strong></p>
+{% endif %}
+
+<a href="?select_all=1" role="button" class="secondary outline">Alle auswählen</a>
+<a href="?deselect_all=1" role="button" class="secondary outline">Alle abwählen</a>
+<br><br>
+
+<form method="post">
+    
+    {% for user in users %}
+    
+    <input type="checkbox" id="{{ user.cn }}" name="{{ user.cn }}" value="On" {% if user.memberOfCurrentGroup %}checked{% endif %}>
+    <label for="{{ user.cn }}">{{ user.cn }} ({{ user.displayName }})</label>
+    <br>   
+    
+    {% endfor %}
+    <br><br>
+    <div class="grid">
+        <a href="{% url "group_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Mitgliedschaften aktualisieren">
+    </div>
+</form>
+
+
+Hinweis: Einige Systembenutzer sind ausgeblendet.
+
+        
+{% endblock %}

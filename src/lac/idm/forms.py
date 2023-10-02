@@ -31,3 +31,12 @@ class AdministratorUserEditForm(forms.Form):
     displayName = forms.CharField(label="Anzeigename", max_length=100, required=False)
     mail = forms.EmailField(label="E-Mail-Adresse", max_length=100, required=False)
     admin = forms.BooleanField(label="Administrator", required=False, widget=forms.CheckboxInput)
+
+class GroupCreateForm(forms.Form):
+    cn = forms.CharField(label="Gruppenname", max_length=100)
+    description = forms.CharField(label="Beschreibung", max_length=100, required=False)
+    standard = forms.BooleanField(label="Standardgruppe (Von nun an werden neu erstellte Nutzer dieser Gruppe hinzugefügt)", required=False, widget=forms.CheckboxInput)
+
+class GroupEditForm(forms.Form):
+    description = forms.CharField(label="Beschreibung", max_length=100, required=False)
+    standard = forms.BooleanField(label="Standardgruppe (Von nun an werden neu erstellte Nutzer dieser Gruppe hinzugefügt)", required=False, widget=forms.CheckboxInput)

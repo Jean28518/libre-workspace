@@ -6,7 +6,6 @@
 
 {% if user_information.admin %}
 
-<h3>Administration</h3>
 <div class="grid">
     <a class="secondary" href="{% url "user_overview" %}">
         <article style="text-align: center;">
@@ -15,11 +14,18 @@
             Benutzeradministration
         </article>
     </a>
+    <a class="secondary" href="{% url "group_overview" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-128">groups</span> 
+            <br> 
+            Gruppenadministration
+        </article>
+    </a>
 </div>
 
+<h3>Eigene Einstellungen</h3>
 {% endif %}
 
-<h3>Eigene Einstellungen</h3>
 
 <div class="grid">
     <a class="secondary" href="{% url "user_settings" %}">

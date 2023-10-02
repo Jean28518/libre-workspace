@@ -1,0 +1,36 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2>Gruppenadministration</h2>
+
+<a href="{% url "create_group" %}" role="button" class="primary">Gruppe hinzufügen</a>
+
+<hr>
+
+<table>
+    <thead>
+      <tr>
+        <th scope="col">Gruppenname </th>
+        <th scope="col">Beschreibung</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for group in groups %}
+        <tr>
+            <td>{{group.cn}}</td>
+            <td>{{group.description}}</td>
+            <td><a href="{% url "edit_group" group.cn %}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
+            <td><a href="{% url "assign_users_to_group" group.cn %}" title="Mitglieder verwalten" role="button" class="secondary outline"><span class="material-icons md-16">group</span></a></td>
+        </tr>
+            
+    
+    {% endfor %}
+    </tbody>
+  </table>
+
+  Hinweis: Einige Systemgruppen sind ausgeblendet.
+
+        
+{% endblock %}
