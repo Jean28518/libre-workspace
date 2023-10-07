@@ -1,0 +1,47 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+{% if message != "" %}
+<p><strong>{{ message }}</strong></p>
+{% endif %}
+
+<h2>Systemverwaltung</h2>
+
+<h3>Vollautomatisierte Backups</h3>
+<h4> Grundlegende Informationen </h4>
+<p>
+    Der komplette Server inklusive Daten wird mit allen Konfigurationen vollautomatisiert täglich über borg auf einen externen Ort gesichert.
+    Das Wiederherstellen von Daten ist aktuell nur manuell durch einen Systemadministrator möglich.
+    Diese Backups sind nur für den Fall eines Systemausfalls in der letzten Not gedacht.
+    Die einzelnen Sicherungsstände werden inkrementell gespeichert und komprimiert und sind somit sehr platzsparend.
+</p>
+
+<h4> Anleitung </h4>
+<ul>
+    <li>Stellen Sie sicher, dass auf dem anderen Server borg installiert ist.</li>
+    <li>Es ist empfohlen, für die Backups einen eigenen Benutzer auf dem anderen Ort zu erstellen. Dieser Benutzer sollte nur die Rechte haben, die für die Backups notwendig sind.</li>
+    <li>Sie müssen sicherstellen, dass sich der Server auf dem anderen Ort anmelden kann. Fügen Sie hierfür den öffentlichen Schlüssel dieses Servers (ganz unten angegeben) in die Datei <code>~/.ssh/authorized_keys</code> auf dem anderen Ort ein.</li>
+    <li>Erstellen sie mit dem Befehl <code>borg init --encryption=repokey</code> ein neues Repository.</li>
+    <li>Fügen Sie den SSH-Fingerabdruck des Backup-Servers in das entsprechende Feld unten. Sie können sich ihn mit dem Befehl <code>ssh-keyscan -p &lt;port&gt; &lt;IP-Adresse/Hostname&gt;</code> anzeigen lassen.</li>
+</ul>
+
+
+<form method="post">
+    {{ form }}
+    <br><br>
+    <div class="grid">
+        <a href="{% url "unix_index" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Änderungen speichern">
+    </div>
+    <p> Solange heute noch kein Backup erstellt wurde, wird der Server nach dem Speichern sofort versuchen, ein Backup zu erstellen, wenn die Uhrzeit. </p>
+    <a href="{% url "retry_backup" %}"role="button" class="secondary" style="height: 62px">Backup manuell anstoßen</a>
+</form>
+
+
+<h4> Aktueller öffentlicher Schlüssel </h4>
+<code style="max-width: 100%; overflow: auto;">{{ public_key }}</code>
+
+<p> Mit diesem Schlüssel kann sich der Server automatisch auf dem anderen Ort anmelden. </p>
+
+{% endblock %}

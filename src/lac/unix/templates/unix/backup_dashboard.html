@@ -1,0 +1,120 @@
+{% comment %} # rv["backup_status"] can be one of the following:
+# ok
+# last_backup_failed
+# running
+# deactivated
+# not_configured {% endcomment %}
+<article>
+    <div class="grid">
+        <div>
+            <h4 align="center">Status</h4>
+            {% if backup_information.backup_status == "ok" %}
+            <div align="center"><span style="color: green;" class="material-icons md-64">cloud_done</span> </div>
+            <div align="center">Letzte Sicherung erfolgreich</div>
+            {% elif backup_information.backup_status == "last_backup_failed" %}
+            <div align="center"><span style="color: orange;" class="material-icons md-64">error</span> </div>
+            <div align="center">Letztes Backup mit Fehlern abgeschlossen</div>
+            <div align="center"><a href="{% url "retry_backup" %}">Erneut versuchen</a></div>
+            {% elif backup_information.backup_status == "running" %}
+            <div align="center"><span style="color: green;" class="material-icons md-64">cloud_upload</span> </div>
+            <div align="center">Backup läuft</div>
+            {% elif backup_information.backup_status == "deactivated" %}
+            <div align="center"><span style="color: grey;" class="material-icons md-64">cloud_off</span> </div>
+            <div align="center">Backup deaktiviert</div>
+            {% elif backup_information.backup_status == "not_configured" %}
+            <div align="center"><span style="color: grey;" class="material-icons md-64">cloud_off</span> </div>
+            <div align="center">Backup nicht konfiguriert</div>
+            {% endif %}
+        </div>
+        <div>
+            <h4 align="center">Verwendete Backup-Größe</h4>
+            <div align="center"><span class="material-icons md-64">album</span> </div>
+            <div align="center">{{ backup_information.compressed_size_of_all_backups }}</div>
+            
+        </div>
+    </div>
+    <br> <br>
+    <div class="grid">
+        <div>
+            <h4>Verlauf</h4>
+            <div style="max-height: 300px; overflow: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Backup erfolgreich</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        {% for backup in backup_information.backup_history %}
+                        <tr>
+                            <td>{{ backup.date }}</td>
+                            <td>
+                                {% if backup.success %} 
+                                <span style="color: green;" class="material-icons md-24">done</span> 
+                                {% else %}
+                                <!-- Button to trigger the modal -->
+                                <span style="color: red;" class="material-icons md-18">error</span>
+                                <a class="outline"
+                                data-target="backup-error{{ backup.date }}"
+                                onClick="toggleModal(event)"
+                                href="#">
+                                Fehler anzeigen
+                                </a>
+                                <!-- Modal -->
+                                <!-- Modal -->
+                                <dialog id="backup-error{{ backup.date }}">
+                                    <article>
+                                    <a href="#close"
+                                        aria-label="Close"
+                                        class="close"
+                                        data-target="backup-error{{ backup.date }}"
+                                        onClick="toggleModal(event)">
+                                    </a>
+                                    <h3>{{ backup.date }}</h3>
+                                    <p>
+                                        {{ backup.error }}
+                                    </p>
+                                    <footer>
+                                        <a href="#cancel"
+                                        role="button"
+                                        class="secondary"
+                                        data-target="backup-error{{ backup.date }}"
+                                        onClick="toggleModal(event)">
+                                        Schließen
+                                        </a>
+                                    </footer>
+                                    </article>
+                                </dialog>
+                                {% endif %}
+                            
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <h4>Gespeicherte Archive</h4>
+            <div style="max-height: 300px; overflow: auto;">
+                <table>
+                    <tbody>
+                        {% for archive in backup_information.archives %}
+                        <tr>
+                            <td>{{ archive }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</article>
+
+<script>
+    setTimeout(function(){
+        window.location.reload(1);
+     }, 60000);
+</script>
+
