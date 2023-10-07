@@ -116,7 +116,7 @@ def get_borg_information_for_dashboard():
         rv["backup_status"] = "deactivated"
 
     # If the repository is not configured, set backup status to "not_configured"
-    if config["BORG_REPOSITORY"] == "":
+    if get_value("BORG_REPOSITORY") == "":
         rv["backup_status"] = "not_configured"
 
     return rv
