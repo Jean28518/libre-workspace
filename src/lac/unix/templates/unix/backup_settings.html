@@ -19,7 +19,7 @@
 
 <h4> Anleitung </h4>
 <ul>
-    <li>Stellen Sie sicher, dass auf dem anderen Server borg installiert ist.</li>
+    <li>Stellen Sie sicher, dass auf dem anderen Server borg installiert ist. <code>sudo apt install borgbackup</code></li>
     <li>Es ist empfohlen, für die Backups einen eigenen Benutzer auf dem anderen Ort zu erstellen. Dieser Benutzer sollte nur die Rechte haben, die für die Backups notwendig sind.</li>
     <li>Sie müssen sicherstellen, dass sich der Server auf dem anderen Ort anmelden kann. Fügen Sie hierfür den öffentlichen Schlüssel dieses Servers (ganz unten angegeben) in die Datei <code>~/.ssh/authorized_keys</code> auf dem anderen Ort ein.</li>
     <li>Erstellen sie mit dem Befehl <code>borg init --encryption=repokey</code> ein neues Repository.</li>
@@ -43,5 +43,11 @@
 <code style="max-width: 100%; overflow: auto;">{{ public_key }}</code>
 
 <p> Mit diesem Schlüssel kann sich der Server automatisch auf dem anderen Ort anmelden. </p>
+
+<h4> Wichtige Sicherheitshinweise </h4>
+<ul>
+    <li>Sollte Ihr Backup verschlüsselt sein, muss bei einer Wiedeherstellung der Archive zusätzlich zur Passphrase auch der private Schlüssel eingegeben werden. Dieser ist nur auf dem Server gespeichert und kann nicht wiederhergestellt werden. Sollte der Server ausfallen, sind die Daten somit verloren, sollten Sie nicht den Borg-Wiedeherstellungsschlüssel besitzen. Weitere Informationen können hier nachgelesen werden: <a href="https://borgbackup.readthedocs.io/en/stable/quickstart.html#repository-encryption">https://borgbackup.readthedocs.io/en/stable/quickstart.html#repository-encryption</a></li>
+    <li>Verlassen Sie sich nie auf zu 100% auf das System. Testen Sie regelmäßg manuell, ob alle wichtigen Daten gesichert sind. Weitere Informationen dazu finden Sie hier: <a href="https://borgbackup.readthedocs.io/en/stable/quickstart.html#restoring-a-backup">https://borgbackup.readthedocs.io/en/stable/quickstart.html#restoring-a-backup</a></li>
+</ul>
 
 {% endblock %}

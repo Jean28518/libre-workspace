@@ -35,6 +35,9 @@ else
   borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt 2> ./history/borg_errors_$DATE.log
 fi
 
+# Start all services
+bash ./start_services.sh
+
 borg prune -v $BORG_REPOSITORY \
     --keep-daily=$BORG_KEEP_DAILY \
     --keep-weekly=$BORG_KEEP_WEEKLY \
