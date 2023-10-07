@@ -43,10 +43,11 @@ while True:
     if not os.path.isfile("/root/.ssh/known_hosts"):
         os.system("touch /root/.ssh/known_hosts")
     known_hosts = open("/root/.ssh/known_hosts").readlines()
-    trusted_fingerprints = open("trusted_fingerprints").readlines()
-    for fingerprint in trusted_fingerprints:
-        if fingerprint not in known_hosts:
-            known_hosts.append(fingerprint)
+    if os.path.isfile("trusted_fingerprints"):
+        trusted_fingerprints = open("trusted_fingerprints").readlines()
+        for fingerprint in trusted_fingerprints:
+            if fingerprint not in known_hosts:
+                known_hosts.append(fingerprint)
     # Write the fingerprints to the /root/.ssh/known_hosts file
     with open("/root/.ssh/known_hosts", "w") as f:
         f.writelines(known_hosts)
@@ -55,10 +56,11 @@ while True:
     ## BACKUP ######################################################################################################
 
     # Get backup time from config file
-    backup_time = unix.config["BORG_BACKUP_TIME"]
-    date = time.strftime("%Y-%m-%d")
+    if unix.get_value("BORG_REPOSITORY") != "":
+        backup_time = unix.get_value("BORG_BACKUP_TIME")
+        date = time.strftime("%Y-%m-%d")
 
-    # If current time is higher than backup time, run backup
-    if time.strftime("%H:%M") > backup_time and not os.path.isfile("backup_running") and not os.path.isfile(f"history/borg_errors_{date}.log"):
-        print("Running backup")
-        os.system("bash ./do_backup.sh")
+        # If current time is higher than backup time, run backup
+        if time.strftime("%H:%M") > backup_time and not os.path.isfile("backup_running") and not os.path.isfile(f"history/borg_errors_{date}.log"):
+            print("Running backup")
+            os.system("bash ./do_backup.sh")
