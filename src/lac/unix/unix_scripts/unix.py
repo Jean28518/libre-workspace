@@ -114,7 +114,7 @@ def get_borg_information_for_dashboard():
         rv["backup_status"] = "running"
 
     # If file "deactivated" exists, set backup status to "deactivated"
-    if os.path.isfile("disabled"):
+    if os.path.isfile("backup_disabled"):
         rv["backup_status"] = "deactivated"
 
     # If the repository is not configured, set backup status to "not_configured"
@@ -152,31 +152,30 @@ def retry_backup():
     if os.path.isfile("backup_running"):
         return
     # If the backup is deactivated, exit
-    if os.path.isfile("disabled"):
+    if os.path.isfile("backup_disabled"):
         return
     # If the repository is not configured, exit
     if config["BORG_REPOSITORY"] == "":
         return
-    print("TOUCHING")
     # Remove the history file of today
     date = time.strftime("%Y-%m-%d")
     print(date)
     if os.path.isfile(f"history/borg_errors_{date}.log"):
         os.remove(f"history/borg_errors_{date}.log")
-    os.system("touch run_service")
+    trigger_cron_service()
 
 def is_backup_enabled():
     # Return True if backup is enabled, False if backup is disabled
-    return not os.path.isfile("disabled")
+    return not os.path.isfile("backup_disabled")
 
 def set_backup_enabled(enabled):
     # Enable or disable the backup
     if enabled:
-        if os.path.isfile("disabled"):
-            os.remove("disabled")
+        if os.path.isfile("backup_disabled"):
+            os.remove("backup_disabled")
     else:
-        if not os.path.isfile("disabled"):
-            os.system("touch disabled")
+        if not os.path.isfile("backup_disabled"):
+            os.system("touch backup_disabled")
 
 
 def get_disks_stats():
@@ -215,4 +214,40 @@ def get_system_information():
     rv["ram_usage"] = subprocess.getoutput("free -h").split("\n")[1].split()[2].replace("Gi", "")
     rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("years", "Jahre")
     rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
+
+
+    rv["update_information"] = f"{get_upgradable_packages()} Pakete können aktualisiert werden." if get_upgradable_packages() > 0 else "Das System ist auf dem neuesten Stand."
+    if os.path.exists("history/update.log") and not is_update_currently_running():
+        rv["last_update_log"] = open("history/update.log").read()
+    if is_update_currently_running():
+        rv["update_information"] = "Das System wird gerade aktualisiert..."
     return rv
+
+
+def get_upgradable_packages():
+    return int(subprocess.getoutput("cat upgradable_packages | wc -l")) -1
+
+
+def is_update_currently_running():
+    return os.path.isfile("update_running")
+
+
+def trigger_cron_service():
+    # If the run_service file exists, remove it and run service immediately
+    os.system("touch run_service")
+
+def update_system():
+    # If the update is currently running, exit
+    if os.path.isfile("update_system"):
+        return
+    os.system("touch update_system")
+    trigger_cron_service()
+    
+
+
+def reboot_system():
+    os.system("/sbin/shutdown -r now")
+
+
+def shutdown_system():
+    os.system("/sbin/shutdown -h now")

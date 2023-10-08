@@ -3,3 +3,5 @@ id_rsa.pub
 trusted_fingerprints
 unix.conf
 run_service
+backup_disabled
+upgradable_packages

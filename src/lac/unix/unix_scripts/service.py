@@ -11,33 +11,8 @@ if os.geteuid() != 0:
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-
-counter = 0
-while True:
-    ## Run every minute ############################################################################################
-    # If run_service file exists, remove it and run service immediately
-    time.sleep(1)
-    counter += 1
-    if counter < 5 and not os.path.isfile("run_service"):
-        continue
-    if os.path.isfile("run_service"):
-        os.remove("run_service")
-    counter = 0
-    if os.path.isfile("disabled"):
-        print("Service is currently disabled.")
-        continue
-
-    # Read config file
-    unix.read_config_file()
-
-    ## ENSURE PUBLIC KEY OF ROOT USER IS AVAILABLE #################################################################
-    # If public key of root user is not available, create it
-    if not os.path.isfile("/root/.ssh/id_rsa.pub"):
-        os.system("ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N ''")
-    os.system("cp /root/.ssh/id_rsa.pub .")
-    os.system("chmod 444 id_rsa.pub")
-
-    ## ENSURE SSH-FINGERPRINT OF BORG REPOSITORY IS KNOWN ##########################################################
+def ensure_fingerprint_is_trusted():
+    ## Ensure trusted ssh fingerprints are available
     # Fingerprint is located in trusted_fingerprints file
     # If the fingerprints are not in the /root/.ssh/known_hosts file, add them
     if not os.path.isfile("/root/.ssh/known_hosts"):
@@ -53,10 +28,31 @@ while True:
         f.writelines(known_hosts)
 
 
+
+counter = 0
+hourly_counter = 3600
+while True:
+    ## Run every minute ############################################################################################
+    # If run_service file exists, remove it and run service immediately
+    time.sleep(1)
+    counter += 1
+    hourly_counter += 1
+    if os.path.isfile("run_service"):
+        os.remove("run_service")
+        counter = 60
+        hourly_counter = 3600
+    if counter < 60:
+        continue
+    counter = 0
+
+    # Read config file
+    unix.read_config_file()
+
     ## BACKUP ######################################################################################################
 
     # Get backup time from config file
-    if unix.get_value("BORG_REPOSITORY") != "":
+    if unix.get_value("BORG_REPOSITORY") != "" and not os.path.exists("backup_disabled"):
+        ensure_fingerprint_is_trusted()
         backup_time = unix.get_value("BORG_BACKUP_TIME")
         date = time.strftime("%Y-%m-%d")
 
@@ -64,3 +60,32 @@ while True:
         if time.strftime("%H:%M") > backup_time and not os.path.isfile("backup_running") and not os.path.isfile(f"history/borg_errors_{date}.log"):
             print("Running backup")
             os.system("bash ./do_backup.sh")
+
+    
+
+    ## SYSTEM UPDATE ################################################################################################
+
+    if os.path.isfile("update_system"):
+        os.remove("update_system")
+        print("Updating system")
+        os.system("bash ./do_update.sh")
+
+    ##################################################################################################################
+    ## RUN EVERY HOUR ################################################################################################
+    ##################################################################################################################
+
+    if hourly_counter < 3600:
+        continue
+    hourly_counter = 0
+
+    ## Get list of upgradable packages
+    os.system("apt list --upgradable > upgradable_packages")
+
+
+    ## Ensure public key of root user is available 
+    # If public key of root user is not available, create it
+    if not os.path.isfile("/root/.ssh/id_rsa.pub"):
+        os.system("ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N ''")
+    os.system("cp /root/.ssh/id_rsa.pub .")
+    os.system("chmod 444 id_rsa.pub")
+    

@@ -1,0 +1,199 @@
+<article>
+    <h3>System</h3>
+    <table>
+        <tr>
+            <th>Hostname</th>
+            <td>{{ system_information.hostname }}</td>
+        </tr>
+        <tr>
+            <th>Betriebssystem</th>
+            <td>{{ system_information.os }}</td>
+        </tr>
+        <tr>
+            <th>Arbeitsspeicher</th>
+            <td><progress value="{{system_information.ram_usage}}" max="{{system_information.total_ram}}"></progress><br>Gesamtgröße: {{ system_information.total_ram }} Belegt: {{ system_information.ram_usage }}</td>
+        </tr>
+        <tr>
+            <th>Betriebszeit</th>
+            <td>{{ system_information.uptime }}</td>
+        </tr>
+        <tr>
+            <th>Aktualisierungen</th>
+            <td>{{ system_information.update_information }} 
+                {% if system_information.last_update_log %} 
+                    <br>
+                    {% comment %} Button for update log {% endcomment %}
+                    <a
+                    data-target="modal-update_log"
+                    onClick="toggleModal(event)"
+                    title="System aktualisieren">
+                    Letzten Update Log anzeigen
+                    </a>
+                    <!-- Modal -->
+                    <dialog id="modal-update_log">
+                        <article>
+                        <a href="#close"
+                            aria-label="Close"
+                            class="close"
+                            data-target="modal-update_log"
+                            onClick="toggleModal(event)">
+                        </a>
+                        <code>
+                            {{system_information.last_update_log}}
+                        </code>
+                        <footer>
+                            <a href="#cancel"
+                            role="button"
+                            class="secondary"
+                            data-target="modal-update_log"
+                            onClick="toggleModal(event)">
+                            Schließen
+                            </a>
+                        </footer>
+                        </article>
+                    </dialog>
+                {% endif %}</td>
+        </tr>
+    </table>
+
+    
+       
+    <h4>Festplatten</h4>
+    <div class="grid">
+        {% for disk in disks_stats %}
+        <div>
+            <strong>{{ disk.name }}: {{ disk.mountpoint }}</strong>
+            <progress value="{{disk.used_percent}}" max="100"></progress>
+            <p>Gesamtgröße: {{ disk.size }} Belegt: {{ disk.used }}</p>
+
+        </div>
+        {% endfor %}
+    </div>
+    <h4>Steuerung</h4>
+    <div class="grid">
+        <div>
+
+            {% comment %} Button for system update {% endcomment %}
+            <button
+            data-target="modal-update"
+            onClick="toggleModal(event)"
+            title="System aktualisieren">
+            <span class="material-icons">upgrade</span>
+            </button>
+            <!-- Modal -->
+            <dialog id="modal-update">
+                <article>
+                <a href="#close"
+                    aria-label="Close"
+                    class="close"
+                    data-target="modal-update"
+                    onClick="toggleModal(event)">
+                </a>
+                <h3>System aktualisieren?</h3>
+                <p>
+                    Möchten Sie das System wirklich aktualisieren?
+                    Dies wird alle verfügbaren Updates herunterladen und installieren.
+                </p>
+                <footer>
+                    <a href="#cancel"
+                    role="button"
+                    class="secondary"
+                    data-target="modal-update"
+                    onClick="toggleModal(event)">
+                    Abbrechen
+                    </a>
+                    <a href="{%url 'update_system'%}"
+                    role="button"
+                    data-target="modal-update">
+                    Jetzt aktualisieren
+                    </a>
+                </footer>
+                </article>
+            </dialog>
+        </div>
+
+            <div>
+                {% comment %} Button for system restart {% endcomment %}
+                <button
+                        data-target="modal-restart"
+                        onClick="toggleModal(event)"
+                        title="System neustarten">
+                    <span class="material-icons">restart_alt</span>
+                </button>
+                <!-- Modal -->
+                <dialog id="modal-restart">
+                    <article>
+                        <a href="#close"
+                            aria-label="Close"
+                            class="close"
+                            data-target="modal-restart"
+                            onClick="toggleModal(event)">
+                        </a>
+                        <h3>System neustarten?</h3>
+                        <p>
+                            Möchten Sie das System wirklich neustarten?
+                            Dies wird alle laufenden Prozesse beenden und das System neu starten.
+                        </p>
+                        <footer>
+                            <a href="#cancel"
+                                role="button"
+                                class="secondary"
+                                data-target="modal-restart"
+                                onClick="toggleModal(event)">
+                                Abbrechen
+                            </a>
+                            <a href="{%url 'reboot_system'%}"
+                                role="button"
+                                data-target="modal-restart">
+                                Jetzt neustarten
+                            </a>
+                        </footer>
+                    </article>
+                </dialog>
+            </div>
+
+        
+            <div>
+
+                {% comment %} Button for shutdown {% endcomment %}
+                <button
+                data-target="modal-shutdown"
+                onClick="toggleModal(event)"
+                title="Server herunterfahren">
+                <span class="material-icons">power_settings_new</span>
+                </button>
+                <!-- Modal -->
+                <dialog id="modal-shutdown">
+                <article>
+                <a href="#close"
+                    aria-label="Close"
+                    class="close"
+                    data-target="modal-shutdown"
+                    onClick="toggleModal(event)">
+                </a>
+                <h3>Server herunterfahren?</h3>
+                <p>
+                    Möchten Sie den Server wirklich herunterfahren?
+                </p>
+                <strong>DIES WIRD DEN SERVER AUSSCHALTEN. UM DEN SERVER WIEDER ZU STARTEN, MÜSSEN SIE IHN WIEDER MANUELL (VORT ORT) EINSCHALTEN.</strong>
+                <footer>
+                    <a href="#cancel"
+                    role="button"
+                    class="secondary"
+                    data-target="modal-shutdown"
+                    onClick="toggleModal(event)">
+                    Abbrechen
+                    </a>
+                    <a href="{%url 'shutdown_system'%}"
+                    role="button"
+                    style="background-color: red; border-color: red;"
+                    data-target="modal-shutdown">
+                    JETZT HERUNTERFAHREN
+                    </a>
+                </footer>
+                </article>
+            </dialog>
+
+        </div>
+    </div>
+</article>

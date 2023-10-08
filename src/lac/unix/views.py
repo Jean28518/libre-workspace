@@ -50,7 +50,30 @@ def backup_settings(request):
     public_key = unix.get_public_key()
     return render(request, "unix/backup_settings.html", {"form": form, "message": message, "public_key": public_key})
 
+
+@staff_member_required
 def retry_backup(request):
     unix.retry_backup()
+    time.sleep(1)
+    return redirect("unix_index")
+
+
+@staff_member_required
+def update_system(request):
+    unix.update_system()
+    time.sleep(1)
+    return redirect("unix_index")
+
+
+@staff_member_required
+def reboot_system(request):
+    unix.reboot_system()
+    time.sleep(1)
+    return redirect("unix_index")
+
+
+@staff_member_required
+def shutdown_system(request):
+    unix.shutdown_system()
     time.sleep(1)
     return redirect("unix_index")
