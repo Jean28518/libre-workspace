@@ -4,10 +4,8 @@
 
 <h2>Systemverwaltung</h2>
 
-<h3>Vollautomatisierte Backups</h3>
 {% include "unix/backup_dashboard.html" %}
 
-<a href="{% url "backup_settings" %}"><button>Backup-Konfiguration</button></a>
-
+{% include "unix/system_information.html" %}
 
 {% endblock %}

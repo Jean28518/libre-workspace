@@ -1,5 +1,6 @@
 import os
 import time
+import subprocess
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -56,6 +57,7 @@ def set_value(key, value):
 # running
 # deactivated
 # not_configured
+# no_backup_yet
 def get_borg_information_for_dashboard():
     rv = {} # return value
     rv["compressed_size_of_all_backups"] = 0
@@ -119,6 +121,10 @@ def get_borg_information_for_dashboard():
     if get_value("BORG_REPOSITORY") == "":
         rv["backup_status"] = "not_configured"
 
+    # If everything is okay but no backup has been made yet, set backup status to "no_backup_yet"
+    if rv["backup_status"] == "ok" and len(rv["backup_history"]) == 0:
+        rv["backup_status"] = "no_backup_yet"
+
     return rv
 
 def get_public_key():
@@ -171,3 +177,42 @@ def set_backup_enabled(enabled):
     else:
         if not os.path.isfile("disabled"):
             os.system("touch disabled")
+
+
+def get_disks_stats():
+    # Return disk name, the mountpoint, the foll size and the used size.
+    lines = subprocess.getoutput("df -h")
+
+    lines = lines.split("\n")
+    lines = lines[1:]
+    disks = []
+    for line in lines:
+        line = line.split(" ")
+        while '' in line:
+            line.remove('')
+        name = line[0]
+        if "/dev/loop" in name or "udev" in name or "tmpfs" in name:
+            continue
+        size = line[1]
+        # If the size is in megabytes, skip this disk, because it is very small
+        if "M" in size:
+            continue
+        disk = {}
+        disk["name"] = name.replace("/dev/", "")
+        disk["size"] = size
+        disk["used"] = line[2]
+        disk["used_percent"] = line[4].replace("%", "")
+        disk["mountpoint"] = line[5]
+        disks.append(disk)
+    return disks
+
+
+def get_system_information():
+    # Get hostname, ram usage, cpu usage, uptime, os version
+    rv = {}
+    rv["hostname"] = subprocess.getoutput("hostname")
+    rv["total_ram"] = subprocess.getoutput("free -h").split("\n")[1].split()[1].replace("Gi", "")
+    rv["ram_usage"] = subprocess.getoutput("free -h").split("\n")[1].split()[2].replace("Gi", "")
+    rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("years", "Jahre")
+    rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
+    return rv

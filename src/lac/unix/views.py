@@ -10,7 +10,9 @@ import time
 @staff_member_required
 def unix_index(request):
     backup_information = unix.get_borg_information_for_dashboard()
-    return render(request, "unix/index.html", {"backup_information": backup_information})
+    disks_stats = unix.get_disks_stats()
+    system_information = unix.get_system_information()
+    return render(request, "unix/index.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information})
 
 @staff_member_required
 def backup_settings(request):
@@ -42,7 +44,6 @@ def backup_settings(request):
             unix.set_value("REMOTEPATH", "/usr/local/bin/borg" if form.cleaned_data["borg_repo_is_on_synology"] else "")
             unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"])
             # message = "Einstellungen gespeichert."
-            unix.retry_backup()
             message = "Einstellungen gespeichert."
         else:
             message = "Einstellungen konnten nicht gespeichert werden."

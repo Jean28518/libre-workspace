@@ -5,12 +5,16 @@
 # deactivated
 # not_configured {% endcomment %}
 <article>
+    <h3>Vollautomatisierte Backups</h3>
     <div class="grid">
         <div>
             <h4 align="center">Status</h4>
             {% if backup_information.backup_status == "ok" %}
             <div align="center"><span style="color: green;" class="material-icons md-64">cloud_done</span> </div>
             <div align="center">Letzte Sicherung erfolgreich</div>
+            {% elif backup_information.backup_status == "no_backup_yet" %}
+            <div align="center"><span style="color: grey;" class="material-icons md-64">cloud</span> </div>
+            <div align="center">Erwarte erstes Backup</div>
             {% elif backup_information.backup_status == "last_backup_failed" %}
             <div align="center"><span style="color: orange;" class="material-icons md-64">error</span> </div>
             <div align="center">Letztes Backup mit Fehlern abgeschlossen</div>
@@ -110,6 +114,7 @@
             </div>
         </div>
     </div>
+    <a href="{% url "backup_settings" %}"><button>Backup-Konfiguration</button></a>
 </article>
 
 <script>

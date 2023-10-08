@@ -1,0 +1,35 @@
+<article>
+    <h2>Systeminformationen</h2>
+    <h3>System</h3>
+    <table>
+        <tr>
+            <th>Hostname</th>
+            <td>{{ system_information.hostname }}</td>
+        </tr>
+        <tr>
+            <th>Betriebssystem</th>
+            <td>{{ system_information.os }}</td>
+        </tr>
+        <tr>
+            <th>Arbeitsspeicher</th>
+            <td><progress value="{{system_information.ram_usage}}" max="{{system_information.total_ram}}"></progress><br>Gesamtgröße: {{ system_information.total_ram }} Belegt: {{ system_information.ram_usage }}</td>
+        </tr>
+        <tr>
+            <th>Betriebszeit</th>
+            <td>{{ system_information.uptime }}</td>
+        </tr>
+    </table>
+    
+       
+    <h3>Festplatten</h3>
+    <div class="grid">
+        {% for disk in disks_stats %}
+        <div>
+            <strong>{{ disk.name }}: {{ disk.mountpoint }}</strong>
+            <progress value="{{disk.used_percent}}" max="100"></progress>
+            <p>Gesamtgröße: {{ disk.size }} Belegt: {{ disk.used }}</p>
+
+        </div>
+        {% endfor %}
+    </div>
+</article>
