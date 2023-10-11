@@ -166,13 +166,13 @@ STATICFILES_DIRS = [
 ]
 
 # Needed for gunicon
-STATIC_ROOT = '/static/'
+STATIC_ROOT = '/var/www/linux-arbeitsplatz-static/'
 
 ALLOWED_HOSTS = ['*']
 
 # Email Settings
 EMAIL_HOST = os.getenv("EMAIL_HOST")                    # <- host name [e.g. smtp.gmail.com for gmail]
-EMAIL_PORT = int(os.getenv("EMAIL_PORT"))               # <- smtp port [e.g. 587]
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "465"))               # <- smtp port [e.g. 587]
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")          # <- username
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # <- password
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")

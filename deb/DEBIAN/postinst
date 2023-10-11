@@ -1,0 +1,18 @@
+/bin/bash /usr/share/linux-arbeitsplatz/install.sh
+
+/usr/bin/systemctl daemon-reload 
+/usr/bin/systemctl enable linux-arbeitsplatz-unix.service --now
+/usr/bin/systemctl enable linux-arbeitsplatz-web.service --now
+
+# If :2000 is not in /etc/caddy/Caddyfile, add it
+if ! grep -q "/var/www/linux-arbeitsplatz-static" /etc/caddy/Caddyfile; then
+    echo ":2000 {
+  handle_path /static* {
+        root * /var/www/linux-arbeitsplatz-static
+        file_server
+        encode zstd gzip
+  }
+  reverse_proxy localhost:11123
+}" >> /etc/caddy/Caddyfile
+fi
+/usr/bin/systemctl reload caddy

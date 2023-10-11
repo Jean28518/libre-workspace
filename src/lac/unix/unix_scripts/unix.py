@@ -190,7 +190,7 @@ def get_disks_stats():
         while '' in line:
             line.remove('')
         name = line[0]
-        if "/dev/loop" in name or "udev" in name or "tmpfs" in name:
+        if "/dev/loop" in name or "udev" in name or "tmpfs" in name or "overlay" in name:
             continue
         size = line[1]
         # If the size is in megabytes, skip this disk, because it is very small
@@ -210,15 +210,16 @@ def get_system_information():
     # Get hostname, ram usage, cpu usage, uptime, os version
     rv = {}
     rv["hostname"] = subprocess.getoutput("hostname")
-    rv["total_ram"] = subprocess.getoutput("free -h").split("\n")[1].split()[1].replace("Gi", "")
-    rv["ram_usage"] = subprocess.getoutput("free -h").split("\n")[1].split()[2].replace("Gi", "")
+    rv["total_ram"] = subprocess.getoutput("free -h").split("\n")[1].split()[1].replace("Gi", "").replace("Mi", "")
+    rv["ram_usage"] = subprocess.getoutput("free -h").split("\n")[1].split()[2].replace("Gi", "").replace("Mi", "")
+    rv["ram_percent"] = int(float(rv["ram_usage"].replace(",", ".")) / float(rv["total_ram"].replace(",", ".")) * 100)
     rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("years", "Jahre")
     rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
 
 
     rv["update_information"] = f"{get_upgradable_packages()} Pakete können aktualisiert werden." if get_upgradable_packages() > 0 else "Das System ist auf dem neuesten Stand."
     if os.path.exists("history/update.log") and not is_update_currently_running():
-        rv["last_update_log"] = open("history/update.log").read()
+        rv["last_update_log"] = open("history/update.log").read().replace("\n", " <br> ")
     if is_update_currently_running():
         rv["update_information"] = "Das System wird gerade aktualisiert..."
     return rv

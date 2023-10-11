@@ -1,0 +1,16 @@
+export EMAIL_HOST="smtp.gmail.com"                         
+export EMAIL_PORT="567"                                   
+export EMAIL_HOST_USER="my-email@gmail.com"                 
+export EMAIL_HOST_PASSWORD="#####"   
+
+# only activate (uncomment) one of these:
+export EMAIL_USE_TLS=True
+#export EMAIL_USE_SSL=True
+
+# Change all instances of int and de to the real domain components
+export AUTH_LDAP_SERVER_URI="ldap://la.int.de"
+export AUTH_LDAP_BIND_DN="cn=Administrator,cn=users,dc=int,dc=de"
+export AUTH_LDAP_BIND_PASSWORD="#####"
+export AUTH_LDAP_USER_DN_TEMPLATE="cn=%(user)s,cn=users,dc=int,dc=de"
+export AUTH_LDAP_GROUP_SEARCH_BASE="cn=Groups,dc=int,dc=de"
+export AUTH_LDAP_GROUP_ADMIN_DN="CN=Administrators,CN=Builtin,DC=int,DC=de"

@@ -8,6 +8,8 @@ if os.geteuid() != 0:
     print("Cron is not running as root. Exiting.")
     exit()
 
+print("Running unix service...")
+
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 

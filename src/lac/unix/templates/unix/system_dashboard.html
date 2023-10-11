@@ -11,7 +11,7 @@
         </tr>
         <tr>
             <th>Arbeitsspeicher</th>
-            <td><progress value="{{system_information.ram_usage}}" max="{{system_information.total_ram}}"></progress><br>Gesamtgröße: {{ system_information.total_ram }} Belegt: {{ system_information.ram_usage }}</td>
+            <td><progress value="{{system_information.ram_percent}}" max="100"></progress><br>Gesamtgröße: {{ system_information.total_ram }} Belegt: {{ system_information.ram_usage }}</td>
         </tr>
         <tr>
             <th>Betriebszeit</th>
@@ -39,7 +39,7 @@
                             onClick="toggleModal(event)">
                         </a>
                         <code>
-                            {{system_information.last_update_log}}
+                            {{system_information.last_update_log | safe}}
                         </code>
                         <footer>
                             <a href="#cancel"
