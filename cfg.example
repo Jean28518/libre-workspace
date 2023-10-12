@@ -8,7 +8,7 @@ export EMAIL_USE_TLS=True
 #export EMAIL_USE_SSL=True
 
 # Change all instances of int and de to the real domain components
-export AUTH_LDAP_SERVER_URI="ldap://la.int.de"
+export AUTH_LDAP_SERVER_URI="ldaps://la.int.de"
 export AUTH_LDAP_DC="dc=int,dc=de"
 export AUTH_LDAP_BIND_DN="cn=Administrator,cn=users,dc=int,dc=de"
 export AUTH_LDAP_BIND_PASSWORD="#####"
