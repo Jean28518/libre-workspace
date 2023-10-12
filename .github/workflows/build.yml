@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - run: sudo apt-get update -y
-      - run: sudo apt-get install -y libldap2-dev python3-venv libsasl2-dev
       - run: bash build_deb.sh
       - name: Upload deb
         uses: actions/upload-artifact@v1
