@@ -108,7 +108,7 @@ def get_user_dn_by_email(email):
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
     # Search for user
-    result = conn.search_s("cn=users,dc=int,dc=de", ldap.SCOPE_SUBTREE, "mail=" + email)
+    result = conn.search_s(f"cn=users,{settings.AUTH_LDAP_DC}", ldap.SCOPE_SUBTREE, "mail=" + email)
     conn.unbind_s()
     if len(result) != 1:
         return None
@@ -120,7 +120,7 @@ def ldap_create_user(user_information):
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
     # Build modlist
-    dn = "cn=" + user_information["username"] + ",cn=users,dc=int,dc=de"
+    dn = "cn=" + user_information["username"] + f",cn=users,{settings.AUTH_LDAP_DC}"
     attrs = {}
     attrs['objectclass'] = [b'top', b'person', b'organizationalPerson', b'user']
     attrs['cn'] = [user_information["username"].encode('utf-8')]
@@ -150,7 +150,7 @@ def ldap_create_user(user_information):
     # # Add user to group
     # conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     # conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
-    # dn = "cn=users,cn=groups,cn=accounts,dc=int,dc=de"
+    # dn = f"cn=users,cn=groups,cn=accounts,{settings.AUTH_LDAP_DC}"
     # mod_attrs = [(ldap.MOD_ADD, 'member', [dn])]
     # conn.modify_s(dn, mod_attrs)
     # conn.unbind_s()
@@ -253,7 +253,7 @@ def ldap_get_all_groups():
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
     # Get all Groups: (objectClass=group)
-    result = conn.search_s("cn=users,dc=int,dc=de", ldap.SCOPE_SUBTREE, "(objectClass=group)", ["cn", "description"])
+    result = conn.search_s(f"cn=users,{settings.AUTH_LDAP_DC}", ldap.SCOPE_SUBTREE, "(objectClass=group)", ["cn", "description"])
     conn.unbind_s()
    
     groups = []
@@ -272,7 +272,7 @@ def ldap_create_group(group_information):
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
     # Build modlist
-    dn = "cn=" + group_information["cn"] + ",cn=users,dc=int,dc=de"
+    dn = "cn=" + group_information["cn"] + f",cn=users,{settings.AUTH_LDAP_DC}"
     attrs = {}
     attrs['objectclass'] = [b'top', b'group']
     attrs['cn'] = [group_information["cn"].encode('utf-8')]
