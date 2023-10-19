@@ -7,7 +7,7 @@ Using Samba as domain controller.
 ```bash
 # Make sure you have AD domain controler like samba active and ldaps enabled.
 
-wget https://github.com/Jean28518/linux-arbeitsplatz-central/releases/tag/v0.1.0
+wget https://github.com/Jean28518/linux-arbeitsplatz-central/releases/download/v0.1.0/linux-arbeitsplatz.deb
 sudo apt install ./linux-arbeitsplatz.deb
 
 vim /usr/share/linux-arbeitsplatz/cfg
