@@ -18,7 +18,7 @@ systemctl enable linux-arbeitsplatz-unix --now
 systemctl restart linux-arbeitsplatz-web
 ```
 
-## Caddyfile
+### Caddyfile
 
 ```Caddyfile
 central.int.de {
