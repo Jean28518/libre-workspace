@@ -182,7 +182,7 @@ def ldap_get_all_users():
     return users
 
 def ldap_is_system_user(cn):
-    hidden_users = hidden_users.lower()
+    hidden_users = settings.HIDDEN_LDAP_USERS.lower()
     hidden_users = hidden_users.split(",")
     cn = cn.lower()
     return cn == "guest" or cn == "krbtgt" or cn == "administrator" or cn == "admin" or cn in hidden_users
