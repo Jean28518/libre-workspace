@@ -15,3 +15,6 @@ export AUTH_LDAP_BIND_PASSWORD="#####"
 export AUTH_LDAP_USER_DN_TEMPLATE="cn=%(user)s,cn=users,dc=int,dc=de"
 export AUTH_LDAP_GROUP_SEARCH_BASE="cn=Groups,dc=int,dc=de"
 export AUTH_LDAP_GROUP_ADMIN_DN="CN=Administrators,CN=Builtin,DC=int,DC=de"
+
+# Separate them with a ,
+export HIDDEN_LDAP_USERS="dns-hostname"

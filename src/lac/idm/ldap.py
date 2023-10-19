@@ -182,8 +182,10 @@ def ldap_get_all_users():
     return users
 
 def ldap_is_system_user(cn):
+    hidden_users = hidden_users.lower()
+    hidden_users = hidden_users.split(",")
     cn = cn.lower()
-    return cn == "guest" or cn == "krbtgt" or cn == "administrator" or cn == "admin"
+    return cn == "guest" or cn == "krbtgt" or cn == "administrator" or cn == "admin" or cn in hidden_users
 
 def ldap_is_system_group(cn):
     system_groups = ["administrators", "domain admins", "domain computers", "domain guests", "domain users", "enterprise admins", "group policy creator owners", "schema admins", "cert publishers", "dnsadmins", "dnsupdateproxy", "ras and ias servers", "allowed rodc password replication group", "denied rodc password replication group", "read-only domain controllers", "protected users", "enterprise read-only domain controllers", "domain controllers"]
