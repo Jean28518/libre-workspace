@@ -97,7 +97,7 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {
 # Allow self signed certificates
 ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
 
-HIDDEN_LDAP_USERS = os.getenv("HIDDEN_LDAP_USERS")
+HIDDEN_LDAP_USERS = os.getenv("HIDDEN_LDAP_USERS", "")
 
 
 LOGGING = {
