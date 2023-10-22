@@ -5,7 +5,7 @@
 <h2>'{{cn}}' bearbeiten</h2>
 
 {% if message != "" %}
-<p><strong>{{ message }}</strong></p>
+<p><strong>{{ message | safe }}</strong></p>
 {% endif %}
 
 <button class="contrast outline"

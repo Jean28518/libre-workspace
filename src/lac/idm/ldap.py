@@ -79,11 +79,16 @@ def is_ldap_user_password_correct(user_dn, password):
     return True
 
 def ldap_get_cn_of_dn(dn):
+    # If its a cn, return it
+    if not "," in dn:
+        return dn
     return dn.split(",")[0].split("=")[1]
 
 # Takes user dn and password as string
 def set_ldap_user_new_password(user_dn, password):
     cn = ldap_get_cn_of_dn(user_dn)
+    if not "," in user_dn:
+        user_dn = ldap_get_dn_of_cn(cn)
     if ldap_is_system_user(cn):
         return f"Benutzer '{cn}' ist ein Systembenutzer. Aufgrund technischen Gründen kann das Passwort nicht verändert werden."
 
@@ -218,6 +223,10 @@ def ldap_update_user(cn, user_information):
         old_attrs['mail'] = [old_user_information.get("mail", "").encode('utf-8')]
 
     ldif = modlist.modifyModlist(old_attrs, attrs)
+
+    print(ldif)
+    if ldif == []:
+        return
 
     # Modify user
     try:

@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
 from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm
-from .ldap import get_user_information_of_cn, update_user_information_ldap, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group
+from .ldap import get_user_information_of_cn, update_user_information_ldap, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
 from .idm import reset_password_for_email
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -31,7 +31,16 @@ def user_login(request):
     if request.user.is_authenticated:
         return redirect(index)
     if request.method == 'POST':
-        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        username = request.POST['username']
+
+        # Check if user entered email address, if so, convert to username
+        if "@" in username and "." in username:
+            userdn = get_user_dn_by_email(username)
+            if userdn == None:
+                return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen."})
+            username = ldap_get_cn_of_dn(userdn)
+
+        user = authenticate(username=username, password=request.POST['password'])
         if user and user.is_authenticated:
             print("User is authenticated")
             login(request, user)
@@ -138,11 +147,17 @@ def edit_user(request, cn):
     if request.method == 'POST':
         form = AdministratorUserEditForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             user_information = form.cleaned_data
+            pw_message = ""
+            if user_information["password"] != "":
+                pw_message = set_ldap_user_new_password(cn, user_information["password"])
+                if pw_message == None:
+                    pw_message = f"Passwort erfolgreich geändert!"
+            user_information.pop("password")
             message = ldap_update_user(cn, user_information)
             if message == None:
                 message = f"Änderungen erfolgreich gespeichert!"
+            message = message + "<br>" + pw_message
         else:
             message = form.errors
         form_data = form.cleaned_data

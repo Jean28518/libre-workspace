@@ -5,7 +5,7 @@
 <h2>Benutzereinstellungen</h2>
 
 {% if message != "" %}
-<p><strong>{{ message }}</strong></p>
+<p><strong>{{ message | safe }}</strong></p>
 {% endif %}
 
 <a href="{% url "change_password" %}" role="button" class="secondary outline">Passwort ändern</a>
