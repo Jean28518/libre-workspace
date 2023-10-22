@@ -1,0 +1,77 @@
+<article>
+
+    <h2> Datenexport </h2>
+
+    {% if data_export_status != "running" %}
+
+        {% comment %} Rsync log {% endcomment %}
+        {% if rsync_history != "" %}
+        <!-- Button to trigger the modal -->
+        <a class="outline"
+        data-target="rsync-log"
+        onClick="toggleModal(event)"
+        href="#">
+        Nachrichten des letzten Exports ansehen
+        </a>
+        <!-- Modal -->
+        <!-- Modal -->
+        <dialog id="rsync-log">
+            <article>
+            <a href="#close"
+                aria-label="Close"
+                class="close"
+                data-target="rsync-log"
+                onClick="toggleModal(event)">
+            </a>
+            <h3> Nachrichten des letzten Exports </h3>
+            <p> Je weniger Nachrichten zu sehen sind, desto fehlerfreier ist der letzte Export verlaufen.</p>
+            <code>
+                {{ rsync_history | safe }}
+            </code>
+            <footer>
+                <a href="#cancel"
+                role="button"
+                class="secondary"
+                data-target="rsync-log"
+                onClick="toggleModal(event)">
+                Schließen
+                </a>
+            </footer>
+            </article>
+        </dialog>
+        <br>
+        <br>
+        {% endif %}
+
+        <p>
+            Wähle eine Partition aus, auf der alle Daten des Servers exportiert werden sollen.
+            Es werden alle wichtigen Daten (auch von eingebundenen Festplatten) gesichert, welche nicht in /mnt oder /media eingehängt sind.<br>
+            Sollte schon ein Export dieses Servers auf dem Ziel existieren, werden die Daten auf dem Export überschrieben.
+            Es wird nicht überprüft, ob auf dem Ziel genügend Speicherplatz vorhanden ist.
+        </p>
+
+        <form action="{% url "data_export" %}" method="post">
+        <label for="partition-export">Festplatte</label>
+        <select name="partition-export" id="partition-export" required>
+            <option value="" selected>Wähle ein Ziel...</option>
+            {% for partition in partitions %}
+            {% if partition.mountpoint %}<option value="{{ partition.mountpoint }}">{{ partition.name }} ({{partition.size}})</option>{% endif %}
+            {% endfor %}
+        </select>
+        <input type="submit" value="Exportieren">
+        </form>
+
+        <p> Hinweis: Es werden während des Export-Vorgangs alle Dienste vorrübergehend ausgeschaltet.</p>
+    {% else %}
+    <p> 
+        Der Daten-Export läuft gerade. Bitte warte, bis der Export abgeschlossen ist.
+        Dieser Vorgang kann einige Stunden dauern.
+        Alle weiteren Dienste werden gerade pausiert und sind aktuell nicht erreichbar.
+    </p>
+        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
+    {% endif %}
+
+
+
+
+</article>

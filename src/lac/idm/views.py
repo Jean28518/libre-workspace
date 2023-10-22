@@ -81,7 +81,6 @@ def user_password_reset(request):
         form = PasswordResetForm(request.POST)
         if form.is_valid():
             reset_password_for_email(form.cleaned_data["email"])
-            print("HUHU")
             message = "Sollte die E-Mail-Adresse in unserem System existieren, wurde eine E-Mail mit einem Link zum Zurücksetzen des Passworts versendet."
         else:
             message = "Bitte geben Sie eine gültige E-Mail-Adresse ein."

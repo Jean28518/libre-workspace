@@ -18,3 +18,5 @@ export AUTH_LDAP_GROUP_ADMIN_DN="CN=Administrators,CN=Builtin,DC=int,DC=de"
 
 # Separate them with a ,
 export HIDDEN_LDAP_USERS="dns-hostname"
+
+export NEXTCLOUD_INSTALLATION_DIRECTORY="/var/www/nextcloud/"

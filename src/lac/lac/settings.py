@@ -181,3 +181,6 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")          # <- username
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # <- password
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")
+
+# Other Enviromental Settings
+NEXTCLOUD_INSTALLATION_DIRECTORY = os.getenv("NEXTCLOUD_INSTALLATION_DIRECTORY", "/var/www/nextcloud/")

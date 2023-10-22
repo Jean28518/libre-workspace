@@ -1,0 +1,44 @@
+<article>
+
+    <h2> Datenimport (WIP) </h2>
+
+        <p>
+            Dieses Tool ermöglicht es, Daten von einer Festplatte auf die Nextcloud zu importieren.
+            Die Daten werden dabei in den Nextcloud Bereich eines bestimmten Nutzers kopiert.
+            Erst ganz am Ende des Vorgangs werden die Daten in der Nextcloud sichtbar.<br>
+            Möchten Sie die Daten in einen Gruppenordner importieren, so müssen Sie die Daten zunächst in den Nextcloud Bereich eines Nutzers importieren und anschließend in den Gruppenordner verschieben.
+        </p>
+
+
+        <form action="{% url "data_export" %}" method="post">
+        <label for="partition-import">Festplatte</label>
+        <select name="partition-import" id="partition-import" required>
+            <option value="" selected>Wähle die Quell-Festplatte aus...</option>
+            {% for partition in partitions %}
+            {% if partition.mountpoint %}<option value="{{ partition.mountpoint }}">{{ partition.name }} ({{partition.size}})</option>{% endif %}
+            {% endfor %}
+        </select>
+        <label for="user-import">Nextcloud-Benutzer</label>
+        <select name="user-import" id="user-import" required>
+            <option value="" selected>Wähle den Nextcloud-Benutzer aus...</option>
+            {% for nc_user in nextcloud_user_directories %}
+            <option value="{{nc_user.path}}">{{ nc_user.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Exportieren">
+        </form>
+        <p> Im nächsten Schritt wird der Ordner auf der Quell-Festplatte ausgewählt, den Sie importieren möchten. </p>
+
+    {% comment %} {% else %} {% endcomment %}
+    <p> 
+        Der Datenimport läuft gerade. Bitte warte, bis der Importier-Vorgang abgeschlossen ist.
+        Dieser Vorgang kann einige Stunden dauern.
+        Erst ganz am Ende des Vorgangs werden die Daten in der Nextcloud sichtbar.<br>
+    </p>
+        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
+    {% comment %} {% endif %} {% endcomment %}
+
+
+
+
+</article>

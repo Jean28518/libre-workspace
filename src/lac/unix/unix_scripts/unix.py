@@ -1,6 +1,9 @@
 import os
 import time
 import subprocess
+import json
+import lac.settings as settings
+import idm.ldap as ldap
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -252,3 +255,96 @@ def reboot_system():
 
 def shutdown_system():
     os.system("/sbin/shutdown -h now")
+
+
+def escape_bash_characters(string, also_escape_paths=True):
+    if also_escape_paths:
+        string = string.replace("/", "").replace("\\", "").replace(".", "")
+    return string.replace(" ", "").replace(";", "").replace("&", "").replace("|", "").replace(">", "").replace("<", "").replace("$", "")
+
+
+def get_partitions():
+    data = subprocess.getoutput("lsblk -AJ")
+    data = json.loads(data)
+
+    partitions = []
+    for item in data["blockdevices"]:
+        if "children" in item:
+            for child in item["children"]:
+                partition = {}
+                partition["name"] = child["name"]
+                partition["size"] = child["size"]
+                partition["mountpoint"] = None
+                if "mountpoints" in child:
+                    partition["mountpoint"] = child["mountpoints"][0]
+                partitions.append(partition)
+    return partitions
+
+
+def mount(partition):
+    partition = escape_bash_characters(partition)
+    message = subprocess.getoutput(f"mkdir -p /mnt/{partition}")
+    if message != "":
+        return message
+    return subprocess.getoutput(f"mount /dev/{partition} /mnt/{partition}")
+
+
+def umount(partition):
+    partition = escape_bash_characters(partition)
+    message = subprocess.getoutput(f"umount /mnt/{partition}")
+    subprocess.getoutput(f"rmdir /mnt/{partition}")
+    return message
+
+
+# Exports all important files of the whole system to the specified filepath
+def export_data(filepath):
+    filepath = escape_bash_characters(filepath, False)
+    if os.path.exists("export_data"):
+        return "Backup already running"
+        
+    os.system(f"echo '{filepath}' > export_data")
+    trigger_cron_service()
+    return
+
+
+def get_data_export_status():
+    if os.path.isfile("export_running"):
+        return "running"
+    return "not_running"
+
+
+def abort_current_data_export():
+    if os.path.isfile("export_running"):
+        os.system("rm export_running")
+        os.system("rm export_data")
+        os.system("pkill do_data_export.sh")
+        os.system("bash start_service.sh")
+    return
+
+
+def get_rsync_history():
+    if not os.path.isfile("history/rsync.log"):
+        return ""
+    rsync_history = open("history/rsync.log").read().replace("\n", "<br>")
+    return rsync_history
+
+# Format: [{"name": "user1", "path": "/path/to/user1"}, {"name": "user2", "path": "/path/to/user2"}]
+def get_nextcloud_user_directories():
+    if not os.path.isfile(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/config/config.php"):
+        return []
+    nextcloud_config_file = open(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/config/config.php").readlines()
+    for line in nextcloud_config_file:
+        if "datadirectory" in line:
+            nextcloud_data_directory = line.split("=>")[1].strip().strip("'").strip('"').strip(",")
+            break
+    nextcloud_users = []
+    for user in os.listdir(nextcloud_data_directory):
+        if (not "appdata" in user or not user == "files_external" or not user == "__groupfolders") and os.path.isdir(nextcloud_data_directory + "/" + user):
+            nextcloud_users.append({"name": user, "path": nextcloud_data_directory + "/" + user + "/files"})
+
+    # Translate the objectGUID to the username for each nextcloud user
+    ldap_users = ldap.ldap_get_all_users()
+    for ldap_user in ldap_users:
+        for nextcloud_user in nextcloud_users:
+            if ldap_user["objectGUID"].upper() == nextcloud_user["name"]:
+                nextcloud_user["name"] = ldap_user.cn

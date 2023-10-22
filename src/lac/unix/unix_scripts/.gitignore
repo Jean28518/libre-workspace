@@ -5,3 +5,4 @@ unix.conf
 run_service
 backup_disabled
 upgradable_packages
+export_data

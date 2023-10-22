@@ -1,0 +1,31 @@
+<article>
+
+<h2> Festplatten </h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Partition</th>
+            <th>Größe</th>
+            <th>Einhängepunkt</th>
+            <th>Aktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for partition in partitions %}
+        <tr>
+            <td>{{ partition.name }}</td>
+            <td>{{ partition.size }}</td>
+            <td>{% if partition.mountpoint %}{% endif %}{{ partition.mountpoint}}</td>
+            <td>
+                {% if partition.mountpoint %}
+                    <a href="{% url "umount" partition.name %}">Aushängen</a>
+                {% else %}
+                    <a href="{% url "mount" partition.name %}">Einhängen</a>
+                {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</article>

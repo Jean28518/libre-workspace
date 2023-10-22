@@ -12,7 +12,7 @@ def get_user_information_of_cn(cn):
     dn = ldap_get_dn_of_cn(cn)
 
     # Get user with dn
-    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf"])
+    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf", "objectGUID"])
 
     
     conn.unbind_s()
@@ -27,6 +27,7 @@ def get_user_information_of_cn(cn):
     user_information["last_name"] = ldap_reply[0][1].get("sn", [b""])[0].decode('utf-8')
     user_information["displayName"] = ldap_reply[0][1].get("displayName", [b""])[0].decode('utf-8')
     user_information["mail"] = ldap_reply[0][1].get("mail", [b""])[0].decode('utf-8')
+    user_information["objectGUID"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
 
     user_information["groups"] = ldap_reply[0][1].get("memberOf", [])
     for i in range(len(user_information["groups"])):
@@ -177,13 +178,14 @@ def ldap_get_all_users():
             mail = user.get("mail", [b''])[0].decode('utf-8')
             cn = user.get("cn", [b''])[0].decode('utf-8')
             groups = user.get("memberOf", [])
+            objectGUID = user.get("objectGUID", [b''])[0].hex()
             for i in range(len(groups)):
                 groups[i] = groups[i].decode('utf-8')
 
             if ldap_is_system_user(cn):
                 continue
 
-            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups})
+            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "objectGUID": objectGUID})
     return users
 
 def ldap_is_system_user(cn):

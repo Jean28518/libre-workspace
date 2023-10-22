@@ -1,0 +1,21 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Datenimport/-export</h2>
+
+{% include "unix/mounting.html" %}
+
+{% include "unix/data_export.html" %}
+
+{% include "unix/data_import.html" %}
+
+<div align="center">Hinweis: Diese Seite aktualisiert sich alle 60 Sekunden.</div>
+
+<script>
+    setTimeout(function(){
+        window.location.reload(1);
+     }, 60000);
+</script>
+
+{% endblock %}
