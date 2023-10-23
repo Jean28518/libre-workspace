@@ -335,16 +335,20 @@ def get_nextcloud_user_directories():
     nextcloud_config_file = open(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/config/config.php").readlines()
     for line in nextcloud_config_file:
         if "datadirectory" in line:
-            nextcloud_data_directory = line.split("=>")[1].strip().strip("'").strip('"').strip(",")
+            nextcloud_data_directory = line.split("=>")[1].strip().replace("'", "").strip('"').strip(",")
             break
     nextcloud_users = []
     for user in os.listdir(nextcloud_data_directory):
-        if (not "appdata" in user or not user == "files_external" or not user == "__groupfolders") and os.path.isdir(nextcloud_data_directory + "/" + user):
+        print(nextcloud_data_directory + "/" + user)
+        if not "appdata" in user and not user == "files_external" and not user == "__groupfolders" and os.path.isdir(nextcloud_data_directory + "/" + user):
             nextcloud_users.append({"name": user, "path": nextcloud_data_directory + "/" + user + "/files"})
 
     # Translate the objectGUID to the username for each nextcloud user
     ldap_users = ldap.ldap_get_all_users()
     for ldap_user in ldap_users:
         for nextcloud_user in nextcloud_users:
-            if ldap_user["objectGUID"].upper() == nextcloud_user["name"]:
-                nextcloud_user["name"] = ldap_user.cn
+            # Match only the last 8 characters of the objectGUID with the last 8 characters of the username, because the objectGUID of ldap_users is slightly different from the username of nextcloud_users
+            if ldap_user["objectGUID"].upper()[-8:-1] == nextcloud_user["name"].replace("-", "")[-8:-1]:
+                nextcloud_user["name"] = ldap_user["cn"]
+
+    return nextcloud_users
