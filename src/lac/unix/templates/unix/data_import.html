@@ -1,6 +1,18 @@
 <article>
 
-    <h2> Datenimport (WIP) </h2>
+    <h2> Datenimport (Nextcloud) </h2>
+
+    {% if nextcloud_import_process_running %}
+
+    <p> 
+        Der Datenimport läuft gerade. Bitte warte, bis der Importier-Vorgang abgeschlossen ist.
+        Dieser Vorgang kann einige Stunden dauern.
+        Erst ganz am Ende des Vorgangs werden die Daten in der Nextcloud sichtbar.<br>
+    </p>
+        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
+    {% else %}
+
+
 
         <p>
             Dieses Tool ermöglicht es, Daten von einer Festplatte auf die Nextcloud zu importieren.
@@ -10,35 +22,25 @@
         </p>
 
 
-        <form action="{% url "data_export" %}" method="post">
-        <label for="partition-import">Festplatte</label>
-        <select name="partition-import" id="partition-import" required>
+        <form action="{% url "data_import_1" %}" method="post">
+        <label for="current_directory">Festplatte</label>
+        <select name="current_directory" id="current_directory" required>
             <option value="" selected>Wähle die Quell-Festplatte aus...</option>
             {% for partition in partitions %}
             {% if partition.mountpoint %}<option value="{{ partition.mountpoint }}">{{ partition.name }} ({{partition.size}})</option>{% endif %}
             {% endfor %}
         </select>
-        <label for="user-import">Nextcloud-Benutzer</label>
-        <select name="user-import" id="user-import" required>
+        <label for="user_import">Nextcloud-Benutzer</label>
+        <select name="user_import" id="user_import" required>
             <option value="" selected>Wähle den Nextcloud-Benutzer aus...</option>
             {% for nc_user in nextcloud_user_directories %}
             <option value="{{nc_user.path}}">{{ nc_user.name }}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="Exportieren">
+        <input type="submit" value="Importieren...">
         </form>
         <p> Im nächsten Schritt wird der Ordner auf der Quell-Festplatte ausgewählt, den Sie importieren möchten. </p>
 
-    {% comment %} {% else %} {% endcomment %}
-    <p> 
-        Der Datenimport läuft gerade. Bitte warte, bis der Importier-Vorgang abgeschlossen ist.
-        Dieser Vorgang kann einige Stunden dauern.
-        Erst ganz am Ende des Vorgangs werden die Daten in der Nextcloud sichtbar.<br>
-    </p>
-        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
-    {% comment %} {% endif %} {% endcomment %}
-
-
-
+    {% endif %}
 
 </article>

@@ -33,21 +33,17 @@ central.int.de {
 
 ## How to develop
 
-Copy the content of env.example into your ~/.bashrc file and adjust it to your needs. Restart the terminal.
-
 ```bash
 sudo apt-get install libldap2-dev python3-venv libsasl2-dev
 cd src/lac/
 python3 -m venv .env
+cd ../../
+cp cfg.example cfg
+vim cfg # Configure example
 
-source .env/bin/activate
-pip install django python-ldap django-auth-ldap
-python manage.py migrate
 
-python manage.py runserver
-
-deactivate
-
-# If you did the setup above once, you can start the django server by
-bash run.sh
+# If you did the setup above once, you can start the django server with this command
+bash run_development.sh
+# Start unix service (in a second terminal session)
+bash unix_service.sh
 ```

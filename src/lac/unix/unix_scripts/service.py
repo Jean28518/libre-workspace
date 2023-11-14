@@ -1,6 +1,6 @@
 # Called from root crontab every minute
 import os
-import unix # (its in the same directory)
+import unix_config # (its in the same directory)
 import time
 
 # If cron is not running as root, exit
@@ -48,14 +48,14 @@ while True:
     counter = 0
 
     # Read config file
-    unix.read_config_file()
+    unix_config.read_config_file()
 
     ## BACKUP ######################################################################################################
 
     # Get backup time from config file
-    if unix.get_value("BORG_REPOSITORY") != "" and not os.path.exists("backup_disabled"):
+    if unix_config.get_value("BORG_REPOSITORY") != "" and not os.path.exists("backup_disabled"):
         ensure_fingerprint_is_trusted()
-        backup_time = unix.get_value("BORG_BACKUP_TIME")
+        backup_time = unix_config.get_value("BORG_BACKUP_TIME")
         date = time.strftime("%Y-%m-%d")
 
         # If current time is higher than backup time, run backup

@@ -229,6 +229,8 @@ def get_system_information():
 
 
 def get_upgradable_packages():
+    if not os.path.isfile("upgradable_packages"):
+        return 0
     return int(subprocess.getoutput("cat upgradable_packages | wc -l")) -1
 
 
@@ -260,7 +262,7 @@ def shutdown_system():
 def escape_bash_characters(string, also_escape_paths=True):
     if also_escape_paths:
         string = string.replace("/", "").replace("\\", "").replace(".", "")
-    return string.replace(" ", "").replace(";", "").replace("&", "").replace("|", "").replace(">", "").replace("<", "").replace("$", "")
+    return string.replace(";", "").replace("&", "").replace("|", "").replace(">", "").replace("<", "").replace("$", "")
 
 
 def get_partitions():
@@ -339,7 +341,6 @@ def get_nextcloud_user_directories():
             break
     nextcloud_users = []
     for user in os.listdir(nextcloud_data_directory):
-        print(nextcloud_data_directory + "/" + user)
         if not "appdata" in user and not user == "files_external" and not user == "__groupfolders" and os.path.isdir(nextcloud_data_directory + "/" + user):
             nextcloud_users.append({"name": user, "path": nextcloud_data_directory + "/" + user + "/files"})
 
@@ -352,3 +353,30 @@ def get_nextcloud_user_directories():
                 nextcloud_user["name"] = ldap_user["cn"]
 
     return nextcloud_users
+
+
+def get_folder_list(path):
+    path = escape_bash_characters(path, False)
+    if not os.path.isdir(path):
+        return []
+    folders = []
+    for folder in os.listdir(path):
+        if os.path.isdir(path + "/" + folder):
+            folders.append(folder)
+    return folders
+
+
+def import_folder_to_nextcloud_user(folder_import, nextcloud_user_folder):
+    os.environ["NEXTCLOUD_USER_FOLDER"] = nextcloud_user_folder
+    os.environ["FOLDER_IMPORT"] = folder_import
+    os.environ["NEXTCLOUD_INSTALLATION_DIRECTORY"] = settings.NEXTCLOUD_INSTALLATION_DIRECTORY
+    os.system("bash import_folder_to_nextcloud_user.sh &")
+
+
+def nextcloud_import_process_running():
+    return os.path.isfile("nextcloud_import_process_running")
+
+
+def abort_current_nextcloud_import():
+    os.system("rm nextcloud_import_process_running")
+    os.system("pkill import_folder_to_nextcloud_user.sh")

@@ -86,7 +86,8 @@ def data_management(request):
     data_export_status = unix.get_data_export_status()
     rsync_history = unix.get_rsync_history()
     nextcloud_user_directories = unix.get_nextcloud_user_directories()
-    return render(request, "unix/data_management.html", {"partitions": partitions, "data_export_status": data_export_status, "rsync_history": rsync_history, "nextcloud_user_directories": nextcloud_user_directories})
+    nextcloud_import_process_running = unix.nextcloud_import_process_running()
+    return render(request, "unix/data_management.html", {"partitions": partitions, "data_export_status": data_export_status, "rsync_history": rsync_history, "nextcloud_user_directories": nextcloud_user_directories, "nextcloud_import_process_running": nextcloud_import_process_running})
 
 
 @staff_member_required
@@ -125,3 +126,57 @@ def abort_current_data_export(request):
     unix.abort_current_data_export()
     time.sleep(1)
     return redirect("data_management")
+
+
+@staff_member_required
+def data_import_1(request):
+    if request.method == "POST":
+        current_directory = request.POST.get("current_directory", "")
+        if current_directory == "":
+            return HttpResponse("Fehler: Kein Verzeichnis angegeben")
+        # The user is the nextcloud path to the user directory
+        user_import = request.POST.get("user_import", "")
+        if user_import == "":
+            return HttpResponse("Fehler: Kein Benutzer angegeben")
+        request.session["current_directory"] = current_directory
+        request.session["user_import"] = user_import
+        request.session["redirection_after_selection"] = "data_import_2"
+        request.session["redirection_on_cancel"] = "data_management"
+        request.session["description"] = "Bitte wählen Sie das Verzeichnis aus, welches Sie importieren möchten."
+        
+        return redirect("pick_folder")
+    
+@staff_member_required
+def data_import_2(request):
+    unix.import_folder_to_nextcloud_user(request.session["current_directory"], request.session["user_import"])
+    time.sleep(1)
+    return redirect("data_management")
+    
+
+# Session: current_directory*, redirection_after_selection, redirection_on_cancel, description
+@staff_member_required
+def pick_folder(request):
+    if request.session.get("current_directory", "") == "":
+        return HttpResponse("Fehler: Kein Verzeichnis angegeben")
+    description = request.session.get("description", "")
+
+
+    if request.method == "POST":
+        if request.POST.get("cancel", "") != "":
+            return redirect(request.session["redirection_on_cancel"])
+        if request.POST.get("pick", "") != "":
+            if request.POST.get("pick", "") == "..":
+                request.session["current_directory"] = "/".join(request.session["current_directory"].split("/")[:-1])
+            else:
+                request.session["current_directory"] = request.session["current_directory"] + "/" + request.POST.get("pick", "")
+            if request.session["current_directory"] == "":
+                request.session["current_directory"] = "/"
+            request.session["current_directory"] = request.session["current_directory"].replace("//", "/")
+            print("picked!")
+            print(request.session["current_directory"])
+
+        if request.POST.get("select", "") != "":
+            return redirect(request.session["redirection_after_selection"])
+
+    folder_list = unix.get_folder_list(request.session["current_directory"])
+    return render(request, "unix/pick_folder.html", {"description": description, "folder_list": folder_list, "current_directory": request.session["current_directory"]})
