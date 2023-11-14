@@ -47,4 +47,7 @@ python manage.py migrate
 python manage.py runserver
 
 deactivate
+
+# If you did the setup above once, you can start the django server by
+bash run.sh
 ```
