@@ -1,0 +1,23 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Willkommen!</h2>
+
+<p>In den nächsten Seiten werden wir gemeinsam den Linux-Arbeitsplatz einrichten.</p>
+
+<p>Bitte definieren Sie zunächst Ihr Masterpasswort. Dieses sollte sicher sein und lässt sich später nicht mehr ändern.</p>
+
+{% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+<form method="post">  
+    <label for="text">Passwort</label>
+    <input type="password" id="password" name="password">
+
+    <label for="text">Passwort wiederholen</label>
+    <input type="password" id="password_repeat" name="password_repeat">
+    
+    <input type="submit" value="Weiter">
+</form>
+
+{% endblock %}

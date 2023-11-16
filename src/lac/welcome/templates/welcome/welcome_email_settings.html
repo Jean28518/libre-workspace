@@ -1,0 +1,71 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>E-Mail</h2>
+
+<p>
+    Um die volle Funktionalität auszuschöpfen, wird empfohlen, ein Mail-Konto anzugeben, über dies der Linux-Arbeitsplatz selbständig Einladungen, 
+    "Passwort-Zurücksetzen"-Mails oder weiteres versenden kann. Dies kann auch später vorgenommen werden.
+</p>
+
+<form method="post">  
+    <label for="skip">
+        <input type="checkbox" id="skip" name="skip" onclick="change()">
+        Vorerst überspringen.
+    </label>
+    <div id="mail_settings">
+
+        <label for="mailhost">
+            Mail-Host
+            <input type="text" id="mailhost" name="mailhost" placeholder="smtp.mail.com">
+        </label>
+
+        <label for="mailport">
+            Mail-Port
+            <input type="number" id="mailport" name="mailport" placeholder="587">
+        </label>
+
+        <label for="mailuser">
+            Mail-Benutzer
+            <input type="text" id="mailuser" name="mailuser" placeholder="no-reply@mail.com">
+        </label>
+
+        <label for="mailpassword">
+            Mail-Passwort
+            <input type="password" id="mailpassword" name="mailpassword" placeholder="Passwort">
+            <small>Hinweis: Bei gmail-Konten muss ein "App-Passwort" verwendet werden.</small>
+        </label>
+
+        <fieldset>
+            <legend>Verschlüsselung</legend>
+            <label for="tls">
+            <input type="radio" id="tls" name="mailencryption" value="tls" checked>
+            TLS
+            </label>
+            <label for="ssl">
+            <input type="radio" id="ssl" name="mailencryption" value="ssl">
+            SSL
+            </label>
+        </fieldset>
+    </div>
+
+    <br>
+        
+    
+    <input type="submit" value="Weiter">
+</form>
+
+<script>
+function change() {
+    skip = document.getElementById("skip");
+    mail_settings = document.getElementById("mail_settings");
+    if (skip.checked) {
+        mail_settings.style.display = "none";
+    } else {
+        mail_settings.style.display = "block";
+    }
+}
+</script>
+
+{% endblock %}

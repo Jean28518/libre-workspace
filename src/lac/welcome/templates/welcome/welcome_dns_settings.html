@@ -1,0 +1,91 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Sichtbarkeit</h2>
+
+<p>
+    Wählen Sie aus, ob der Linux-Arbeitsplatz öffentlich oder lediglich im lokalen Netzwerk erreichbar sein soll.
+    Dies kann später nur noch manuell durch einen wissenden Linux-Administrator geändert werden.
+</p>
+
+
+{% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+<form method="post">  
+    <fieldset>
+        <label for="private">
+            <input type="radio" id="private" name="visibility" value="private" onclick="change()" checked>
+            Lokal
+        </label>
+        <label for="public">
+          <input type="radio" id="public" name="visibility" value="public" onclick="change()">
+          Öffentlich
+        </label>
+      </fieldset>
+
+    <div id="domain_field" style="display: none">
+        <label for="domain">
+            Domain
+            <input type="text" id="domain" name="domain" placeholder="example.com">
+            Die oben angegebene Domain muss in Ihrer Kontrolle sein. Geben Sie hier nur den Domainnamen an, ohne Protokoll oder Subdomains.
+        </label>
+
+        <br>
+
+        Verwenden Sie entweder eine <strong>komplette Domain</strong> und stellen folgende DNS-Einträge sicher:
+        <ul>
+            <li>Typ: A | Name: * | Ziel: IP-Adresses dieses Servers</li>
+            <li>Typ: A | Name: @ | Ziel: IP-Adresses dieses Servers</li>
+        </ul>
+
+        <strong>oder</strong> verwenden Sie folgende <strong>Subdomains</strong> und stellen folgende DNS-Einträge sicher:
+        <ul>
+            <li>Typ: A | Name: cloud | Ziel: IP-Adresses dieses Servers</li>
+            <li>Typ: A | Name: portal | Ziel: IP-Adresses dieses Servers</li>
+            <li>Typ: A | Name: central | Ziel: IP-Adresses dieses Servers</li>
+            <li>Typ: A | Name: la | Ziel: IP-Adresses dieses Servers</li>
+            <li>Typ: A | Name: chat | Ziel: IP-Adresses dieses Servers</li>
+            <li>Typ: A | Name: meet | Ziel: IP-Adresses dieses Servers</li>
+        </ul>
+    </div>
+
+     
+    
+    <input type="submit" value="Weiter">
+</form>
+
+<h3>Erklärung</h3>
+
+<h4>Öffentlich</h4>
+
+<p>
+    Der Linux-Arbeitsplatz ist über das Internet erreichbar. Sie können sich von überall auf der Welt mit Ihrem Benutzerkonto anmelden.
+    Dies ist die einfachste Möglichkeit, um auf Ihren Linux-Arbeitsplatz zuzugreifen.
+    <br>
+<p>
+
+<h4>Lokal</h4>
+
+<p>
+    Der Linux-Arbeitsplatz ist nur im lokalen Netzwerk (Zuhause) erreichbar. Sie können sich nur von Geräten aus Ihrem lokalen Netzwerk mit Ihrem Benutzerkonto anmelden.
+    <br>
+<p>
+
+
+
+<script>
+function change() {
+    console.log("test");
+    private = document.getElementById("private");
+    public = document.getElementById("public");
+    domain_field = document.getElementById("domain_field");
+    if (public.checked) {
+        domain_field.style.display = "block";
+    } else {
+        domain_field.style.display = "none";
+    }
+}
+</script>
+
+{% endblock %}

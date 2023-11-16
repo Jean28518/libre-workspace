@@ -1,0 +1,58 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Module</h2>
+
+<p>Wählen Sie aus, welche Module installiert werden sollen.</p>
+
+{% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+<form method="post">  
+    <h3>Cloud</h3>
+    <fieldset>
+        <label for="nextcloud">
+          <input type="checkbox" id="nextcloud" name="nextcloud" role="switch" checked onclick="change()">
+          Nextcloud - Cloudspeicher, Kontakte, Kalender, Aufgaben, Notizen
+        </label>
+    </fieldset>
+    
+    <label for="online_office" id="online_office">Online Office
+    <select id="online_office" required>
+        <option value="collabora" selected>Collabora Online (perfekt für .odt, .ods, .odp Dateien) (Libre Office-Formate)</option>
+        <option value="onlyoffice">Only Office (perfekt für .docx, .xls, .ppt Dateien) (Microsoft-Formate)</option>
+        <option value="deactivate">Deaktivieren</option>
+    </select>
+    </label>
+    
+    <h3>Kommunikation</h3>
+    <fieldset>
+        <label for="rocketchat">
+          <input type="checkbox" id="rocketchat" name="rocketchat" role="switch" checked>
+          Rocket.Chat - Chat für Teams
+        </label>
+
+        <label for="jitsi">
+          <input type="checkbox" id="jitsi" name="jitsi" role="switch" checked>
+          Jitsi - Videokonferenzen
+        </label>
+    </fieldset>
+        
+    
+    <input type="submit" value="Weiter">
+</form>
+
+<script>
+function change() {
+    console.log("test");
+    nextcloud = document.getElementById("nextcloud");
+    online_office = document.getElementById("online_office");
+    if (nextcloud.checked) {
+        online_office.style.display = "block";
+    } else {
+        online_office.style.display = "none";
+    }
+}
+</script>
+
+{% endblock %}

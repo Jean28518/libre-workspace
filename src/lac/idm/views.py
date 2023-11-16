@@ -10,6 +10,7 @@ from .ldap import get_user_information_of_cn, update_user_information_ldap, is_l
 from .idm import reset_password_for_email
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
 
 def signal_handler(context, user, request, exception, **kwargs):
     print("Context: " + str(context) + "\nUser: " + str(user) + "\nRequest: " + str(request) + "\nException: " + str(exception))
@@ -22,7 +23,9 @@ django_auth_ldap.backend.ldap_error.connect(signal_handler)
 
 # Create your views here.
 def index(request):
-    if request.user.is_authenticated:
+    if not settings.LINUX_ARBEITSPLATZ_CONFIGURED:
+        return redirect("welcome_index")
+    elif request.user.is_authenticated:
         user_information = get_user_information_of_cn(request.user.ldap_user.dn)
         return render(request, "idm/index.html", {"request": request, "user_information": user_information})
     return redirect(user_login)

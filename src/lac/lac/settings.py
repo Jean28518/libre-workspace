@@ -61,6 +61,7 @@ TEMPLATES = [
             BASE_DIR / "idm/templates",
             BASE_DIR / "unix/templates",
             BASE_DIR / "lac/templates",
+            BASE_DIR / "welcome/templates",
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -77,7 +78,7 @@ TEMPLATES = [
 AUTHENTICATION_BACKENDS = ["django_auth_ldap.backend.LDAPBackend"]
 
 # LDAP Settings
-AUTH_LDAP_SERVER_URI = os.getenv("AUTH_LDAP_SERVER_URI")
+AUTH_LDAP_SERVER_URI = os.getenv("AUTH_LDAP_SERVER_URI", "")
 AUTH_LDAP_DC = os.getenv("AUTH_LDAP_DC")
 AUTH_LDAP_BIND_DN = os.getenv("AUTH_LDAP_BIND_DN")
 AUTH_LDAP_BIND_PASSWORD = os.getenv("AUTH_LDAP_BIND_PASSWORD")
@@ -184,3 +185,5 @@ EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")
 
 # Other Enviromental Settings
 NEXTCLOUD_INSTALLATION_DIRECTORY = os.getenv("NEXTCLOUD_INSTALLATION_DIRECTORY", "/var/www/nextcloud/")
+
+LINUX_ARBEITSPLATZ_CONFIGURED = os.getenv("LINUX_ARBEITSPLATZ_CONFIGURED", "false").lower() == "true"

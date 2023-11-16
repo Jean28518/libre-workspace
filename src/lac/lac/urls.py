@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("idm.urls")),
     path("unix/", include("unix.urls")),
+    path("welcome/", include("welcome.urls")),
 
 ]

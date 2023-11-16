@@ -6,8 +6,11 @@ import base64
 
 
 def get_user_information_of_cn(cn):
-    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
-    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    try:
+        conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+        conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    except LDAPError as e:
+        return None
 
     dn = ldap_get_dn_of_cn(cn)
 
