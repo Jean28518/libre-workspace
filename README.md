@@ -34,7 +34,7 @@ central.int.de {
 ## How to develop
 
 ```bash
-sudo apt-get install libldap2-dev python3-venv libsasl2-dev
+sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev
 cd src/lac/
 python3 -m venv .env
 cd ../../
