@@ -37,7 +37,7 @@ def backup_settings(request):
             unix.set_backup_enabled(form.cleaned_data["enabled"])
             unix.set_value("BORG_REPOSITORY", form.cleaned_data["borg_repository"])
             unix.set_value("BORG_ENCRYPTION", "true" if form.cleaned_data["borg_encryption"] else "false")
-            unix.set_value("BORG_PASSPHRASE", form.cleaned_data["borg_passphrase"])
+            unix.set_value("BORG_PASSPHRASE", form.cleaned_data["borg_passphrase"].replace("$", "\$"))
             unix.set_value("BORG_BACKUP_TIME", form.cleaned_data["daily_backup_time"])
             unix.set_value("BORG_KEEP_DAILY", form.cleaned_data["keep_daily_backups"])
             unix.set_value("BORG_KEEP_WEEKLY", form.cleaned_data["keep_weekly_backups"])
