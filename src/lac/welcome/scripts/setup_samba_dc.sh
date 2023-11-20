@@ -5,15 +5,14 @@
 # ADMIN_PASSWORD
 export DEBIAN_FRONTEND=noninteractive
 
-# secomd domain label: First part of $DOMAIN
 SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`
+FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`
 
 ## Setup DNS-Environment ##################################
 echo "$IP la.$DOMAIN" >> /etc/hosts # IP of the server itself
 
 # For ubuntu systems
 systemctl disable --now systemd-resolved
-unlink /etc/resolv.conf
 
 # Make sure we don't have dnsmasq installed
 sudo apt purge dnsmasq -y
@@ -49,7 +48,7 @@ export SAMBA_DNS_FORWARDER=$IP
 # Administrator password
 export SAMBA_ADMIN_PASSWORD=$ADMIN_PASSWORD
 
-samba-tool domain provision --realm=$SCND_DOMAIN_LABEL --domain=$DOMAIN --adminpass=$ADMIN_PASSWORD
+samba-tool domain provision --realm=$DOMAIN --domain=la.$DOMAIN --adminpass=$ADMIN_PASSWORD
 
 mv /etc/krb5.conf /etc/krb5.conf.orig
 cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
@@ -102,10 +101,10 @@ ufw allow ldaps
 
 # Add these subdomains to samba dns server:
 # .la .cloud .office .portal .central .chat .meet
-samba-tool dns add la.$DOMAIN $SCND_DOMAIN_LABEL la A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $SCND_DOMAIN_LABEL cloud A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $SCND_DOMAIN_LABEL office A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $SCND_DOMAIN_LABEL portal A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $SCND_DOMAIN_LABEL central A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $SCND_DOMAIN_LABEL chat A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $SCND_DOMAIN_LABEL meet A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN la A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN cloud A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN office A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN portal A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN central A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN chat A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN meet A $IP -U administrator%$ADMIN_PASSWORD
