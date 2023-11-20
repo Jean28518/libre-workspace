@@ -6,9 +6,6 @@
 # DOMAIN
 # IP
 
-export DOMAIN=int.de
-export IP=192.168.254.22
-
 # Disable internal DNS and install dnsmasq
 
 export DEBIAN_FRONTEND=noninteractive

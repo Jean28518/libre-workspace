@@ -88,6 +88,8 @@ chmod 600 myKey.pem
 # tls cafile   =
 
 echo "[global]" >> /etc/samba/smb.conf
+sed -i "s/dns forwarder/#dns forwarder/g" /etc/samba/smb.conf
+echo "dns forwarder = 208.67.222.222" >> /etc/samba/smb.conf
 echo "tls enabled  = yes" >> /etc/samba/smb.conf
 echo "tls keyfile  = /etc/samba/tls/myKey.pem" >> /etc/samba/smb.conf
 echo "tls certfile = /etc/samba/tls/myCert.pem" >> /etc/samba/smb.conf

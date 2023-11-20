@@ -5,9 +5,6 @@
 # ADMIN_PASSWORD
 
 
-# Get PHP-Version
-PHP_VERSION=`php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1,2`
-
 SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`
 FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`
 DC_DC="dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
@@ -15,7 +12,10 @@ DC_DC="dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
 
 ## Setup Nextcloud #########################################
 
-apt install caddy mariadb-server php-gd php-mysql php-curl php-mbstring php-intl php-gmp php-bcmath php-xml php-imagick libmagickcore-6.q16-6-extra php-zip php-fpm php-redis php-apcu php-memcache unzip vim
+apt install caddy mariadb-server php-gd php-mysql php-curl php-mbstring php-intl php-gmp php-bcmath php-xml php-imagick libmagickcore-6.q16-6-extra php-zip php-fpm php-redis php-apcu php-memcache unzip vim -y
+
+# Get PHP-Version
+PHP_VERSION=`php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1,2`
 
 # Setup mysql database
 mysql --execute "CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY 'eemoi2Sh';"
@@ -29,7 +29,7 @@ unzip latest.zip
 sudo mkdir -p /var/www/
 sudo cp -r nextcloud /var/www/
 sudo chown -R www-data:www-data /var/www/nextcloud
-#rm latest.zip
+rm latest.zip
 
 # Add the content of caddy_nextcloud_entry.txt to /etc/caddy/Caddyfile
 cat caddy_nextcloud_entry.txt >> /etc/caddy/Caddyfile
@@ -85,13 +85,15 @@ systemctl restart php*
 
 sudo -u www-data php /var/www/nextcloud/occ app:enable user_ldap
 sudo -u www-data php /var/www/nextcloud/occ ldap:create-empty-config
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapHost la.$DOMAIN
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapHost ldaps://la.$DOMAIN
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapPort 636
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBase "dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseUsers "cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "cn=Administrator,cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "$ADMIN_PASSWORD"
 # Disable the ssl certificate validation
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapTLS 0
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 turnOffCertCheck 1
 # custom ldap request (user search filter)
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilter "(objectclass=*)"
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilter "(&(&(|(objectclass=*)))(|(cn=%uid)(|(mail=%uid))))"
