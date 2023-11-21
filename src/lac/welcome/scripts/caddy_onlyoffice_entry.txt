@@ -1,0 +1,8 @@
+office.SED_DOMAIN {
+    #tls internal
+    header {
+        X-Forwarded-Proto: https;
+        access-control-allow-origin: *;
+    }
+    reverse_proxy http://localhost:10923
+}
