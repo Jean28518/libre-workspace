@@ -6,13 +6,12 @@
 mkdir -p /root/onlyoffice
 
 
-echo "docker run -i -t -d -p 10923:80 --restart=unless-stopped --name onlyoffice -e JWT_ENABLED='true' -e JWT_SECRET='$ADMIN_PASSWORD' onlyoffice/documentserver" > /root/onlyoffice/run.sh
+echo "docker run -i -t -d -p 10923:80 --restart=unless-stopped --name onlyoffice -e JWT_ENABLED='true' -e JWT_SECRET='$ADMIN_PASSWORD' onlyoffice/documentserver --add-host cloud.$DOMAIN:$IP" > /root/onlyoffice/run.sh
 
 bash /root/onlyoffice/run.sh
 
 if [ $DOMAIN = "int.de" ] ; then
   docker exec onlyoffice sed -i 's/"rejectUnauthorized": true/"rejectUnauthorized": false/g' /etc/onlyoffice/documentserver/default.json
-  docker exec onlyoffice echo "$IP cloud.$DOMAIN" >> /etc/hosts
   docker restart onlyoffice
 fi
 

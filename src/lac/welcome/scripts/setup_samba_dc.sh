@@ -5,8 +5,9 @@
 # ADMIN_PASSWORD
 export DEBIAN_FRONTEND=noninteractive
 
-SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`
-FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`
+# Thrd Level:                                       # subdomain
+SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`    # int
+FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`    # de
 
 ## Setup DNS-Environment ##################################
 echo "$IP la.$DOMAIN" >> /etc/hosts # IP of the server itself
