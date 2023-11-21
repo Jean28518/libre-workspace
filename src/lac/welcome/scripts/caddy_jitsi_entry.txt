@@ -1,0 +1,3 @@
+meet.SED_DOMAIN {
+    reverse_proxy localhost:30323
+}

@@ -111,3 +111,12 @@ samba-tool dns add la.$DOMAIN $DOMAIN portal A $IP -U administrator%$ADMIN_PASSW
 samba-tool dns add la.$DOMAIN $DOMAIN central A $IP -U administrator%$ADMIN_PASSWORD
 samba-tool dns add la.$DOMAIN $DOMAIN chat A $IP -U administrator%$ADMIN_PASSWORD
 samba-tool dns add la.$DOMAIN $DOMAIN meet A $IP -U administrator%$ADMIN_PASSWORD
+
+# Add all these entries to /etc/hosts
+echo "$IP la.$DOMAIN" >> /etc/hosts # Samba DC
+echo "$IP cloud.$DOMAIN" >> /etc/hosts # Nextcloud
+echo "$IP office.$DOMAIN" >> /etc/hosts # Online Office
+echo "$IP portal.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Portal
+echo "$IP central.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Central
+echo "$IP chat.$DOMAIN" >> /etc/hosts # Rocket.Chat
+echo "$IP meet.$DOMAIN" >> /etc/hosts # Jitsi Meet
