@@ -1,0 +1,5 @@
+chat.SED_DOMAIN {
+    #tls internal
+    reverse_proxy localhost:18423
+}
+

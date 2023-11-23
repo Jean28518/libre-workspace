@@ -13,6 +13,26 @@ fi
 
 python3 -m venv .env
 
+ln -s /usr/bin/python3 /usr/bin/python
+
 source .env/bin/activate
 pip install django python-ldap django-auth-ldap gunicorn
 python manage.py migrate --no-input
+
+# Get the current IP-Adress
+# Get the output of hostname -I and cut the first part of it
+IP=`hostname -I | cut -d' ' -f1`
+
+echo ":443 {
+    tls internal {
+        on_demand
+    }
+    handle_path /static* {
+        root * /var/www/linux-arbeitsplatz-static
+        file_server
+        encode zstd gzip
+    }
+    reverse_proxy localhost:11123
+}
+
+" >> /etc/caddy/Caddyfile

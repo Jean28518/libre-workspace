@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+import os, subprocess
 
 # Create your views here.
 def welcome_index(request):
@@ -23,7 +24,15 @@ def welcome_index(request):
 def welcome_select_apps(request):
     if request.method == "POST":
         request.session["nextcloud"] = request.POST.get("nextcloud", "")
-        request.session["onlineoffice"] = request.POST.get("onlineoffice", "")
+        if request.POST.get("online_office", "") == "onlyoffice":
+            request.session["onlineoffice"] = "onlyoffice"
+            request.session["collabora"] = ""
+        elif request.POST.get("online_office", "") == "collabora":
+            request.session["onlineoffice"] = "collabora"
+            request.session["onlyoffice"] = ""
+        else:
+            request.session["onlyoffice"] = ""
+            request.session["collabora"] = ""
         request.session["rocketchat"] = request.POST.get("rocketchat", "")
         request.session["jitisi"] = request.POST.get("jitisi", "")
         return redirect("welcome_dns_settings")
@@ -41,6 +50,8 @@ def welcome_dns_settings(request):
                 message = "Bitte geben Sie eine Domain an."
             elif request.session["domain"].count(".") != 1:
                 message = "Bitte stellen Sie sicher, dass Sie nur die Domain angeben und keine Subdomain."
+        else:
+            request.session["domain"] = "int.de"
         if message == "":
             return redirect("welcome_email_settings")
     return render(request, "welcome/welcome_dns_settings.html")
@@ -48,17 +59,34 @@ def welcome_dns_settings(request):
 
 def welcome_email_settings(request):
     if request.method == "POST":
-        skip = request.POST.get("skip", "")
-        if skip == "":
-            request.session["mailhost"] = request.POST.get("mailhost", "")
-            request.session["mailport"] = request.POST.get("mailport", "")
-            request.session["mailuser"] = request.POST.get("mailuser", "")
-            request.session["mailpassword"] = request.POST.get("mailpassword", "")
-            request.session["mailencryption"] = request.POST.get("mailencryption", "")
+        request.session["mailhost"] = request.POST.get("mailhost", "")
+        request.session["mailport"] = request.POST.get("mailport", "")
+        request.session["mailuser"] = request.POST.get("mailuser", "")
+        request.session["mailpassword"] = request.POST.get("mailpassword", "")
+        request.session["mailencryption"] = request.POST.get("mailencryption", " ")
         ## TODO: Start here the installation process
         return redirect("installation_running")
     return render(request, "welcome/welcome_email_settings.html", {"message": ""})
 
 
 def installation_running(request):
+    os.environ["DOMAIN"] = request.session["domain"]
+    os.environ["ADMIN_PASSWORD"] = request.session["password"]
+    # Get output of script: in lac/welcome/scripts/get_ip.sh
+    os.environ["IP"] = os.popen("bash /usr/share/linux-arbeitsplatz/welcome/scripts/get_ip.sh").read()
+    os.environ["EMAIL_HOST"] = request.session["mailhost"]
+    os.environ["EMAIL_PORT"] = request.session["mailport"]
+    os.environ["EMAIL_HOST_USER"] = request.session["mailuser"]
+    os.environ["EMAIL_HOST_PASSWORD"] = request.session["mailpassword"]
+    os.environ["MAIL_ENCRYPTION"] = request.session["mailencryption"]
+    # Run basics script
+    os.environ["NEXTCLOUD"] = request.session["nextcloud"]
+    os.environ["ONLYOFFICE"] = request.session["onlyoffice"]
+    os.environ["COLLABORA"] = request.session["collabora"]
+    os.environ["ROCKETCHAT"] = request.session["rocketchat"]
+    os.environ["JITSI"] = request.session["jitisi"]
+
+    # Run installation script
+    subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/welcome/scripts/" )
+
     return render(request, "welcome/installation_running.html")

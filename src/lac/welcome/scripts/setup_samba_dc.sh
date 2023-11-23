@@ -81,6 +81,8 @@ openssl req -newkey rsa:2048 -keyout myKey.pem -nodes -x509 -days 36500 -out myC
 
 chmod 600 myKey.pem
 
+cd -
+
 # In the /etc/samba/smb.conf we want to append the following lines:
 # [global]
 # tls enabled  = yes

@@ -1,5 +1,6 @@
 # Set this to True, if Linux-Arbeitsplatz should not run the welcome assistant.
 # For that exspecially Active Directory Server should be configured.
+# Enable the unix service if you skip the automated install: /usr/bin/systemctl enable linux-arbeitsplatz-unix.service
 export LINUX_ARBEITSPLATZ_CONFIGURED=False
 
 # Mail Settings

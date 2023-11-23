@@ -159,3 +159,6 @@ cython_debug/
 #.idea/
 
 cfg
+
+linux-arbeitsplatz.deb
+linux-arbeitsplatz.iso

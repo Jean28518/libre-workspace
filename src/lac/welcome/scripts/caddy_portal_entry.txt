@@ -1,0 +1,8 @@
+portal.SED_DOMAIN SED_DOMAIN_DELETE_PUBLIC {
+  #tls internal
+  root * /var/www/linux-arbeitsplatz-portal
+  encode gzip
+  php_fastcgi unix//var/run/php/php-fpm.sock
+  file_server
+}
+
