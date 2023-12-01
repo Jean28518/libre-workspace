@@ -10,12 +10,30 @@ def welcome_index(request):
         password_repeat = request.POST["password_repeat"]
         if password.strip() == "":
             message = "Passwort darf nicht leer sein."
+        if password.count(" ") > 0:
+            message = "Passwort darf keine Leerzeichen enthalten."
+        # Check if password contains at least one number
+        if not any(char.isdigit() for char in password):
+            message = "Passwort muss mindestens eine Zahl enthalten."
+        # Check if password contains at least one letter
+        if not any(char.isalpha() for char in password):
+            message = "Passwort muss mindestens einen Buchstaben enthalten."
+        # Check if password contains at least one special character
+        special_characters = "!\"%&'()*+,-./:;<=>?@[\]^_`{|}~"
+        if not any(char in special_characters for char in password):
+            message = "Passwort muss mindestens ein Sonderzeichen enthalten."
+        # If password contains "$'# it is forbidden
+        forbidden_characters = "$'#"
+        if any(char in forbidden_characters for char in password):
+            message = "Passwort darf keine der folgenden Zeichen enthalten: $'#"
+        # Check if password is at least 8 characters long
+        if len(password) < 8:
+            message = "Passwort muss mindestens 8 Zeichen lang sein."
         if password == password_repeat:
             request.session["password"] = password
         else:
             message = "Passwörter stimmen nicht überein. Bitte versuchen Sie es erneut."
         if message == "":
-            print("Mami")
             return redirect("welcome_select_apps")
 
     return render(request, "welcome/welcome_index.html", {"message": message})
@@ -73,7 +91,7 @@ def installation_running(request):
     os.environ["DOMAIN"] = request.session["domain"]
     os.environ["ADMIN_PASSWORD"] = request.session["password"]
     # Get output of script: in lac/welcome/scripts/get_ip.sh
-    os.environ["IP"] = os.popen("bash /usr/share/linux-arbeitsplatz/welcome/scripts/get_ip.sh").read()
+    os.environ["IP"] = os.popen("bash /usr/share/linux-arbeitsplatz/welcome/scripts/get_ip.sh").read().replace("\n", "")
     os.environ["EMAIL_HOST"] = request.session["mailhost"]
     os.environ["EMAIL_PORT"] = request.session["mailport"]
     os.environ["EMAIL_HOST_USER"] = request.session["mailuser"]

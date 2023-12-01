@@ -91,17 +91,19 @@ sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBase "dc=$SC
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseUsers "cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "cn=Administrator,cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "$ADMIN_PASSWORD"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentPassword "$ADMIN_PASSWORD"
 # Disable the ssl certificate validation
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 turnOffCertCheck 1
 # custom ldap request (user search filter)
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilter "(objectclass=*)"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilter "(&(&(|(objectclass=*)))(|(cn=%uid)(|(mail=%uid))))"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilter "(&(objectclass=*)(|(cn=%uid)(|(mailPrimaryAddress=%uid)(mail=%uid))))"
 # custom ldap request (group search filter)
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilter "(|(cn=groups))"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilter "(&(|(objectclass=group)))"
 # Group member association member(AD)
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupMemberAssocAttr "member"
 # mail field
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapEmailAttribute "mail"
+# Set configuration active
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapConfigurationActive 1
 
 systemctl restart php*

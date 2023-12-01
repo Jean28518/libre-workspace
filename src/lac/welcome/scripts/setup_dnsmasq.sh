@@ -39,6 +39,7 @@ echo "$IP portal.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Portal
 echo "$IP central.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Central
 echo "$IP chat.$DOMAIN" >> /etc/hosts # Rocket.Chat
 echo "$IP meet.$DOMAIN" >> /etc/hosts # Jitsi Meet
+echo "$IP $DOMAIN" >> /etc/hosts # Domain itself
 
 # Finally switch the services
 systemctl stop systemd-resolved.service
