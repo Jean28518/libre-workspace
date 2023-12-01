@@ -34,10 +34,10 @@ sed -i "s/:443/central.$DOMAIN/g" /etc/caddy/Caddyfile
 sed -i "s/LINUX_ARBEITSPLATZ_CONFIGURED=False/LINUX_ARBEITSPLATZ_CONFIGURED=True/g" /usr/share/linux-arbeitsplatz/cfg
 
 # Remove the lines with "EMAIL" in it
-sed -i "/EMAIL/d"/usr/share/linux-arbeitsplatz/cfg
+sed -i "/EMAIL/d" /usr/share/linux-arbeitsplatz/cfg
 
 # Remove the lines with "AUTH_LDAP" in it
-sed -i "/AUTH_LDAP/d"/usr/share/linux-arbeitsplatz/cfg
+sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
 
 # Add the EMAIL settings to the cfg file
 echo "export EMAIL_HOST=\"$EMAIL_HOST\"" >>/usr/share/linux-arbeitsplatz/cfg
@@ -60,7 +60,7 @@ echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,dc=$SCND_DOMAIN_LABEL,dc=$F
 echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,DC=$SCND_DOMAIN_LABEL,DC=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
 
 # Set the password of the systemv user
-echo "systemv:$ADMIN_PASSWORD" | chpasswd
+chpasswd <<<"systemv:$ADMIN_PASSWORD"
 
 # Enable the unix service
 /usr/bin/systemctl enable linux-arbeitsplatz-unix.service
