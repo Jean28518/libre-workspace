@@ -65,5 +65,7 @@ chpasswd <<<"systemv:$ADMIN_PASSWORD"
 # Enable the unix service
 /usr/bin/systemctl enable linux-arbeitsplatz-unix.service
 
+rm installation_running
+
 # After everything is configured, we need to restart the whole server
 reboot

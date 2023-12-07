@@ -52,7 +52,7 @@ def welcome_select_apps(request):
             request.session["onlyoffice"] = ""
             request.session["collabora"] = ""
         request.session["rocketchat"] = request.POST.get("rocketchat", "")
-        request.session["jitisi"] = request.POST.get("jitisi", "")
+        request.session["jitsi"] = request.POST.get("jitsi", "")
         return redirect("welcome_dns_settings")
 
     return render(request, "welcome/welcome_select_apps.html")
@@ -102,9 +102,11 @@ def installation_running(request):
     os.environ["ONLYOFFICE"] = request.session["onlyoffice"]
     os.environ["COLLABORA"] = request.session["collabora"]
     os.environ["ROCKETCHAT"] = request.session["rocketchat"]
-    os.environ["JITSI"] = request.session["jitisi"]
+    os.environ["JITSI"] = request.session["jitsi"]
 
     # Run installation script
-    subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/welcome/scripts/" )
-
+    # if file /usr/share/linux-arbeitsplatz/welcome/scripts/installation_running exists
+    if not os.path.isfile("/usr/share/linux-arbeitsplatz/welcome/scripts/installation_running"):
+        subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/welcome/scripts/" )
+        
     return render(request, "welcome/installation_running.html")

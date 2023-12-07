@@ -20,7 +20,7 @@ services:
       - 18423:3000
 
   mongodb:
-    image: docker.io/bitnami/mongodb:5.0
+    image: docker.io/bitnami/mongodb:4.4
     restart: unless-stopped
     volumes:
       - mongodb_data:/bitnami/mongodb

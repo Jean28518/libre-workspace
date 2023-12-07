@@ -10,7 +10,8 @@ SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`    # int
 FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`    # de
 
 ## Setup DNS-Environment ##################################
-echo "$IP la.$DOMAIN" >> /etc/hosts # IP of the server itself
+hostnamectl set-hostname la
+echo "$IP la.$DOMAIN la" >> /etc/hosts # IP of the server itself
 
 # For ubuntu systems
 systemctl disable --now systemd-resolved

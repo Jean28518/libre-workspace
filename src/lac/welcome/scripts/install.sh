@@ -1,3 +1,6 @@
+# This will be removed in the setup_rest_of_linux_arbeitsplatz.sh script.
+touch installation_running
+
 # This script installs the whole linux-arbeitsplatz how defined in the environment variables.
 . basics.sh
 
