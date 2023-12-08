@@ -43,10 +43,10 @@ def welcome_select_apps(request):
     if request.method == "POST":
         request.session["nextcloud"] = request.POST.get("nextcloud", "")
         if request.POST.get("online_office", "") == "onlyoffice":
-            request.session["onlineoffice"] = "onlyoffice"
+            request.session["onlyoffice"] = "onlyoffice"
             request.session["collabora"] = ""
         elif request.POST.get("online_office", "") == "collabora":
-            request.session["onlineoffice"] = "collabora"
+            request.session["collabora"] = "collabora"
             request.session["onlyoffice"] = ""
         else:
             request.session["onlyoffice"] = ""
