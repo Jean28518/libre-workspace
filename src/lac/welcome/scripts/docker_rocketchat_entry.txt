@@ -10,7 +10,7 @@ services:
       PORT: 3000
       DEPLOY_METHOD: "docker"
       OVERWRITE_SETTING_Show_Setup_Wizard: "completed" # You can uncomment this if you want to go through the setup wizard
-#      ADMIN_USERNAME: Administrator
+      ADMIN_USERNAME: Administrator
       ADMIN_NAME: Administrator
       ADMIN_EMAIL: webmaster@SED_DOMAIN
       ADMIN_PASS: SED_PASSWORD

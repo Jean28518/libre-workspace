@@ -24,7 +24,7 @@ django_auth_ldap.backend.ldap_error.connect(signal_handler)
 # Create your views here.
 def index(request):
     if not settings.LINUX_ARBEITSPLATZ_CONFIGURED:
-        return redirect("welcome_index")
+        return redirect("welcome_start")
     elif request.user.is_authenticated:
         user_information = get_user_information_of_cn(request.user.ldap_user.dn)
         return render(request, "idm/index.html", {"request": request, "user_information": user_information})

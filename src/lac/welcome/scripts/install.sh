@@ -37,5 +37,10 @@ if [ ! -z "$JITSI" ]; then
     . setup_jitsi.sh
 fi
 
+# Distribute the certificates for local installations
+if [ $DOMAIN = "int.de" ] ; then
+    . setup_internal_https.sh
+fi
+
 # Install the rest of the linux-arbeitsplatz
 . setup_rest_of_linux_arbeitsplatz.sh

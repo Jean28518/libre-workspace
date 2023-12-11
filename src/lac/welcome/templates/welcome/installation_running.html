@@ -4,16 +4,12 @@
 
 <h2>Installation...</h2>
 
+{% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
 
 <p>
     Vielen Dank für Ihre Zeit! <br> Der Linux-Arbeitsplatz installiert sich nun selbstständig. Dies kann einige Minuten dauern. <br>
-    Die Seite kann zu manchen Zeitpunkten nicht erreichbar sein. Bitte stellen Sie sicher, dass der Server eine durchgehende, stabile Internetverbindung hat. <br>
+    Diese Seite kann zu manchen Zeitpunkten nicht erreichbar sein. Bitte stellen Sie sicher, dass der Server eine durchgehende, stabile Internetverbindung hat. <br>
 </p>    
-
-<h3>So erreichen Sie den Linux-Arbeitsplatz nach der Installation:</h3>
-<p>
-    {%include "welcome/access.html"%}
-</p>
 
 <p>Nach der Installation startet Ihr Server neu. Dann ist der Linux-Arbeitsplatz einsatzbereit!</p>
 
@@ -24,4 +20,13 @@
 <center>
     <span class="material-icons md-128">download</span> 
 </center>
+
+<br>
+<br>
+
+<h3>So erreichen Sie den Linux-Arbeitsplatz nach der Installation:</h3>
+<p>
+    {%include "welcome/access.html"%}
+</p>
+
 {% endblock %}

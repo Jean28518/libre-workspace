@@ -15,6 +15,22 @@ cd /var/www/
 git clone https://github.com/Jean28518/linux-arbeitsplatz-portal.git
 cd -
 
+# Add access page reverse proxy on ip address
+echo "$IP {
+    #tls internal
+    handle_path /static* {
+        root * /var/www/linux-arbeitsplatz-static
+        file_server
+        encode zstd gzip
+    } 
+    handle {
+    rewrite * /welcome/access
+    reverse_proxy localhost:11123
+    }
+}
+
+" >> /etc/hosts
+
 cat caddy_portal_entry.txt >> /etc/caddy/Caddyfile
 if [ $DOMAIN = "int.de" ] ; then
   sed -i "s/#tls internal/tls internal/g" /etc/caddy/Caddyfile
@@ -23,6 +39,7 @@ else
   sed -i "s/SED_DOMAIN_DELETE_PUBLIC//g" /etc/caddy/Caddyfile
 fi
 sed -i "s/SED_DOMAIN/$DOMAIN/g" /etc/caddy/Caddyfile
+
 
 systemctl reload caddy
 

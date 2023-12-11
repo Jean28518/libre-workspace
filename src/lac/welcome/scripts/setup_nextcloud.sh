@@ -55,6 +55,20 @@ sudo -u www-data php /var/www/nextcloud/occ config:system:set default_phone_regi
 # Disable the dashboard app
 sudo -u www-data php /var/www/nextcloud/occ app:disable dashboard
 sudo -u www-data php /var/www/nextcloud/occ app:disable activity
+sudo -u www-data php /var/www/nextcloud/occ app:disable firstrunwizard
+sudo -u www-data php /var/www/nextcloud/occ app:disable support
+sudo -u www-data php /var/www/nextcloud/occ app:disable nextcloud_announcements
+
+
+# Install Apps:
+sudo -u www-data php /var/www/nextcloud/occ app:install calendar
+sudo -u www-data php /var/www/nextcloud/occ app:install contacts
+sudo -u www-data php /var/www/nextcloud/occ app:install deck
+sudo -u www-data php /var/www/nextcloud/occ app:install mail
+sudo -u www-data php /var/www/nextcloud/occ app:install notes
+sudo -u www-data php /var/www/nextcloud/occ app:install tasks
+sudo -u www-data php /var/www/nextcloud/occ app:install collectives
+sudo -u www-data php /var/www/nextcloud/occ app:install drawio
 
 
 # PHP-Optimizations
@@ -62,6 +76,8 @@ sudo -u www-data php /var/www/nextcloud/occ app:disable activity
 sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/php.ini
 # upload_max_filesize = 50 G
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
+echo "opcache.interned_strings_buffer = 128" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "opcache.memory_consumption = 2048" >> /etc/php/$PHP_VERSION/fpm/php.ini
 
 # Uncomment the environment variables in /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 sed -i "s/;env\[HOSTNAME\]/env[HOSTNAME]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf

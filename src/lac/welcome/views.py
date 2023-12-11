@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
-import os, subprocess
+import os
+import subprocess
+from django.conf import settings
+
+subdomains = ["cloud", "office", "portal", "central", "la", "chat", "meet"]
 
 # Create your views here.
-def welcome_index(request):
+def welcome_start(request):
     # If request is POST
     message = ""
     if request.method == "POST":
@@ -36,7 +40,7 @@ def welcome_index(request):
         if message == "":
             return redirect("welcome_select_apps")
 
-    return render(request, "welcome/welcome_index.html", {"message": message})
+    return render(request, "welcome/welcome_start.html", {"message": message})
 
 
 def welcome_select_apps(request):
@@ -72,7 +76,7 @@ def welcome_dns_settings(request):
             request.session["domain"] = "int.de"
         if message == "":
             return redirect("welcome_email_settings")
-    return render(request, "welcome/welcome_dns_settings.html")
+    return render(request, "welcome/welcome_dns_settings.html", {"message": message, "subdomains": subdomains})
 
 
 def welcome_email_settings(request):
@@ -88,10 +92,11 @@ def welcome_email_settings(request):
 
 
 def installation_running(request):
+    message = ""
     os.environ["DOMAIN"] = request.session["domain"]
     os.environ["ADMIN_PASSWORD"] = request.session["password"]
     # Get output of script: in lac/welcome/scripts/get_ip.sh
-    os.environ["IP"] = os.popen("bash /usr/share/linux-arbeitsplatz/welcome/scripts/get_ip.sh").read().replace("\n", "")
+    os.environ["IP"] = os.popen("hostname -I").read().split(" ")[0]
     os.environ["EMAIL_HOST"] = request.session["mailhost"]
     os.environ["EMAIL_PORT"] = request.session["mailport"]
     os.environ["EMAIL_HOST_USER"] = request.session["mailuser"]
@@ -107,6 +112,31 @@ def installation_running(request):
     # Run installation script
     # if file /usr/share/linux-arbeitsplatz/welcome/scripts/installation_running exists
     if not os.path.isfile("/usr/share/linux-arbeitsplatz/welcome/scripts/installation_running"):
-        subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/welcome/scripts/" )
-        
-    return render(request, "welcome/installation_running.html")
+        if os.path.isfile("/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"):
+            subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/welcome/scripts/" )
+        else:
+            print("WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation.")
+            message = "WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
+    
+    if not "cert" in subdomains:
+        subdomains.append("cert")
+
+    variables = {
+        "message": message, 
+        "subdomains": subdomains, 
+        "domain": os.environ["DOMAIN"],
+        "ip": os.environ["IP"],
+    }
+
+    # Create rendered access_rendered.html
+    with open(f'{settings.BASE_DIR}/welcome/templates/welcome/access_rendered.html', 'w') as f:
+        string = render(request, "welcome/access.html", variables).content.decode("utf-8")
+        string = "{% extends \"lac/base.html\" %}\n{% block content %}\n" + string + "\n{% endblock %}"
+        f.write(string)
+
+    variables["installation_running"] = True
+    return render(request, "welcome/installation_running.html", variables)
+
+
+def access(request):
+    return render(request, "welcome/access_rendered.html")

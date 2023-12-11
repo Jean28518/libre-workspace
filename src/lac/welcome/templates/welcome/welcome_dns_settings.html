@@ -41,13 +41,9 @@
 
         <strong>oder</strong> verwenden Sie folgende <strong>Subdomains</strong> und stellen folgende DNS-Einträge sicher:
         <ul>
-            <li>Typ: A | Name: cloud | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: office | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: portal | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: central | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: la | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: chat | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: meet | Ziel: IP-Adresses dieses Servers</li>
+            {% for subdomain in subdomains %}
+                <li>Typ: A | Name: {{subdomain}} | Ziel: IP-Adresses dieses Servers</li>
+            {% endfor %}
         </ul>
     </div>
 
@@ -56,23 +52,23 @@
     <input type="submit" value="Weiter">
 </form>
 
-<h3>Erklärung</h3>
+    <h3>Erklärung</h3>
 
-<h4>Öffentlich</h4>
 
-<p>
-    Der Linux-Arbeitsplatz ist über das Internet erreichbar. Sie können sich von überall auf der Welt mit Ihrem Benutzerkonto anmelden.
-    Dies ist die einfachste Möglichkeit, um auf Ihren Linux-Arbeitsplatz zuzugreifen.
+    <h4>Lokal</h4>
+
+    <p>
+        Der Linux-Arbeitsplatz ist nur im lokalen Netzwerk (Zuhause) erreichbar. Sie können sich nur von Geräten aus Ihrem lokalen Netzwerk mit Ihrem Benutzerkonto anmelden.
+    <br>
+    <p>
+        
+    <h4>Öffentlich</h4>
+
+    <p>
+        Der Linux-Arbeitsplatz ist über das Internet erreichbar. Sie können sich von überall auf der Welt mit Ihrem Benutzerkonto anmelden.
+        Dies ist in der späteren Benutzung die einfachste Möglichkeit, um auf Ihren Linux-Arbeitsplatz zuzugreifen.
     <br>
 <p>
-
-<h4>Lokal</h4>
-
-<p>
-    Der Linux-Arbeitsplatz ist nur im lokalen Netzwerk (Zuhause) erreichbar. Sie können sich nur von Geräten aus Ihrem lokalen Netzwerk mit Ihrem Benutzerkonto anmelden.
-    <br>
-<p>
-
 
 
 <script>

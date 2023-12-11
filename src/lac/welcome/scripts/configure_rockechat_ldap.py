@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 
-client = MongoClient('mongodb://mongodb:27017/')
+client = MongoClient('mongodb://localhost:27017/')
 
 db = client.rocketchat
 
@@ -31,7 +31,7 @@ update_setting("LDAP_Port", 636)
 # Set LDAP_Authentication to True
 update_setting("LDAP_Authentication", True)
 # LDAP_Authentication_UserDN is the user that will be used to search for other users in the LDAP server
-update_setting("LDAP_Authentication_UserDN", f"cn=Administrator,dc={SCND_DOMAIN_LABEL},dc={FRST_DOMAIN_LABEL}")
+update_setting("LDAP_Authentication_UserDN", f"cn=Administrator,cn=users,dc={SCND_DOMAIN_LABEL},dc={FRST_DOMAIN_LABEL}")
 # LDAP_Authentication_Password
 update_setting("LDAP_Authentication_Password", ADMIN_PASSWORD)
 # LDAP_Encryption to ssl
@@ -44,3 +44,9 @@ update_setting("LDAP_BaseDN", f"cn=users,dc={SCND_DOMAIN_LABEL},dc={FRST_DOMAIN_
 update_setting("LDAP_AD_User_Search_Field", "cn,mail")
 # LDAP_Enable to True
 update_setting("LDAP_Enable", True)
+
+# Disable 2FA
+update_setting("Accounts_TwoFactorAuthentication_Enabled", False)
+
+# Set Registration Form to "Disabled"
+update_setting("Accounts_RegistrationForm", "Disabled")

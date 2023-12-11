@@ -1,5 +1,29 @@
-{% if internal %} 
+{% if domain == "int.de" %} 
     Stellen Sie auf Ihrem Router (und am besten auf Ihren Geräten) sicher, dass folgender DNS-Eintrag gesetzt ist: <strong>{{ ip }}</strong>
     In der Praxis zeigt sich leider manchmal, dass trotz richtiger DNS-Konfiguration aufgrund von Caches die Verbindungen nicht einwandfrei funktionieren.
-    Gegen solche Verbindungsprobleme können Sie bei Linux-Geräte e
+    Gegen solche Verbindungsprobleme können Sie bei Linux-Geräten folgende Einträge in der Datei <strong>/etc/hosts</strong> sicherstellen:
+    <pre>
+
+    {% for subdomain in subdomains %}{{ ip }} {{subdomain}}.{{ domain }}
+    {% endfor %}</pre>
+
+    <p>
+        Das Zertifikat für die https-Verbindungen können Sie {% if installation_running %}(nach der Installation){% endif %} jederzeit hier herunterladen: <a href="https://cert.{{ domain }}/lan.crt">https://cert.{{ domain }}/lan.crt</a>
+    </p>
 {% endif %}
+
+<br>
+
+<div class="grid">
+<a href="https://portal.{{domain}}" target="_blank" role="button">Zum Linux-Arbeitsplatz (portal.{{domain}})</a>
+</div>
+{% if installation_running %}
+<center>(Dieser Link funktioniert erst, wenn der Server fertig installiert ist und ggf. die DNS-Einträge aktualisiert wurden.)</center>
+{% endif %}
+
+<script>
+    setTimeout(function(){
+        window.location.reload(1);
+     }, 60000);
+</script>
+
