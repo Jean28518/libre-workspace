@@ -29,7 +29,7 @@ echo "$IP {
     }
 }
 
-" >> /etc/hosts
+" >> /etc/caddy/Caddyfile
 
 cat caddy_portal_entry.txt >> /etc/caddy/Caddyfile
 if [ $DOMAIN = "int.de" ] ; then
