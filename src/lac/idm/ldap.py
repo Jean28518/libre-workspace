@@ -6,6 +6,9 @@ import base64
 
 
 def get_user_information_of_cn(cn):
+    if not settings.AUTH_LDAP_ENABLED:
+        return None
+
     try:
         conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
         conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
@@ -165,6 +168,9 @@ def ldap_create_user(user_information):
     # conn.unbind_s()
 
 def ldap_get_all_users():
+    if not settings.AUTH_LDAP_ENABLED:
+        return []
+
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 

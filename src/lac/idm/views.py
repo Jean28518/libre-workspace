@@ -7,10 +7,12 @@ import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
 from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm
 from .ldap import get_user_information_of_cn, update_user_information_ldap, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
-from .idm import reset_password_for_email
+from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
+from django.contrib.auth.models import User
+
 
 def signal_handler(context, user, request, exception, **kwargs):
     print("Context: " + str(context) + "\nUser: " + str(user) + "\nRequest: " + str(request) + "\nException: " + str(exception))
@@ -18,16 +20,28 @@ def signal_handler(context, user, request, exception, **kwargs):
 django_auth_ldap.backend.ldap_error.connect(signal_handler)
 
 
+def ensure_superuser_exists():
+    if not settings.AUTH_LDAP_ENABLED:
+        if User.objects.filter(is_superuser=True).count() == 0:
+            User.objects.create_superuser(
+                username="Administrator",
+                first_name="Administrator",
+                password=settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP,
+                email="",
+            )
+            print("Created superuser 'Administrator' with password '{}'".format(settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP))
+
 
 
 
 # Create your views here.
 def index(request):
+    ensure_superuser_exists()
     if not settings.LINUX_ARBEITSPLATZ_CONFIGURED:
         return redirect("welcome_start")
     elif request.user.is_authenticated:
-        user_information = get_user_information_of_cn(request.user.ldap_user.dn)
-        return render(request, "idm/index.html", {"request": request, "user_information": user_information})
+        user_information = get_user_information(request.user)
+        return render(request, "idm/index.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED})
     return redirect(user_login)
 
 def user_login(request):
@@ -73,7 +87,7 @@ def user_settings(request):
         return render(request, "idm/user_settings.html", {"form": form, "message": "Die Änderungen wurden erfolgreich gespeichert!"})
 
     else:
-        user_information = get_user_information_of_cn(request.user.ldap_user.dn)
+        user_information = get_user_information(request.user)
         form = BasicUserForm(initial=user_information)
         return render(request, "idm/user_settings.html", {"form": form})    
 
@@ -97,8 +111,8 @@ def change_password(request):
         message = ""
         if form.is_valid():
             if form.cleaned_data["new_password"] == form.cleaned_data["new_password_repeat"]:
-                if is_ldap_user_password_correct(request.user.ldap_user.dn, form.cleaned_data["old_password"]):
-                    message = set_ldap_user_new_password(request.user.ldap_user.dn, form.cleaned_data["new_password"])
+                if is_user_password_correct(request.user, form.cleaned_data["old_password"]):
+                    message = set_user_new_password(request.user, form.cleaned_data["new_password"])
                     if message == None:
                         message = "Das Passwort wurde erfolgreich geändert!"
                 else:

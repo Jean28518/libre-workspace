@@ -7,6 +7,7 @@
 {% if user_information.admin %}
 
 <div class="grid">
+    {% if ldap_enabled %}
     <a class="secondary" href="{% url "user_overview" %}">
         <article style="text-align: center;">
             <span class="material-icons md-128">manage_accounts</span> 
@@ -21,6 +22,7 @@
             Gruppenadministration
         </article>
     </a>
+    {% endif %}
     <a class="secondary" href="{% url "unix_index" %}">
         <article style="text-align: center;">
             <span class="material-icons md-128">dns</span> 
@@ -44,6 +46,7 @@
 
 
 <div class="grid">
+    {% if ldap_enabled %}
     <a class="secondary" href="{% url "user_settings" %}">
         <article style="text-align: center;">
             <span class="material-icons md-128">account_circle</span> 
@@ -51,6 +54,7 @@
             Profileinstellungen
         </article>
     </a>
+    {% endif %}
     <a class="secondary" href="{% url "change_password" %}">
         <article style="text-align: center;">
             <span class="material-icons md-128">password</span> 

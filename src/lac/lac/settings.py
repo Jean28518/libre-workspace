@@ -75,7 +75,14 @@ TEMPLATES = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = ["django_auth_ldap.backend.LDAPBackend"]
+AUTH_LDAP_ENABLED = os.getenv("AUTH_LDAP_SERVER_URI", "") != ""
+
+if AUTH_LDAP_ENABLED:
+    AUTHENTICATION_BACKENDS = ["django_auth_ldap.backend.LDAPBackend"]
+else:
+    AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
+
+INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP = os.getenv("INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP", "admin")
 
 # LDAP Settings
 AUTH_LDAP_SERVER_URI = os.getenv("AUTH_LDAP_SERVER_URI", "")

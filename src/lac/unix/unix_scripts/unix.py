@@ -330,6 +330,9 @@ def get_rsync_history():
     rsync_history = open("history/rsync.log").read().replace("\n", "<br>")
     return rsync_history
 
+def is_nextcloud_available():
+    return os.path.isfile(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/config/config.php")
+
 # Format: [{"name": "user1", "path": "/path/to/user1"}, {"name": "user2", "path": "/path/to/user2"}]
 def get_nextcloud_user_directories():
     if not os.path.isfile(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/config/config.php"):

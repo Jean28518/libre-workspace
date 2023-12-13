@@ -85,8 +85,12 @@ def data_management(request):
     partitions = unix.get_partitions()
     data_export_status = unix.get_data_export_status()
     rsync_history = unix.get_rsync_history()
-    nextcloud_user_directories = unix.get_nextcloud_user_directories()
-    nextcloud_import_process_running = unix.nextcloud_import_process_running()
+    if unix.is_nextcloud_available():
+        nextcloud_user_directories = unix.get_nextcloud_user_directories()
+        nextcloud_import_process_running = unix.nextcloud_import_process_running()
+    else:
+        nextcloud_user_directories = []
+        nextcloud_import_process_running = False
     return render(request, "unix/data_management.html", {"partitions": partitions, "data_export_status": data_export_status, "rsync_history": rsync_history, "nextcloud_user_directories": nextcloud_user_directories, "nextcloud_import_process_running": nextcloud_import_process_running})
 
 

@@ -8,7 +8,9 @@
 
 {% include "unix/data_export.html" %}
 
-{% include "unix/data_import.html" %}
+{% if nextcloud_user_directories|length > 0 %}
+    {% include "unix/data_import.html" %}
+{% endif %}
 
 <div align="center">Hinweis: Diese Seite aktualisiert sich alle 60 Sekunden.</div>
 

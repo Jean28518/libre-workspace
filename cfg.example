@@ -13,9 +13,15 @@ export EMAIL_HOST_PASSWORD="#####"
 export EMAIL_USE_TLS=True
 #export EMAIL_USE_SSL=True
 
+# This is ignored, if AUTH_LDAP_SERVER_URI is not blank
+# This is the initial "Administrator" password, if your instance uses no LDAP.
+export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP="LinuxArbeitsplatz"
+
 # Samba AD Settings
 # Change all instances of int and de to the real domain components
-export AUTH_LDAP_SERVER_URI="ldaps://la.int.de"
+# Example for AUTH_LDAP_SERVER_URI would be: "ldaps://la.int.de"
+# If you want to deactivate Samba AD integration, set AUTH_LDAP_SERVER_URI to ""
+export AUTH_LDAP_SERVER_URI=""
 export AUTH_LDAP_DC="dc=int,dc=de"
 export AUTH_LDAP_BIND_DN="cn=Administrator,cn=users,dc=int,dc=de"
 export AUTH_LDAP_BIND_PASSWORD="#####"
