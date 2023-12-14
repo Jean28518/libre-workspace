@@ -69,14 +69,12 @@ def update_system(request):
 @staff_member_required
 def reboot_system(request):
     unix.reboot_system()
-    time.sleep(1)
     return redirect("unix_index")
 
 
 @staff_member_required
 def shutdown_system(request):
     unix.shutdown_system()
-    time.sleep(1)
     return redirect("unix_index")
 
 

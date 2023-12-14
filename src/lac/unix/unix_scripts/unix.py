@@ -83,6 +83,8 @@ def get_borg_information_for_dashboard():
         lines = open("history/borg_list").readlines()
         for line in lines:
             rv["archives"].append(line.strip())
+    # Sort archives by date
+    rv["archives"] = sorted(rv["archives"], key=lambda k: k[0:10], reverse=True)
 
 
     backup_history = []
@@ -104,6 +106,8 @@ def get_borg_information_for_dashboard():
             entry["date"] = date
             entry["error"] = error
             backup_history.append(entry)
+    # Sort backup_history by date
+    backup_history = sorted(backup_history, key=lambda k: k['date'], reverse=True)
     rv["backup_history"] = backup_history
 
     for entry in rv["backup_history"]:
