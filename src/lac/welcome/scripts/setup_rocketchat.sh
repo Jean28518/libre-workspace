@@ -19,4 +19,5 @@ fi
 systemctl reload caddy
 
 apt install python3-pymongo -y
+sleep 15
 python3 ./configure_rocketchat_ldap.py

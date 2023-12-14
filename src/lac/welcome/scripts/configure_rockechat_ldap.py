@@ -44,6 +44,12 @@ update_setting("LDAP_BaseDN", f"cn=users,dc={SCND_DOMAIN_LABEL},dc={FRST_DOMAIN_
 update_setting("LDAP_AD_User_Search_Field", "cn,mail")
 # LDAP_Enable to True
 update_setting("LDAP_Enable", True)
+# LDAP_AD_Username_Field to cn
+update_setting("LDAP_AD_Username_Field", "cn")
+# LDAP_Email_Field to mail
+update_setting("LDAP_Email_Field", "mail")
+# LDAP_AD_Name_Field to displayName
+update_setting("LDAP_AD_Name_Field", "displayName")
 
 # Disable 2FA
 update_setting("Accounts_TwoFactorAuthentication_Enabled", False)
