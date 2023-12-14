@@ -12,7 +12,7 @@ DC_DC="dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
 
 ## Setup Nextcloud #########################################
 
-apt install caddy mariadb-server php-gd php-mysql php-curl php-mbstring php-intl php-gmp php-bcmath php-xml php-bz2 php-imagick libmagickcore-6.q16-6-extra php-zip php-fpm php-redis php-apcu php-memcache unzip vim -y
+apt install caddy mariadb-server php-gd php-mysql php-curl php-mbstring php-intl php-gmp php-bcmath php-imap php-xml php-bz2 php-imagick libmagickcore-6.q16-6-extra php-zip php-fpm php-redis php-apcu php-memcache unzip vim -y
 
 # Get PHP-Version
 PHP_VERSION=`php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1,2`
