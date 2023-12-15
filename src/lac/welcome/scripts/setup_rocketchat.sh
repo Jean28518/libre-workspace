@@ -19,5 +19,6 @@ fi
 systemctl reload caddy
 
 apt install python3-pymongo -y
-sleep 15
+# We need to wait for the mongoDB to be ready
+sleep 60
 python3 ./configure_rocketchat_ldap.py
