@@ -2,7 +2,21 @@
 
 Using Samba as domain controller.
 
-## How to deploy
+## Build .iso
+
+```bash
+sudo apt install syslinux-utils git
+git clone https://github.com/Jean28518/linux-arbeitsplatz-central.git
+cd linux-arbeitsplatz-central
+bash download_debian_iso.sh
+bash build_deb.sh
+sudo bash build_iso.sh
+```
+
+You can access the installer at port 80 and 443. (After installing the debian base system).
+Your default account is called "Administrator".
+
+## How to deploy (only Linux-Arbeitpsplatz Zentrale)
 
 ```bash
 # Make sure you have AD domain controler like samba active and ldaps enabled.
