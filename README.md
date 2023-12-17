@@ -61,3 +61,13 @@ bash run_development.sh
 # Start unix service (in a second terminal session)
 bash unix_service.sh
 ```
+
+## Build documentation
+
+```bash
+sudo apt install python3-sphinx python3-sphinx-press-theme
+bash build_docs.sh
+```
+
+You find the generated html files in docs/_build
+
