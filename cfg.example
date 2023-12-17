@@ -1,9 +1,10 @@
 # Set this to True, if Linux-Arbeitsplatz should not run the welcome assistant.
-# For that exspecially Active Directory Server should be configured.
+# For that especially Active Directory Server should be configured.
 # Enable the unix service if you skip the automated install: /usr/bin/systemctl enable linux-arbeitsplatz-unix.service
 export LINUX_ARBEITSPLATZ_CONFIGURED=False
 
 # Mail Settings
+# (This is only for the management interface, not for other services like nextcloud)
 export EMAIL_HOST="smtp.gmail.com"                         
 export EMAIL_PORT="567"                                   
 export EMAIL_HOST_USER="my-email@gmail.com"                 
@@ -15,7 +16,7 @@ export EMAIL_USE_TLS=True
 
 # This is ignored, if AUTH_LDAP_SERVER_URI is not blank
 # This is the initial "Administrator" password, if your instance uses no LDAP.
-export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP="LinuxArbeitsplatz"
+export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP="LinuxWorkspace"
 
 # Samba AD Settings
 # Change all instances of int and de to the real domain components

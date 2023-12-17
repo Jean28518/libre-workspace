@@ -1,3 +1,6 @@
+# This script is called directly after the installation of the .deb package
+# It is used to setup the django application and the caddy server
+
 sudo mkdir -p /var/www/linux-arbeitsplatz-static/
 sudo chmod -R 777 /var/www/linux-arbeitsplatz-static/
 
