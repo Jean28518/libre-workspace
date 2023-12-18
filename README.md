@@ -43,6 +43,19 @@ central.int.de {
   }
   reverse_proxy localhost:11123
 }
+
+[IP] {
+    #tls internal
+    handle_path /static* {
+        root * /var/www/linux-arbeitsplatz-static
+        file_server
+        encode zstd gzip
+    } 
+    handle {
+    rewrite * /welcome/access
+    reverse_proxy localhost:11123
+    }
+}
 ```
 
 ## How to develop
