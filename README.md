@@ -44,6 +44,7 @@ central.int.de {
   reverse_proxy localhost:11123
 }
 
+# Access description for new libre workspace users
 [IP] {
     #tls internal
     handle_path /static* {
