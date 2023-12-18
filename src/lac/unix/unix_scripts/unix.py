@@ -134,6 +134,13 @@ def get_borg_information_for_dashboard():
 
     return rv
 
+
+# Returns true if we are running on a ubuntu system
+def is_system_ubuntu():
+    string = subprocess.getoutput("cat /etc/os-release")
+    return "ubuntu" in string.lower()
+
+
 def get_public_key():
     # Get the public key of the root user
     if os.path.isfile("id_rsa.pub"):
@@ -270,7 +277,10 @@ def escape_bash_characters(string, also_escape_paths=True):
 
 
 def get_partitions():
-    data = subprocess.getoutput("lsblk -AJ")
+    if is_system_ubuntu():
+        data = subprocess.getoutput("lsblk -aJ")
+    else:
+        data = subprocess.getoutput("lsblk -AJ")
     data = json.loads(data)
 
     partitions = []

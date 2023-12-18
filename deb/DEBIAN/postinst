@@ -1,6 +1,7 @@
-if CLEAN_CADDYFILE="True"; then
+if [ "$CLEAN_CADDYFILE" = "True" ]; then
     /usr/bin/echo "" > /etc/caddy/Caddyfile
 fi
+
 /bin/bash /usr/share/linux-arbeitsplatz/install.sh 
 
 /usr/bin/systemctl daemon-reload 
