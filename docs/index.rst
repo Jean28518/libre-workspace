@@ -15,6 +15,7 @@ Libre Workspace Documentation (for Administrators)
    :caption: Modules
 
    modules/libre-workspace-central
+   modules/nextcloud
 
 
 
