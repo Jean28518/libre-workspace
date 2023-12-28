@@ -31,17 +31,18 @@ The generated static files are located in `/var/www/linux-arbeitsplatz-static` a
 
 A caddy file entry would look like this:
 
-```
-central.int.de {
-    tls internal # This is only needed for local domains. For public domains you can uncomment this line.
-    handle_path /static* {
-        root * /var/www/linux-arbeitsplatz-static
-        file_server
-        encode zstd gzip
-    } 
-    reverse_proxy localhost:11123
-}
-```
+.. code-block:: yaml
+
+    central.int.de {
+        tls internal # This is only needed for local domains. For public domains you can uncomment this line.
+        handle_path /static* {
+            root * /var/www/linux-arbeitsplatz-static
+            file_server
+            encode zstd gzip
+        } 
+        reverse_proxy localhost:11123
+    }
+
 
 Services
 --------
@@ -97,3 +98,9 @@ It is available if in the cfg file the option `LINUX_ARBEITSPLATZ_CONFIGURED` is
 The installation is done via simple bash scripts which are located in `/usr/share/linux-arbeitsplatz-central/welcome/scripts`.
 For every module of the whole libre workspace a script is available which can be executed manually.
 The whole installation is done and controlled by the `/usr/share/linux-arbeitsplatz-central/welcome/scripts` script.
+
+
+How to update
+=============
+
+To update Libre Workspace Central you can easily install the new .deb package. And restart the services.
