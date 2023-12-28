@@ -63,7 +63,7 @@ The background tasks are:
 
 For more information have a look at the source code.
 
-Modules (djanog)
+Modules (django)
 ================
 
 Libre Workspace Central provides a modular system to extend the functionality of the application in form of django apps.
