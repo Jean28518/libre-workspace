@@ -279,3 +279,31 @@ def assign_users_to_group(request, cn):
         
 
     return render(request, "idm/admin/assign_users_to_group.html", {"users": users, "cn": cn, "message": message})
+
+
+def assign_groups_to_user(request, cn):
+    groups = ldap_get_all_groups()
+    user_information = get_user_information_of_cn(cn)
+    message = ""
+    for user_group in user_information["groups"]:
+        for group in groups:
+            if group["dn"].lower() == user_group.lower():
+                group["memberOfCurrentUser"] = True
+    if request.method == 'POST':
+        for group in groups:
+            # Add user to group
+            if request.POST.get(group["cn"], "") == "On" and not group.get("memberOfCurrentUser", False):
+                print("Add user " + cn + " to group " + group["cn"])
+                message = ldap_add_user_to_group(user_information["dn"], group["dn"])
+                group["memberOfCurrentUser"] = True
+            # Remove user from group
+            elif request.POST.get(group["cn"], "") == "" and group.get("memberOfCurrentUser", False):
+                print("Remove user " + cn + " from group " + group["cn"])
+                message = ldap_remove_user_from_group(user_information["dn"], group["dn"])
+                group["memberOfCurrentUser"] = False
+        if message == None or message == "":
+            message = "Mitgliedschaften erfolgreich aktualisiert!"
+        return render(request, "idm/admin/assign_groups_to_user.html", {"groups": groups, "user_information": user_information, "message": message})
+    
+    return render(request, "idm/admin/assign_groups_to_user.html", {"groups": groups, "user_information": user_information, "message": message})
+    

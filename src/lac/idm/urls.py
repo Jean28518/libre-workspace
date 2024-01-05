@@ -14,6 +14,8 @@ urlpatterns = [
     path("create_user", views.create_user, name="create_user"),
     path("edit_user/<str:cn>", views.edit_user, name="edit_user"),
     path("delete_user/<str:cn>", views.delete_user, name="delete_user"),
+    path("assign_groups_to_user/<str:cn>", views.assign_groups_to_user, name="assign_groups_to_user"),
+
 
     path("group_overview", views.group_overview, name="group_overview"),
     path("create_group", views.create_group, name="create_group"),

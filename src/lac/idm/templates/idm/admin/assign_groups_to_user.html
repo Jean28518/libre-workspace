@@ -1,0 +1,30 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2>Gruppen-Mitgliedschaften von {{ user_information.displayName }}</h2>
+
+{% if message != "" %}
+<p><strong>{{ message }}</strong></p>
+{% endif %}
+
+<form method="post">
+    
+    {% for group in groups %}
+    
+    <input type="checkbox" id="{{ group.cn }}" name="{{ group.cn }}" value="On" {% if group.memberOfCurrentUser %}checked{% endif %}>
+    <label for="{{ group.cn }}">{{ group.cn }}</label>
+    <br>   
+    
+    {% endfor %}
+    <br><br>
+    <div class="grid">
+        <a href="{% url "edit_user" user_information.cn %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Mitgliedschaften aktualisieren">
+    </div>
+</form>
+
+
+Hinweis: Einige Systemgruppen sind ausgeblendet.
+
+        
+{% endblock %}

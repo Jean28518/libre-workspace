@@ -35,6 +35,7 @@ def get_user_information_of_cn(cn):
     user_information["mail"] = ldap_reply[0][1].get("mail", [b""])[0].decode('utf-8')
     user_information["objectGUID"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
     user_information["dn"] = dn
+    user_information["cn"] = cn
 
     user_information["groups"] = ldap_reply[0][1].get("memberOf", [])
     for i in range(len(user_information["groups"])):
@@ -297,8 +298,9 @@ def ldap_get_all_groups():
    
     groups = []
     for group in result:
+        dn = group[0]
+        print(group)
         group = group[1]
-        dn = group.get("dn", [b''])[0].decode('utf-8')
         cn = group.get("cn", [b''])[0].decode('utf-8')
         description = group.get("description", [b''])[0].decode('utf-8')
         if ldap_is_system_group(cn):
