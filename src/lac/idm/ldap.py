@@ -154,6 +154,12 @@ def ldap_create_user(user_information):
         conn.add_s(dn, ldif)
     except LDAPError as e:
         return f"Fehler: {str(e)}"
+    
+    # Add user to all default groups
+    groups = ldap_get_all_groups()
+    for group in groups:
+        if group["defaultGroup"]:
+            ldap_add_user_to_group(dn, group["dn"])
 
     # Enable user
     mod_attrs = [(ldap.MOD_REPLACE, 'userAccountControl', [b'512'])]
@@ -253,7 +259,6 @@ def ldap_update_user(cn, user_information):
 
     ldif = modlist.modifyModlist(old_attrs, attrs)
 
-    print(ldif)
     if ldif != []:
         # Modify user
         try:
@@ -299,18 +304,47 @@ def ldap_get_all_groups():
     groups = []
     for group in result:
         dn = group[0]
-        print(group)
         group = group[1]
         cn = group.get("cn", [b''])[0].decode('utf-8')
         description = group.get("description", [b''])[0].decode('utf-8')
+
+        # Check if group is default group
+        (description, isDefaultGroup) = ldap_check_if_group_is_default_group(description)
+
         if ldap_is_system_group(cn):
             continue
-        groups.append({"dn": dn, "cn": cn, "description": description})
+        groups.append({"dn": dn, "cn": cn, "description": description, "defaultGroup": isDefaultGroup})
     return groups
+
+# Returns tuple of description (str) and isDefaultGroup (bool)
+def ldap_check_if_group_is_default_group(description: str, dontRemoveDefaultGroupOfDescription = False):
+    isDefaultGroup = False
+    if description.endswith(";defaultGroup"):
+        if not dontRemoveDefaultGroupOfDescription:
+            description = description[:-13]
+        isDefaultGroup = True
+    return (description, isDefaultGroup)
+    
+
+
+def apply_default_group_attriubte_to_description(description : str, defaultGroup : bool):
+    if defaultGroup:
+        if description.endswith(";defaultGroup"):
+            return description
+        else:
+            return description + ";defaultGroup"
+    else:
+        if description.endswith(";defaultGroup"):
+            return description[:-13]
+        else:
+            return description
+
 
 def ldap_create_group(group_information):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+
+    group_information["description"] = apply_default_group_attriubte_to_description(group_information["description"], group_information["defaultGroup"])
 
     # Build modlist
     dn = "cn=" + group_information["cn"] + f",cn=users,{settings.AUTH_LDAP_DC}"
@@ -330,31 +364,37 @@ def ldap_create_group(group_information):
     conn.unbind_s()
 
 def ldap_update_group(cn, group_information):
+    # We dont want to modify the original dict
+    group_information = group_information.copy()
+
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+
+    group_information["description"] = apply_default_group_attriubte_to_description(group_information["description"], group_information["defaultGroup"])
 
     # Build modlist
     dn = ldap_get_dn_of_cn(cn)
     attrs = {}
-    attrs['description'] = [group_information.get("description", "").encode('utf-8')]
+    if group_information.get("description", "") != "":
+        attrs['description'] = [group_information.get("description", "").encode('utf-8')]
 
-    old_group_information = ldap_get_group_information_of_cn(cn)
+    old_group_information = ldap_get_group_information_of_cn(cn, True)
     old_attrs = {}
     if old_group_information.get("description", "") != "":
         old_attrs['description'] = [old_group_information.get("description", "").encode('utf-8')]
 
     ldif = modlist.modifyModlist(old_attrs, attrs)
-
-    # Modify group
-    try:
-        conn.modify_s(dn, ldif)
-    except LDAPError as e:
-        return f"Fehler: {str(e)}"
+    if ldif != []:
+        # Modify group
+        try:
+            conn.modify_s(dn, ldif)
+        except LDAPError as e:
+            return f"Fehler: {str(e)}"
 
     conn.unbind_s()
 
 # Returns an single dict with all information to a group
-def ldap_get_group_information_of_cn(cn):
+def ldap_get_group_information_of_cn(cn, dontRemoveDefaultGroupOfDescription = False):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
@@ -374,6 +414,9 @@ def ldap_get_group_information_of_cn(cn):
     group_information["dn"] = dn
     group_information["cn"] = ldap_reply[0][1].get("cn", [b""])[0].decode('utf-8')
     group_information["description"] = ldap_reply[0][1].get("description", [b""])[0].decode('utf-8')
+
+    # Check if group is default group
+    (group_information["description"], group_information["defaultGroup"]) = ldap_check_if_group_is_default_group(group_information["description"], dontRemoveDefaultGroupOfDescription)
 
     return group_information
 
