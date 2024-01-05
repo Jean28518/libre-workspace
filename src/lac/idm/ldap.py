@@ -34,6 +34,7 @@ def get_user_information_of_cn(cn):
     user_information["displayName"] = ldap_reply[0][1].get("displayName", [b""])[0].decode('utf-8')
     user_information["mail"] = ldap_reply[0][1].get("mail", [b""])[0].decode('utf-8')
     user_information["objectGUID"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
+    user_information["dn"] = dn
 
     user_information["groups"] = ldap_reply[0][1].get("memberOf", [])
     for i in range(len(user_information["groups"])):
@@ -159,6 +160,9 @@ def ldap_create_user(user_information):
     
     conn.unbind_s()
 
+    # If user should be admin:
+    ldap_ensure_admin_status_of_user(user_information["username"], user_information["admin"])
+
     # # Add user to group
     # conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     # conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
@@ -166,6 +170,19 @@ def ldap_create_user(user_information):
     # mod_attrs = [(ldap.MOD_ADD, 'member', [dn])]
     # conn.modify_s(dn, mod_attrs)
     # conn.unbind_s()
+
+# Revokes or grants admin rights to a user. If nothing changes, nothing happens.
+def ldap_ensure_admin_status_of_user(cn : str, admin : bool):
+    dn = ldap_get_dn_of_cn(cn)
+    user_information = get_user_information_of_cn(cn)
+    if user_information is None:
+        return f"Benutzer '{cn}' wurde nicht gefunden."
+    current_admin_status = user_information["admin"]
+    if admin and not current_admin_status:
+        ldap_add_user_to_group(dn, f"cn=Administrators,cn=Builtin,{settings.AUTH_LDAP_DC}")
+    elif not admin and current_admin_status:
+        ldap_remove_user_from_group(dn, f"cn=Administrators,cn=Builtin,{settings.AUTH_LDAP_DC}")
+
 
 def ldap_get_all_users():
     if not settings.AUTH_LDAP_ENABLED:
@@ -236,16 +253,16 @@ def ldap_update_user(cn, user_information):
     ldif = modlist.modifyModlist(old_attrs, attrs)
 
     print(ldif)
-    if ldif == []:
-        return
+    if ldif != []:
+        # Modify user
+        try:
+            conn.modify_s(dn, ldif)
+        except LDAPError as e:
+            return f"Fehler: {str(e)}"
 
-    # Modify user
-    try:
-        conn.modify_s(dn, ldif)
-    except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        conn.unbind_s()
 
-    conn.unbind_s()
+    ldap_ensure_admin_status_of_user(cn, user_information["admin"])
 
 # If cn is a dn, return it, else return dn of cn
 def ldap_get_dn_of_cn(cn):
@@ -334,6 +351,7 @@ def ldap_update_group(cn, group_information):
 
     conn.unbind_s()
 
+# Returns an single dict with all information to a group
 def ldap_get_group_information_of_cn(cn):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
