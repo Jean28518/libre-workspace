@@ -43,6 +43,9 @@ sed -i "s/SED_DOMAIN/$DOMAIN/g" /etc/caddy/Caddyfile
 
 systemctl reload caddy
 
+# Redirect now the local webbrowser (http://localhost) to https://$IP
+sed -i "/s/https://localhost:443/https://$IP/g" /etc/caddy/Caddyfile
+
 # Change the linux arbeits zentrale to the finished domain in the caddyfile to central.$DOMAIN
 sed -i "s/:443/central.$DOMAIN/g" /etc/caddy/Caddyfile 
 

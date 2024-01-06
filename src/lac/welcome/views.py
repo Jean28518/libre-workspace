@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 import os
 import subprocess
 from django.conf import settings
+from .forms import EmailConfiguration
+
+import welcome.cfg as cfg
+
+import welcome.scripts.update_email_settings as update_email_settings
 
 subdomains = ["cloud", "office", "portal", "central", "la", "chat", "meet"]
 
@@ -140,3 +145,45 @@ def installation_running(request):
 
 def access(request):
     return render(request, "welcome/access_rendered.html")
+
+
+def system_configuration(request):
+    return render(request, "welcome/system_configuration.html")
+
+
+def email_configuration(request):#
+    message = ""
+    current_email_conf = {
+        "server": cfg.get_value("EMAIL_HOST", ""),
+        "port": cfg.get_value("EMAIL_PORT", ""),
+        "user": cfg.get_value("EMAIL_HOST_USER", ""),
+        "password": cfg.get_value("EMAIL_HOST_PASSWORD", ""),       
+    }
+    if cfg.get_value("EMAIL_USE_TLS", "False") == "True":
+        current_email_conf["encryption"] = "TLS"
+    else:
+        current_email_conf["encryption"] = "SSL"
+    form = EmailConfiguration(request.POST or None, initial=current_email_conf)
+
+    if request.method == "POST":
+        form = EmailConfiguration(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            cfg.set_value("EMAIL_HOST", form.cleaned_data["server"])
+            cfg.set_value("EMAIL_PORT", form.cleaned_data["port"])
+            cfg.set_value("EMAIL_HOST_USER", form.cleaned_data["user"])
+            if form.cleaned_data["password"] != "":
+                cfg.set_value("EMAIL_HOST_PASSWORD", form.cleaned_data["password"])
+            if form.cleaned_data["encryption"] == "TLS":
+                cfg.set_value("EMAIL_USE_TLS", "True")
+                cfg.set_value("EMAIL_USE_SSL", "False")
+            else:
+                cfg.set_value("EMAIL_USE_TLS", "False")
+                cfg.set_value("EMAIL_USE_SSL", "True")
+            message = "E-Mail Konfiguration gespeichert."
+            mail_config = form.cleaned_data.copy()
+            if (mail_config["password"] == ""):
+                mail_config["password"] = current_email_conf["password"]
+            update_email_settings.update_email_settings(form.cleaned_data)
+
+    return render(request, "welcome/email_configuration.html", {"current_email_conf": current_email_conf, "form": form, "message": message})

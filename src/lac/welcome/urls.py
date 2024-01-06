@@ -9,4 +9,7 @@ urlpatterns = [
     path("email_settings", views.welcome_email_settings, name="welcome_email_settings"),
     path("installation_running", views.installation_running, name="installation_running"),
     path("access", views.access, name="access"),
+
+    path("system_configuration", views.system_configuration, name="system_configuration"),
+    path("email_configuration", views.email_configuration, name="email_configuration"),
 ]

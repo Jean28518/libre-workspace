@@ -42,7 +42,7 @@ echo ":443 {
 # We need this one for the local browser to work
 # Only http, because we don't want a warning about the self-signed certificate
 http://localhost {
-    reverse_proxy https://127.0.0.1:443 {
+    reverse_proxy https://localhost:443 {
         transport http {
             tls_insecure_skip_verify
         }

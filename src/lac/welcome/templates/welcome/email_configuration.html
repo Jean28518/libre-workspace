@@ -1,0 +1,27 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+    <h2> E-Mail Konfiguration </h2>
+
+    <p>
+        Um die volle Funktionalität auszuschöpfen, wird empfohlen, ein Mail-Konto anzugeben, über dies der Linux-Arbeitsplatz selbständig Einladungen, 
+        "Passwort-Zurücksetzen"-Mails oder weiteres versenden kann.
+    </p>
+
+    {% if message != "" %}
+    <p><strong>{{ message }}</strong></p>
+    {% endif %}
+
+    
+    <form method="post">  
+        {{ form }}
+
+        <div class="grid">
+            <a href="{% url "system_configuration" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+            <input type="submit" value="Änderungen speichern">
+        </div>
+    </form>
+
+
+{% endblock %}

@@ -2,9 +2,8 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 
-client = MongoClient('mongodb://localhost:27017/')
+from .configure_rockechat_ldap import update_setting
 
-db = client.rocketchat
 
 IP = os.environ['IP']
 DOMAIN = os.environ['DOMAIN']
@@ -12,17 +11,6 @@ ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
 
 SCND_DOMAIN_LABEL = DOMAIN.split(".")[0]
 FRST_DOMAIN_LABEL = DOMAIN.split(".")[1]
-
-def update_setting(setting, value):
-    db.rocketchat_settings.update_one(
-        {"_id": setting},
-        {"$set": {
-            "value": value,
-            # Updated at:
-            "_updatedAt": datetime.utcnow()
-        }}
-        
-    )
 
 # Update the setting "LDAP_Host" in the collection rocketchat_settings
 update_setting("LDAP_Host", IP)

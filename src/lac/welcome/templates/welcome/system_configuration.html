@@ -1,0 +1,18 @@
+{% extends "lac/base.html" %}
+{% comment %} {% csrf_token %} {% endcomment %}
+{% block content %}
+
+<h2>Systemkonfiguration</h2>
+
+<div class="grid">
+    <a class="secondary" href="{% url "email_configuration" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-128">email</span> 
+            <br> 
+            E-Mail Konfiguration
+        </article>
+    </a>
+    
+</div>
+
+{% endblock %}

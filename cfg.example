@@ -16,7 +16,7 @@ export EMAIL_USE_TLS=True
 
 # This is ignored, if AUTH_LDAP_SERVER_URI is not blank
 # This is the initial "Administrator" password, if your instance uses no LDAP.
-export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP="LinuxWorkspace"
+export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP="LibreWorkspace"
 
 # Samba AD Settings
 # Change all instances of int and de to the real domain components

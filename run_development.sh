@@ -11,7 +11,7 @@ fi
 
 source .env/bin/activate
 
-pip install django python-ldap django-auth-ldap
+pip install django python-ldap django-auth-ldap pymongo
 
 
 python3 manage.py migrate --no-input
