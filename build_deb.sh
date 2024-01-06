@@ -8,6 +8,8 @@ cp install.sh deb/usr/share/linux-arbeitsplatz
 cp run.sh deb/usr/share/linux-arbeitsplatz
 cp unix_service.sh deb/usr/share/linux-arbeitsplatz
 cp cfg.example deb/usr/share/linux-arbeitsplatz/
+cp openbox-autostart deb/usr/share/linux-arbeitsplatz/
+cp prepare_for_first_boot.sh deb/usr/share/linux-arbeitsplatz/
 
 chmod +x deb/usr/share/linux-arbeitsplatz/install.sh
 chmod +x deb/usr/share/linux-arbeitsplatz/run.sh
