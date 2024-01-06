@@ -281,6 +281,7 @@ def assign_users_to_group(request, cn):
     return render(request, "idm/admin/assign_users_to_group.html", {"users": users, "cn": cn, "message": message})
 
 
+@staff_member_required
 def assign_groups_to_user(request, cn):
     groups = ldap_get_all_groups()
     user_information = get_user_information_of_cn(cn)

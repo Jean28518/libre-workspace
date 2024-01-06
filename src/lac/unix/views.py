@@ -150,6 +150,8 @@ def data_import_1(request):
     
 @staff_member_required
 def data_import_2(request):
+    if request.session["current_directory"] == "/":
+        return HttpResponse("Fehler: Das Root-Verzeichnis kann nicht importiert werden")
     unix.import_folder_to_nextcloud_user(request.session["current_directory"], request.session["user_import"])
     time.sleep(1)
     return redirect("data_management")

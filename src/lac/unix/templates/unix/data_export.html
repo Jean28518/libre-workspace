@@ -55,7 +55,15 @@
         <select name="partition-export" id="partition-export" required>
             <option value="" selected>Wähle ein Ziel...</option>
             {% for partition in partitions %}
-            {% if partition.mountpoint %}<option value="{{ partition.mountpoint }}">{{ partition.name }} ({{partition.size}})</option>{% endif %}
+                {% if partition.mountpoint %}
+                    {% if partition.mountpoint != "/" %}
+                        {% if partition.under1G %}
+
+                        {% else %}
+                            <option value="{{ partition.mountpoint }}">{{ partition.name }} ({{partition.size}})</option>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
             {% endfor %}
         </select>
         <input type="submit" value="Exportieren">

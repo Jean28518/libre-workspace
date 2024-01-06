@@ -18,10 +18,12 @@
             <td>{{ partition.size }}</td>
             <td>{% if partition.mountpoint %}{% endif %}{{ partition.mountpoint}}</td>
             <td>
-                {% if partition.mountpoint %}
-                    <a href="{% url "umount" partition.name %}">Aushängen</a>
-                {% else %}
-                    <a href="{% url "mount" partition.name %}">Einhängen</a>
+                {% if partition.mountpoint != "/"%}
+                    {% if partition.mountpoint %}
+                        <a href="{% url "umount" partition.name %}">Aushängen</a>
+                    {% else %}
+                        <a href="{% url "mount" partition.name %}">Einhängen</a>
+                    {% endif %}
                 {% endif %}
         </tr>
         {% endfor %}
