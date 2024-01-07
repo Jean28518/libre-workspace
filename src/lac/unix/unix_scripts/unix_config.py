@@ -1,4 +1,4 @@
-# This code is duplixated in the unix.py file for internal use.
+# This code is duplicated in the unix.py file for internal use.
 # We need this for our service.py because it does not like the unix.py file.
 import os
 

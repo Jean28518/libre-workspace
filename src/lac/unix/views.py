@@ -9,11 +9,33 @@ import time
 
 # Create your views here.
 @staff_member_required
+# System Management
 def unix_index(request):
     backup_information = unix.get_borg_information_for_dashboard()
     disks_stats = unix.get_disks_stats()
     system_information = unix.get_system_information()
-    return render(request, "unix/system_management.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information})
+    update_information = unix.get_update_information()
+    
+    return render(request, "unix/system_management.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information, "update_information": update_information})
+
+
+@staff_member_required
+def set_update_configuration(request):
+    if request.method == "POST":
+        software_modules = unix.get_software_modules()
+        for module in software_modules:
+            key = module["id"]
+            configKey = key.upper() + "_AUTOMATIC_UPDATES"
+            if request.POST.get(key, "") == "on":
+                unix.set_value(configKey, "true")
+            else:
+                unix.set_value(configKey, "false")
+        if request.POST.get("system", "") == "on":
+            unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "true")
+        else:
+            unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "false")
+        unix.set_value("UPDATE_TIME", request.POST.get("time", "02:00"))
+    return redirect("unix_index")
 
 @staff_member_required
 def backup_settings(request):

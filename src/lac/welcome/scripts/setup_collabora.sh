@@ -9,7 +9,8 @@ FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`
 mkdir -p /root/collabora
 
 
-echo "docker run -t -d -p 9980:9980 -e "aliasgroup1=https://cloud\\\\.$SCND_DOMAIN_LABEL\\\\.$FRST_DOMAIN_LABEL:443" -e "username=admin" -e "password=beiSee8e" --restart unless-stopped --name collabora --add-host cloud.$DOMAIN:$IP collabora/code:latest" > /root/collabora/run.sh
+echo "docker pull collabora/code:latest
+docker run -t -d -p 9980:9980 -e "aliasgroup1=https://cloud\\\\.$SCND_DOMAIN_LABEL\\\\.$FRST_DOMAIN_LABEL:443" -e "username=admin" -e "password=beiSee8e" --restart unless-stopped --name collabora --add-host cloud.$DOMAIN:$IP collabora/code:latest" > /root/collabora/run.sh
 
 bash /root/collabora/run.sh
 docker exec collabora echo "$IP cloud.$DOMAIN" >> /etc/hosts

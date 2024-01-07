@@ -67,10 +67,19 @@ while True:
 
     ## SYSTEM UPDATE ################################################################################################
 
+    # If a user manually requested an update, run update
     if os.path.isfile("update_system"):
         os.remove("update_system")
         print("Updating system")
         os.system("bash ./do_update.sh")
+
+    # All other updates:
+    update_time = unix_config.get_value("UPDATE_TIME")
+    current_date = time.strftime("%Y-%m-%d")
+    if time.strftime("%H:%M") > update_time and not os.path.isfile("update_running") and not os.path.isfile(f"history/update-{current_date}.log"):
+        print("Starting automatic updates")
+        os.system("bash ./update_everything.sh")
+
 
     ## DO DATA EXPORT ################################################################################################
 

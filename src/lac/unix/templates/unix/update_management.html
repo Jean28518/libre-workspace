@@ -1,0 +1,80 @@
+<article>
+    <h3>Vollautomatisierte Updates</h3>
+    <h3>Konfiguration</h3>
+    <div>
+        <fieldset>
+            <form action="{% url "set_update_configuration" %}" method="POST">
+                    {% for module in update_information.software_modules %}
+                        {% if module.installed %}
+                            <label for="{{module.id}}">
+                            <input type="checkbox" id="{{module.id}}" name="{{module.id}}" role="switch" {% if module.automaticUpdates %}checked{% endif %}>
+                            {{module.name}}
+                            </label>
+                        {% endif %}
+                        <!-- Time -->
+                    {% endfor %}
+                    <label for="time">Automatische Updates ausführen um:
+                        <input type="time" id="time" name="time" value="{{update_information.update_time}}" required>
+                    </label>
+                <input type="submit" value="Speichern">
+            </form>
+        </fieldset>
+    </div>
+    <div class="grid">
+        <div>
+            <h4>Verlauf</h4>
+            <div style="max-height: 300px; overflow: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Log-Dateien</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        {% for log in update_information.update_history %}
+                        <tr>
+                            <td>{{ log.date }}</td>
+                            <td>
+                               <!-- Button to trigger the modal -->
+                                <a class="outline"
+                                data-target="backup-error{{ backup.date }}"
+                                onClick="toggleModal(event)"
+                                href="#">
+                                Bericht anzeigen
+                                </a>
+                                <!-- Modal -->
+                                <!-- Modal -->
+                                <dialog id="backup-error{{ backup.date }}">
+                                    <article>
+                                    <a href="#close"
+                                        aria-label="Close"
+                                        class="close"
+                                        data-target="backup-error{{ backup.date }}"
+                                        onClick="toggleModal(event)">
+                                    </a>
+                                    <h3>Update am {{ log.date }}</h3>
+                                    <code>
+                                        {{ log.content | safe }}
+                                    </code>
+                                    <footer>
+                                        <a href="#cancel"
+                                        role="button"
+                                        class="secondary"
+                                        data-target="backup-error{{ backup.date }}"
+                                        onClick="toggleModal(event)">
+                                        Schließen
+                                        </a>
+                                    </footer>
+                                    </article>
+                                </dialog>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</article>
+

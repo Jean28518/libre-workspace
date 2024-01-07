@@ -35,13 +35,13 @@ def write_config_file():
             else:
                 f.write(f"{key}=\"{value}\"\n")
 
-def get_value(key):
+def get_value(key, default=""):
     read_config_file()
     # Get the value of a key from the config file
     if key in config:
         return config[key]
     else:
-        return ""
+        return default
     
 def set_value(key, value):
     read_config_file()
@@ -398,3 +398,66 @@ def nextcloud_import_process_running():
 def abort_current_nextcloud_import():
     os.system("rm nextcloud_import_process_running")
     os.system("pkill import_folder_to_nextcloud_user.sh")
+
+
+def is_rocketchat_available():
+    return os.path.isdir("/root/rocket.chat/")
+
+
+def is_jitsi_available():
+    return os.path.isdir("/root/jitsi/")
+
+
+def is_collabora_available():
+    return os.path.isdir("/root/collabora/")
+
+
+def is_onlyoffice_available():
+    return os.path.isdir("/root/onlyoffice/")
+
+
+def get_software_modules():
+    modules = []
+    if is_nextcloud_available():
+        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+    else:
+        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+    if is_rocketchat_available():
+        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+    else:
+        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+    if is_jitsi_available():
+        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+    else:
+        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+    if is_collabora_available():
+        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+    else:
+        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+    if is_onlyoffice_available():
+        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+    else:
+        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+    
+    print(modules)
+    return modules
+
+
+def get_update_history():
+    history = []
+    for file in os.listdir("history"):
+        if file.startswith("update-"):
+            entry = {}
+            entry["date"] = file[7:-4]
+            entry["content"] = open(f"history/{file}").read().replace("\n", "<br>")
+            history.append(entry)
+    return history
+
+
+def get_update_information():
+    update_information = {}
+    update_information["software_modules"] = get_software_modules()
+    update_information["software_modules"].insert(0, {"id": "system", "name": "System", "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "false") == "true"})
+    update_information["update_time"] = get_value("UPDATE_TIME")
+    update_information["update_history"] = get_update_history()
+    return update_information
