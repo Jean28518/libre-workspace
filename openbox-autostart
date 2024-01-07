@@ -1,3 +1,6 @@
 # This file is used for autostart of the browser 
 
+# If .config/chromium folder exists remove it
+rm -rf ~/.config/chromium
+
 chromium --kiosk --temp-profile --noerrdialogs --enable-features=OverlayScrollbar --disable-restore-session-state http://localhost

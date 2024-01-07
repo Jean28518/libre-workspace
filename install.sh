@@ -19,7 +19,7 @@ python3 -m venv .env
 ln -s /usr/bin/python3 /usr/bin/python
 
 source .env/bin/activate
-pip install django python-ldap django-auth-ldap gunicorn
+pip install django python-ldap django-auth-ldap gunicorn pymongo
 python manage.py migrate --no-input
 
 # Get the current IP-Adress
@@ -38,7 +38,7 @@ echo ":443 {
     reverse_proxy localhost:11123
 }
 
-
+# SED-LOCALHOST-ENTRY
 # We need this one for the local browser to work
 # Only http, because we don't want a warning about the self-signed certificate
 http://localhost {

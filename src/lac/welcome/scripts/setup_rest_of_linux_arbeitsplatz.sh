@@ -15,8 +15,11 @@ cd /var/www/
 git clone https://github.com/Jean28518/linux-arbeitsplatz-portal.git
 cd -
 
+# Remove the the block which begins with "# SED-PORTAL-ENTRY" and is 10 lines long
+sed -i "/# SED-LOCALHOST-ENTRY/,+10d" /etc/caddy/Caddyfile
+
 # Add access page reverse proxy on ip address
-echo "$IP {
+echo "$IP http://localhost {
     #tls internal
     handle_path /static* {
         root * /var/www/linux-arbeitsplatz-static
@@ -43,8 +46,6 @@ sed -i "s/SED_DOMAIN/$DOMAIN/g" /etc/caddy/Caddyfile
 
 systemctl reload caddy
 
-# Redirect now the local webbrowser (http://localhost) to https://$IP
-sed -i "/s/https://localhost:443/https://$IP/g" /etc/caddy/Caddyfile
 
 # Change the linux arbeits zentrale to the finished domain in the caddyfile to central.$DOMAIN
 sed -i "s/:443/central.$DOMAIN/g" /etc/caddy/Caddyfile 
