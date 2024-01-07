@@ -11,7 +11,6 @@ from .idm import reset_password_for_email, get_user_information, set_user_new_pa
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
-from django.contrib.auth.models import User
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -20,33 +19,20 @@ def signal_handler(context, user, request, exception, **kwargs):
 django_auth_ldap.backend.ldap_error.connect(signal_handler)
 
 
-def ensure_superuser_exists():
-    if not settings.AUTH_LDAP_ENABLED:
-        if User.objects.filter(is_superuser=True).count() == 0:
-            User.objects.create_superuser(
-                username="Administrator",
-                first_name="Administrator",
-                password=settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP,
-                email="",
-            )
-            print("Created superuser 'Administrator' with password '{}'".format(settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP))
-
 
 
 
 # Create your views here.
-def index(request):
-    ensure_superuser_exists()
-    if not settings.LINUX_ARBEITSPLATZ_CONFIGURED:
-        return redirect("welcome_start")
-    elif request.user.is_authenticated:
+def dashboard(request):
+    if request.user.is_authenticated:
         user_information = get_user_information(request.user)
-        return render(request, "idm/index.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED})
+        return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED})
     return redirect(user_login)
 
+# We have to set login_page=True to prevent the base template from displaying the login button
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect(index)
+        return redirect(dashboard)
     if request.method == 'POST':
         username = request.POST['username']
 
@@ -54,7 +40,7 @@ def user_login(request):
         if "@" in username and "." in username:
             userdn = get_user_dn_by_email(username)
             if userdn == None:
-                return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen."})
+                return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen.", "login_page": True})
             username = ldap_get_cn_of_dn(userdn)
 
         user = authenticate(username=username, password=request.POST['password'])
@@ -64,15 +50,15 @@ def user_login(request):
             # if request.GET.get("next", "") != "":
             #     return HttpResponseRedirect(request.GET['next'])
             # else: 
-            return redirect(index)
+            return redirect(dashboard)
         else:
             print("User is not authenticated")
-            return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut."})
-    return render(request, "idm/login.html", {"request": request})
+            return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True})
+    return render(request, "idm/login.html", {"request": request, "login_page": True})
 
 def user_logout(request):
     logout(request)
-    return redirect(index)
+    return redirect("index")
 
 @login_required
 def user_settings(request):

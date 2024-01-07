@@ -35,7 +35,7 @@ Installation using the ISO image (recommended)
    If you want to create a RAID, you can do so by selecting "Manual" and following the instructions. As a mount point for the RAID system '/data' is recommended.
    (At the moment the RAID system is not automatically used by the libre workspace. This is planned for the future.)
 
-5. After the installation is complete, the system will reboot. Discover the IP address of the system and open it in your browser.
+5. After the installation is complete, the system will reboot. Discover the IP address of the system and open it in your browser. Otherwise you can just follow the instructions of the server display.
 
 .. note::
 
@@ -50,7 +50,7 @@ Installation using the ISO image (recommended)
     For this you don't need a domain name and you can still access your data from outside your home network via VPN.
 
 9. In the mail settings you can specify the smtp server to be used for sending mails. With this set users can reset their passwords themselves and calender invitations can be sent. You can also skip this step and set it up later manually.
-10. Now the installation starts. This can take a while. There are instructions displayed on the screen, how to access the libre workspace portal after the installation is complete.
+10. Now the installation starts. This can take a while. There are instructions displayed on the screen, how to access the libre workspace after the installation is complete.
 11. Your login at the web interface is "Administrator" with the password you set in step 6.
 
 .. warning::

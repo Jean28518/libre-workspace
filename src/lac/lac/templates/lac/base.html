@@ -154,11 +154,17 @@
                   {{ request.user.username }}
               </summary>
               <ul role="listbox">
-                <li><a href="/change_password">Passwort ändern</a></li>
-                <li><a href="/logout">Ausloggen</a></li>
+                <li><a href="{% url "change_password" %}">Passwort ändern</a></li>
+                <li><a href="{% url "user_logout" %}">Ausloggen</a></li>
               </ul>
             </details>
           </li>
+        </ul>
+      {% elif login_page %}
+      
+      {% else %}
+        <ul>
+          <li title="Anmelden"><a href="{% url "user_login" %}" role="button">Anmelden</a></li>
         </ul>
       {% endif %}
     </nav> 

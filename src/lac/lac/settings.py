@@ -62,6 +62,7 @@ TEMPLATES = [
             BASE_DIR / "unix/templates",
             BASE_DIR / "lac/templates",
             BASE_DIR / "welcome/templates",
+            BASE_DIR / "app_dashboard/templates",
         ],
         'APP_DIRS': True,
         'OPTIONS': {

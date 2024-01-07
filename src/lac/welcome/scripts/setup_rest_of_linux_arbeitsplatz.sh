@@ -9,13 +9,7 @@ FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`    # de
 
 DEBIAN_FRONTEND=noninteractive
 
-# Install portal
-apt install php-fpm git -y
-cd /var/www/
-git clone https://github.com/Jean28518/linux-arbeitsplatz-portal.git
-cd -
-
-# Remove the the block which begins with "# SED-PORTAL-ENTRY" and is 10 lines long
+# Remove the the block which begins with "# SED-LOCALHOST-ENTRY" and is 10 lines long
 sed -i "/# SED-LOCALHOST-ENTRY/,+10d" /etc/caddy/Caddyfile
 
 # Add access page reverse proxy on ip address
@@ -34,7 +28,6 @@ echo "$IP http://localhost {
 
 " >> /etc/caddy/Caddyfile
 
-cat caddy_portal_entry.txt >> /etc/caddy/Caddyfile
 if [ $DOMAIN = "int.de" ] ; then
   sed -i "s/#tls internal/tls internal/g" /etc/caddy/Caddyfile
   sed -i "s/SED_DOMAIN_DELETE_PUBLIC/$DOMAIN/g" /etc/caddy/Caddyfile

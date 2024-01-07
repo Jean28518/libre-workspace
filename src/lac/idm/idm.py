@@ -5,6 +5,8 @@ from .ldap import get_user_dn_by_email, set_ldap_user_new_password, get_user_inf
 
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.auth.models import User
+
 
 def get_user_information(user):
     user_information = {}
@@ -57,3 +59,16 @@ def is_user_password_correct(user, password):
         return is_ldap_user_password_correct(user.ldap_user.dn, password)
     else:
         return user.check_password(password)
+    
+
+# Also ensures that a superuser exists if LDAP is disabled
+def ensure_superuser_exists():
+    if not settings.AUTH_LDAP_ENABLED:
+        if User.objects.filter(is_superuser=True).count() == 0:
+            User.objects.create_superuser(
+                username="Administrator",
+                first_name="Administrator",
+                password=settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP,
+                email="",
+            )
+            print("Created superuser 'Administrator' with password '{}'".format(settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP))

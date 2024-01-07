@@ -1,0 +1,12 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+{% for array in grid %}
+    <div class="grid">
+    {% for element in array %}
+        {{element | safe}}
+    {% endfor %}
+    </div>
+{% endfor %}
+
+{% endblock %}

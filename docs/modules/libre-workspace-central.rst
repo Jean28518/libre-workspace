@@ -19,7 +19,7 @@ Setup
 Libre Workspace installs all necessary dependencies as django and gunicorn.
 It also requires borgbackup and depends on caddy as a webserver and reverse proxy (for the automated install, which is optional).
 
-Optinal it can connect to a LDAP server to administrate users and groups. It also provides a self service portal for users to change their password or their name and mail.
+Optional it can connect to a LDAP server to administrate users and groups. It also provides a self service portal for users to change their password or their name and mail.
 This can be configured in the cfg file which is located in /usr/share/linux-arbeitsplatz-central/cfg
 
 Hosting
