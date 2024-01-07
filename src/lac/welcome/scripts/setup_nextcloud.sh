@@ -69,6 +69,7 @@ sudo -u www-data php /var/www/nextcloud/occ app:install notes
 sudo -u www-data php /var/www/nextcloud/occ app:install tasks
 sudo -u www-data php /var/www/nextcloud/occ app:install collectives
 sudo -u www-data php /var/www/nextcloud/occ app:install drawio
+sudo -u www-data php /var/www/nextcloud/occ app:install groupfolders
 
 
 # PHP-Optimizations

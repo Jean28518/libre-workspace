@@ -53,17 +53,6 @@ sed -i "/EMAIL/d" /usr/share/linux-arbeitsplatz/cfg
 # Remove the lines with "AUTH_LDAP" in it
 sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
 
-# Add the EMAIL settings to the cfg file
-echo "export EMAIL_HOST=\"$EMAIL_HOST\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export EMAIL_PORT=\"$EMAIL_PORT\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export EMAIL_HOST_USER=\"$EMAIL_HOST_USER\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export EMAIL_HOST_PASSWORD=\"$EMAIL_HOST_PASSWORD\"" >>/usr/share/linux-arbeitsplatz/cfg
-if [ $MAIL_ENCRYPTION = "tls" ] ; then
-  echo "export EMAIL_USE_TLS=True" >>/usr/share/linux-arbeitsplatz/cfg
-else
-  echo "export EMAIL_USE_SSL=True" >>/usr/share/linux-arbeitsplatz/cfg
-fi
-
 # Add the Samba AD settings to the cfg file
 echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/usr/share/linux-arbeitsplatz/cfg
 echo "export AUTH_LDAP_DC=\"dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
