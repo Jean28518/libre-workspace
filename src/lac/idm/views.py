@@ -54,7 +54,7 @@ def user_login(request):
         else:
             print("User is not authenticated")
             return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True})
-    return render(request, "idm/login.html", {"request": request, "login_page": True})
+    return render(request, "idm/login.html", {"request": request, "hide_login_button": True})
 
 def user_logout(request):
     logout(request)

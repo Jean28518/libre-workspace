@@ -45,7 +45,7 @@ def welcome_start(request):
         if message == "":
             return redirect("welcome_select_apps")
 
-    return render(request, "welcome/welcome_start.html", {"message": message})
+    return render(request, "welcome/welcome_start.html", {"message": message, "hide_login_button": True})
 
 
 def welcome_select_apps(request):
@@ -64,7 +64,7 @@ def welcome_select_apps(request):
         request.session["jitsi"] = request.POST.get("jitsi", "")
         return redirect("welcome_dns_settings")
 
-    return render(request, "welcome/welcome_select_apps.html")
+    return render(request, "welcome/welcome_select_apps.html", {"hide_login_button": True})
 
 
 def welcome_dns_settings(request):
@@ -81,7 +81,7 @@ def welcome_dns_settings(request):
             request.session["domain"] = "int.de"
         if message == "":
             return redirect("installation_running")
-    return render(request, "welcome/welcome_dns_settings.html", {"message": message, "subdomains": subdomains})
+    return render(request, "welcome/welcome_dns_settings.html", {"message": message, "subdomains": subdomains, "hide_login_button": True})
 
 
 def installation_running(request):
@@ -120,6 +120,7 @@ def installation_running(request):
         "subdomains": subdomains, 
         "domain": os.environ["DOMAIN"],
         "ip": os.environ["IP"],
+        "hide_login_button": True,
     }
 
     # Create rendered access_rendered.html
@@ -133,15 +134,15 @@ def installation_running(request):
 
 
 def access(request):
-    return render(request, "welcome/access_rendered.html")
+    return render(request, "welcome/access_rendered.html", {"hide_login_button": True})
 
 
 def system_configuration(request):
-    return render(request, "welcome/system_configuration.html")
+    return render(request, "welcome/system_configuration.html", {"hide_login_button": True})
 
 
 # Thats the config dashboard in system configuration
-def email_configuration(request):#
+def email_configuration(request):
     message = ""
     current_email_conf = {
         "server": cfg.get_value("EMAIL_HOST", ""),
