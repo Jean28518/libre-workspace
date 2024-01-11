@@ -122,7 +122,7 @@ while True:
 
     ## DO DATA EXPORT ################################################################################################
 
-    if os.path.isfile("data_export"):
+    if os.path.isfile("export_data"):
         print("Exporting data")
         os.system("bash ./do_data_export.sh")
 

@@ -1,5 +1,5 @@
 # The path of the destination is stored in file "export_data"
-DESTINATION=cat export_data
+DESTINATION=`cat ./export_data`
 
 touch export_running
 
