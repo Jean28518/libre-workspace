@@ -8,7 +8,7 @@ import welcome.cfg as cfg
 
 import welcome.scripts.update_email_settings as update_email_settings
 
-subdomains = ["cloud", "office", "central", "la", "chat", "meet"]
+subdomains = ["cloud", "office", "portal", "la", "chat", "meet"]
 
 # Create your views here.
 def welcome_start(request):

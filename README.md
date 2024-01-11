@@ -35,7 +35,7 @@ systemctl restart linux-arbeitsplatz-web
 ### Caddyfile
 
 ```Caddyfile
-central.int.de {
+portal.int.de {
   handle_path /static* {
         root * /var/www/linux-arbeitsplatz-static
         file_server

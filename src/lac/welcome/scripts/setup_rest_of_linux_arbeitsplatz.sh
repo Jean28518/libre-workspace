@@ -40,8 +40,8 @@ sed -i "s/SED_DOMAIN/$DOMAIN/g" /etc/caddy/Caddyfile
 systemctl reload caddy
 
 
-# Change the linux arbeits zentrale to the finished domain in the caddyfile to central.$DOMAIN
-sed -i "s/:443/central.$DOMAIN/g" /etc/caddy/Caddyfile 
+# Change the linux arbeits zentrale to the finished domain in the caddyfile to portal.$DOMAIN
+sed -i "s/:443/portal.$DOMAIN/g" /etc/caddy/Caddyfile 
 
 # Set the cfg file of lac:
 # LINUX_ARBEITSPLATZ_CONFIGURED=False to LINUX_ARBEITSPLATZ_CONFIGURED=True
