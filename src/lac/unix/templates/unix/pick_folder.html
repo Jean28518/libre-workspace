@@ -5,29 +5,9 @@
 <h2> Ordner auswählen </h2>
 
 <p>{{ description }}</p>
+   
+{% include "unix/folder_view.html" %}
 
-<h3> Aktuell ausgewählter Ordner: {{current_directory}} </h3>
-
-        <form method="post" style="display: inline;">
-            <input type="hidden" name="pick" value="..">
-            <button type="submit" name="pick" value=".." class="contrast outline">
-            Nach oben
-            </button>
-        </form>
-
-        {% for folder in folder_list %}
-            <tr>
-                {% comment %} <td><a href="">{{ folder }}</a></td> {% endcomment %}
-                <form method="post" style="display: inline;">
-                    <input type="hidden" name="pick" value="{{ folder }}">
-                    <button type="submit" name="pick" value="{{ folder }}" class="contrast outline">
-                      {{folder}}
-                    </button>
-                  </form>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
 
 <div class="grid">
     <form method="post" style="display: inline;">

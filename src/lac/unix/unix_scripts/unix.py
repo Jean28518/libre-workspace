@@ -381,7 +381,26 @@ def get_folder_list(path):
     for folder in os.listdir(path):
         if os.path.isdir(path + "/" + folder):
             folders.append(folder)
+    folders.sort()
     return folders
+
+
+def get_file_list(path):
+    path = escape_bash_characters(path, False)
+    if not os.path.isdir(path):
+        return []
+    files = []
+    for folder in os.listdir(path):
+        if os.path.isfile(path + "/" + folder):
+            files.append(folder)
+    files.sort()
+    return files
+
+def get_directory_above(path):
+    path = "/".join(path.split("/")[:-1])
+    if path == "":
+            path = "/"
+    return path
 
 
 def import_folder_to_nextcloud_user(folder_import, nextcloud_user_folder):

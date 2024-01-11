@@ -18,6 +18,7 @@ urlpatterns = [
     path("data_import_1", views.data_import_1, name="data_import_1"),
     path("data_import_2", views.data_import_2, name="data_import_2"),
     path("pick_folder", views.pick_folder, name="pick_folder"),
+    path("file_explorer", views.file_explorer, name="file_explorer"),
 
     path("set_update_configuration", views.set_update_configuration, name="set_update_configuration"),
     

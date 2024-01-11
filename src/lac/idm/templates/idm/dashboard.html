@@ -25,7 +25,7 @@
     {% endif %}
     <a class="secondary" href="{% url "data_management" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">folder</span> 
+            <span class="material-icons md-128">save</span> 
             <br> 
             Datenimport/-export
         </article>
@@ -44,6 +44,13 @@
             <span class="material-icons md-128">settings</span> 
             <br> 
             Systemkonfiguration
+        </article>
+    </a>
+    <a class="secondary" href="{% url "file_explorer" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-128">folder</span> 
+            <br> 
+            Datei-Explorer
         </article>
     </a>
     

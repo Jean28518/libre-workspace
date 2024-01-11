@@ -1,0 +1,34 @@
+<form method="post" style="display: inline;">
+    <input type="hidden" name="pick" value="..">
+    <button type="submit" name="pick" value=".." class="contrast outline">
+    Nach oben
+    </button>
+</form>
+
+<h5>Aktueller Ordner: {{ current_directory }} </h5>
+
+<table style="color:var(--color);">
+<tbody>
+
+{% for folder in folder_list %}
+<tr>
+    {% comment %} <td><a href="">{{ folder }}</a></td> {% endcomment %}
+    <form method="post" style="display: inline;">
+        <input type="hidden" name="pick" value="{{ folder }}">
+        <button type="submit" name="pick" value="{{ folder }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" >
+            <span class="material-icons md-28">folder</span> 
+            {{folder}}
+        </button>
+      </form>
+</tr>
+{% endfor %}
+
+{% for file in file_list %}
+<tr>
+    {% comment %} <td><a href="">{{ file }}</a></td> {% endcomment %}
+    <span class="material-icons md-24">description</span> 
+    {{file}}<br>
+</tr>
+{% endfor %}
+</tbody>
+</table>

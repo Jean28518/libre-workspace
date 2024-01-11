@@ -196,20 +196,16 @@ def pick_folder(request):
             return redirect(request.session["redirection_on_cancel"])
         if request.POST.get("pick", "") != "":
             if request.POST.get("pick", "") == "..":
-                request.session["current_directory"] = "/".join(request.session["current_directory"].split("/")[:-1])
+                request.session["current_directory"] = unix.get_directory_above(request.session["current_directory"])
             else:
                 request.session["current_directory"] = request.session["current_directory"] + "/" + request.POST.get("pick", "")
-            if request.session["current_directory"] == "":
-                request.session["current_directory"] = "/"
             request.session["current_directory"] = request.session["current_directory"].replace("//", "/")
-            print("picked!")
-            print(request.session["current_directory"])
-
         if request.POST.get("select", "") != "":
             return redirect(request.session["redirection_after_selection"])
 
     folder_list = unix.get_folder_list(request.session["current_directory"])
-    return render(request, "unix/pick_folder.html", {"description": description, "folder_list": folder_list, "current_directory": request.session["current_directory"]})
+    file_list = unix.get_file_list(request.session["current_directory"])
+    return render(request, "unix/pick_folder.html", {"description": description, "folder_list": folder_list, "current_directory": request.session["current_directory"], "file_list": file_list})
 
 
 # We are using the djano module here
@@ -243,3 +239,22 @@ def unix_send_mail(request):
     email.send()
 
     return HttpResponse("Mail send successfully")
+
+
+@staff_member_required
+def file_explorer(request):
+    current_directory = request.session.get("current_directory", "/")
+
+    if request.method == "POST":
+        pick = request.POST.get("pick", "")
+        if pick == "..":
+            current_directory = unix.get_directory_above(current_directory)
+        else:
+            current_directory = current_directory + "/" + pick
+    
+    current_directory = current_directory.replace("//", "/")
+    folder_list = unix.get_folder_list(current_directory)
+    file_list = unix.get_file_list(current_directory)
+    request.session["current_directory"] = current_directory
+   
+    return render(request, "unix/file_explorer.html", {"folder_list": folder_list, "current_directory": current_directory, "file_list": file_list})

@@ -1,0 +1,15 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+{% include "unix/folder_view.html" %}
+
+
+<div class="grid">
+    <a class="btn btn-primary" href="{% url 'dashboard' %}" role=button>Datei-Explorer schließen</a>
+</div>
+
+<br>
+<center>
+    Hinweis: Aus Sicherheitsgründen, ist es nicht möglich, den Inhalt von Dateien anzuzeigen.
+</center>
+{% endblock %}
