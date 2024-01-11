@@ -1,6 +1,9 @@
 def get_card_for_dict(dict : dict):
     return get_card_for(dict["title"], dict["url"], dict["icon_path"], dict["description"])
 
+def get_card_for_dashboard_entry(dashboard_entry):
+    return get_card_for(dashboard_entry.title, dashboard_entry.link, dashboard_entry.icon.url, dashboard_entry.description)
+
 def get_card_for(title, url, icon_path, description):
     return f'''<a class="secondary" href="{url}">
         <article>

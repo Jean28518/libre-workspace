@@ -1,0 +1,24 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2> Erstelle {{ type }} </h2>
+
+{% if message != "" %}
+<p><strong>{{ message | safe }}</strong></p>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="grid">
+        <a href="{{url}}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Erstellen">
+    </div>
+    {{ form }}
+    <br><br>
+    <div class="grid">
+        <a href="{{url}}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <input type="submit" value="Erstellen">
+    </div>
+</form>
+    
+{% endblock %}
+    

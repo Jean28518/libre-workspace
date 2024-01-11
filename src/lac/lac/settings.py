@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'app_dashboard',
 ]
 
 MIDDLEWARE = [
@@ -182,6 +184,9 @@ STATICFILES_DIRS = [
 STATIC_ROOT = '/var/www/linux-arbeitsplatz-static/'
 
 ALLOWED_HOSTS = ['*']
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Email Settings
 EMAIL_HOST = os.getenv("EMAIL_HOST")                 # <- host name [e.g. smtp.gmail.com for gmail]

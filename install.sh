@@ -26,12 +26,21 @@ python manage.py migrate --no-input
 # Get the output of hostname -I and cut the first part of it
 IP=`hostname -I | cut -d' ' -f1`
 
-echo ":443 {
+# If caddy file does not has # PORTAL-ENTRY, then add it
+if ! grep -q "# PORTAL-ENTRY" /etc/caddy/Caddyfile; then
+
+echo "# PORTAL-ENTRY
+:443 {
     tls internal {
         on_demand
     }
     handle_path /static* {
         root * /var/www/linux-arbeitsplatz-static
+        file_server
+        encode zstd gzip
+    }
+    handle_path /media* {
+        root * /usr/share/linux-arbeitsplatz/media
         file_server
         encode zstd gzip
     }
@@ -50,3 +59,5 @@ http://localhost {
 }
 
 " >> /etc/caddy/Caddyfile
+
+fi

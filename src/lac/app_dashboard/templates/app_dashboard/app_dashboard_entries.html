@@ -1,0 +1,22 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h1> Dashboard-Einträge </h1>
+
+<a href="{% url 'new_app_dashboard_entry' %}" role=button> Neuer Dashboard-Eintrag </a>
+
+<table>
+<tr>
+<th> Titel </th>
+<th> Bearbeiten </th>
+</tr>
+
+{% for dashboard in dashboard_entries %}
+<tr>
+<td> {{ dashboard.title }} </td>
+<td> <a href="{% url 'edit_app_dashboard_entry' dashboard.id %}"> Bearbeiten </a> </td>
+</tr>
+{% endfor %}
+</table>
+{% endblock  %}
+
