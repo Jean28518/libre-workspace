@@ -2,6 +2,7 @@
 import os
 import unix_config # (its in the same directory)
 import time
+from datetime import datetime
 
 # If cron is not running as root, exit
 if os.geteuid() != 0:
@@ -29,9 +30,41 @@ def ensure_fingerprint_is_trusted():
     with open("/root/.ssh/known_hosts", "w") as f:
         f.writelines(known_hosts)
 
+def ensure_rocketchat_settings():
+    time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    # Count the number of files with name "rocketchat" in history directory
+    history_files = os.listdir("history")
+    rocketchat_files = []
+    for history_file in history_files:
+        if "rocketchat" in history_file:
+            rocketchat_files.append(history_file)
+    # If there are more than 5 files with name "rocketchat" in history directory, exit
+    if len(rocketchat_files) >= 5:
+        return
+    
+    # Find the latest file with name "rocketchat" in history directory
+    # Only run if the latest file was created more than 5 minutes ago
+    if len(rocketchat_files) > 0:
+        latest_file = rocketchat_files[0]
+        for rocketchat_file in rocketchat_files:
+            if rocketchat_file > latest_file:
+                latest_file = rocketchat_file
+        # If the latest file was created less than 5 minutes ago, exit
+        latest_time = latest_file.split("_")[1].split(".")[0]
+        # Get time of latest file
+        latest_file = datetime.strptime(latest_time, "%Y-%m-%d-%H-%M-%S")
+        if (datetime.now() - latest_file).seconds < 300:
+            return
+    old_working_dir = os.getcwd()
+    os.chdir("../../welcome/scripts")
+    print("Ensuring rocketchat settings...")
+    os.system("python3 configure_rockechat_ldap.py")
+    os.chdir(old_working_dir)
+    os.system("touch history/rocketchat_" + time + ".set")
 
 
-counter = 0
+
+counter = 60
 hourly_counter = 3600
 while True:
     ## Run every minute ############################################################################################
@@ -49,6 +82,9 @@ while True:
 
     # Read config file
     unix_config.read_config_file()
+
+    # Ensure rocketchat settings
+    ensure_rocketchat_settings()
 
     ## BACKUP ######################################################################################################
 

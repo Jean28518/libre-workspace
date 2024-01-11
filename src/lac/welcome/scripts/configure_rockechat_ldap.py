@@ -2,7 +2,17 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 
-from .configure_rockechat_ldap import update_setting
+from rocketchat_mongo import update_setting
+
+# Get IP and domain from env.sh file:
+env_lines = open("env.sh", "r").readlines()
+for line in env_lines:
+    if "export IP=" in line:
+        os.environ["IP"] = line.split("=")[1].strip("\" \n")
+    elif "export DOMAIN=" in line:
+        os.environ["DOMAIN"] = line.split("=")[1].strip("\" \n")
+    elif "export ADMIN_PASSWORD=" in line:
+        os.environ["ADMIN_PASSWORD"] = line.split("=")[1].strip("\" \n")
 
 
 IP = os.environ['IP']

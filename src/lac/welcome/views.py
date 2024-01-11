@@ -97,6 +97,12 @@ def installation_running(request):
     os.environ["ROCKETCHAT"] = request.session["rocketchat"]
     os.environ["JITSI"] = request.session["jitsi"]
 
+    # Create env.sh file
+    with open("/usr/share/linux-arbeitsplatz/welcome/scripts/env.sh", "w") as f:
+        f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
+        f.write(f"export IP={os.environ['IP']}\n")
+        f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
+
     # Run installation script
     # if file /usr/share/linux-arbeitsplatz/welcome/scripts/installation_running exists
     if not os.path.isfile("/usr/share/linux-arbeitsplatz/welcome/scripts/installation_running"):
