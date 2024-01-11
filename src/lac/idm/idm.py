@@ -8,17 +8,25 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 
 
+# user: ldap user, user object or username
 def get_user_information(user):
     user_information = {}
-    if settings.AUTH_LDAP_ENABLED:
+    if type(user) == str:
+        if settings.AUTH_LDAP_ENABLED:
+            user_information = get_user_information_of_cn("Administrator")
+        else:
+            user = User.objects.get(username=user)
+    elif settings.AUTH_LDAP_ENABLED:     
         user_information = get_user_information_of_cn(user.ldap_user.dn)
-    else:
+
+    if not settings.AUTH_LDAP_ENABLED:
         user_information["admin"] = user.is_superuser
         user_information["username"] = user.username
-        user_information["email"] = user.email
+        user_information["mail"] = user.email
         user_information["first_name"] = user.first_name
         user_information["last_name"] = user.last_name
         user_information["displayName"] = user.first_name + " " + user.last_name
+        
     return user_information
 
 
@@ -72,3 +80,10 @@ def ensure_superuser_exists():
                 email="",
             )
             print("Created superuser 'Administrator' with password '{}'".format(settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP))
+
+
+def get_admin_user():
+    if settings.AUTH_LDAP_ENABLED:
+        return get_user_information("Administrator")
+    else:
+        return User.objects.get(username="Administrator")

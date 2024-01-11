@@ -20,4 +20,6 @@ urlpatterns = [
     path("pick_folder", views.pick_folder, name="pick_folder"),
 
     path("set_update_configuration", views.set_update_configuration, name="set_update_configuration"),
+    
+    path("send_mail", views.unix_send_mail, name="send_mail"),
 ]

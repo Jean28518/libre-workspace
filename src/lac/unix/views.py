@@ -3,7 +3,11 @@ import unix.unix_scripts.unix as unix
 import unix.forms as forms
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.contrib.auth.models import User
+from idm.idm import get_admin_user
 import time
 
 
@@ -206,3 +210,36 @@ def pick_folder(request):
 
     folder_list = unix.get_folder_list(request.session["current_directory"])
     return render(request, "unix/pick_folder.html", {"description": description, "folder_list": folder_list, "current_directory": request.session["current_directory"]})
+
+
+# We are using the djano module here
+# This is only for local scripts.
+# We are checking if the remote ip address is 127.0.0.1
+def unix_send_mail(request):
+    if request.method != "POST":
+        return HttpResponse("Unauthorized")
+
+    # if ip address 127.0.0.1 return
+    if request.META.get("REMOTE_ADDR", "") != "127.0.0.1":
+        return HttpResponse("Unauthorized")
+    
+    # Get admin email address
+    admin_user = get_admin_user()
+  
+    recipient = request.POST.get("recipient", "")
+    if recipient == "":
+        if admin_user.get("mail", None) != None:
+            recipient = admin_user["mail"]
+        if recipient == "":
+            return HttpResponseBadRequest("No recipient given and no admin email address found")
+    subject = request.POST.get("subject", "")
+    message = request.POST.get("message", "").replace("\\n", "\n")
+    attachment_path = request.POST.get("attachment_path", "")
+
+    email = EmailMessage(subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=[recipient])
+    if attachment_path != "":
+        email.attach_file(attachment_path)
+    print("Sending email...")
+    email.send()
+
+    return HttpResponse("Mail send successfully")
