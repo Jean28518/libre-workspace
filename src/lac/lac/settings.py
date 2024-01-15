@@ -203,3 +203,5 @@ EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL") == "True"
 NEXTCLOUD_INSTALLATION_DIRECTORY = os.getenv("NEXTCLOUD_INSTALLATION_DIRECTORY", "/var/www/nextcloud/")
 
 LINUX_ARBEITSPLATZ_CONFIGURED = os.getenv("LINUX_ARBEITSPLATZ_CONFIGURED", "false").lower() == "true"
+
+LOGIN_URL="/idm/login"

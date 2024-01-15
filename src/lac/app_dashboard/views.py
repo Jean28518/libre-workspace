@@ -14,7 +14,7 @@ import idm.ldap
 import idm.views
 
 # Cache for 10 seconds
-cache_page(10)
+@cache_page(10)
 def index(request):
     idm.idm.ensure_superuser_exists()
     if not settings.LINUX_ARBEITSPLATZ_CONFIGURED:
@@ -60,13 +60,13 @@ def index(request):
     return render(request, "app_dashboard/index.html", {"request": request, "grid": grid})
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def app_dashboard_entries(request):
     dashboard_entries = DashboardEntry.objects.all()
     dashboard_entries = sorted(dashboard_entries, key=lambda x: x.order)
     return render(request, "app_dashboard/app_dashboard_entries.html", {"request": request, "dashboard_entries": dashboard_entries})
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def new_app_dashboard_entry(request):
     message = ""
     if request.method == "POST":
@@ -82,7 +82,7 @@ def new_app_dashboard_entry(request):
     return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "Dasboard-Eintrag", "url": reverse("app_dashboard_entries"), "message": message})
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def edit_app_dashboard_entry(request, id):
     message = ""
     dashboard_entry = DashboardEntry.objects.get(id=id)

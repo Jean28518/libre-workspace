@@ -12,7 +12,7 @@ import time
 
 
 # Create your views here.
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 # System Management
 def unix_index(request):
     backup_information = unix.get_borg_information_for_dashboard()
@@ -23,7 +23,7 @@ def unix_index(request):
     return render(request, "unix/system_management.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information, "update_information": update_information})
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def set_update_configuration(request):
     if request.method == "POST":
         software_modules = unix.get_software_modules()
@@ -41,7 +41,7 @@ def set_update_configuration(request):
         unix.set_value("UPDATE_TIME", request.POST.get("time", "02:00"))
     return redirect("unix_index")
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def backup_settings(request):
     message = ""
     current_config = {
@@ -78,33 +78,33 @@ def backup_settings(request):
     return render(request, "unix/backup_settings.html", {"form": form, "message": message, "public_key": public_key})
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def retry_backup(request):
     unix.retry_backup()
     time.sleep(1)
     return redirect("unix_index")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def update_system(request):
     unix.update_system()
     time.sleep(1)
     return redirect("unix_index")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def reboot_system(request):
     unix.reboot_system()
     return redirect("unix_index")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def shutdown_system(request):
     unix.shutdown_system()
     return redirect("unix_index")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def data_management(request):
     partitions = unix.get_partitions()
     data_export_status = unix.get_data_export_status()
@@ -118,7 +118,7 @@ def data_management(request):
     return render(request, "unix/data_management.html", {"partitions": partitions, "data_export_status": data_export_status, "rsync_history": rsync_history, "nextcloud_user_directories": nextcloud_user_directories, "nextcloud_import_process_running": nextcloud_import_process_running})
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def mount(request, partition):
     message = unix.mount(partition)
     if message != "":
@@ -127,7 +127,7 @@ def mount(request, partition):
     return redirect("data_management")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def umount(request, partition):
     message = unix.umount(partition)
     if message != "":
@@ -136,7 +136,7 @@ def umount(request, partition):
     return redirect("data_management")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def data_export(request):
     if request.method == "POST":
         partition = request.POST.get("partition-export", "")
@@ -149,14 +149,14 @@ def data_export(request):
     return redirect("data_management")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def abort_current_data_export(request):
     unix.abort_current_data_export()
     time.sleep(1)
     return redirect("data_management")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def data_import_1(request):
     if request.method == "POST":
         current_directory = request.POST.get("current_directory", "")
@@ -174,7 +174,7 @@ def data_import_1(request):
         
         return redirect("pick_folder")
     
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def data_import_2(request):
     if request.session["current_directory"] == "/":
         return HttpResponse("Fehler: Das Root-Verzeichnis kann nicht importiert werden")
@@ -184,7 +184,7 @@ def data_import_2(request):
     
 
 # Session: current_directory*, redirection_after_selection, redirection_on_cancel, description
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def pick_folder(request):
     if request.session.get("current_directory", "") == "":
         return HttpResponse("Fehler: Kein Verzeichnis angegeben")
@@ -241,7 +241,7 @@ def unix_send_mail(request):
     return HttpResponse("Mail send successfully")
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def file_explorer(request):
     current_directory = request.session.get("current_directory", "/")
 

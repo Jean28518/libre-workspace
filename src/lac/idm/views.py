@@ -110,13 +110,13 @@ def change_password(request):
         form = PasswordForm()
         return render(request, "idm/change_password.html", {"form": form})
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def user_overview(request):
     users = ldap_get_all_users()
     print(users)
     return render(request, "idm/admin/user_overview.html", {"users": users})
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def create_user(request):
     message = ""
     form_data = {}
@@ -142,7 +142,7 @@ def create_user(request):
     return render(request, "idm/admin/create_user.html", {"form": form, "message": message})
 
     
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def edit_user(request, cn):
     message = ""
     form_data = get_user_information_of_cn(cn)
@@ -168,17 +168,17 @@ def edit_user(request, cn):
         form = AdministratorUserEditForm(form_data)
     return render(request, "idm/admin/edit_user.html", {"form": form, "message": message, "cn": cn})#
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def delete_user(request, cn):
     ldap_delete_user(cn)
     return redirect(user_overview)
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def group_overview(request):
     groups = ldap_get_all_groups()
     return render(request, "idm/admin/group_overview.html", {"groups": groups})
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def create_group(request):
     message = ""
     form_data = {}
@@ -202,7 +202,7 @@ def create_group(request):
     return render(request, "idm/admin/create_group.html", {"form": form, "message": message})
     
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def edit_group(request, cn):
     message = ""
     form_data = ldap_get_group_information_of_cn(cn)
@@ -221,12 +221,12 @@ def edit_group(request, cn):
         form = GroupEditForm(form_data)
     return render(request, "idm/admin/edit_group.html", {"form": form, "message": message, "cn": cn})
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def delete_group(request, cn):
     ldap_delete_group(cn)
     return redirect(group_overview)
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def assign_users_to_group(request, cn):
     users = ldap_get_all_users()
     group_dn = ldap_get_group_information_of_cn(cn)["dn"]
@@ -267,7 +267,7 @@ def assign_users_to_group(request, cn):
     return render(request, "idm/admin/assign_users_to_group.html", {"users": users, "cn": cn, "message": message})
 
 
-@staff_member_required
+@staff_member_required(login_url=settings.LOGIN_URL)
 def assign_groups_to_user(request, cn):
     groups = ldap_get_all_groups()
     user_information = get_user_information_of_cn(cn)
