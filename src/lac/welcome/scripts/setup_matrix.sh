@@ -11,11 +11,9 @@ DC_DC="dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
 # Install matrix
 mkdir /root/matrix
 cp docker_matrix_entry.txt /root/matrix/docker-compose.yml
-docker run -it --rm \
-    --volume /root/matrix/synapse-data:/data \
-    -e SYNAPSE_SERVER_NAME=matrix.$DOMAIN \
-    -e SYNAPSE_REPORT_STATS=no \
-    matrixdotorg/synapse:latest generate
+
+mkdir /root/matrix/synapse-data
+docker run --rm --volume /root/matrix/synapse-data:/data -e SYNAPSE_SERVER_NAME=matrix.$DOMAIN -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
 
 
 echo "

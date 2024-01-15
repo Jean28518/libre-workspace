@@ -60,4 +60,6 @@ http://localhost {
 
 " >> /etc/caddy/Caddyfile
 
+systemctl reload caddy
+
 fi
