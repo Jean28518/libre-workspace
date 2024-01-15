@@ -72,6 +72,9 @@ Installation on an existing Debian or Ubuntu system
 .. code-block:: bash
 
     sudo apt install ./linux-arbeitsplatz.deb
+    sudo systemctl start linux-arbeitsplatz-web
+    # If you don't run the welcome assistant:
+    sudo systemctl start linux-arbeitsplatz-unix
 
 This will install the the webserver caddy and the management portal which listens on port 443.
 
