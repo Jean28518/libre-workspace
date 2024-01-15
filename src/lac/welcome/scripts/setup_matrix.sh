@@ -27,7 +27,7 @@ modules:
      attributes:
         uid: \"cn\"
         mail: \"mail\"
-        name: \"givenName\"
+        name: \"displayName\"
      bind_dn: \"cn=Administrator,cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"
      bind_password: \"$ADMIN_PASSWORD\"
      #filter: \"(objectClass=posixAccount)\"
