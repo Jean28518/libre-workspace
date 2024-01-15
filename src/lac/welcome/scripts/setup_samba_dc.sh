@@ -106,13 +106,15 @@ systemctl restart samba-ad-dc
 ufw allow ldaps
 
 # Add these subdomains to samba dns server:
-# .la .cloud .office .portal .chat .meet
+# .la .cloud .office .portal .chat .meet, .element, .matrix
 samba-tool dns add la.$DOMAIN $DOMAIN la A $IP -U administrator%$ADMIN_PASSWORD
 samba-tool dns add la.$DOMAIN $DOMAIN cloud A $IP -U administrator%$ADMIN_PASSWORD
 samba-tool dns add la.$DOMAIN $DOMAIN office A $IP -U administrator%$ADMIN_PASSWORD
 samba-tool dns add la.$DOMAIN $DOMAIN portal A $IP -U administrator%$ADMIN_PASSWORD
 samba-tool dns add la.$DOMAIN $DOMAIN chat A $IP -U administrator%$ADMIN_PASSWORD
 samba-tool dns add la.$DOMAIN $DOMAIN meet A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN element A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
 
 # Add all these entries to /etc/hosts
 echo "$IP cloud.$DOMAIN" >> /etc/hosts # Nextcloud
@@ -120,4 +122,6 @@ echo "$IP office.$DOMAIN" >> /etc/hosts # Online Office
 echo "$IP portal.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Central
 echo "$IP chat.$DOMAIN" >> /etc/hosts # Rocket.Chat
 echo "$IP meet.$DOMAIN" >> /etc/hosts # Jitsi Meet
+echo "$IP element.$DOMAIN" >> /etc/hosts # Element
+echo "$IP matrix.$DOMAIN" >> /etc/hosts # Matrix
 echo "$IP $DOMAIN" >> /etc/hosts # Domain itself

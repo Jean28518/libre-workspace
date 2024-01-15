@@ -423,6 +423,10 @@ def is_rocketchat_available():
     return os.path.isdir("/root/rocket.chat/")
 
 
+def is_matrix_available():
+    return os.path.isdir("/root/matrix/")
+
+
 def is_jitsi_available():
     return os.path.isdir("/root/jitsi/")
 
@@ -445,6 +449,10 @@ def get_software_modules():
         modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
         modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
+    if is_matrix_available():
+        modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
+    else:
+        modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_jitsi_available():
         modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:

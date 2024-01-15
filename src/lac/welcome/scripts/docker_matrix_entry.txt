@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=synapse
+      - POSTGRES_PASSWORD=OoRei7oh
+      - POSTGRES_DB=synapse
+      - POSTGRES_INITDB_ARGS=--encoding='UTF8' --lc-collate='C' --lc-ctype='C'
+    volumes: 
+      - ./postgres-data:/var/lib/postgresql/data
+  synapse:
+    image: matrixdotorg/synapse:latest
+    restart: unless-stopped
+    volumes:
+      - ./synapse-data:/data
+    ports:
+      - 8008:8008
+    depends_on:
+      - db
+  element:
+    container_name: element
+    image: vectorim/element-web
+    restart: unless-stopped
+    ports:
+      - 15124:80

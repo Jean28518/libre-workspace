@@ -8,7 +8,7 @@ import welcome.cfg as cfg
 
 import welcome.scripts.update_email_settings as update_email_settings
 
-subdomains = ["cloud", "office", "portal", "la", "chat", "meet"]
+subdomains = ["cloud", "office", "portal", "la", "chat", "meet", "element", "matrix"]
 
 # Create your views here.
 def welcome_start(request):
@@ -61,6 +61,7 @@ def welcome_select_apps(request):
             request.session["onlyoffice"] = ""
             request.session["collabora"] = ""
         request.session["rocketchat"] = request.POST.get("rocketchat", "")
+        request.session["matrix"] = request.POST.get("matrix", "")
         request.session["jitsi"] = request.POST.get("jitsi", "")
         return redirect("welcome_dns_settings")
 
@@ -95,6 +96,7 @@ def installation_running(request):
     os.environ["ONLYOFFICE"] = request.session["onlyoffice"]
     os.environ["COLLABORA"] = request.session["collabora"]
     os.environ["ROCKETCHAT"] = request.session["rocketchat"]
+    os.environ["MATRIX"] = request.session["matrix"]
     os.environ["JITSI"] = request.session["jitsi"]
 
     # Create env.sh file

@@ -31,6 +31,12 @@ if [ ! -z "$ROCKETCHAT" ]; then
     . setup_rocketchat.sh
 fi
 
+# If the environment variable ROCKETCHAT is not empty
+if [ ! -z "$MATRIX" ]; then
+    # Install Rocket.Chat
+    . setup_matrix.sh
+fi
+
 # If the environment variable JITSI is not empty
 if [ ! -z "$JITSI" ]; then
     # Install Jitsi

@@ -31,6 +31,11 @@ if [ "$ROCKETCHAT_AUTOMATIC_UPDATES" == "True" ]; then
     bash rocketchat/update_rocketchat.sh >> ./history/update-$DATE.log
 fi
 
+if [ "$MATRIX_AUTOMATIC_UPDATES" == "True" ]; then
+    echo "Starting matrix update at $DATE" >> ./history/update-$DATE.log
+    bash matrix/update_matrix.sh >> ./history/update-$DATE.log
+fi
+
 if [ "$JITSI_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting jitsi update at $DATE" >> ./history/update-$DATE.log
     bash jitsi/update_jitsi.sh >> ./history/update-$DATE.log

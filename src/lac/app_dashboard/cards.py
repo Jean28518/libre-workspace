@@ -17,6 +17,7 @@ def get_card_for(title, url, icon_path, description):
 card_data = [
     {"title": "Nextcloud", "url": "", "icon_path": "/static/lac/icons/nextcloud.webp", "description": "Dateien, Kalender, ...", "keywords": ["cloud", "nextcloud"]},
     {"title": "Rocket.Chat", "url": "", "icon_path": "/static/lac/icons/rocketchat.webp", "description": "Unternehmens-Chat", "keywords": ["chat", "rocketchat"]},
+    {"title": "Element", "url": "", "icon_path": "/static/lac/icons/element.webp", "description": "Chat", "keywords": ["element"]},
     {"title": "Jitsi", "url": "", "icon_path": "/static/lac/icons/jitsi.webp", "description": "Videokonferenzen", "keywords": ["jitsi", "meet"]},
     {"title": "ERP", "url": "", "icon_path": "/static/lac/icons/erp.webp", "description": "Enterprise Resource Planning", "keywords": ["erp", "erpnext", "kivitendo"]},
     {"title": "NocoDB", "url": "", "icon_path": "/static/lac/icons/nocodb.webp", "description": "Datenbanken", "keywords": ["nocodb", "database", "db"]},
