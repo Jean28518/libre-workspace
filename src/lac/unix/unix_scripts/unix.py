@@ -438,25 +438,25 @@ def is_onlyoffice_available():
 def get_software_modules():
     modules = []
     if is_nextcloud_available():
-        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
-        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_rocketchat_available():
-        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
-        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_jitsi_available():
-        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
-        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_collabora_available():
-        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
-        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_onlyoffice_available():
-        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "false") == "true", "installed": True })
+        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
-        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "false") == "true", "installed": False })
+        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     
     print(modules)
     return modules
@@ -470,13 +470,14 @@ def get_update_history():
             entry["date"] = file[7:-4]
             entry["content"] = open(f"history/{file}").read().replace("\n", "<br>")
             history.append(entry)
+    history = sorted(history, key=lambda k: k['date'], reverse=True)
     return history
 
 
 def get_update_information():
     update_information = {}
     update_information["software_modules"] = get_software_modules()
-    update_information["software_modules"].insert(0, {"id": "system", "name": "System", "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "false") == "true"})
-    update_information["update_time"] = get_value("UPDATE_TIME")
+    update_information["software_modules"].insert(0, {"id": "system", "name": "System", "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "False") == "True"})
+    update_information["update_time"] = get_value("UPDATE_TIME", "02:00")
     update_information["update_history"] = get_update_history()
     return update_information

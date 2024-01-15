@@ -38,19 +38,19 @@
                             <td>
                                <!-- Button to trigger the modal -->
                                 <a class="outline"
-                                data-target="backup-error{{ backup.date }}"
+                                data-target="backup-error{{ log.date }}"
                                 onClick="toggleModal(event)"
                                 href="#">
                                 Bericht anzeigen
                                 </a>
                                 <!-- Modal -->
                                 <!-- Modal -->
-                                <dialog id="backup-error{{ backup.date }}">
+                                <dialog id="backup-error{{ log.date }}">
                                     <article>
                                     <a href="#close"
                                         aria-label="Close"
                                         class="close"
-                                        data-target="backup-error{{ backup.date }}"
+                                        data-target="backup-error{{ log.date }}"
                                         onClick="toggleModal(event)">
                                     </a>
                                     <h3>Update am {{ log.date }}</h3>
@@ -61,7 +61,7 @@
                                         <a href="#cancel"
                                         role="button"
                                         class="secondary"
-                                        data-target="backup-error{{ backup.date }}"
+                                        data-target="backup-error{{ log.date }}"
                                         onClick="toggleModal(event)">
                                         Schließen
                                         </a>

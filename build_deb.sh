@@ -2,7 +2,7 @@ mkdir -p deb/usr/share/linux-arbeitsplatz
 cp -r src/lac/* deb/usr/share/linux-arbeitsplatz/
 
 # Disable DEBUG mode
-# sed -i "s/DEBUG = True/DEBUG = False/g" deb/usr/share/linux-arbeitsplatz/lac/settings.py
+sed -i "s/DEBUG = True/DEBUG = False/g" deb/usr/share/linux-arbeitsplatz/lac/settings.py
 
 cp install.sh deb/usr/share/linux-arbeitsplatz
 cp run.sh deb/usr/share/linux-arbeitsplatz

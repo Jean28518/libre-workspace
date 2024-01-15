@@ -31,13 +31,13 @@ def set_update_configuration(request):
             key = module["id"]
             configKey = key.upper() + "_AUTOMATIC_UPDATES"
             if request.POST.get(key, "") == "on":
-                unix.set_value(configKey, "true")
+                unix.set_value(configKey, "True")
             else:
-                unix.set_value(configKey, "false")
+                unix.set_value(configKey, "False")
         if request.POST.get("system", "") == "on":
-            unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "true")
+            unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "True")
         else:
-            unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "false")
+            unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "False")
         unix.set_value("UPDATE_TIME", request.POST.get("time", "02:00"))
     return redirect("unix_index")
 
