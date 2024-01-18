@@ -52,6 +52,9 @@ echo "database:
 # Run docker-compose.yml
 docker-compose -f /root/matrix/docker-compose.yml up -d
 
+# If synapse is restarting and complaining about the signing key (Permission denied), then run this command:
+# mv /root/matrix/synapse-data/signing.key /root/matrix/synapse-data/signing.key.old
+
 
 # Change element app/config.json inside the docker container
 sudo docker cp element:/app/config.json /root/matrix/config.json

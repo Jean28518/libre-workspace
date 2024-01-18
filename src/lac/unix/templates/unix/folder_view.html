@@ -7,15 +7,14 @@
 
 <h5>Aktueller Ordner: {{ current_directory }} </h5>
 
-<table style="color:var(--color);">
+<table>
 <tbody>
 
 {% for folder in folder_list %}
 <tr>
-    {% comment %} <td><a href="">{{ folder }}</a></td> {% endcomment %}
     <form method="post" style="display: inline;">
         <input type="hidden" name="pick" value="{{ folder }}">
-        <button type="submit" name="pick" value="{{ folder }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" >
+        <button type="submit" name="pick" value="{{ folder }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" class="secondary outline" >
             <span class="material-icons md-28">folder</span> 
             {{folder}}
         </button>
@@ -24,10 +23,13 @@
 {% endfor %}
 
 {% for file in file_list %}
-<tr>
-    {% comment %} <td><a href="">{{ file }}</a></td> {% endcomment %}
-    <span class="material-icons md-24">description</span> 
-    {{file}}<br>
+<tr>   
+    <form method="post" style="display: inline;">
+        <button name="pick" value="{{ folder }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" class="secondary outline" disabled>
+            <span class="material-icons md-28">description</span> 
+            {{file}}
+        </button>
+    </form>
 </tr>
 {% endfor %}
 </tbody>
