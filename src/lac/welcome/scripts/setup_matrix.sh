@@ -50,6 +50,8 @@ echo "database:
     cp_max: 10" >> /root/matrix/synapse-data/homeserver.yaml
 
 # Run docker-compose.yml
+# We mv this signing key because otherwise synapse will complain about the signing key. I don't know why.
+mv /root/matrix/synapse-data/matrix.$DOMAIN.signing.key /root/matrix/synapse-data/matrix.$DOMAIN.signing.key.old
 docker-compose -f /root/matrix/docker-compose.yml up -d
 
 # If synapse is restarting and complaining about the signing key (Permission denied), then run this command:
@@ -57,14 +59,14 @@ docker-compose -f /root/matrix/docker-compose.yml up -d
 
 
 # Change element app/config.json inside the docker container
-sudo docker cp element:/app/config.json /root/matrix/config.json
+docker cp element:/app/config.json /root/matrix/config.json
 sed -i "s#https://matrix-client.matrix.org#https://matrix.$DOMAIN#g" /root/matrix/config.json
 sed -i "s#https://matrix.org#https://matrix.$DOMAIN#g" /root/matrix/config.json
 sed -i "s#matrix.org#matrix.$DOMAIN#g" /root/matrix/config.json
 sed -i "s#meet.element.io#meet.$DOMAIN#g" /root/matrix/config.json
 
 # Copy the changed config.json back to the docker container
-sudo docker cp /root/matrix/config.json element:/app/config.json
+docker cp /root/matrix/config.json element:/app/config.json
 rm /root/matrix/config.json
 
 # Restart the element container
