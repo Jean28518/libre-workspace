@@ -106,6 +106,11 @@ If you are using caddy, replace the last caddy block in the caddyfile e.g. with 
                 file_server
                 encode zstd gzip
         }
+        handle_path /media* {
+        root * /usr/share/linux-arbeitsplatz/media
+        file_server
+        encode zstd gzip
+        }
         reverse_proxy localhost:11123
     }
 
