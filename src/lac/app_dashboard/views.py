@@ -49,14 +49,18 @@ def index(request):
     grid = []
     while len(cards) > 0:
         grid.append([])
-        for i in range(3):
+        for i in range(4):
             if len(cards) == 0:
                 break
             grid[-1].append(cards.pop(0))
 
-    while len(grid[-1]) < 3:
+    # If we have 2 cards in the last row, we need to add an empty div to the beginning that the cards are centered
+    if len(grid[-1]) == 2:
+        grid[-1].insert(0, "<div></div>")
+    
+    while len(grid[-1]) < 4:
         grid[-1].append("<div></div>")
-            
+
     return render(request, "app_dashboard/index.html", {"request": request, "grid": grid})
 
 

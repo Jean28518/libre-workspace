@@ -10,14 +10,14 @@
     {% if ldap_enabled %}
     <a class="secondary" href="{% url "user_overview" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">manage_accounts</span> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">manage_accounts</span> 
             <br> 
             Benutzeradministration
         </article>
     </a>
     <a class="secondary" href="{% url "group_overview" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">groups</span> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">groups</span> 
             <br> 
             Gruppenadministration
         </article>
@@ -25,35 +25,34 @@
     {% endif %}
     <a class="secondary" href="{% url "data_management" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">save</span> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">save</span> 
             <br> 
             Datenimport/-export
+        </article>
+    </a>
+    <a class="secondary" href="{% url "file_explorer" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-96" style="padding: 0.5rem;">folder</span> 
+            <br> 
+            Datei-Explorer
         </article>
     </a>
 </div>
 <div class="grid">
     <a class="secondary" href="{% url "unix_index" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">dns</span> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">dns</span> 
             <br> 
             Systemverwaltung
         </article>
     </a>
     <a class="secondary" href="{% url "system_configuration" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">settings</span> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">settings</span> 
             <br> 
             Systemkonfiguration
         </article>
-    </a>
-    <a class="secondary" href="{% url "file_explorer" %}">
-        <article style="text-align: center;">
-            <span class="material-icons md-128">folder</span> 
-            <br> 
-            Datei-Explorer
-        </article>
-    </a>
-    
+    </a>    
 </div>
 
 <h3>Eigene Einstellungen</h3>
@@ -64,7 +63,7 @@
     {% if ldap_enabled %}
     <a class="secondary" href="{% url "user_settings" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">account_circle</span> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">account_circle</span> 
             <br> 
             Profileinstellungen
         </article>
@@ -72,7 +71,7 @@
     {% endif %}
     <a class="secondary" href="{% url "change_password" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-128">password</span> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">password</span> 
             <br> 
             Passwort ändern
         </article>

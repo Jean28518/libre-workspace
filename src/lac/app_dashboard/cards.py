@@ -8,7 +8,9 @@ def get_card_for(title, url, icon_path, description):
     return f'''<a class="secondary" href="{url}">
         <article>
             <center>
-            <img src="{icon_path}" alt="{title}" style="height: 8rem"/>
+            <div style="padding: 0.5rem;">
+                <img src="{icon_path}" alt="{title}" style="height: 6rem"/>
+            </div>
             <p><strong> {title} </strong><br><small>{description}</small></p>
             </center>
         </article>
