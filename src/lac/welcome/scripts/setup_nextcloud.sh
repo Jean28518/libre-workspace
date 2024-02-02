@@ -43,8 +43,18 @@ ufw allow http
 ufw allow https
 systemctl reload caddy
 
+ADDITIONAL_INSTALL_OPTIONS=""
+# if /data exists, then add --data-dir="/data/nextcloud" to the installation options
+if [ -d "/data" ]; then
+  ADDITIONAL_INSTALL_OPTIONS="--data-dir=/data/nextcloud"
+  mkdir -p /data/nextcloud
+  chown -R www-data:www-data /data/nextcloud
+  # We also need to change the permissions of the data folder becouse otherwise caddy can't access it properly
+  chown -R www-data:www-data /data
+fi
+
 # Configure nextcloud
-sudo -u www-data php /var/www/nextcloud/occ maintenance:install --database "mysql" --database-name "nextcloud"  --database-user "nextcloud" --database-pass "eemoi2Sh" --admin-user "Administrator" --admin-pass "$ADMIN_PASSWORD"
+sudo -u www-data php /var/www/nextcloud/occ maintenance:install --database "mysql" --database-name "nextcloud"  --database-user "nextcloud" --database-pass "eemoi2Sh" --admin-user "Administrator" --admin-pass "$ADMIN_PASSWORD" $ADDITIONAL_INSTALL_OPTIONS
 # Add cloud.$DOMAIN to trusted domains
 sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_domains 1 --value=cloud.$DOMAIN
 # Add $IP to tusted_proxies
