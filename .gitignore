@@ -161,7 +161,7 @@ cython_debug/
 cfg
 
 linux-arbeitsplatz.deb
-linux-arbeitsplatz.iso
+libre-workspace.iso
 debian-original.iso
 
 .vscode
