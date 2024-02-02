@@ -28,14 +28,14 @@ def update_email_settings(email_settings):
 
     # Change email settings in nextcloud if nextcloud is installed
     if unix.is_nextcloud_available():
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpauthtype --value="LOGIN"')
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpmode --value="{email_settings["encryption"]}"')
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpauth --value="1"')
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtphost --value="{email_settings["server"]}"')
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpport --value="{email_settings["port"]}"')
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpname --value="{email_settings["user"]}"')
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtppassword --value="{email_settings["password"]}"')
-        os.system(f'sudo -u www-data php --define apc.enable_cli=1 {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_from_address --value="{email_settings["user"]}"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpauthtype --value="LOGIN"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpmode --value="{email_settings["encryption"]}"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpauth --value="1"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtphost --value="{email_settings["server"]}"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpport --value="{email_settings["port"]}"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpname --value="{email_settings["user"]}"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtppassword --value="{email_settings["password"]}"')
+        os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_from_address --value="{email_settings["user"]}"')
 
     
     # Change mail settings in rocket.chat if rocket.chat is installed

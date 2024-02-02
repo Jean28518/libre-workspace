@@ -79,6 +79,9 @@ sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.interned_strings_buffer = 128" >> /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.memory_consumption = 2048" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/fpm/php.ini
+# We need this for the automatic updates and the cronjob
+echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/cli/php.ini
 
 # Uncomment the environment variables in /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 sed -i "s/;env\[HOSTNAME\]/env[HOSTNAME]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf

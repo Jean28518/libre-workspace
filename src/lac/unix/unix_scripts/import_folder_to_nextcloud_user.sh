@@ -9,5 +9,5 @@ convmv -f utf-8 -t utf-8 -r --notest --nfc $NEXTCLOUD_USER_FOLDER/*
 sudo chown www-data:www-data -R $NEXTCLOUD_USER_FOLDER/*
 
 # One of these two commands will work (because we do not know if the current nextcloud has apc.enable_cli=1 or not):
-sudo -u www-data php --define apc.enable_cli=1 $NEXTCLOUD_INSTALLATION_DIRECTORY/occ files:scan --all
+sudo -u www-data php $NEXTCLOUD_INSTALLATION_DIRECTORY/occ files:scan --all
 rm nextcloud_import_process_running
