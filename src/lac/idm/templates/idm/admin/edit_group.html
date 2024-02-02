@@ -18,7 +18,9 @@ GRUPPE LÖSCHEN
     {{ form }}
     <br><br>
     <div class="grid">
-        <a href="{% url "group_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Änderungen speichern">
     </div>
 </form>
@@ -47,7 +49,7 @@ GRUPPE LÖSCHEN
             onClick="toggleModal(event)">
             Abbrechen
         </a>
-        <a href="{% url "delete_group" cn %}"role="button" class="contrast" style="height: 62px">GRUPPE LÖSCHEN</a>
+        <a href="{% url "delete_group" cn %}"role="button" class="contrast" style="height: 50px">GRUPPE LÖSCHEN</a>
         </footer>
     </article>
 </dialog>

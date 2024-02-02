@@ -22,7 +22,9 @@
     {% endfor %}
     <br><br>
     <div class="grid">
-        <a href="{% url "group_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Mitgliedschaften aktualisieren">
     </div>
 </form>

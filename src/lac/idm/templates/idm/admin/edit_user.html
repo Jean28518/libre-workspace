@@ -15,19 +15,25 @@ BENUTZER LÖSCHEN
 </button>
 
 <div class="grid">
-    <a href="{% url "assign_groups_to_user" cn %}"role="button" class="secondary outline" style="height: 62px">Gruppen-Mitgliedschaften</a>
+    <div>
+        <a href="{% url "assign_groups_to_user" cn %}"role="button" class="secondary" style="display: block;">Zurück</a>
+    </div>
 </div>
 <br>
 
 <form method="post">
     <div class="grid">
-        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Änderungen speichern">
     </div>
     {{ form }}
     <br><br>
     <div class="grid">
-        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Änderungen speichern">
     </div>
 </form>
@@ -55,7 +61,7 @@ BENUTZER LÖSCHEN
             onClick="toggleModal(event)">
             Abbrechen
         </a>
-        <a href="{% url "delete_user" cn %}"role="button" class="contrast" style="height: 62px">BENUTZER LÖSCHEN</a>
+        <a href="{% url "delete_user" cn %}"role="button" class="contrast" style="height: 50px">BENUTZER LÖSCHEN</a>
         </footer>
     </article>
 </dialog>

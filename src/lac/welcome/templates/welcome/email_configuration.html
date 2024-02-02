@@ -18,7 +18,9 @@
         {{ form }}
 
         <div class="grid">
-            <a href="{% url "system_configuration" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+            <div>
+                <a href="{% url "system_configuration" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            </div>
             <input type="submit" value="Änderungen speichern">
         </div>
     </form>

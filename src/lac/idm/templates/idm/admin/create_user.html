@@ -10,13 +10,17 @@
 
 <form method="post">
     <div class="grid">
-        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Benutzer hinzufügen">
     </div>
     {{ form }}
     <br><br>
     <div class="grid">
-        <a href="{% url "user_overview" %}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Benutzer hinzufügen">
     </div>
 </form>

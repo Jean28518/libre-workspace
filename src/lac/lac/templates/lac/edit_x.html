@@ -15,13 +15,17 @@ LÖSCHEN
 
 <form method="post" enctype="multipart/form-data">
     <div class="grid">
-        <a href="{{url}}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Speichern">
     </div>
     {{ form }}
     <br><br>
     <div class="grid">
-        <a href="{{url}}"role="button" class="secondary" style="height: 62px">Zurück</a>
+        <div>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
         <input type="submit" value="Speichern">
     </div>
 </form>
@@ -48,7 +52,10 @@ LÖSCHEN
             onClick="toggleModal(event)">
             Abbrechen
         </a>
-        <a href="{{delete_url}}"role="button" class="contrast" style="height: 62px">LÖSCHEN</a>
+        <div>
+            <a href="{% url "dashboard" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+        </div>
+        <a href="{{delete_url}}"role="button" class="contrast" style="height: 50px">LÖSCHEN</a>
         </footer>
     </article>
 </dialog>
