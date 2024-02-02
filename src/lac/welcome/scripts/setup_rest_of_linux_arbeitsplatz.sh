@@ -62,9 +62,6 @@ echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,dc=$SCND_DOMAIN_L
 echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
 echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,DC=$SCND_DOMAIN_LABEL,DC=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
 
-# Set the password of the systemv user
-chpasswd <<<"systemv:$ADMIN_PASSWORD"
-
 # Enable the unix service
 /usr/bin/systemctl enable linux-arbeitsplatz-unix.service
 
