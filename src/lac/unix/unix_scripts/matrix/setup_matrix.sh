@@ -60,11 +60,31 @@ docker-compose -f /root/matrix/docker-compose.yml up -d
 
 . update_element_config.sh
 
+# Add "unencrypt" message to clients in .well-known/matrix/server
+# So the clients don't encrypt the messages by default
+mkdir -p /var/www/matrix/.well-known/matrix
+echo "{
+    \"io.element.e2ee\": {
+        \"default\": false
+    }
+}
+
+" > /var/www/matrix/.well-known/matrix/client
+
+chown -R www-data:www-data /var/www/matrix
+
 
 # Add caddy file entry:
 echo "matrix.$DOMAIN {
-    #tls internal
-    reverse_proxy localhost:8008
+  #tls internal
+  handle_path /.well-known* {
+    header {
+      Access-Control-Allow-Origin *
+    }
+    root * /var/www/matrix/.well-known
+    file_server
+  }
+  reverse_proxy localhost:8008
 }
 
 " >> /etc/caddy/Caddyfile
