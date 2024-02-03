@@ -131,6 +131,13 @@ def get_user_dn_by_email(email):
         return result[0][0]
 
 def ldap_create_user(user_information):
+
+    # Check if username is allowd:
+    username = user_information["username"]
+    # Only allow lowercase letters, numbers and the following special character: -.
+    if username.replace("-", "").replace(".", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "").replace("a", "").replace("b", "").replace("c", "").replace("d", "").replace("e", "").replace("f", "").replace("g", "").replace("h", "").replace("i", "").replace("j", "").replace("k", "").replace("l", "").replace("m", "").replace("n", "").replace("o", "").replace("p", "").replace("q", "").replace("r", "").replace("s", "").replace("t", "").replace("u", "").replace("v", "").replace("w", "").replace("x", "").replace("y", "").replace("z", "").replace("ä", "").replace("ö", "").replace("ü", "") != "":
+        return "Der Benutzername darf nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich enthalten"
+
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
@@ -342,6 +349,12 @@ def apply_default_group_attriubte_to_description(description : str, defaultGroup
 
 
 def ldap_create_group(group_information):
+
+    # Check if group name is allowd:
+    # Only allow lowercase letters, numbers and the following special character: -.
+    if group_information["cn"].replace("-", "").replace(".", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "").replace("a", "").replace("b", "").replace("c", "").replace("d", "").replace("e", "").replace("f", "").replace("g", "").replace("h", "").replace("i", "").replace("j", "").replace("k", "").replace("l", "").replace("m", "").replace("n", "").replace("o", "").replace("p", "").replace("q", "").replace("r", "").replace("s", "").replace("t", "").replace("u", "").replace("v", "").replace("w", "").replace("x", "").replace("y", "").replace("z", "").replace("ä", "").replace("ö", "").replace("ü", "") != "":
+        return "Der Gruppenname darf nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich enthalten"
+
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
