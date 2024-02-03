@@ -89,15 +89,15 @@ while True:
     ## BACKUP ######################################################################################################
 
     # Get backup time from config file
-    if unix_config.get_value("BORG_REPOSITORY") != "" and not os.path.exists("backup_disabled"):
+    if unix_config.get_value("BORG_REPOSITORY") != "" and not os.path.exists("maintenance/backup_disabled"):
         ensure_fingerprint_is_trusted()
         backup_time = unix_config.get_value("BORG_BACKUP_TIME")
         date = time.strftime("%Y-%m-%d")
 
         # If current time is higher than backup time, run backup
-        if time.strftime("%H:%M") > backup_time and not os.path.isfile("backup_running") and not os.path.isfile(f"history/borg_errors_{date}.log"):
+        if time.strftime("%H:%M") > backup_time and not os.path.isfile("maintenance/backup_running") and not os.path.isfile(f"history/borg_errors_{date}.log"):
             print("Running backup")
-            os.system("bash ./do_backup.sh")
+            os.system("bash maintenance/do_backup.sh")
 
             # Send email to admin if backup failed
             read_errors = open(f"history/borg_errors_{date}.log").read()
@@ -107,17 +107,17 @@ while True:
     ## SYSTEM UPDATE ################################################################################################
 
     # If a user manually requested an update, run update
-    if os.path.isfile("update_system"):
-        os.remove("update_system")
+    if os.path.isfile("maintenance/update_system"):
+        os.remove("maintenance/update_system")
         print("Updating system")
-        os.system("bash ./do_update.sh")
+        os.system("bash maintenance/do_update.sh")
 
     # All other updates:
     update_time = unix_config.get_value("UPDATE_TIME")
     current_date = time.strftime("%Y-%m-%d")
-    if time.strftime("%H:%M") > update_time and not os.path.isfile("update_running") and not os.path.isfile(f"history/update-{current_date}.log"):
+    if time.strftime("%H:%M") > update_time and not os.path.isfile("maintenance/update_running") and not os.path.isfile(f"history/update-{current_date}.log"):
         print("Starting automatic updates")
-        os.system("bash ./update_everything.sh")
+        os.system("bash maintenance/update_everything.sh")
 
 
     ## DO DATA EXPORT ################################################################################################

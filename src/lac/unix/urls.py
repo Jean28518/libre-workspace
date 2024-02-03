@@ -21,6 +21,13 @@ urlpatterns = [
     path("file_explorer", views.file_explorer, name="file_explorer"),
 
     path("set_update_configuration", views.set_update_configuration, name="set_update_configuration"),
-    
+
+    path("system_configuration", views.system_configuration, name="system_configuration"),
+    path("email_configuration", views.email_configuration, name="email_configuration"),
+    path("module_management", views.module_management, name="module_management"),
+    path("module_management/install/<name>", views.install_module, name="install_module"),
+    path("module_management/uninstall/<name>", views.uninstall_module, name="uninstall_module"),
+
+
     path("send_mail", views.unix_send_mail, name="send_mail"),
 ]

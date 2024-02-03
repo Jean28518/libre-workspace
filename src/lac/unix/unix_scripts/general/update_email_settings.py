@@ -3,7 +3,7 @@ import lac.settings as settings
 import unix.unix_scripts.unix as unix
 import os
 
-from .rocketchat_mongo import update_setting, is_mongodb_available
+from ..rocketchat.rocketchat_mongo import update_setting, is_mongodb_available
 
 # email_settings:
 # {

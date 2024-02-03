@@ -5,7 +5,7 @@ import os
 from rocketchat_mongo import update_setting
 
 # Get IP and domain from env.sh file:
-env_lines = open("env.sh", "r").readlines()
+env_lines = open("../env.sh", "r").readlines()
 for line in env_lines:
     if "export IP=" in line:
         os.environ["IP"] = line.split("=")[1].strip("\" \n")

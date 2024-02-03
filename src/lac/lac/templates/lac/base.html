@@ -127,13 +127,23 @@
 }
 
 :root {
-  --font-size: 16px;
+  --font-size: 1rem;
   --block-spacing-vertical: 1rem;
 
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: 1rem;
+}
+
+.danger {
+  background-color: #dc0000;
+  border-color: #dc0000;
+  color: white;
+}
+
+[role=button], button, input[type=button], input[type=reset], input[type=submit] {
+  padding: 0.5rem 0.75rem;
 }
 
     </style>
@@ -150,12 +160,11 @@ h1, h2, h3, h4, h5, h6 {
         <li>
           <a href="/" class="contrast"><strong>Libre-Workspace Portal</strong></a>
         </li>
+        <li><a href="/idm/dashboard">Verwaltung</a></li> 
       </ul>
       {% if request.user.is_authenticated %}
         <ul>
-          {% comment %} <li><a href="#">Link</a></li>
-          <li><a href="#">Link</a></li> {% endcomment %}
-          {% comment %}  {% endcomment %}
+          {% comment %} <li><a href="#">Link</a></li> {% endcomment %}
           <li>
             <details role="list" dir="rtl">
               <summary aria-haspopup="listbox" role="link" class="secondary">

@@ -1,5 +1,4 @@
 from django.shortcuts import render
-import unix.unix_scripts.unix as unix
 import unix.forms as forms
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import redirect
@@ -8,7 +7,12 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.auth.models import User
 from idm.idm import get_admin_user
+import unix.unix_scripts.cfg as cfg
+from unix.unix_scripts.general.update_email_settings import update_email_settings
+from .forms import EmailConfiguration
+from django.urls import reverse
 import time
+import unix.unix_scripts.unix as unix
 
 
 # Create your views here.
@@ -258,3 +262,96 @@ def file_explorer(request):
     request.session["current_directory"] = current_directory
    
     return render(request, "unix/file_explorer.html", {"folder_list": folder_list, "current_directory": current_directory, "file_list": file_list})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+# Thats the config dashboard in system configuration
+def email_configuration(request):
+    message = ""
+    current_email_conf = {
+        "server": cfg.get_value("EMAIL_HOST", ""),
+        "port": cfg.get_value("EMAIL_PORT", ""),
+        "user": cfg.get_value("EMAIL_HOST_USER", ""),
+        "password": cfg.get_value("EMAIL_HOST_PASSWORD", ""),       
+    }
+    if cfg.get_value("EMAIL_USE_TLS", "False") == "True":
+        current_email_conf["encryption"] = "TLS"
+    else:
+        current_email_conf["encryption"] = "SSL"
+    form = EmailConfiguration(request.POST or None, initial=current_email_conf)
+
+    if request.method == "POST":
+        form = EmailConfiguration(request.POST)
+        if form.is_valid():
+            cfg.set_value("EMAIL_HOST", form.cleaned_data["server"])
+            cfg.set_value("EMAIL_PORT", form.cleaned_data["port"])
+            cfg.set_value("EMAIL_HOST_USER", form.cleaned_data["user"])
+            if form.cleaned_data["password"] != "":
+                cfg.set_value("EMAIL_HOST_PASSWORD", form.cleaned_data["password"])
+            if form.cleaned_data["encryption"] == "TLS":
+                cfg.set_value("EMAIL_USE_TLS", "True")
+                cfg.set_value("EMAIL_USE_SSL", "False")
+            else:
+                cfg.set_value("EMAIL_USE_TLS", "False")
+                cfg.set_value("EMAIL_USE_SSL", "True")
+            message = "E-Mail Konfiguration gespeichert."
+            mail_config = form.cleaned_data.copy()
+            if (mail_config["password"] == ""):
+                mail_config["password"] = current_email_conf["password"]
+            update_email_settings(form.cleaned_data)
+
+    return render(request, "unix/email_configuration.html", {"current_email_conf": current_email_conf, "form": form, "message": message})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def system_configuration(request):
+    return render(request, "unix/system_configuration.html")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def module_management(request):
+    message = ""
+    if request.method == "POST":
+        form = forms.OnlineOfficeInstallationForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            if data["online_office"] == "Deaktivieren" and (unix.is_onlyoffice_available() or unix.is_collabora_available()):
+                unix.remove_module("onlyoffice")
+                unix.remove_module("collabora")
+            elif data["online_office"] == "OnlyOffice" and not unix.is_onlyoffice_available():
+                unix.setup_module("onlyoffice")
+                unix.remove_module("collabora")
+            elif data["online_office"] == "Collabora" and not unix.is_collabora_available():
+                unix.setup_module("collabora")
+                unix.remove_module("onlyoffice")
+            message = "Änderungen werden angewendet. Dies kann einige Minuten dauern."
+        
+    modules = unix.get_software_modules()
+    # Remove the modules with the id "onlyoffice" and "collabora"
+    modules = [module for module in modules if module["id"] not in ["onlyoffice", "collabora"]]
+    # We check here if the message is empty because when an action is running the form selection (the pre selected) will be wrong
+    if unix.is_nextcloud_available() and message == "":
+        form = forms.OnlineOfficeInstallationForm()
+        currentOnlineModule = unix.get_online_office_module()
+        match currentOnlineModule:
+            case "onlyoffice":
+                form.fields["online_office"].initial = "OnlyOffice"
+            case "collabora":
+                form.fields["online_office"].initial = "Collabora"
+            case _:
+                form.fields["online_office"].initial = "Deaktivieren"
+    else:
+        form = ""
+    return render(request, "unix/module_management.html" , {"modules": modules, "form": form, "message": message})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def install_module(request, name):
+    unix.setup_module(name)
+    return render(request, "lac/message.html", {"message": f"{name} wird installiert. Dies kann einige Minuten dauern.", "url": reverse("dashboard")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def uninstall_module(request, name):
+    unix.remove_module(name)
+    return render(request, "lac/message.html", {"message": f"{name} wird deinstalliert. Dies kann einige Minuten dauern.", "url": reverse("dashboard")})

@@ -10,37 +10,49 @@ touch installation_running
 # If the environment variable NEXTCLOUD is not empty
 if [ ! -z "$NEXTCLOUD" ]; then
     # Install Nextcloud
+    cd ../nextcloud
     . setup_nextcloud.sh
+    cd -
 fi
 
 # If the environment variable COLLABORA is not empty
 if [ ! -z "$COLLABORA" ]; then
     # Install Collabora
+    cd ../collabora
     . setup_collabora.sh
+    cd -
 fi
 
 # If the environment variable ONLYOFFICE is not empty
 if [ ! -z "$ONLYOFFICE" ]; then
     # Install Onlyoffice
+    cd ../onlyoffice
     . setup_onlyoffice.sh
+    cd -
 fi
 
 # If the environment variable ROCKETCHAT is not empty
 if [ ! -z "$ROCKETCHAT" ]; then
     # Install Rocket.Chat
+    cd ../rocketchat
     . setup_rocketchat.sh
+    cd -
 fi
 
 # If the environment variable ROCKETCHAT is not empty
 if [ ! -z "$MATRIX" ]; then
-    # Install Rocket.Chat
+    # Install Matrix
+    cd ../matrix
     . setup_matrix.sh
+    cd -
 fi
 
 # If the environment variable JITSI is not empty
 if [ ! -z "$JITSI" ]; then
     # Install Jitsi
+    cd ../jitsi
     . setup_jitsi.sh
+    cd -
 fi
 
 # Distribute the certificates for local installations

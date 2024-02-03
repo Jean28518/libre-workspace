@@ -1,5 +1,5 @@
 #!/bin/bash
-source ./unix.conf
+source ../unix.conf
 
 touch backup_running
 
@@ -30,9 +30,9 @@ fi
 # If $REMOTEPATH is set, then use this command:
 # If $REMOTEPATH is set, then use this command:
 if [ -z "$REMOTEPATH" ] ; then
-  borg create --exclude-caches $BORG_REPOSITORY::$DATE / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /var/lib/mysql/ib_logfile0 2> ./history/borg_errors_$DATE.log
+  borg create --exclude-caches $BORG_REPOSITORY::$DATE / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /var/lib/mysql/ib_logfile0 2> ../history/borg_errors_$DATE.log
 else
-  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /var/lib/mysql/ib_logfile0 2> ./history/borg_errors_$DATE.log
+  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /var/lib/mysql/ib_logfile0 2> ../history/borg_errors_$DATE.log
 fi
 
 # Start all services
@@ -44,7 +44,7 @@ borg prune -v $BORG_REPOSITORY \
     --keep-monthly=$BORG_KEEP_MONTHLY \
 
 
-borg list --short $BORG_REPOSITORY > ./history/borg_list
-borg info $BORG_REPOSITORY > ./history/borg_info
+borg list --short $BORG_REPOSITORY > ../history/borg_list
+borg info $BORG_REPOSITORY > ../history/borg_info
 
 rm backup_running

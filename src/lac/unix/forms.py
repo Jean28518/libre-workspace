@@ -12,3 +12,16 @@ class BackupSettings(forms.Form):
     keep_weekly_backups = forms.IntegerField(label="Anzahl der wöchentlichen Backups", min_value=0, max_value=100, widget=forms.NumberInput(attrs={"placeholder": "6"}))
     keep_monthly_backups = forms.IntegerField(label="Anzahl der monatlichen Backups", min_value=0, max_value=100, widget=forms.NumberInput(attrs={"placeholder": "12"}))
     borg_repo_is_on_synology = forms.BooleanField(label="Borg Repository ist auf einem Synology NAS", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
+
+
+class EmailConfiguration(forms.Form):
+    server = forms.CharField(label="E-Mail Server", max_length=100, widget=forms.TextInput(attrs={"placeholder": "mail.example.com"}))
+    port = forms.IntegerField(label="E-Mail Port", min_value=0, max_value=10000, widget=forms.NumberInput(attrs={"placeholder": "587"}))
+    user = forms.CharField(label="E-Mail Benutzername", max_length=100, widget=forms.TextInput(attrs={"placeholder": "example@example.com"}))
+    password = forms.CharField(label="E-Mail Passwort", max_length=100, widget=forms.PasswordInput(attrs={"placeholder": "Passwort"}),  required=False)
+    encryption = forms.ChoiceField(label="E-Mail Verschlüsselung", choices=[("TLS", "TLS"), ("SSL", "SSL")], widget=forms.Select(attrs={"class": "form-control"}))
+                                                                                                            
+
+class OnlineOfficeInstallationForm(forms.Form):
+    # Selection between OnlyOffice and Collabora and nothing
+    online_office = forms.ChoiceField(label="Online Office", choices=[("Collabora", "Collabora"), ("OnlyOffice", "OnlyOffice"), ("Deaktivieren", "Deaktivieren")], widget=forms.Select(attrs={"class": "form-control"}))

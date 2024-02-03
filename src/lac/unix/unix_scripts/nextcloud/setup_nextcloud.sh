@@ -4,7 +4,6 @@
 # IP
 # ADMIN_PASSWORD
 
-
 SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`
 FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`
 DC_DC="dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"

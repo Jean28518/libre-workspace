@@ -2,12 +2,9 @@ from django.shortcuts import render, redirect
 import os
 import subprocess
 from django.conf import settings
-from .forms import EmailConfiguration
 
-import welcome.cfg as cfg
 
-import welcome.scripts.update_email_settings as update_email_settings
-
+# List of subdomains
 subdomains = ["cloud", "office", "portal", "la", "chat", "meet", "element", "matrix"]
 
 # Create your views here.
@@ -89,7 +86,7 @@ def installation_running(request):
     message = ""
     os.environ["DOMAIN"] = request.session["domain"]
     os.environ["ADMIN_PASSWORD"] = request.session["password"]
-    # Get output of script: in lac/welcome/scripts/get_ip.sh
+    # Get output of script: in lac/unix/unix_scripts/get_ip.sh
     os.environ["IP"] = os.popen("hostname -I").read().split(" ")[0]
     # Run basics script
     os.environ["NEXTCLOUD"] = request.session["nextcloud"]
@@ -100,16 +97,16 @@ def installation_running(request):
     os.environ["JITSI"] = request.session["jitsi"]
 
     # Create env.sh file
-    with open("/usr/share/linux-arbeitsplatz/welcome/scripts/env.sh", "w") as f:
+    with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:
         f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
         f.write(f"export IP={os.environ['IP']}\n")
         f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
 
     # Run installation script
-    # if file /usr/share/linux-arbeitsplatz/welcome/scripts/installation_running exists
-    if not os.path.isfile("/usr/share/linux-arbeitsplatz/welcome/scripts/installation_running"):
-        if os.path.isfile("/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"):
-            subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/welcome/scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/welcome/scripts/" )
+    # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/installation_running exists
+    if not os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/installation_running"):
+        if os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/install.sh"):
+            subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/unix/unix_scripts/" )
         else:
             print("WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation.")
             message = "WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
@@ -137,46 +134,3 @@ def installation_running(request):
 
 def access(request):
     return render(request, "welcome/access_rendered.html", {"hide_login_button": True})
-
-
-def system_configuration(request):
-    return render(request, "welcome/system_configuration.html", {"hide_login_button": True})
-
-
-# Thats the config dashboard in system configuration
-def email_configuration(request):
-    message = ""
-    current_email_conf = {
-        "server": cfg.get_value("EMAIL_HOST", ""),
-        "port": cfg.get_value("EMAIL_PORT", ""),
-        "user": cfg.get_value("EMAIL_HOST_USER", ""),
-        "password": cfg.get_value("EMAIL_HOST_PASSWORD", ""),       
-    }
-    if cfg.get_value("EMAIL_USE_TLS", "False") == "True":
-        current_email_conf["encryption"] = "TLS"
-    else:
-        current_email_conf["encryption"] = "SSL"
-    form = EmailConfiguration(request.POST or None, initial=current_email_conf)
-
-    if request.method == "POST":
-        form = EmailConfiguration(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            cfg.set_value("EMAIL_HOST", form.cleaned_data["server"])
-            cfg.set_value("EMAIL_PORT", form.cleaned_data["port"])
-            cfg.set_value("EMAIL_HOST_USER", form.cleaned_data["user"])
-            if form.cleaned_data["password"] != "":
-                cfg.set_value("EMAIL_HOST_PASSWORD", form.cleaned_data["password"])
-            if form.cleaned_data["encryption"] == "TLS":
-                cfg.set_value("EMAIL_USE_TLS", "True")
-                cfg.set_value("EMAIL_USE_SSL", "False")
-            else:
-                cfg.set_value("EMAIL_USE_TLS", "False")
-                cfg.set_value("EMAIL_USE_SSL", "True")
-            message = "E-Mail Konfiguration gespeichert."
-            mail_config = form.cleaned_data.copy()
-            if (mail_config["password"] == ""):
-                mail_config["password"] = current_email_conf["password"]
-            update_email_settings.update_email_settings(form.cleaned_data)
-
-    return render(request, "welcome/email_configuration.html", {"current_email_conf": current_email_conf, "form": form, "message": message})

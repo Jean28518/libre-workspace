@@ -7,3 +7,4 @@ backup_disabled
 upgradable_packages
 export_data
 os
+env.sh

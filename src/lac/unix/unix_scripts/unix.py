@@ -117,7 +117,7 @@ def get_borg_information_for_dashboard():
                 rv["backup_status"] = "last_backup_failed"
     
     # If file "backup_running" exists, set backup status to "running"
-    if os.path.isfile("backup_running"):
+    if os.path.isfile("maintenance/backup_running"):
         rv["backup_status"] = "running"
 
     # If file "deactivated" exists, set backup status to "deactivated"
@@ -163,10 +163,10 @@ def set_trusted_fingerprint(fingerprint):
 def retry_backup():
     read_config_file()
     # If the backup is currently running, exit
-    if os.path.isfile("backup_running"):
+    if os.path.isfile("maintenance/backup_running"):
         return
     # If the backup is deactivated, exit
-    if os.path.isfile("backup_disabled"):
+    if os.path.isfile("maintenance/backup_disabled"):
         return
     # If the repository is not configured, exit
     if config["BORG_REPOSITORY"] == "":
@@ -180,16 +180,16 @@ def retry_backup():
 
 def is_backup_enabled():
     # Return True if backup is enabled, False if backup is disabled
-    return not os.path.isfile("backup_disabled")
+    return not os.path.isfile("maintenance/backup_disabled")
 
 def set_backup_enabled(enabled):
     # Enable or disable the backup
     if enabled:
-        if os.path.isfile("backup_disabled"):
-            os.remove("backup_disabled")
+        if os.path.isfile("maintenance/backup_disabled"):
+            os.remove("maintenance/backup_disabled")
     else:
-        if not os.path.isfile("backup_disabled"):
-            os.system("touch backup_disabled")
+        if not os.path.isfile("maintenance/backup_disabled"):
+            os.system("touch maintenance/backup_disabled")
 
 
 def get_disks_stats():
@@ -240,13 +240,13 @@ def get_system_information():
 
 
 def get_upgradable_packages():
-    if not os.path.isfile("upgradable_packages"):
+    if not os.path.isfile("maintenance/upgradable_packages"):
         return 0
-    return int(subprocess.getoutput("cat upgradable_packages | wc -l")) -1
+    return int(subprocess.getoutput("cat maintenance/upgradable_packages | wc -l")) -1
 
 
 def is_update_currently_running():
-    return os.path.isfile("update_running")
+    return os.path.isfile("maintenance/update_running")
 
 
 def trigger_cron_service():
@@ -255,9 +255,9 @@ def trigger_cron_service():
 
 def update_system():
     # If the update is currently running, exit
-    if os.path.isfile("update_system"):
+    if os.path.isfile("maintenance/update_system"):
         return
-    os.system("touch update_system")
+    os.system("touch maintenance/update_system")
     trigger_cron_service()
     
 
@@ -489,3 +489,36 @@ def get_update_information():
     update_information["update_time"] = get_value("UPDATE_TIME", "02:00")
     update_information["update_history"] = get_update_history()
     return update_information
+
+def get_env_sh_variables():
+    return_value = {}
+    if not os.path.isfile("env.sh"):
+        return return_value
+    for line in open("env.sh").readlines():
+        if line.strip() != "":
+            line = line.replace("export ", "")
+            key, value = line.split("=")
+            return_value[key] = value.strip().strip('"').strip()
+    
+
+def setup_module(module_name):
+    # Check if path extists: module_name/setup_module_name.sh
+    if os.path.isfile(f"{module_name}/setup_{module_name}.sh"):
+        process = subprocess.Popen(["/usr/bin/bash", f"{module_name}/setup_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
+    else:
+        return "WARNING: Setup script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
+    
+def remove_module(module_name):
+    # Check if path extists: module_name/remove_module_name.sh
+    if os.path.isfile(f"{module_name}/remove_{module_name}.sh"):
+        process = subprocess.Popen(["/usr/bin/bash", f"{module_name}/remove_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
+    else:
+        return "WARNING: Remove script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
+    
+
+def get_online_office_module():
+    if is_collabora_available():
+        return "collabora"
+    if is_onlyoffice_available():
+        return "onlyoffice"
+    return None
