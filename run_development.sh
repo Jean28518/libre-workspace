@@ -5,13 +5,19 @@ if [ -f "cfg" ]; then
     source cfg
 fi
 
+CHANGED_DIR=false
 if [ -d "src/lac/" ]; then
     cd src/lac/
+    CHANGED_DIR=true
 fi
 
 source .env/bin/activate
 
-pip install django python-ldap django-auth-ldap pymongo
+if [ "$CHANGED_DIR" = true ]; then
+    pip install -r ../../requirements.txt
+else
+    pip install -r requirements.txt
+fi
 
 
 python3 manage.py migrate --no-input

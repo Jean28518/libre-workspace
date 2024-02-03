@@ -49,7 +49,7 @@
             onClick="toggleModal(event)">
             Abbrechen
             </a>
-            <a href="{% url 'uninstall_module' module.name %}"
+            <a href="{% url 'uninstall_module' module.id %}"
             role="button"
             class="danger"
             data-target="modal-uninstall-{{ module.name }}">
@@ -80,7 +80,7 @@
             onClick="toggleModal(event)">
             Abbrechen
             </a>
-            <a href="{% url 'install_module' module.name %}"
+            <a href="{% url 'install_module' module.id %}"
             role="button"
             data-target="modal-install-{{ module.name }}">
             Installieren

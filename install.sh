@@ -19,7 +19,7 @@ python3 -m venv .env
 ln -s /usr/bin/python3 /usr/bin/python
 
 source .env/bin/activate
-pip install django python-ldap django-auth-ldap gunicorn pymongo
+pip install -r requirements.txt
 python manage.py migrate --no-input
 
 # Get the current IP-Adress

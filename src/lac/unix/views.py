@@ -42,6 +42,10 @@ def set_update_configuration(request):
             unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "True")
         else:
             unix.set_value("SYSTEM_AUTOMATIC_UPDATES", "False")
+        if request.POST.get("libre_workspace", "") == "on":
+            unix.set_value("LIBRE_WORKSPACE_AUTOMATIC_UPDATES", "True")
+        else:
+            unix.set_value("LIBRE_WORKSPACE_AUTOMATIC_UPDATES", "False")
         unix.set_value("UPDATE_TIME", request.POST.get("time", "02:00"))
     return redirect("unix_index")
 
@@ -347,11 +351,15 @@ def module_management(request):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def install_module(request, name):
-    unix.setup_module(name)
+    response = unix.setup_module(name)
+    if response != None:
+        return render(request, "lac/message.html", {"message": f"{name} konnte nicht deinstalliert werden: {response}", "url": reverse("dashboard")})
     return render(request, "lac/message.html", {"message": f"{name} wird installiert. Dies kann einige Minuten dauern.", "url": reverse("dashboard")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def uninstall_module(request, name):
-    unix.remove_module(name)
+    response = unix.remove_module(name)
+    if response != None:
+        return render(request, "lac/message.html", {"message": f"{name} konnte nicht deinstalliert werden: {response}", "url": reverse("dashboard")})
     return render(request, "lac/message.html", {"message": f"{name} wird deinstalliert. Dies kann einige Minuten dauern.", "url": reverse("dashboard")})

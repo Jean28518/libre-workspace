@@ -4,6 +4,14 @@ echo "Hint: This script runs every day wether some update procedure is enabled o
 
 . ../unix.conf
 
+if [ "$LIBRE_WORKSPACE_AUTOMATIC_UPDATES" == "True" ]; then
+    echo "Starting libre workspace update (only python venv!) at $DATE" >> ../history/update-$DATE.log 2>&1
+    # Get the update log also to our log file
+    cd /usr/share/linux-arbeitsplatz/
+    bash update_venv.sh >> ../history/update-$DATE.log 2>&1
+    cd /usr/share/linux-arbeitsplatz/unix/unix_scripts/maintenance
+fi
+
 if [ "$SYSTEM_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting system update at $DATE" >> ../history/update-$DATE.log 2>&1
     # Get the update log also to our log file

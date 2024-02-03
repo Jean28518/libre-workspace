@@ -486,6 +486,7 @@ def get_update_information():
     update_information = {}
     update_information["software_modules"] = get_software_modules()
     update_information["software_modules"].insert(0, {"id": "system", "name": "System", "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "False") == "True"})
+    update_information["software_modules"].insert(0, {"id": "libre_workspace", "name": "Libre Workspace (venv)", "installed": True, "automaticUpdates": get_value("LIBRE_WORKSPACE_AUTOMATIC_UPDATES", "False") == "True"})
     update_information["update_time"] = get_value("UPDATE_TIME", "02:00")
     update_information["update_history"] = get_update_history()
     return update_information
@@ -499,19 +500,20 @@ def get_env_sh_variables():
             line = line.replace("export ", "")
             key, value = line.split("=")
             return_value[key] = value.strip().strip('"').strip()
+    return return_value
     
 
 def setup_module(module_name):
     # Check if path extists: module_name/setup_module_name.sh
     if os.path.isfile(f"{module_name}/setup_{module_name}.sh"):
-        process = subprocess.Popen(["/usr/bin/bash", f"{module_name}/setup_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
+        process = subprocess.Popen(["/usr/bin/bash", f"setup_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
     else:
         return "WARNING: Setup script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
     
 def remove_module(module_name):
     # Check if path extists: module_name/remove_module_name.sh
     if os.path.isfile(f"{module_name}/remove_{module_name}.sh"):
-        process = subprocess.Popen(["/usr/bin/bash", f"{module_name}/remove_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
+        process = subprocess.Popen(["/usr/bin/bash", f"remove_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
     else:
         return "WARNING: Remove script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
     
