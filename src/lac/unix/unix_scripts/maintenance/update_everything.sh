@@ -49,5 +49,17 @@ if [ "$JITSI_AUTOMATIC_UPDATES" == "True" ]; then
     bash jitsi/update_jitsi.sh >> ../history/update-$DATE.log 2>&1
 fi
 
+# Update all addons which are located in /usr/share/linux-arbeitsplatz/unix/unix_scripts/addons
+for ADDON in /usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/*; do
+    if [ -d "$ADDON" ]; then
+        # Get folder name from path
+        ADDON_NAME=$(basename $ADDON)
+        if [ "$(eval "echo \$${ADDON_NAME}_AUTOMATIC_UPDATES")" == "True" ]; then
+            echo "Starting update of $ADDON_NAME at $DATE" >> ../history/update-$DATE.log 2>&1
+            bash "cd $ADDON; bash $ADDON/update_$ADDON_NAME.sh" >> ../history/update-$DATE.log 2>&1
+        fi
+    fi
+done
+
 echo "Cleaning up system..." >> ../history/update-$DATE.log
 bash cleanup.sh >> ../history/update-$DATE.log

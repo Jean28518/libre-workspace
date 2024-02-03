@@ -14,8 +14,9 @@ Libre Workspace Documentation (for Administrators)
    :maxdepth: 2
    :caption: Modules
 
-   modules/libre-workspace-central
+   modules/libre-workspace-portal
    modules/nextcloud
+   modules/addons
 
 
 

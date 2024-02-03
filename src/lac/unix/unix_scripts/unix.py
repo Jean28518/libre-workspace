@@ -474,7 +474,20 @@ def get_software_modules():
     else:
         modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     
+    # Get addons:
+    addons = get_all_addon_modules()
+    for addon in addons:
+        addon["installed"] = is_module_installed(addon["id"])
+        addon["automaticUpdates"] = get_value(f"{addon['id']}_AUTOMATIC_UPDATES", "False") == "True"
+        modules.append(addon)
+
+
     return modules
+
+
+# We determine if a module is installed by checking if the module's directory exists in the root directory
+def is_module_installed(addon):
+    return os.path.isdir(f"/root/{addon}")
 
 
 def get_update_history():
@@ -496,6 +509,7 @@ def get_update_information():
     update_information["software_modules"].insert(0, {"id": "libre_workspace", "name": "Libre Workspace (venv)", "installed": True, "automaticUpdates": get_value("LIBRE_WORKSPACE_AUTOMATIC_UPDATES", "False") == "True"})
     update_information["update_time"] = get_value("UPDATE_TIME", "02:00")
     update_information["update_history"] = get_update_history()
+    print(update_information)
     return update_information
 
 def get_env_sh_variables():
@@ -513,17 +527,65 @@ def get_env_from_unix_conf():
     read_config_file()
     return config
 
+
+def get_module_path(module_name):
+    if os.path.isdir(f"addons/{module_name}"):
+        return f"addons/{module_name}"
+    return module_name
+
 def setup_module(module_name):
-    # Check if path extists: module_name/setup_module_name.sh
-    if os.path.isfile(f"{module_name}/setup_{module_name}.sh"):
-        process = subprocess.Popen(["/usr/bin/bash", f"setup_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
+    module_path = get_module_path(module_name)
+    # Check if module is an addon:
+    if "addon" in module_path:
+        # Add the entry to the /etc/hosts file
+        addon = get_config_of_addon(module_name)
+        url = addon.get("url", "")
+        if url != "":
+            return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
+        domain = get_env_sh_variables().get("DOMAIN", "")
+        if domain == "":
+            return "No domain found in the env.sh file. Please check the env.sh file."
+        ip = get_env_sh_variables().get("IP", "")   
+        os.system(f"echo \"{url}.{domain}\t {ip}\" >> /etc/hosts")
+
+        # Add the entry to the DNS server
+        if settings.AUTH_LDAP_ENABLED:
+            admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+            # Run this command: samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
+            os.system(f"samba-tool dns add la.{domain} {domain} {module_name} A {ip} -U administrator%{admin_password}")
+        
+
+    # Check if path extists: module_path/setup_module_name.sh
+    if os.path.isfile(f"{module_path}/setup_{module_name}.sh"):
+        process = subprocess.Popen(["/usr/bin/bash", f"setup_{module_name}.sh"], cwd=f"{module_path}/", env=get_env_sh_variables())
     else:
         return "WARNING: Setup script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
-    
+
+
 def remove_module(module_name):
+    module_path = get_module_path(module_name)
+
+    if "addon" in module_path:
+        # Remove the entry from the /etc/hosts file
+        addon = get_config_of_addon(module_name)
+        url = addon.get("url", "")
+        if url != "":
+            return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
+        domain = get_env_sh_variables().get("DOMAIN", "")
+        if domain == "":
+            return "No domain found in the env.sh file. Please check the env.sh file."
+        ip = get_env_sh_variables().get("IP", "")   
+        os.system(f"sed -i '/{url}.{domain}/d' /etc/hosts")
+
+        # Remove the entry from the DNS server
+        if settings.AUTH_LDAP_ENABLED:
+            admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+            # Run this command: samba-tool dns delete la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
+            os.system(f"samba-tool dns delete la.{domain} {domain} {module_name} A {ip} -U administrator%{admin_password}")
+    
     # Check if path extists: module_name/remove_module_name.sh
-    if os.path.isfile(f"{module_name}/remove_{module_name}.sh"):
-        process = subprocess.Popen(["/usr/bin/bash", f"remove_{module_name}.sh"], cwd=f"{module_name}/", env=get_env_sh_variables())
+    if os.path.isfile(f"{module_path}/remove_{module_name}.sh"):
+        process = subprocess.Popen(["/usr/bin/bash", f"remove_{module_name}.sh"], cwd=f"{module_path}/", env=get_env_sh_variables())
     else:
         return "WARNING: Remove script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
     
@@ -561,3 +623,44 @@ def recover_file_or_dir(full_path_to_backup):
 
 def is_path_a_file(path):
     return os.path.isfile(path)
+
+
+# Returns array with all configs
+def get_all_addon_modules():
+    # Get all folders in the addons directory
+    addons = []
+    for folder in os.listdir("addons"):
+        if os.path.isdir(f"addons/{folder}"):
+            addons.append(get_config_of_addon(folder))
+    return addons
+
+
+def get_config_of_addon(addon):
+    # Read the config file of the addon
+    config = {}
+    for line in open(f"addons/{addon}/{addon}.conf"):
+        if line.strip().startswith("#"):
+            continue
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        # remove the " and ' characters from the outer ends of the string
+        config[key.strip()] = value.strip("'\"\n ")
+    return config
+
+
+def install_addon(path_to_zip_file):
+    addon_id = path_to_zip_file.split('/')[-1].split('.')[0]
+    # Remove the old folder of the addon if it exists
+    os.system(f"rm -r addons/{addon_id}")
+    os.system(f"unzip {path_to_zip_file} -d addons/")
+    os.system(f"rm {path_to_zip_file}")
+    # Copy the image file which could have the ending .png .svg .jpg .webp to the static folder
+    for file in os.listdir(f"addons/{addon_id}"):
+        if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
+            os.system(f"cp addons/{addon_id}/{file} lac/static/lac/icons/{file}")
+
+
+def uninstall_addon(addon_id):
+    os.system(f"rm -r addons/{addon_id}")
+    os.system(f"rm lac/static/lac/icons/{addon_id}.*")
