@@ -103,10 +103,10 @@ def installation_running(request):
         f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
 
     # Run installation script
-    # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/installation_running exists
-    if not os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/installation_running"):
-        if os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/install.sh"):
-            subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/install.sh"], cwd="/usr/share/linux-arbeitsplatz/unix/unix_scripts/" )
+    # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running exists
+    if not os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running"):
+        if os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"):
+            subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"], cwd="/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/" )
         else:
             print("WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation.")
             message = "WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."

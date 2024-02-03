@@ -160,7 +160,9 @@ h1, h2, h3, h4, h5, h6 {
         <li>
           <a href="/" class="contrast"><strong>Libre-Workspace Portal</strong></a>
         </li>
-        <li><a href="/idm/dashboard">Verwaltung</a></li> 
+        {% if request.user.is_authenticated %}
+          <li><a href="/idm/dashboard">Verwaltung</a></li> 
+        {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
         <ul>
