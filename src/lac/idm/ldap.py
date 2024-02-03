@@ -19,7 +19,7 @@ def get_user_information_of_cn(cn):
     dn = ldap_get_dn_of_cn(cn)
 
     # Get user with dn
-    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf", "objectGUID"])
+    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf", "objectGUID", "userAccountControl"])
 
     
     conn.unbind_s()
@@ -35,6 +35,7 @@ def get_user_information_of_cn(cn):
     user_information["displayName"] = ldap_reply[0][1].get("displayName", [b""])[0].decode('utf-8')
     user_information["mail"] = ldap_reply[0][1].get("mail", [b""])[0].decode('utf-8')
     user_information["objectGUID"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
+    user_information["enabled"] = int(ldap_reply[0][1].get("userAccountControl", [b'512'])[0]) & 2 == 0
     user_information["dn"] = dn
     user_information["cn"] = cn
 
@@ -220,13 +221,14 @@ def ldap_get_all_users():
             cn = user.get("cn", [b''])[0].decode('utf-8')
             groups = user.get("memberOf", [])
             objectGUID = user.get("objectGUID", [b''])[0].hex()
+            enabled = int(user.get("userAccountControl", [b'512'])[0]) & 2 == 0
             for i in range(len(groups)):
                 groups[i] = groups[i].decode('utf-8')
 
             if ldap_is_system_user(cn):
                 continue
 
-            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "objectGUID": objectGUID})
+            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "objectGUID": objectGUID, "enabled": enabled, "admin": is_user_in_group({"groups": groups}, "Administrators")})
     return users
 
 def ldap_is_system_user(cn):
@@ -253,6 +255,12 @@ def ldap_update_user(cn, user_information):
     attrs['sn'] = [user_information.get("last_name", "").encode('utf-8')]
     attrs['displayName'] = [user_information.get("displayName", "").encode('utf-8')]
     attrs['mail'] = [user_information.get("mail", "").encode('utf-8')]
+   
+    if user_information.get("enabled", "") == True:
+        attrs['userAccountControl'] = [b'512']
+    else:
+        attrs['userAccountControl'] = [b'514']
+
 
     old_user_information = get_user_information_of_cn(cn)
     old_attrs = {}
@@ -264,6 +272,11 @@ def ldap_update_user(cn, user_information):
         old_attrs['displayName'] = [old_user_information.get("displayName", "").encode('utf-8')]
     if old_user_information.get("mail", "") != "":
         old_attrs['mail'] = [old_user_information.get("mail", "").encode('utf-8')]
+    
+    if old_user_information.get("enabled", "") == True:
+        old_attrs['userAccountControl'] = [b'512']
+    else:
+        old_attrs['userAccountControl'] = [b'514']
 
     ldif = modlist.modifyModlist(old_attrs, attrs)
 
@@ -469,3 +482,24 @@ def ldap_add_user_to_group(user_dn, group_dn):
         return f"Fehler: {str(e)}"
     conn.unbind_s()
 
+
+def ldap_disable_user(user_dn):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    mod_attrs = [(ldap.MOD_REPLACE, 'userAccountControl', [b'514'])]
+    try:
+        conn.modify_s(user_dn, mod_attrs)
+    except LDAPError as e:
+        return f"Fehler: {str(e)}"
+    conn.unbind_s()
+
+
+def ldap_enable_user(user_dn):
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    mod_attrs = [(ldap.MOD_REPLACE, 'userAccountControl', [b'512'])]
+    try:
+        conn.modify_s(user_dn, mod_attrs)
+    except LDAPError as e:
+        return f"Fehler: {str(e)}"
+    conn.unbind_s()

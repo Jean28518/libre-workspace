@@ -19,7 +19,7 @@
     <tbody>
     {% for user in users %}
         <tr>
-            <td>{{user.cn}}</td>
+            <td>{{user.cn}} {% if user.enabled == False %}(Deaktiviert){% endif %}</td>
             <td>{{user.displayName}}</td>
             <td><a href="mailto:{{user.mail}}">{{user.mail}}</a></td>
             <td><a href="{% url "edit_user" user.cn %}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>

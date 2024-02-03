@@ -31,6 +31,7 @@ class AdministratorUserEditForm(forms.Form):
     displayName = forms.CharField(label="Anzeigename", max_length=100, required=False)
     mail = forms.EmailField(label="E-Mail-Adresse", max_length=100, required=False)
     admin = forms.BooleanField(label="Administrator", required=False, widget=forms.CheckboxInput)
+    enabled = forms.BooleanField(label="Aktiviert", required=False, widget=forms.CheckboxInput)
 
 class GroupCreateForm(forms.Form):
     cn = forms.CharField(label="Gruppenname", max_length=100)
