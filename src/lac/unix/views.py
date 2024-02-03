@@ -13,6 +13,8 @@ from .forms import EmailConfiguration
 from django.urls import reverse
 import time
 import unix.unix_scripts.unix as unix
+import unix.email as email
+import idm.ldap
 
 
 # Create your views here.
@@ -231,6 +233,7 @@ def pick_path(request):
     return render(request, "unix/pick_folder.html", {"description": description, "folder_list": folder_list, "current_directory": request.session["current_directory"], "file_list": file_list, "enable_file_link": allow_files})
 
 
+# This is only for system messages to the admin user
 # We are using the djano module here
 # This is only for local scripts.
 # We are checking if the remote ip address is 127.0.0.1
@@ -255,11 +258,7 @@ def unix_send_mail(request):
     message = request.POST.get("message", "").replace("\\n", "\n")
     attachment_path = request.POST.get("attachment_path", "")
 
-    email = EmailMessage(subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=[recipient])
-    if attachment_path != "":
-        email.attach_file(attachment_path)
-    print("Sending email...")
-    email.send()
+    email.send_mail(recipient, subject, message, attachment_path)
 
     return HttpResponse("Mail send successfully")
 
@@ -306,7 +305,8 @@ def email_configuration(request):
             cfg.set_value("EMAIL_PORT", form.cleaned_data["port"])
             cfg.set_value("EMAIL_HOST_USER", form.cleaned_data["user"])
             if form.cleaned_data["password"] != "":
-                cfg.set_value("EMAIL_HOST_PASSWORD", form.cleaned_data["password"])
+                # We need to escape the $ sign because of the bash syntax in our config file
+                cfg.set_value("EMAIL_HOST_PASSWORD", form.cleaned_data["password"].replace("$", "\$"))
             if form.cleaned_data["encryption"] == "TLS":
                 cfg.set_value("EMAIL_USE_TLS", "True")
                 cfg.set_value("EMAIL_USE_SSL", "False")
@@ -425,3 +425,15 @@ def enter_recovery_selector(request):
     request.session["allow_files"] = "True"
     request.session["current_directory"] = "/backups"
     return redirect("pick_folder")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def test_mail(request):
+    user_information = idm.ldap.get_user_information_of_cn(request.user.username)
+    mail_adress = user_information.get("mail", "")
+    if mail_adress == "" or mail_adress == None:
+        return render(request, "lac/message.html", {"message": "Keine E-Mail-Adresse gefunden. Bitte definieren Sie eine Mail-Adresse in Ihren Benutzereinstellungen.", "url": reverse("user_settings")})
+    message = email.send_mail(mail_adress, "Testmail - Libre Workspace", "Das ist eine Testmail.\nIhre Mail-Einstellungen scheinen korrekt zu sein.")
+    if message != None:
+        return render(request, "lac/message.html", {"message": f"Testmail konnte nicht versendet werden: <code>{message}</code>", "url": reverse("email_configuration")})
+    return render(request, "lac/message.html", {"message": "Testmail wurde erfolgreich versendet. Bitte überprüfen Sie Ihr Postfach.", "url": reverse("email_configuration")})

@@ -34,4 +34,5 @@ urlpatterns = [
     path("enter_recovery_selector", views.enter_recovery_selector, name="enter_recovery_selector"),
 
     path("send_mail", views.unix_send_mail, name="send_mail"),
+    path("test_mail", views.test_mail, name="test_mail"),
 ]
