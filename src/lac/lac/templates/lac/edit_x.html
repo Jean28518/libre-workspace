@@ -3,15 +3,19 @@
 
 <h2> Bearbeite {{ name }} </h2>
 
+{% if description %} {{ description | safe }} <br> <br> {% endif %}
+
 {% if message != "" %}
 <p><strong>{{ message | safe }}</strong></p>
 {% endif %}
 
+{% if delete_url %}
 <button class="contrast outline"
 data-target="modal-deletion"
 onClick="toggleModal(event)">
 LÖSCHEN
 </button>
+{% endif %}
 
 <form method="post" enctype="multipart/form-data">
     <div class="grid">

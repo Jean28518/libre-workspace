@@ -13,8 +13,8 @@
 
 {% for dashboard in dashboard_entries %}
 <tr>
-<td> {{ dashboard.title }} </td>
-<td> <a href="{% url 'edit_app_dashboard_entry' dashboard.id %}"> Bearbeiten </a> </td>
+    <td> {{ dashboard.title }} {% if not dashboard.is_active %} (Deaktiviert) {% endif %}</td>
+    <td> <a href="{% url 'edit_app_dashboard_entry' dashboard.id %}"> Bearbeiten </a> </td>
 </tr>
 {% endfor %}
 </table>
