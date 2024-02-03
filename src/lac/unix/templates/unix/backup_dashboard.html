@@ -22,6 +22,9 @@
             {% elif backup_information.backup_status == "running" %}
             <div align="center"><span style="color: green;" class="material-icons md-64">cloud_upload</span> </div>
             <div align="center">Backup läuft</div>
+            {% elif backup_information.backup_status == "recovery_running" %}
+            <div align="center"><span style="color: blue;" class="material-icons md-64">cloud_download</span> </div>
+            <div align="center">Wiederherstellung läuft</div>
             {% elif backup_information.backup_status == "deactivated" %}
             <div align="center"><span style="color: grey;" class="material-icons md-64">cloud_off</span> </div>
             <div align="center">Backup deaktiviert</div>
@@ -116,5 +119,15 @@
     </div>
     <br>
     <a href="{% url "backup_settings" %}"><button>Backup-Konfiguration</button></a>
+    {% if backup_information.backup_mounted != "True" %}
+        {% if backup_information.backup_status == "not_configured" %}
+            {% comment %} do nothing {% endcomment %}
+        {% else %}
+            <a href="{% url "mount_backups" %}"><button>Backups einbinden</button></a>
+        {% endif %}
+    {% else %}
+        <a href="{% url "umount_backups" %}"><button>Backups aushängen</button></a>
+        <a href="{% url "enter_recovery_selector" %}"><button>Backup ansehen/wiederherstellen</button></a>
+    {% endif %}
 </article>
 

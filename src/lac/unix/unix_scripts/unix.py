@@ -58,6 +58,7 @@ def set_value(key, value):
 # ok
 # last_backup_failed
 # running
+# recovery_running
 # deactivated
 # not_configured
 # no_backup_yet
@@ -85,6 +86,11 @@ def get_borg_information_for_dashboard():
             rv["archives"].append(line.strip())
     # Sort archives by date
     rv["archives"] = sorted(rv["archives"], key=lambda k: k[0:10], reverse=True)
+
+    if os.path.ismount("/backups"):
+        rv["backup_mounted"] = "True"
+    else:
+        rv["backup_mounted"] = "False"
 
 
     backup_history = []
@@ -119,6 +125,9 @@ def get_borg_information_for_dashboard():
     # If file "backup_running" exists, set backup status to "running"
     if os.path.isfile("maintenance/backup_running"):
         rv["backup_status"] = "running"
+    
+    if os.path.isfile("maintenance/recovery_running"):
+        rv["backup_status"] = "recovery_running"
 
     # If file "deactivated" exists, set backup status to "deactivated"
     if os.path.isfile("backup_disabled"):
@@ -173,7 +182,6 @@ def retry_backup():
         return
     # Remove the history file of today
     date = time.strftime("%Y-%m-%d")
-    print(date)
     if os.path.isfile(f"history/borg_errors_{date}.log"):
         os.remove(f"history/borg_errors_{date}.log")
     trigger_cron_service()
@@ -466,7 +474,6 @@ def get_software_modules():
     else:
         modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     
-    print(modules)
     return modules
 
 
@@ -501,7 +508,10 @@ def get_env_sh_variables():
             key, value = line.split("=")
             return_value[key] = value.strip().strip('"').strip()
     return return_value
-    
+
+def get_env_from_unix_conf():
+    read_config_file()
+    return config
 
 def setup_module(module_name):
     # Check if path extists: module_name/setup_module_name.sh
@@ -524,3 +534,30 @@ def get_online_office_module():
     if is_onlyoffice_available():
         return "onlyoffice"
     return None
+
+
+def mount_backups():
+    process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+    time.sleep(1)
+    if process.returncode != None and process.returncode != 0:
+        return "Error: Mounting backups failed: " + str(process.stdout) + " " + str(process.stderr)
+
+
+def umount_backups():
+    process = subprocess.Popen(["/usr/bin/bash", "umount_backups.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+    time.sleep(1)
+    if process.returncode != None and process.returncode != 0:
+        return "Error: Umounting backups failed: " + str(process.stdout) + " " + str(process.stderr)
+    
+
+# This function needs the location in the backup to recover and the location to recover to
+# Example: full_path_to_backup = "/backup/2021-01-01_12-00-00", full_path_to_recover_to = "/mnt/restore"
+def recover_file_or_dir(full_path_to_backup):
+    process = subprocess.Popen(["/usr/bin/bash", "recover_path.sh", full_path_to_backup], cwd="maintenance/", env=get_env_from_unix_conf(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    time.sleep(1)
+    if process.returncode != None and process.returncode != 0:
+        return "Error: Recovering file or directory failed: " + str(process.stdout.read()) + " " + str(process.stderr.read())
+    
+
+def is_path_a_file(path):
+    return os.path.isfile(path)

@@ -17,7 +17,7 @@ urlpatterns = [
     path("abort_current_data_export", views.abort_current_data_export, name="abort_current_data_export"),
     path("data_import_1", views.data_import_1, name="data_import_1"),
     path("data_import_2", views.data_import_2, name="data_import_2"),
-    path("pick_folder", views.pick_folder, name="pick_folder"),
+    path("pick_folder", views.pick_path, name="pick_folder"),
     path("file_explorer", views.file_explorer, name="file_explorer"),
 
     path("set_update_configuration", views.set_update_configuration, name="set_update_configuration"),
@@ -28,6 +28,10 @@ urlpatterns = [
     path("module_management/install/<name>", views.install_module, name="install_module"),
     path("module_management/uninstall/<name>", views.uninstall_module, name="uninstall_module"),
 
+    path("mount_backups", views.mount_backups, name="mount_backups"),
+    path("umount_backups", views.umount_backups, name="umount_backups"),
+    path("recover_path", views.recover_path, name="recover_path"),
+    path("enter_recovery_selector", views.enter_recovery_selector, name="enter_recovery_selector"),
 
     path("send_mail", views.unix_send_mail, name="send_mail"),
 ]

@@ -25,7 +25,7 @@
 {% for file in file_list %}
 <tr>   
     <form method="post" style="display: inline;">
-        <button name="pick" value="{{ folder }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" class="secondary outline" disabled>
+        <button name="pick" value="{{ file }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" class="secondary outline" {% if not enable_file_link %}disabled{% endif %}>
             <span class="material-icons md-28">description</span> 
             {{file}}
         </button>

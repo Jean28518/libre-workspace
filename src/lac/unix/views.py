@@ -192,8 +192,13 @@ def data_import_2(request):
     
 
 # Session: current_directory*, redirection_after_selection, redirection_on_cancel, description
+# Also if a file is selected it will be stored in the session variable "current_directory"
+# If allow_files is set to "True" the user can select a file
 @staff_member_required(login_url=settings.LOGIN_URL)
-def pick_folder(request):
+def pick_path(request):
+    allow_files = False
+    if request.session.get("allow_files", "") == "True":
+        allow_files = True
     if request.session.get("current_directory", "") == "":
         return HttpResponse("Fehler: Kein Verzeichnis angegeben")
     description = request.session.get("description", "")
@@ -206,14 +211,24 @@ def pick_folder(request):
             if request.POST.get("pick", "") == "..":
                 request.session["current_directory"] = unix.get_directory_above(request.session["current_directory"])
             else:
+                # Check if the selected path is a file
+                if unix.is_path_a_file(request.session["current_directory"] + "/" + request.POST.get("pick", "")):
+                    if allow_files:
+                        request.session["current_directory"] = request.session["current_directory"] + "/" + request.POST.get("pick", "")
+                        request.session["allow_files"] = request.POST.get("allow_files", "False")
+                        return redirect(request.session["redirection_after_selection"])
+                    else:
+                        request.session["allow_files"] = request.POST.get("allow_files", "False")
+                        return HttpResponse("Fehler: Es wurde eine Datei ausgewählt, aber ein Verzeichnis erwartet.")                    
                 request.session["current_directory"] = request.session["current_directory"] + "/" + request.POST.get("pick", "")
             request.session["current_directory"] = request.session["current_directory"].replace("//", "/")
         if request.POST.get("select", "") != "":
+            request.session["allow_files"] = request.POST.get("allow_files", "False")
             return redirect(request.session["redirection_after_selection"])
 
     folder_list = unix.get_folder_list(request.session["current_directory"])
     file_list = unix.get_file_list(request.session["current_directory"])
-    return render(request, "unix/pick_folder.html", {"description": description, "folder_list": folder_list, "current_directory": request.session["current_directory"], "file_list": file_list})
+    return render(request, "unix/pick_folder.html", {"description": description, "folder_list": folder_list, "current_directory": request.session["current_directory"], "file_list": file_list, "enable_file_link": allow_files})
 
 
 # We are using the djano module here
@@ -363,3 +378,50 @@ def uninstall_module(request, name):
     if response != None:
         return render(request, "lac/message.html", {"message": f"{name} konnte nicht deinstalliert werden: {response}", "url": reverse("dashboard")})
     return render(request, "lac/message.html", {"message": f"{name} wird deinstalliert. Dies kann einige Minuten dauern.", "url": reverse("dashboard")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def mount_backups(request):
+    message = unix.mount_backups()
+    if message != None:
+        return render(request, "lac/message.html", {"message": f"Fehler beim Einhängen: {message}", "url": reverse("unix_index")})
+    return redirect("unix_index")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def umount_backups(request):
+    message = unix.umount_backups()
+    if message != None:
+        return render(request, "lac/message.html", {"message": f"Fehler beim Aushängen: {message}", "url": reverse("unix_index")})
+    return redirect("unix_index")
+
+
+# We are getting all information from request.session
+@staff_member_required(login_url=settings.LOGIN_URL)
+def recover_path(request):
+    error_page = render(request, "lac/message.html", {"message": "Fehler: Das Verzeichnis kann nicht wiederhergestellt werden. Bitte wählen Sie ein Verzeichnis in <code>/backups</code> aus.", "url": reverse("unix_index")})
+    path = request.session["current_directory"]
+    if not path.startswith("/backups"):
+        return error_page
+    # Ensure that the path is not ending with /
+    if path.endswith("/"):
+        path = path[:-1]
+    # Get the number of / in the path
+    path_parts = path.split("/")
+    if len(path_parts) <= 3:
+        return error_page
+    
+    response = unix.recover_file_or_dir(path)
+    if response != None:
+        return render(request, "lac/message.html", {"message": f"Das Verzeichnis konnte nicht wiederhergestellt werden: <code>{response}</code>", "url": reverse("unix_index")})
+    return render(request, "lac/message.html", {"message": "Wiederherstellung wird durchgeführt. Dies kann einige Minuten dauern.", "url": reverse("unix_index")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def enter_recovery_selector(request):
+    request.session["redirection_after_selection"] = "recover_path"
+    request.session["redirection_on_cancel"] = "data_management"
+    request.session["description"] = "Bitte wählen Sie das Verzeichnis oder die Datei aus, welche Sie wiederherstellen möchten. Die Wiederherstellung wird bestehende Dateien überschreiben."
+    request.session["allow_files"] = "True"
+    request.session["current_directory"] = "/backups"
+    return redirect("pick_folder")
