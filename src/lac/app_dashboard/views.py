@@ -4,6 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import reverse
 from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
 
 from .models import DashboardEntry
 from .forms import DashboardEntryForm
@@ -65,12 +66,16 @@ def new_app_dashboard_entry(request):
         print(request.FILES)
         form = DashboardEntryForm(request.POST, request.FILES, auto_id=True)
         if form.is_valid():
-            form.save()  
-            message = "Das Dashboard wurde erfolgreich erstellt."
+            # Check for duplicate title
+            if DashboardEntry.objects.filter(title=form.cleaned_data["title"]).count() > 0:
+                message = "Es existiert bereits ein Dashboard mit dem Namen."
+            else:
+                form.save()  
+                message = "Das Dashboard wurde erfolgreich erstellt."
         else:
             message = "Es ist ein Fehler aufgetreten: " + str(form.errors)
-
-    form = DashboardEntryForm()
+    else:
+        form = DashboardEntryForm()
     return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "Dasboard-Eintrag", "url": reverse("app_dashboard_entries"), "message": message})
 
 
@@ -109,3 +114,19 @@ def delete_app_dashboard_entry(request, id):
     object.delete()
 
     return redirect("app_dashboard_entries")
+
+
+def entries_json(request):
+    """Only returns active ones."""
+    entries = DashboardEntry.objects.all()
+    entries = sorted(entries, key=lambda x: x.order)
+    entries = [entry for entry in entries if entry.is_active]
+    entries = [entry.to_dict() for entry in entries]
+    # Get the current url over the request object
+    current_url = request.build_absolute_uri()
+    domain = current_url.split("/")[2]
+    # Ensure if under link is only /xxx, it is a relative link we need to add the domain
+    for entry in entries:
+        if entry["link"].startswith("/"):
+            entry["link"] = domain + entry["link"]
+    return JsonResponse(entries, safe=False)

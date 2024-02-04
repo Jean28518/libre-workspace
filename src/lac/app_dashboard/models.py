@@ -13,3 +13,18 @@ class DashboardEntry(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def to_dict(self):
+        dict = {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "link": self.link,
+            "icon_url": self.icon_url,
+            "order": self.order,
+            "is_active": self.is_active,
+            "is_system": self.is_system
+        }
+        if self.icon:
+            dict["icon_url"] = self.icon.url
+        return dict
