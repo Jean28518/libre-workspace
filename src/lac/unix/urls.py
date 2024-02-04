@@ -35,4 +35,8 @@ urlpatterns = [
 
     path("send_mail", views.unix_send_mail, name="send_mail"),
     path("test_mail", views.test_mail, name="test_mail"),
+    
+    path("addons", views.addons, name="addons"),
+    path("add_addon", views.add_addon, name="add_addon"),
+    path("remove_addon/<addon_id>", views.remove_addon, name="remove_addon"),
 ]

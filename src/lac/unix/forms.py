@@ -25,3 +25,7 @@ class EmailConfiguration(forms.Form):
 class OnlineOfficeInstallationForm(forms.Form):
     # Selection between OnlyOffice and Collabora and nothing
     online_office = forms.ChoiceField(label="Online Office", choices=[("Collabora", "Collabora"), ("OnlyOffice", "OnlyOffice"), ("Deaktivieren", "Deaktivieren")], widget=forms.Select(attrs={"class": "form-control"}))
+
+
+class AddonForm(forms.Form):
+    file = forms.FileField(label="Add-On Datei")

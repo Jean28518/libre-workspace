@@ -1,0 +1,80 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2>{{ overview.heading }}</h2>
+
+{% if overview.add_url %}
+    <a href="{{ overview.add_url }}" role="button" class="primary">{{ overview.element_name }} hinzufügen</a>
+{% endif %}
+
+<hr>
+
+<table>
+    <thead>
+        <tr>
+        {% for t_heading in overview.t_headings %}
+            <th scope="col">{{t_heading}} </th>
+        {% endfor %}
+        {% if overview.edit_url_name %}
+            <th scope="col">Bearbeiten</th>
+        {% endif %}
+        {% if overview.delete_url_name %}
+            <th scope="col">Löschen</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for t_row in overview.table_content %}
+        <tr>
+            {% for field in t_row.content %}
+                    <td>{{field | safe}}</td>
+            {% endfor %}
+            {% if t_row.edit_url %}
+                <td><a href="{{t_row.edit_url}}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
+            {% endif %}
+            {% if t_row.delete_url %}
+                <td>
+                <button class="secondary outline"
+                data-target="modal-{{t_row.delete_url}}"
+                onClick="toggleModal(event)"
+                style="width: 56px; margin-bottom: 0;"
+                title="Löschen">
+                <span class="material-icons md-16">delete</span>
+                </button>
+                {% comment %} <a href="{{t_row.delete_url}}"  role="button" ></a></td> {% endcomment %}
+            {% endif %}
+        </tr>
+        {% comment %} Confirmation for deletion {% endcomment %}
+        <dialog id="modal-{{t_row.delete_url}}">
+            <article>
+                <a href="#close"
+                aria-label="Close"
+                class="close"
+                data-target="modal-{{t_row.delete_url}}"
+                onClick="toggleModal(event)">
+                </a>
+                <h3>{{t_row.content | first}} wirklich löschen?</h3>
+                <p>
+                Dieser Vorgang ist nicht mehr umkehrbar!
+                </p>
+                <footer>
+                <a href="#cancel"
+                    role="button"
+                    class="secondary"
+                    data-target="modal-{{t_row.delete_url}}"
+                    onClick="toggleModal(event)">
+                    Abbrechen
+                </a>
+                <a href="{{t_row.delete_url}}"role="button" class="contrast">LÖSCHEN</a>
+                </footer>
+            </article>
+        </dialog>
+
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% if overview.hint %}
+      <center>{{ overview.hint | safe }}</center>
+  {% endif %}
+{% endblock %}

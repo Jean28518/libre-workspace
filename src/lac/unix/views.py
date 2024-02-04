@@ -9,12 +9,13 @@ from django.contrib.auth.models import User
 from idm.idm import get_admin_user
 import unix.unix_scripts.cfg as cfg
 from unix.unix_scripts.general.update_email_settings import update_email_settings
-from .forms import EmailConfiguration
+from .forms import EmailConfiguration, AddonForm
 from django.urls import reverse
 import time
 import unix.unix_scripts.unix as unix
 import unix.email as email
 import idm.ldap
+from lac.templates import process_overview_dict, message
 
 
 # Create your views here.
@@ -437,3 +438,48 @@ def test_mail(request):
     if message != None:
         return render(request, "lac/message.html", {"message": f"Testmail konnte nicht versendet werden: <code>{message}</code>", "url": reverse("email_configuration")})
     return render(request, "lac/message.html", {"message": "Testmail wurde erfolgreich versendet. Bitte überprüfen Sie Ihr Postfach.", "url": reverse("email_configuration")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def addons(request):
+    overview = process_overview_dict({
+        "heading": "Addon Verwaltung",
+        "element_name": "Addon",
+        "element_url_key": "id",
+        "elements": unix.get_all_addon_modules(),
+        "t_headings": ["Name", "Beschreibung", "Author"],
+        "t_keys": ["name", "description", "author"],
+        "add_url_name": "add_addon",
+        "delete_url_name": "remove_addon",
+    })
+    return render(request, "lac/overview_x.html", {"overview": overview})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def add_addon(request):
+    if request.method == "POST":
+        file = request.FILES["file"]
+        # Move the file to /tmp folder
+        # Check if the file is a zip file
+        if not file.name.endswith(".zip"):
+            return message(request, "Die Datei muss eine Zip-Datei sein.", "add_addon")
+        # Move the file to /tmp
+        with open("/tmp/" + file.name, "wb+") as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+        # Install the addon
+        response = unix.install_addon("/tmp/" + file.name)
+        if response != None:
+            return message(request, f"Das Addon konnte nicht installiert werden: {response}", "addons")
+        return message(request, "Das Addon wurde installiert.", "addons")
+    form = AddonForm()
+    return render(request, "lac/create_x.html", {"form": form, "heading": "Add-On hinzufügen", "hide_buttons_top": "True"})
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def remove_addon(request, addon_id):
+    if unix.is_module_installed(addon_id):
+        return message(request, f"Das Addon kann nicht deinstalliert werden, da es noch in Benutzung ist.", "addons")
+    response = unix.uninstall_addon(addon_id)
+    if response != None:
+        return message(request, f"Das Addon konnte nicht deinstalliert werden: <code>{response}</code>", "addons")
+    return message(request, f"Das Addon wurde deinstalliert.", "addons")

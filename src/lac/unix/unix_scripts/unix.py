@@ -486,8 +486,11 @@ def get_software_modules():
 
 
 # We determine if a module is installed by checking if the module's directory exists in the root directory
-def is_module_installed(addon):
-    return os.path.isdir(f"/root/{addon}")
+def is_module_installed(module_or_addon: str):
+    """ 
+    If this is True, then the module or addon is really installed into the server.
+    """
+    return os.path.isdir(f"/root/{module_or_addon}")
 
 
 def get_update_history():
@@ -563,13 +566,16 @@ def setup_module(module_name):
 
 
 def remove_module(module_name):
+    """
+    Uninstalls the module from the server.)
+    """
     module_path = get_module_path(module_name)
 
     if "addon" in module_path:
         # Remove the entry from the /etc/hosts file
         addon = get_config_of_addon(module_name)
         url = addon.get("url", "")
-        if url != "":
+        if url == "":
             return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
         domain = get_env_sh_variables().get("DOMAIN", "")
         if domain == "":
@@ -658,9 +664,12 @@ def install_addon(path_to_zip_file):
     # Copy the image file which could have the ending .png .svg .jpg .webp to the static folder
     for file in os.listdir(f"addons/{addon_id}"):
         if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
-            os.system(f"cp addons/{addon_id}/{file} lac/static/lac/icons/{file}")
+            os.system(f"cp addons/{addon_id}/{file} ../../lac/static/lac/icons/{file}")
 
 
 def uninstall_addon(addon_id):
+    """"
+    Removes the folder of the addon. Don't uninstall the addon if it is currently installed into the server.
+    """
     os.system(f"rm -r addons/{addon_id}")
     os.system(f"rm lac/static/lac/icons/{addon_id}.*")
