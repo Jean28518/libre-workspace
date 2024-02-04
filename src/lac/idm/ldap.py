@@ -54,31 +54,6 @@ def is_user_in_group(user_information, group_cn):
             return True
     return False
 
-
-def update_user_information_ldap(ldap_user, user_information):
-    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
-    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
-    user_dn = ldap_user.dn
-
-    # Build modlist
-    old = {'givenName': ldap_user.attrs.get("givenName", ""),
-           'sn': ldap_user.attrs.get("sn", ""),
-           'displayName': ldap_user.attrs.get("displayName", ""),
-           'mail': ldap_user.attrs.get("mail", ""),
-           }
-    new = {'givenName': [user_information["first_name"].encode('utf-8')],
-            'sn': [user_information["last_name"].encode('utf-8')],
-            'displayName': [user_information["displayName"].encode('utf-8')],
-            'mail': [user_information["mail"].encode('utf-8')],
-           }
-    ldif = modlist.modifyModlist(old, new)
-
-
-    # Modify user
-    conn.modify_s(user_dn, ldif)
-    conn.unbind_s()
-
-
 # Takes user dn and password as string
 def is_ldap_user_password_correct(user_dn, password):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
@@ -179,13 +154,6 @@ def ldap_create_user(user_information):
     # If user should be admin:
     ldap_ensure_admin_status_of_user(user_information["username"], user_information["admin"])
 
-    # # Add user to group
-    # conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
-    # conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
-    # dn = f"cn=users,cn=groups,cn=accounts,{settings.AUTH_LDAP_DC}"
-    # mod_attrs = [(ldap.MOD_ADD, 'member', [dn])]
-    # conn.modify_s(dn, mod_attrs)
-    # conn.unbind_s()
 
 # Revokes or grants admin rights to a user. If nothing changes, nothing happens.
 def ldap_ensure_admin_status_of_user(cn : str, admin : bool):
@@ -255,6 +223,10 @@ def ldap_update_user(cn, user_information):
     attrs['sn'] = [user_information.get("last_name", "").encode('utf-8')]
     attrs['displayName'] = [user_information.get("displayName", "").encode('utf-8')]
     attrs['mail'] = [user_information.get("mail", "").encode('utf-8')]
+    
+    for key, value in attrs.items():
+        if value == [b""] or value == None:
+            attrs[key] = [b" "]
    
     if user_information.get("enabled", "") == True:
         attrs['userAccountControl'] = [b'512']

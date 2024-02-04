@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
 from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm
-from .ldap import get_user_information_of_cn, update_user_information_ldap, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
+from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
 from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -66,9 +66,11 @@ def user_settings(request):
     if request.method == 'POST':
         form = BasicUserForm(request.POST)
         if form.is_valid():
-            update_user_information_ldap(request.user.ldap_user, form.cleaned_data)
+            # Because when the user is setting his own settings, the user is enabled for sure :)
+            form.cleaned_data["enabled"] = True
+            form.cleaned_data["admin"] = request.user.is_superuser
+            ldap_update_user(request.user.username, form.cleaned_data)
         form.cleaned_data.update({"username": request.user.username})
-        print(form.cleaned_data)
         form = BasicUserForm(initial=form.cleaned_data)
         return render(request, "idm/user_settings.html", {"form": form, "message": "Die Änderungen wurden erfolgreich gespeichert!"})
 
