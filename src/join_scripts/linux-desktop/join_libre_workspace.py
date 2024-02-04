@@ -5,10 +5,9 @@ import requests
 import subprocess
 import time
 
-# TODO:
+# Add in the future:
 # - Install Thunderbird addon cardbook
 # - Add addressbooks to Thunderbird if available
-# - Nextcloud Apps starters (im Startmenü)
 
 def create_web_starter_file(name, icon, comment, link):
     desktop_file = f"""[Desktop Entry]
@@ -45,6 +44,19 @@ def create_web_starters_in_menu(address):
         
         # Create Browser starters
         create_web_starter_file(entry["title"], icon_path, entry["description"], entry["link"])
+
+        if "nextcloud" in entry["title"].lower() or "cloud" in entry["title"].lower():
+            # Create Nextcloud starters
+            for app in entry["nextcloud_apps"]:
+                entry_link = entry["link"]
+                app_icon_url = f"{entry_link}/apps/{app}/img/{app}.svg"
+                app_icon_name = f"nextcloud_{app}.svg"
+                app_icon_path = f"{os.getenv('HOME')}/.local/share/icons/{app_icon_name}"
+                with open(app_icon_path, "wb") as file:
+                    file.write(requests.get(app_icon_url).content)
+                app_link = f"{entry['link']}/index.php/apps/{app}"
+                app_name = app.capitalize()
+                create_web_starter_file(f"{app_name}", app_icon_path, f"Starte {app} (Nextcloud)", app_link)  
 
 
 def get_nextcloud_address(address):

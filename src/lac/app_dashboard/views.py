@@ -13,6 +13,7 @@ from .cards import *
 import idm.idm
 import idm.ldap
 import idm.views
+import unix.unix_scripts.unix as unix
 
 # Cache for 10 seconds
 @cache_page(10)
@@ -129,4 +130,20 @@ def entries_json(request):
     for entry in entries:
         if entry["link"].startswith("/"):
             entry["link"] = domain + entry["link"]
+
+    # Add the apps of nextcloud to the specific nextcloud entry if it exists
+    # Only choose these apps: "calendar", "contacts", "deck", "notes", "tasks", "collectives"
+    nextcloud_entry = None
+    for entry in entries:
+        if "nextcloud" in entry["title"].lower() or "cloud" in entry["title"].lower():
+            nextcloud_entry = entry
+            break
+    all_installed_nextcloud_apps = unix.get_all_installed_nextcloud_addons()
+    nextcloud_apps = []
+    for app in all_installed_nextcloud_apps:
+        if app in ["calendar", "contacts", "deck", "notes", "tasks", "collectives"]:
+            nextcloud_apps.append(app)
+    if nextcloud_entry:
+        nextcloud_entry["nextcloud_apps"] = nextcloud_apps
+    
     return JsonResponse(entries, safe=False)

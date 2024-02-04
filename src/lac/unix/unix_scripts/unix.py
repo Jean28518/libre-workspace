@@ -673,3 +673,16 @@ def uninstall_addon(addon_id):
     """
     os.system(f"rm -r addons/{addon_id}")
     os.system(f"rm lac/static/lac/icons/{addon_id}.*")
+
+
+def get_all_installed_nextcloud_addons():
+    """"
+    Returns a list of all installed nextcloud addons.
+    """
+    addons = []
+    if not is_nextcloud_available():
+        return addons
+    for folder in os.listdir(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/apps"):
+        if os.path.isdir(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/apps/" + folder):
+            addons.append(folder)
+    return addons
