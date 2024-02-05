@@ -93,61 +93,62 @@ An example of setup_nocodb.sh would be:
 
 .. code-block:: bash
 
-    #!/bin/bash
-    # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD and $IP
-    mkdir -p /root/nocodb
-    # Dont forget to escape $ and " with a backslash:
-    echo "version: \"2.1\"
-    services: 
+  #!/bin/bash
+  # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD and $IP
+  mkdir -p /root/nocodb
+  # Dont forget to escape " with a backslash:
+  echo "version: \"2.1\"
+  services: 
     nocodb: 
-        depends_on: 
+      depends_on: 
         root_db: 
-            condition: service_healthy
-        environment: 
-        NC_DB: \"mysql2://root_db:3306?u=noco\&p=faiTh8ra\&d=root_db\"
-        image: \"nocodb/nocodb:latest\"
-        ports: 
+          condition: service_healthy
+      environment: 
+        NC_DB: \"mysql2://root_db:3306?u=noco&p=faiTh8ra&d=root_db\"
+      image: \"nocodb/nocodb:latest\"
+      ports: 
         - \"23260:8080\"
-        restart: unless-stopped
-        volumes: 
+      restart: unless-stopped
+      volumes: 
         - \"./nc_data:/usr/app/data\"
     root_db: 
-        environment: 
+      environment: 
         MYSQL_DATABASE: root_db
         MYSQL_PASSWORD: faiTh8ra
         MYSQL_ROOT_PASSWORD: faiTh8ra
         MYSQL_USER: noco
-        healthcheck: 
+      healthcheck: 
         retries: 10
         test: 
-            - CMD
-            - mysqladmin
-            - ping
-            - \"-h\"
-            - localhost
+          - CMD
+          - mysqladmin
+          - ping
+          - \"-h\"
+          - localhost
         timeout: 20s
-        image: \"mysql:8.0.32\"
-        restart: unless-stopped
-        volumes: 
-        - \"./db_data:/var/lib/mysql\"" > /root/nocodb/docker-compose.yml
-    
-    echo "db.$DOMAIN {
-        #tls internal
-        reverse_proxy localhost:23260
-    }
+      image: \"mysql:8.0.32\"
+      restart: unless-stopped
+      volumes: 
+        - \"./db_data:/var/lib/mysql\"
+  " > /root/nocodb/docker-compose.yml
 
-    " >> /etc/caddy/Caddyfile
+  docker-compose -f /root/nocodb/docker-compose.yml up -d
+  
+  echo "db.$DOMAIN {
+      #tls internal
+      reverse_proxy localhost:23260
+  }
 
-    # If domain is "int.de" uncomment the tls internal line for internal https
-    if [ "$DOMAIN" = "int.de" ]; then
-        sed -i 's/#tls internal/tls internal/g' /etc/caddy/Caddyfile
-    fi
+  " >> /etc/caddy/Caddyfile
 
-    systemctl restart caddy
+  # If domain is "int.de" uncomment the tls internal line for internal https
+  if [ "$DOMAIN" = "int.de" ]; then
+    sed -i 's/#tls internal/tls internal/g' /etc/caddy/Caddyfile
+  fi
 
-    docker-compose -f /root/nocodb/docker-compose.yml up -d
+  systemctl restart caddy
 
-You can get inspiration of more complicated setups here: https://github.com/Jean28518/libre-workspace/tree/main/src/lac/unix/unix_scripts (Don't mind the addons folder there, the other folders like matrix, nextcloud, etc. have almost the same structure as the addons)
+You can get inspiration of more complicated setups here: https://github.com/Jean28518/libre-workspace/tree/main/src/lac/unix/unix_scripts (Don't mind the addons folder there. Have a look to the other folders like matrix, nextcloud, ... . They have almost the same structure as the addons)
 
 update_[NAME].sh
 ----------------
@@ -186,3 +187,12 @@ An example of remove_nocodb.sh would be:
     # Remove the entry from the Caddyfile
     sed -i "/db.$DOMAIN {/,/}/d" /etc/caddy/Caddyfile
     systemctl restart caddy
+
+
+General Tips
+============
+
+- Make sure to use the correct shebang in your shell scripts. It should be ``#!/bin/bash``.
+- Never experiment on production systems. Always test your scripts on a test system first.
+- It is a good practice by running the commands line by line manually on a test system to see if everything works as expected.
+- The addon installation in Libre Workspace Portal simply extracts and copies the files to the correct location. It does no checks of the .zip itself You can simply install a new version by installing the addon again. The old files will be overwritten.

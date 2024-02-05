@@ -90,10 +90,15 @@ echo "matrix.$DOMAIN {
 " >> /etc/caddy/Caddyfile
 
 echo "element.$DOMAIN {
-    #tls internal
-    reverse_proxy localhost:15124
+  #tls internal
+  reverse_proxy localhost:15124
 }
 
 " >> /etc/caddy/Caddyfile
 
-systemctl reload caddy
+# if $DOMAIN == int.de then we need to uncomment the tls internal line
+if [ $DOMAIN = "int.de" ] ; then
+  sed -i "s/#tls internal/tls internal/g" /etc/caddy/Caddyfile
+fi
+
+systemctl restart caddy

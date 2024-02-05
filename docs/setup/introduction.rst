@@ -22,10 +22,11 @@ The Libre Workspace is a complete solution for small companies or individuals. I
 * **Online Office** via Collabora Online or OnlyOffice (selectable in the Libre Workspace Portal)
 * **Video conferencing** via Jitsi Meet
 * **Chat** via Matrix (with the web client **element**) (Groupchats, Spaces, End-to-End Encryption, File Sharing, small Video Calls, Voice Calls, direct Messages, etc.)
-* **Backups of the whole system** via BorgBackup
+* **Backups of the whole system** via BorgBackup - With restore function via the Libre Workspace Portal
 * **Data import and export** via the Libre Workspace Portal
 * **Simple installation and configuration** via the Libre Workspace Portal
-
+* **Addon-Support** (e.g. for additional software like ERP, CRM, etc.)
+  
 Limitations
 ===========
 All limitations are temporary and will be removed in the future.

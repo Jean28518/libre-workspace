@@ -454,9 +454,9 @@ def get_software_modules():
     else:
         modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_rocketchat_available():
-        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
+        modules.append({ "id": "rocketchat", "name": "Rocket.Chat (Deprecated)", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
-        modules.append({ "id": "rocketchat", "name": "Rocket.Chat", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
+        modules.append({ "id": "rocketchat", "name": "Rocket.Chat (Deprecated)", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_matrix_available():
         modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
@@ -543,7 +543,7 @@ def setup_module(module_name):
         # Add the entry to the /etc/hosts file
         addon = get_config_of_addon(module_name)
         url = addon.get("url", "")
-        if url != "":
+        if url == "":
             return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
         domain = get_env_sh_variables().get("DOMAIN", "")
         if domain == "":
