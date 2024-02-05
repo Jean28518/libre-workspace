@@ -49,5 +49,6 @@ with open("/etc/caddy/Caddyfile", "r") as f:
 with open("/etc/caddy/Caddyfile", "w") as f:
     f.writelines(lines)
     print("Service entry removed from Caddyfile")
-    os.system("systemctl restart caddy")
-    sys.exit(0)
+
+os.system("systemctl restart caddy")
+sys.exit(0)

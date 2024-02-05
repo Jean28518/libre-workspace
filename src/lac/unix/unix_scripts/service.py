@@ -3,6 +3,7 @@ import os
 import unix_config # (its in the same directory)
 import time
 from datetime import datetime
+import subprocess
 
 # If cron is not running as root, exit
 if os.geteuid() != 0:
@@ -97,7 +98,10 @@ while True:
         # If current time is higher than backup time, run backup
         if time.strftime("%H:%M") > backup_time and not os.path.isfile("maintenance/backup_running") and not os.path.isfile(f"history/borg_errors_{date}.log"):
             print("Running backup")
-            os.system("bash maintenance/do_backup.sh")
+            # Run do_backup.sh script with cwd in the maintenance directory
+            p = subprocess.Popen(["bash", "do_backup.sh"], cwd="maintenance")
+            p.wait()
+
 
             # Send email to admin if backup failed
             read_errors = open(f"history/borg_errors_{date}.log").read()
@@ -110,14 +114,15 @@ while True:
     if os.path.isfile("maintenance/update_system"):
         os.remove("maintenance/update_system")
         print("Updating system")
-        os.system("bash maintenance/do_update.sh")
+        p = subprocess.Popen(["bash", "do_update.sh"], cwd="maintenance")
 
     # All other updates:
     update_time = unix_config.get_value("UPDATE_TIME")
     current_date = time.strftime("%Y-%m-%d")
     if time.strftime("%H:%M") > update_time and not os.path.isfile("maintenance/update_running") and not os.path.isfile(f"history/update-{current_date}.log"):
         print("Starting automatic updates")
-        os.system("bash maintenance/update_everything.sh")
+        p = subprocess.Popen(["bash", "update_everything.sh"], cwd="maintenance")
+        p.wait()
 
 
     ## DO DATA EXPORT ################################################################################################

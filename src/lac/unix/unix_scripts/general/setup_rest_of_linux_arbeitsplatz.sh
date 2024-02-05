@@ -42,6 +42,10 @@ systemctl reload caddy
 
 # Change the linux arbeits zentrale to the finished domain in the caddyfile to portal.$DOMAIN
 sed -i "s/:443/portal.$DOMAIN/g" /etc/caddy/Caddyfile 
+# Remove the line from tls internal { and the two lines after it if domain is not int.de
+if [ $DOMAIN != "int.de" ] ; then
+  sed -i "/    tls internal {/,+2d" /etc/caddy/Caddyfile
+fi
 
 # Set the cfg file of lac:
 # LINUX_ARBEITSPLATZ_CONFIGURED=False to LINUX_ARBEITSPLATZ_CONFIGURED=True

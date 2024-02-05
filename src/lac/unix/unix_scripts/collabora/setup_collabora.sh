@@ -31,6 +31,8 @@ systemctl reload caddy
 
 # Install in nextcloud the collabora app
 sudo -u www-data php /var/www/nextcloud/occ app:install richdocuments
+# We need this because if we removed it before and then reinstalled it, it is disabled:
+sudo -u www-data php /var/www/nextcloud/occ app:enable richdocuments
 
 # Configure onlyoffice
 sudo -u www-data php /var/www/nextcloud/occ config:app:set richdocuments wopi_url --value="https://office.$DOMAIN/"
