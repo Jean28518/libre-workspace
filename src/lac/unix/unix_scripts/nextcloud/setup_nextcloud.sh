@@ -62,6 +62,9 @@ sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_proxies 0 
 sudo -u www-data php /var/www/nextcloud/occ config:system:set default_phone_region --value=DE
 # Set maintenance window start
 sudo -u www-data php /var/www/nextcloud/occ config:system:set maintenance_window_start --value=1
+# Disable all default files for a new user
+sudo -u www-data php /var/www/nextcloud/occ config:system:set skeletondirectory --value=""
+
 
 # Disable the dashboard app
 sudo -u www-data php /var/www/nextcloud/occ app:disable dashboard
