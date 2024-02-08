@@ -402,6 +402,8 @@ def umount_backups(request):
 @staff_member_required(login_url=settings.LOGIN_URL)
 def recover_path(request):
     error_page = render(request, "lac/message.html", {"message": "Fehler: Das Verzeichnis kann nicht wiederhergestellt werden. Bitte wählen Sie ein Verzeichnis in <code>/backups</code> aus.", "url": reverse("unix_index")})
+
+    # Check if everything is okay
     path = request.session["current_directory"]
     if not path.startswith("/backups"):
         return error_page
@@ -413,10 +415,19 @@ def recover_path(request):
     if len(path_parts) <= 3:
         return error_page
     
-    response = unix.recover_file_or_dir(path)
-    if response != None:
-        return render(request, "lac/message.html", {"message": f"Das Verzeichnis konnte nicht wiederhergestellt werden: <code>{response}</code>", "url": reverse("unix_index")})
-    return render(request, "lac/message.html", {"message": "Wiederherstellung wird durchgeführt. Dies kann einige Minuten dauern.", "url": reverse("unix_index")})
+    # Check confirmation
+    if request.method == "POST":
+        # Do the recovery
+        if request.POST.get("confirm", "") != "on":
+            return render(request, "lac/message.html", {"message": "Sie müssen die Wiederherstellung bestätigen.", "url": reverse("recover_path")})
+        
+        response = unix.recover_file_or_dir(path)
+        if response != None:
+            return render(request, "lac/message.html", {"message": f"Das Verzeichnis konnte nicht wiederhergestellt werden: <code>{response}</code>", "url": reverse("unix_index")})
+        return render(request, "lac/message.html", {"message": "Wiederherstellung wird durchgeführt. Dies kann einige Minuten dauern.", "url": reverse("unix_index")})
+    else:
+        # Render the confirmation page
+        return render(request, "lac/confirm.html", {"message": f"Bitte bestätigen Sie die Wiederherstellung von {path}.<br>Die Wiederherstellung wird bestehende Dateien überschreiben.", "url_cancel": reverse("unix_index")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)

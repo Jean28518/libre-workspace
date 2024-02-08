@@ -1,0 +1,25 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<br><br>
+
+
+<center><strong> {{ message | safe }} </strong></center>
+
+<br>
+
+<form method="post">
+
+
+    <input type="hidden" id="confirm" name="confirm" value="on">
+
+    <div class="grid">
+        <div>
+            <a href="{{url_cancel}}" class="secondary" role="button" style="display: block">Zurück</a>
+        </div>
+        <input type="submit" value="Bestätigen" class="primary" role="button">
+    </div>
+</form>
+
+    
+{% endblock %}
