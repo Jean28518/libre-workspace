@@ -131,6 +131,9 @@ def entries_json(request):
         if entry["link"].startswith("/"):
             entry["link"] = domain + entry["link"]
 
+    # Add a link to the portal itself
+    entries.append({"title": "Libre Workspace Portal", "link": domain, "icon_url": "/static/lac/icons/linux-arbeitsplatz.webp", "description": "Übersicht über alle installierten Apps und Dienste auf dem Portal."})
+
     # Add the apps of nextcloud to the specific nextcloud entry if it exists
     # Only choose these apps: "calendar", "contacts", "deck", "notes", "tasks", "collectives"
     nextcloud_entry = None
