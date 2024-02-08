@@ -1,3 +1,5 @@
+source ../unix.conf
+
 mkdir -p /backups
 
 # If encrypted == true, then use this command:
