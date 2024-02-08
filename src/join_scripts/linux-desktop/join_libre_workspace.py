@@ -161,12 +161,43 @@ AcceptSslErrors=false
         subprocess.run(["secret-tool", "store", "--label=owncloud", "goa-identity", f"owncloud:gen0:{goa_identity}"], input="{'password': <'" + password + "'>}", text=True, check=True)
 
 
+def install_lan_crt(address):
+    if not "int.de" in address:
+        return
+    print("Installing lan.crt to system, firefox, chrome and thunderbird...")
+    # Download cert.int.de/lan.crt and trust the certificate
+    os.system("wget https://cert.int.de/lan.crt -O /tmp/lan.crt --no-check-certificate")
+
+    # Check if the certificate is really a certificate
+    if not "BEGIN CERTIFICATE" in open("/tmp/lan.crt").read():
+        print("No certificate found in lan.crt, skipping installation of lan.crt")
+        return
+
+    # Trust the certificate in the system (run as root)
+    with open("/tmp/install_lan_crt.sh", "w") as file:
+        file.write("""#!/bin/bash
+cp /tmp/lan.crt /usr/local/share/ca-certificates/lan.crt
+update-ca-certificates
+# Also ensure that the certificate is trusted in Firefox, Chrome and Thunderbird. For this we need to install libnss3-tools
+apt install libnss3-tools -y
+""")
+    os.system("pkexec bash /tmp/install_lan_crt.sh")
+
+    # Trust the certificate in Firefox and Thunderbird and Chrome
+    certificateFile = "/tmp/lan.crt"
+    certificateName = "LAN"
+    for certDB in subprocess.getoutput("find  ~/.mozilla* ~/.thunderbird ~/.pki -name 'cert9.db'").split("\n"):
+        certDir = os.path.dirname(certDB)
+        os.system(f"certutil -A -n '{certificateName}' -t 'TCu,Cuw,Tuw' -i {certificateFile} -d {certDir}")
+    
+
 argparser = argparse.ArgumentParser(description='Join a libre workspace')
 argparser.add_argument('address', help='The address of the libre workspace')
 argparser.add_argument('--username', required=False, help='The username for the libre workspace')
 argparser.add_argument('--password', required=False, help='The password for the libre workspace')
 argparser.add_argument('--create_web_entries', required=False, default="True", help='Create web entries in menu')
 argparser.add_argument('--add_nextcloud_sync_client', required=False, default="True", help='Add nextcloud sync client')
+argparser.add_argument('--install_lan_crt', required=False, default="True", help='Install lan.crt')
 args = argparser.parse_args()
 
 address = args.address
@@ -174,6 +205,7 @@ username = args.username
 password = args.password
 create_web_entries = args.create_web_entries
 nextcloud_sync_client = args.add_nextcloud_sync_client
+install_lan_crt = args.install_lan_crt
 
 if create_web_entries == "True":
     create_web_starters_in_menu(address)
@@ -184,4 +216,5 @@ if nextcloud_sync_client == "True" and username and password:
 if address and username and password:
     login_to_gnome_online_accounts(address, username, password)
 
-
+if address and install_lan_crt == "True":
+    install_lan_crt(address)
