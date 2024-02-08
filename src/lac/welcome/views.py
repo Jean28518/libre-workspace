@@ -75,6 +75,8 @@ def welcome_dns_settings(request):
                 message = "Bitte geben Sie eine Domain an."
             elif request.session["domain"].count(".") != 1:
                 message = "Bitte stellen Sie sicher, dass Sie nur die Domain angeben und keine Subdomain."
+            elif len(request.session["domain"]) > 12:
+                message = "Aufgrund von Einschränkungen bzgl. des NetBIOS-Namens darf die Domain (inklusive Punkt) nicht länger als 12 Zeichen sein. (la.[DOMAIN] <= 15). "
         else:
             request.session["domain"] = "int.de"
         if message == "":

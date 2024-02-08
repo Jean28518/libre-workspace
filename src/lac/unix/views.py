@@ -319,6 +319,7 @@ def email_configuration(request):
             if (mail_config["password"] == ""):
                 mail_config["password"] = current_email_conf["password"]
             update_email_settings(form.cleaned_data)
+            unix.restart_linux_arbeitsplatz_web()
 
     return render(request, "unix/email_configuration.html", {"current_email_conf": current_email_conf, "form": form, "message": message})
 

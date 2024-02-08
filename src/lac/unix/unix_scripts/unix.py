@@ -686,3 +686,8 @@ def get_all_installed_nextcloud_addons():
         if os.path.isdir(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/apps/" + folder):
             addons.append(folder)
     return addons
+
+
+def restart_linux_arbeitsplatz_web():
+    # Only run this command one second after the function was called to ensure that the response is sent to the client before the server restarts
+    subprocess.Popen("sleep 1; systemctl restart linux-arbeitsplatz-web",shell=True)
