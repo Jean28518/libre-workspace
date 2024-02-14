@@ -56,7 +56,7 @@ for ADDON in /usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/*; do
         ADDON_NAME=$(basename $ADDON)
         if [ "$(eval "echo \$${ADDON_NAME}_AUTOMATIC_UPDATES")" == "True" ]; then
             echo "Starting update of $ADDON_NAME at $DATE" >> ../history/update-$DATE.log 2>&1
-            bash "cd ../addons/$ADDON; bash update_$ADDON_NAME.sh" >> ../history/update-$DATE.log 2>&1
+            bash "cd $ADDON; bash update_$ADDON_NAME.sh" >> ../history/update-$DATE.log 2>&1
         fi
     fi
 done
