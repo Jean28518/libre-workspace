@@ -353,12 +353,12 @@ def module_management(request):
             if data["online_office"] == "Deaktivieren" and (unix.is_onlyoffice_available() or unix.is_collabora_available()):
                 unix.remove_module("onlyoffice")
                 unix.remove_module("collabora")
-            elif data["online_office"] == "OnlyOffice" and not unix.is_onlyoffice_available():
-                unix.setup_module("onlyoffice")
+            elif data["online_office"] == "OnlyOffice" and (not unix.is_onlyoffice_available() or unix.is_collabora_available()):
                 unix.remove_module("collabora")
-            elif data["online_office"] == "Collabora" and not unix.is_collabora_available():
-                unix.setup_module("collabora")
+                unix.setup_module("onlyoffice")
+            elif data["online_office"] == "Collabora" and (unix.is_onlyoffice_available() or not unix.is_collabora_available()):
                 unix.remove_module("onlyoffice")
+                unix.setup_module("collabora")
             message = "Änderungen werden angewendet. Dies kann einige Minuten dauern."
         
     modules = unix.get_software_modules()
