@@ -70,6 +70,18 @@
         {% endfor %}
     </div>
     <h4>Steuerung</h4>
+    {% comment %} Start / Stop all services {% endcomment %}
+    <div class="grid">
+        <div>
+            <a href="{% url "start_all_services" %}"role="button" class="secondary" style="display: block;">Alle Dienste starten</a>
+        </div>
+        <div>
+            <a href="{% url "stop_all_services" %}"role="button" class="secondary" style="display: block;">Alle Dienste stoppen</a>
+        </div>
+    </div>
+
+    <br>
+
     <div class="grid">
         <div>
 
@@ -192,7 +204,7 @@
                     </a>
                 </footer>
                 </article>
-                </dialog>
-            </div>
+            </dialog>
         </div>
+    </div>
 </article>

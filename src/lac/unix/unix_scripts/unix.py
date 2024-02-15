@@ -278,6 +278,14 @@ def shutdown_system():
     os.system("/sbin/shutdown -h now")
 
 
+def start_all_services():
+    subprocess.Popen(["/usr/bin/bash", "start_services.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+
+
+def stop_all_services():
+    subprocess.Popen(["/usr/bin/bash", "stop_services.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+
+
 def escape_bash_characters(string, also_escape_paths=True):
     if also_escape_paths:
         string = string.replace("/", "").replace("\\", "").replace(".", "")

@@ -116,6 +116,20 @@ def shutdown_system(request):
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
+def start_all_services(request):
+    unix.start_all_services()
+    time.sleep(1)
+    return redirect("unix_index")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def stop_all_services(request):
+    unix.stop_all_services()
+    time.sleep(1)
+    return redirect("unix_index")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
 def data_management(request):
     partitions = unix.get_partitions()
     data_export_status = unix.get_data_export_status()

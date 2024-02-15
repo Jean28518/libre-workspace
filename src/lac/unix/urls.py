@@ -9,6 +9,8 @@ urlpatterns = [
     path("update_system", views.update_system, name="update_system"),
     path("reboot_system", views.reboot_system, name="reboot_system"),
     path("shutdown_system", views.shutdown_system, name="shutdown_system"),
+    path("start_all_services", views.start_all_services, name="start_all_services"),
+    path("stop_all_services", views.stop_all_services, name="stop_all_services"),
 
     path("data_management", views.data_management, name="data_management"),
     path("mount/<partition>", views.mount, name="mount"),

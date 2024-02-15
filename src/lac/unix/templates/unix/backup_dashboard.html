@@ -21,7 +21,7 @@
             <div align="center"><a href="{% url "retry_backup" %}">Erneut versuchen</a></div>
             {% elif backup_information.backup_status == "running" %}
             <div align="center"><span style="color: green;" class="material-icons md-64">cloud_upload</span> </div>
-            <div align="center">Backup läuft</div>
+            <div align="center">Backup läuft...<br><small>Alle Dienste sind gerade abgeschaltet. Bei Bedarf können diese <a href="{% url "start_all_services" %}">hier</a> gestartet werden.</small></div>
             {% elif backup_information.backup_status == "recovery_running" %}
             <div align="center"><span style="color: blue;" class="material-icons md-64">cloud_download</span> </div>
             <div align="center">Wiederherstellung läuft</div>
