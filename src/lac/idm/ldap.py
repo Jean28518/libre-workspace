@@ -3,7 +3,7 @@ import ldap.modlist as modlist
 from ldap import LDAPError
 from django.conf import settings
 import base64
-
+import idm.idm as idm
 
 def get_user_information_of_cn(cn):
     if not settings.AUTH_LDAP_ENABLED:
@@ -211,6 +211,12 @@ def ldap_is_system_group(cn):
     return cn in system_groups
 
 def ldap_update_user(cn, user_information):
+    # If ldap not enabled save user settings in the User model
+    if not settings.AUTH_LDAP_ENABLED:
+        idm.update_user(cn, user_information)
+        return
+
+
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 

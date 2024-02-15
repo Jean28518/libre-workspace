@@ -60,7 +60,6 @@
 
 
 <div class="grid">
-    {% if ldap_enabled %}
     <a class="secondary" href="{% url "user_settings" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">account_circle</span> 
@@ -68,7 +67,6 @@
             Profileinstellungen
         </article>
     </a>
-    {% endif %}
     <a class="secondary" href="{% url "change_password" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">password</span> 

@@ -72,11 +72,15 @@ def user_settings(request):
             ldap_update_user(request.user.username, form.cleaned_data)
         form.cleaned_data.update({"username": request.user.username})
         form = BasicUserForm(initial=form.cleaned_data)
+        if not settings.AUTH_LDAP_ENABLED:
+            form.fields["displayName"].disabled = True
         return render(request, "idm/user_settings.html", {"form": form, "message": "Die Änderungen wurden erfolgreich gespeichert!"})
 
     else:
         user_information = get_user_information(request.user)
         form = BasicUserForm(initial=user_information)
+        if not settings.AUTH_LDAP_ENABLED:
+            form.fields["displayName"].disabled = True
         return render(request, "idm/user_settings.html", {"form": form})    
 
 

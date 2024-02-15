@@ -1,7 +1,7 @@
 import string
 import random
 import os
-from .ldap import get_user_dn_by_email, set_ldap_user_new_password, get_user_information_of_cn, is_ldap_user_password_correct
+import idm.ldap as ldap
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -13,11 +13,11 @@ def get_user_information(user):
     user_information = {}
     if type(user) == str:
         if settings.AUTH_LDAP_ENABLED:
-            user_information = get_user_information_of_cn("Administrator")
+            user_information = ldap.get_user_information_of_cn("Administrator")
         else:
             user = User.objects.get(username=user)
     elif settings.AUTH_LDAP_ENABLED:     
-        user_information = get_user_information_of_cn(user.ldap_user.dn)
+        user_information = ldap.get_user_information_of_cn(user.ldap_user.dn)
 
     if not settings.AUTH_LDAP_ENABLED:
         user_information["admin"] = user.is_superuser
@@ -31,11 +31,11 @@ def get_user_information(user):
 
 
 def reset_password_for_email(email):
-    user = get_user_dn_by_email(email)
+    user = ldap.get_user_dn_by_email(email)
     if user == None:
         return
     random_password = _generate_random_password()
-    set_ldap_user_new_password(user, random_password)
+    ldap.set_ldap_user_new_password(user, random_password)
     print(random_password)
     send_mail(subject="Neues Passwort (Linux-Arbeisplatz Zentrale)", from_email=os.getenv("EMAIL_HOST_USER"), message=f"Das neue Passwort ist:\n\n{random_password}", recipient_list=[email])
     pass
@@ -54,7 +54,7 @@ def _generate_random_password():
 
 def set_user_new_password(user, password):
     if settings.AUTH_LDAP_ENABLED:
-        message = set_ldap_user_new_password(user.ldap_user.dn, password)
+        message = ldap.set_ldap_user_new_password(user.ldap_user.dn, password)
     else:
         message = None
         user.set_password(password)
@@ -64,7 +64,7 @@ def set_user_new_password(user, password):
 
 def is_user_password_correct(user, password):
     if settings.AUTH_LDAP_ENABLED:
-        return is_ldap_user_password_correct(user.ldap_user.dn, password)
+        return ldap.is_ldap_user_password_correct(user.ldap_user.dn, password)
     else:
         return user.check_password(password)
     
@@ -87,3 +87,20 @@ def get_admin_user():
         return get_user_information("Administrator")
     else:
         return User.objects.get(username="Administrator")
+    
+
+def update_user(username, user_information):
+    """
+    Only use this, if LDAP is disabled
+    """
+
+    if settings.AUTH_LDAP_ENABLED:
+        # Update LDAP user
+        pass
+    else:
+        # Update Django user
+        user = User.objects.get(username=username)
+        user.first_name = user_information["first_name"]
+        user.last_name = user_information["last_name"]
+        user.email = user_information["mail"]
+        user.save()
