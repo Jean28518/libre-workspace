@@ -29,6 +29,9 @@ IP=`hostname -I | cut -d' ' -f1`
 # If caddy file does not has # PORTAL-ENTRY, then add it
 if ! grep -q "# PORTAL-ENTRY" /etc/caddy/Caddyfile; then
 
+# Remove :80 entry from caddy file, because we don't want to use it
+python3 /usr/share/linux-arbeitsplatz/unix/unix_scripts/remove_caddy_service.py :80
+
 echo "# PORTAL-ENTRY
 :443 {
     tls internal {
