@@ -557,7 +557,7 @@ def setup_module(module_name):
         if domain == "":
             return "No domain found in the env.sh file. Please check the env.sh file."
         ip = get_env_sh_variables().get("IP", "")   
-        os.system(f"echo \"{url}.{domain}\t {ip}\" >> /etc/hosts")
+        os.system(f"echo \"{ip} {url}.{domain}\" >> /etc/hosts")
 
         # Add the entry to the DNS server
         if settings.AUTH_LDAP_ENABLED:
