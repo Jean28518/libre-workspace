@@ -106,7 +106,9 @@ while True:
             # Send email to admin if backup failed
             read_errors = open(f"history/borg_errors_{date}.log").read()
             if read_errors.strip() != "":
-                os.system("curl -X POST -F 'subject=💾❌ Backup mit Fehlern abgeschlossen❌' -F 'message=Das heutige Backup war nicht vollständig erfolgreich.\\nIm Anhang finden Sie die Fehlermeldungen' localhost:11123/unix/send_mail")
+                # Full path of the log file:
+                log_file = os.path.abspath(f"history/borg_errors_{date}.log")
+                os.system(f"curl -X POST -F 'subject=💾❌ Backup mit Fehlern abgeschlossen❌' -F 'message=Das heutige Backup war nicht vollständig erfolgreich.\nIm Anhang finden Sie die Fehlermeldungen.' -F 'attachment_path={log_file}' localhost:11123/unix/send_mail")
 
     ## SYSTEM UPDATE ################################################################################################
 

@@ -271,7 +271,9 @@ def unix_send_mail(request):
         if recipient == "":
             return HttpResponseBadRequest("No recipient given and no admin email address found")
     subject = request.POST.get("subject", "")
+    subject += f" - ({unix.get_libre_workspace_name()})"
     message = request.POST.get("message", "").replace("\\n", "\n")
+    message += f"\n\nMessage from: {unix.get_libre_workspace_name()}"
     attachment_path = request.POST.get("attachment_path", "")
 
     email.send_mail(recipient, subject, message, attachment_path)
