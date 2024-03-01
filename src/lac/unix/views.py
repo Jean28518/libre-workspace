@@ -169,6 +169,7 @@ def data_export(request):
         return HttpResponse("Fehler: POST Request erwartet")
     if partition == "":
         return HttpResponse("Fehler: Keine Partition ausgewählt")
+    partition += "/libre_workspace_export/"
     unix.export_data(partition)
     time.sleep(1)
     return redirect("data_management")
