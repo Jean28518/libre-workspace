@@ -1,0 +1,28 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2>Kritische Systemkonfiguration</h2>
+
+<div class="danger" role="alert">
+    <strong>Bitte beachten Sie, dass diese Konfigurationen in nur von erfahrenen Administratoren und auf KEINEN FALL leichtfertig durchgeührt werden sollen. Falsche Einstellungen können zu schwerwiegenden Problemen führen.</strong>
+</div>
+
+<div class="grid">
+    <a class="secondary" href="{% url "change_ip_address" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-96">hub</span> 
+            <br> 
+            IP-Adressen-Änderung
+        </article>
+    </a>
+    <a class="secondary" href="{% url "change_master_password" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-96">password</span> 
+            <br> 
+            Masterpasswort-Änderung
+        </article>
+    </a>
+    
+</div>
+
+{% endblock %}

@@ -82,6 +82,17 @@ def ensure_superuser_exists():
             print("Created superuser 'Administrator' with password '{}'".format(settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP))
 
 
+
+def change_superuser_password(new_password):
+    """Only changes the password of the django superuser."""
+    if settings.AUTH_LDAP_ENABLED:
+        pass
+    else:
+        user = User.objects.get(username="Administrator")
+        user.set_password(new_password)
+        user.save()
+
+
 def get_admin_user():
     if settings.AUTH_LDAP_ENABLED:
         return get_user_information("Administrator")

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 import os
 import subprocess
 from django.conf import settings
+import unix.unix_scripts.unix as unix
 
 
 # List of subdomains
@@ -14,27 +15,7 @@ def welcome_start(request):
     if request.method == "POST":
         password = request.POST["password"]
         password_repeat = request.POST["password_repeat"]
-        if password.strip() == "":
-            message = "Passwort darf nicht leer sein."
-        if password.count(" ") > 0:
-            message = "Passwort darf keine Leerzeichen enthalten."
-        # Check if password contains at least one number
-        if not any(char.isdigit() for char in password):
-            message = "Passwort muss mindestens eine Zahl enthalten."
-        # Check if password contains at least one letter
-        if not any(char.isalpha() for char in password):
-            message = "Passwort muss mindestens einen Buchstaben enthalten."
-        # Check if password contains at least one special character
-        special_characters = "!\"%&'()*+,-./:;<=>?@[\]^_`{|}~"
-        if not any(char in special_characters for char in password):
-            message = "Passwort muss mindestens ein Sonderzeichen enthalten."
-        # If password contains "$'# it is forbidden
-        forbidden_characters = "$'#"
-        if any(char in forbidden_characters for char in password):
-            message = "Passwort darf keine der folgenden Zeichen enthalten: $'#"
-        # Check if password is at least 8 characters long
-        if len(password) < 8:
-            message = "Passwort muss mindestens 8 Zeichen lang sein."
+        message = unix.password_challenge(password)
         if password == password_repeat:
             request.session["password"] = password
         else:

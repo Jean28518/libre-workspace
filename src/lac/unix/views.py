@@ -16,6 +16,7 @@ import unix.unix_scripts.unix as unix
 import unix.email as email
 import idm.ldap
 from lac.templates import process_overview_dict, message
+import idm.forms
 
 
 # Create your views here.
@@ -522,3 +523,54 @@ def change_libre_workspace_name(request):
         return message(request, "Der Name wurde geändert.", "unix_index")
     form = forms.ChangeLibreWorkspaceNameForm()
     return render(request, "lac/create_x.html", {"form": form, "heading": "Libre Workspace Name ändern", "hide_buttons_top": "True", "url": reverse("unix_index")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def critical_system_configuration(request):
+    return render(request, "unix/critical_system_configuration.html")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def change_ip_address(request):
+    if request.method == "POST":
+        ip = request.POST.get("ip", "")
+        # Check if the ip is valid
+        if not unix.is_valid_ip(ip):
+            return message(request, "Die IP-Adresse ist nicht gültig.", "critical_system_configuration")
+        unix.set_value("IP", ip)
+        return message(request, "Die IP-Adresse wurde geändert.", "critical_system_configuration")
+    form = forms.ChangeIpAdressForm()
+    return render(request, "lac/generic_form.html", 
+                  {"form": form, 
+                   "heading": "IP-Adresse ändern",
+                   "action": "Ändern",
+                   "hide_buttons_top": "True", 
+                   "url": reverse("critical_system_configuration"), 
+                   "danger": "True",
+                   "description": "Bitte geben Sie die neue IP-Adresse des Servers ein. Der Server wird direkt danach neu gestartet."})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def change_master_password(request):
+    if request.method == "POST":
+        current_password = unix.get_administrator_password()
+        if request.POST.get("old_password", "") != current_password:
+            return message(request, "Das aktuelle Passwort ist falsch.", "critical_system_configuration")
+        if request.POST.get("new_password", "") != request.POST.get("new_password_repeat", ""):
+            return message(request, "Die neuen Passwörter stimmen nicht überein.", "critical_system_configuration")
+        password = request.POST.get("new_password", "")
+        errors = unix.password_challenge(password)
+        if errors == "":
+            unix.change_master_password(password)
+            return message(request, "Das Master-Passwort wurde geändert.", "critical_system_configuration")
+        else:
+            return message(request, f"Das neue Passwort ist nicht sicher genug: {errors}", "critical_system_configuration")
+    form = idm.forms.PasswordForm()
+    return render(request, "lac/generic_form.html", 
+                  {"form": form, 
+                   "heading": "Master-Passwort ändern",
+                   "action": "Ändern",
+                   "hide_buttons_top": "True", 
+                   "url": reverse("critical_system_configuration"), 
+                   "danger": "True",
+                   "description": "Bitte geben Sie das neue Master-Passwort ein. Das Master-Passwort wird direkt danach geändert und der Server wird direkt neu gestartet."})

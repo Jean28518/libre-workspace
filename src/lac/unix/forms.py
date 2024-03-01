@@ -33,3 +33,7 @@ class AddonForm(forms.Form):
 
 class ChangeLibreWorkspaceNameForm(forms.Form):
     name = forms.CharField(label="Neuer Libre-Workspace Name", max_length=100, widget=forms.TextInput(), required=False)
+
+
+class ChangeIpAdressForm(forms.Form):
+    ip = forms.GenericIPAddressField(label="IP-Adresse", widget=forms.TextInput(attrs={"placeholder": "0.0.0.0"}))

@@ -4,6 +4,8 @@ import subprocess
 import json
 import lac.settings as settings
 import idm.ldap as ldap
+import idm.idm as idm
+import welcome.views
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -485,11 +487,15 @@ def get_software_modules():
     else:
         modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     
+    for module in modules:
+        module["scriptsFolder"] = f"{module['id']}"
+
     # Get addons:
     addons = get_all_addon_modules()
     for addon in addons:
         addon["installed"] = is_module_installed(addon["id"])
         addon["automaticUpdates"] = get_value(f"{addon['id'].upper()}_AUTOMATIC_UPDATES", "False") == "True"
+        addon["scriptsFolder"] = f"addons/{addon['id']}"
         modules.append(addon)
 
 
@@ -547,6 +553,8 @@ def get_module_path(module_name):
         return f"addons/{module_name}"
     return module_name
 
+
+# Also "installs" addons
 def setup_module(module_name):
     module_path = get_module_path(module_name)
     # Check if module is an addon:
@@ -720,3 +728,106 @@ def get_libre_workspace_version():
         return output.split(":")[1].strip()
     else:
         return "?"
+    
+
+def change_master_password(password):
+    # Update password for the administrator user in the LDAP server
+    os.system("samba-tool user setpassword Administrator --newpassword=" + password)
+
+    # Update the password of the django admin user, if present
+    idm.change_superuser_password(password)
+        
+    # Update the password of the systemv (linux) user by changing the password in the /etc/shadow file
+    os.system("pam-auth-update --disable krb5")
+    os.system(f"chpasswd <<<\"systemv:{password}\"")
+    os.system("pam-auth-update --enable krb5")
+
+    # Update the password in the env.sh file
+    os.system(f"sed -i 's/ADMIN_PASSWORD=.*/ADMIN_PASSWORD=\"{password}\"/g' env.sh")
+
+    # Change the configured bind password in /usr/share/linux-arbeitsplatz/cfg
+    os.system(f"sed -i 's/AUTH_LDAP_BIND_PASSWORD=.*/AUTH_LDAP_BIND_PASSWORD=\"{password}\"/g' /usr/share/linux-arbeitsplatz/cfg")
+
+    # Update the password in apps like nextcloud, rocketchat, matrix.
+    # We are doing this by running the update_env.sh scripts in the specific folders.
+    env = get_env_sh_variables()
+    for module  in get_software_modules():
+        if module["installed"]:
+            subprocess.Popen(["/usr/bin/bash", "update_env.sh"], cwd=module["scriptsFolder"] + "/", env=env).wait()
+
+    # Restart the whole server to ensure that the new password is used everywhere.
+    reboot_system()
+
+
+def change_ip(ip):
+    # Get old ip
+    old_ip = get_env_sh_variables().get("IP", "")
+
+    # Change the IP in the env.sh file
+    os.system(f"sed -i 's/IP=.*/IP=\"{ip}\"/g' env.sh")
+
+    # Change the IP in the /etc/hosts file
+    os.system(f"sed -i 's/{old_ip}/{ip}/g' /etc/hosts")
+
+    # Change the IP in the DNS server of samba
+    domain = get_env_sh_variables().get("DOMAIN", "")
+    admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+
+    for subdomain in welcome.views.subdomains:
+        os.system(f"samba-tool dns update {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
+    for addon in get_all_addon_modules():
+        os.system(f"samba-tool dns update {addon['url']}.{domain} {domain} {ip} A -U administrator%{admin_password}")
+
+    # Change the IP in apps like nextcloud, rocketchat, matrix and also in the addons.
+    env = get_env_sh_variables()
+    for module  in get_software_modules():
+        if module["installed"]:
+            subprocess.Popen(["/usr/bin/bash", "update_env.sh"], cwd=module["scriptsFolder"] + "/", env=env).wait()
+
+    # Restart the whole server to ensure that the new IP is used everywhere.
+    reboot_system()
+
+
+def is_valid_ip(ip):
+    # Check if the ip is valid
+    try:
+        ip = ip.split(".")
+        if len(ip) != 4:
+            return False
+        for i in ip:
+            if int(i) < 0 or int(i) > 255:
+                return False
+    except:
+        return False
+    return True
+
+
+def get_administrator_password():
+    return get_env_sh_variables().get("ADMIN_PASSWORD", "")
+
+
+def password_challenge(password):
+    """Returns a message if the password is not valid. If the password is valid, it returns ""."""
+    message = ""
+    if password.strip() == "":
+        message = "Passwort darf nicht leer sein."
+    if password.count(" ") > 0:
+        message = "Passwort darf keine Leerzeichen enthalten."
+    # Check if password contains at least one number
+    if not any(char.isdigit() for char in password):
+        message = "Passwort muss mindestens eine Zahl enthalten."
+    # Check if password contains at least one letter
+    if not any(char.isalpha() for char in password):
+        message = "Passwort muss mindestens einen Buchstaben enthalten."
+    # Check if password contains at least one special character
+    special_characters = "!\"%&'()*+,-./:;<=>?@[\]^_`{|}~"
+    if not any(char in special_characters for char in password):
+        message = "Passwort muss mindestens ein Sonderzeichen enthalten."
+    # If password contains "$'# it is forbidden
+    forbidden_characters = "$'#"
+    if any(char in forbidden_characters for char in password):
+        message = "Passwort darf keine der folgenden Zeichen enthalten: $'#"
+    # Check if password is at least 8 characters long
+    if len(password) < 8:
+        message = "Passwort muss mindestens 8 Zeichen lang sein."
+    return message

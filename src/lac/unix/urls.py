@@ -13,6 +13,10 @@ urlpatterns = [
     path("stop_all_services", views.stop_all_services, name="stop_all_services"),
     path("change_libre_workspace_name", views.change_libre_workspace_name, name="change_libre_workspace_name"),
 
+    path("critical_system_configuration" , views.critical_system_configuration, name="critical_system_configuration"),
+    path("change_ip_address", views.change_ip_address, name="change_ip_address"),
+    path("change_master_password", views.change_master_password, name="change_master_password"),
+
     path("data_management", views.data_management, name="data_management"),
     path("mount/<partition>", views.mount, name="mount"),
     path("umount/<partition>", views.umount, name="umount"),
