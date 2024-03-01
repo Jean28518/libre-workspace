@@ -617,7 +617,7 @@ def get_online_office_module():
 
 def mount_backups():
     process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
-    time.sleep(1)
+    time.sleep(5)
     if process.returncode != None and process.returncode != 0:
         return "Error: Mounting backups failed: " + str(process.stdout) + " " + str(process.stderr)
 
