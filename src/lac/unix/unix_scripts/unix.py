@@ -784,6 +784,12 @@ def change_ip(ip):
         if module["installed"]:
             subprocess.Popen(["/usr/bin/bash", "update_env.sh"], cwd=module["scriptsFolder"] + "/", env=env).wait()
 
+    # Change all old ips with the new ip in /etc/caddy/Caddyfile
+    os.system(f"sed -i 's/{old_ip}/{ip}/g' /etc/caddy/Caddyfile")
+
+    # Change all old ips with the new ip in /usr/share/linux-arbeitsplatz/welcome/templates/welcome/access_rendered.html
+    os.system(f"sed -i 's/{old_ip}/{ip}/g' /usr/share/linux-arbeitsplatz/welcome/templates/welcome/access_rendered.html")
+
     # Restart the whole server to ensure that the new IP is used everywhere.
     reboot_system()
 

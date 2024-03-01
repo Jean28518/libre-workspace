@@ -113,3 +113,13 @@ If you are using another webserver/reverse proxy you have to configure it yourse
 
 It is mandatory to configure the cfg file at /usr/share/linux-arbeitsplatz/cfg. If you want to use the active directory functionality you have to care about yourself about the installation of this. The LDAP configuration is done in the cfg file.
 By default, ldap is disabled. Your default login at the web interface is "Administrator" with the password "LibreWorkspace". More details can be found in the cfg file.
+
+
+You also have to ensure /usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh which is used for the addon and module handling.
+The following variables are mandatory to be set. An example would be:
+
+.. code-block:: bash
+
+    export IP="1.2.3.4"
+    export ADMIN_PASSWORD="AdminPasswordOfTheLDAPDomainOtherwiseSetItToAnEmptyString"
+    export DOMAIN="int.de"

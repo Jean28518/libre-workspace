@@ -92,6 +92,14 @@ The configuration and the control of the services is available via the web inter
 All taks are handled by the background service ``linux-arbeitsplatz-unix``. It listens to simple control files in ``/usr/share/linux-arbeitsplatz-central/unix/unix_scripts``.
 All actions are configured and done via simple bash scripts with environment variables. So these files can be adjusted easily and are easy to understand and to run manually.
 
+If you want to run a script manually make sure you source the env.sh and unix.conf file in the unix_scripts directory before:
+
+.. code-block:: bash
+
+    . /usr/share/linux-arbeitsplatz-central/unix/unix_scripts/env.sh
+    . /usr/share/linux-arbeitsplatz-central/unix/unix_scripts/unix.conf
+    
+
 welcome
 -------
 

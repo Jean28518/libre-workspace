@@ -25,6 +25,7 @@ The .zip file should be named [NAME].zip, where [NAME] is the name of the addon 
         - setup_[NAME].sh
         - update_[NAME].sh
         - remove_[NAME].sh
+        - update_env.sh (optional)
         - [NAME].png / [NAME].svg / [NAME].jpg / [NAME].webp
         - LICENSE 
         - any other files needed for the installation of the addon (optional)
@@ -187,6 +188,17 @@ An example of remove_nocodb.sh would be:
     # Remove the entry from the Caddyfile
     sed -i "/db.$DOMAIN {/,/}/d" /etc/caddy/Caddyfile
     systemctl restart caddy
+
+
+update_env.sh
+-------------
+
+This file is a simple shell script which is executed when the administrator updates the environment of the system configuration,
+which could be the master password (also changes the LDAP administrator password) or the IP address of the server, under which it is accessible.
+If your addon doesn't rely on the IP address or the master password, you can ignore this file. It is then not necessary to have it.
+
+In our example of nocodb we don't need this file, because we don't rely on the IP address or the master password.
+So we don't even have to create this file.
 
 
 General Tips
