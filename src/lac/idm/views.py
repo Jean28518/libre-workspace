@@ -19,20 +19,17 @@ def signal_handler(context, user, request, exception, **kwargs):
 django_auth_ldap.backend.ldap_error.connect(signal_handler)
 
 
-
-
-
 # Create your views here.
+@login_required
 def dashboard(request):
-    if request.user.is_authenticated:
-        user_information = get_user_information(request.user)
-        return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED})
-    return redirect(user_login)
+    user_information = get_user_information(request.user)
+    return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED})
+
 
 # We have to set login_page=True to prevent the base template from displaying the login button
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect(dashboard)
+        return redirect("index")
     if request.method == 'POST':
         username = request.POST['username']
 
@@ -47,18 +44,20 @@ def user_login(request):
         if user and user.is_authenticated:
             print("User is authenticated")
             login(request, user)
-            # if request.GET.get("next", "") != "":
-            #     return HttpResponseRedirect(request.GET['next'])
-            # else: 
-            return redirect(dashboard)
+            if request.GET.get("next", "") != "":
+                return HttpResponseRedirect(request.GET['next'])
+            else: 
+                return redirect("index")
         else:
             print("User is not authenticated")
             return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True})
     return render(request, "idm/login.html", {"request": request, "hide_login_button": True})
 
+
 def user_logout(request):
     logout(request)
     return redirect("index")
+
 
 @login_required
 def user_settings(request):
@@ -84,6 +83,7 @@ def user_settings(request):
         return render(request, "idm/user_settings.html", {"form": form})    
 
 
+@login_required
 def user_password_reset(request):
     message = ""
     if request.method == 'POST':

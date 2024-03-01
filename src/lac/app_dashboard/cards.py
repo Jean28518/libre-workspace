@@ -58,5 +58,5 @@ card_data = [
     {"order": 6,"title": "NocoDB", "url": "", "icon_path": "/static/lac/icons/nocodb.webp", "description": "Datenbanken", "keywords": ["nocodb", "database", "db"]},
     {"order": 7,"title": "Video", "url": "", "icon_path": "/static/lac/icons/video.webp", "description": "Video-Anleitungen", "keywords": ["video", "youtube", "peertube"]},
     {"order": 8,"title": "Zertifikate", "url": "", "icon_path": "/static/lac/icons/lock.webp", "description": "Für sicheren Zugriff", "keywords": ["certificate", "ssl", "cert"]},
-    {"order": 9,"title": "Verwaltung", "url": "/login", "icon_path": "/static/lac/icons/company.webp", "description": "Benutzer, Gruppen, ...", "keywords": ["central", "verwaltung", "ldap", "portal"]},
+    {"order": 9,"title": "Verwaltung", "url": "/idm/dashboard", "icon_path": "/static/lac/icons/company.webp", "description": "Benutzer, Gruppen, ...", "keywords": ["central", "verwaltung", "ldap", "portal"]},
 ]
