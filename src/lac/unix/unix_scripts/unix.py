@@ -231,6 +231,8 @@ def get_disks_stats():
 def get_system_information():
     # Get hostname, ram usage, cpu usage, uptime, os version
     rv = {}
+    rv["lw_name"] = get_libre_workspace_name()
+    rv["lw_version"] = get_libre_workspace_version()
     rv["hostname"] = subprocess.getoutput("hostname")
     rv["total_ram"] = subprocess.getoutput("free -h").split("\n")[1].split()[1].replace("Gi", "").replace("Mi", "")
     rv["ram_usage"] = subprocess.getoutput("free -h").split("\n")[1].split()[2].replace("Gi", "").replace("Mi", "")
@@ -700,3 +702,21 @@ def get_all_installed_nextcloud_addons():
 def restart_linux_arbeitsplatz_web():
     # Only run this command one second after the function was called to ensure that the response is sent to the client before the server restarts
     subprocess.Popen("sleep 1; systemctl restart linux-arbeitsplatz-web",shell=True)
+
+
+def get_libre_workspace_name():
+    domain = get_env_sh_variables().get("DOMAIN", "")
+    return get_value(f"LIBRE_WORKSPACE_NAME", f"{domain} - Libre Workspace")
+
+
+def set_libre_workspace_name(name):
+    set_value("LIBRE_WORKSPACE_NAME", name)
+
+
+def get_libre_workspace_version():
+    # Get the version of installed linux-arbeitsplatz.deb:
+    output = subprocess.getoutput("dpkg -s linux-arbeitsplatz | grep Version")
+    if "Version" in output:
+        return output.split(":")[1].strip()
+    else:
+        return "?"

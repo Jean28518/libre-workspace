@@ -2,6 +2,14 @@
     <h3>System</h3>
     <table>
         <tr>
+            <th>Name</th>
+            <td>{{ system_information.lw_name }} (<a href="{% url "change_libre_workspace_name" %}">Ändern</a>)</td>
+        </tr>
+        <tr>
+            <th>Libre-Workspace Version</th>
+            <td>{{ system_information.lw_version }}</td>
+        </tr>
+        <tr>
             <th>Hostname</th>
             <td>{{ system_information.hostname }}</td>
         </tr>

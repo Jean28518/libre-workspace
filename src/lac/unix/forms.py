@@ -29,3 +29,7 @@ class OnlineOfficeInstallationForm(forms.Form):
 
 class AddonForm(forms.Form):
     file = forms.FileField(label="Add-On Datei")
+
+
+class ChangeLibreWorkspaceNameForm(forms.Form):
+    name = forms.CharField(label="Neuer Libre-Workspace Name", max_length=100, widget=forms.TextInput(), required=False)

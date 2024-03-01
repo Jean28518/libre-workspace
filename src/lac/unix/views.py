@@ -510,3 +510,13 @@ def remove_addon(request, addon_id):
     if response != None:
         return message(request, f"Das Addon konnte nicht deinstalliert werden: <code>{response}</code>", "addons")
     return message(request, f"Das Addon wurde deinstalliert.", "addons")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def change_libre_workspace_name(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "")
+        unix.set_value("LIBRE_WORKSPACE_NAME", name)
+        return message(request, "Der Name wurde geändert.", "unix_index")
+    form = forms.ChangeLibreWorkspaceNameForm()
+    return render(request, "lac/create_x.html", {"form": form, "heading": "Libre Workspace Name ändern", "hide_buttons_top": "True", "url": reverse("unix_index")})

@@ -11,6 +11,7 @@ urlpatterns = [
     path("shutdown_system", views.shutdown_system, name="shutdown_system"),
     path("start_all_services", views.start_all_services, name="start_all_services"),
     path("stop_all_services", views.stop_all_services, name="stop_all_services"),
+    path("change_libre_workspace_name", views.change_libre_workspace_name, name="change_libre_workspace_name"),
 
     path("data_management", views.data_management, name="data_management"),
     path("mount/<partition>", views.mount, name="mount"),
