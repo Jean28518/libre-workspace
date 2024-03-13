@@ -6,6 +6,7 @@ import lac.settings as settings
 import idm.ldap as ldap
 import idm.idm as idm
 import welcome.views
+from app_dashboard.models import DashboardEntry
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -705,9 +706,12 @@ def uninstall_addon(addon_id):
     """"
     Removes the folder of the addon. Don't uninstall the addon if it is currently installed into the server.
     """
+    addon_information = get_config_of_addon(addon_id)
     os.system(f"rm -r addons/{addon_id}")
-    os.system(f"rm lac/static/lac/icons/{addon_id}.*")
+    os.system(f"rm ../../lac/static/lac/icons/{addon_id}.*")
     os.system(f"rm /var/www/linux-arbeitsplatz-static/lac/icons/{addon_id}.*")
+    # Remove the entry from the AppDashboardEntry table in the database
+    DashboardEntry.objects.filter(title=addon_information["name"], is_system=True).delete()
 
 
 def get_all_installed_nextcloud_addons():
