@@ -3,10 +3,7 @@
 # DOMAIN
 # IP
 # ADMIN_PASSWORD
-
-SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`
-FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`
-DC_DC="dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
+# LDAP_DC
 
 
 ## Setup Nextcloud #########################################
@@ -121,10 +118,10 @@ sudo -u www-data php /var/www/nextcloud/occ app:enable user_ldap
 sudo -u www-data php /var/www/nextcloud/occ ldap:create-empty-config
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapHost ldaps://la.$DOMAIN
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapPort 636
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBase "dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseUsers "cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "cn=Administrator,cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBase "$LDAP_DC"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "cn=users,$LDAP_DC"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseUsers "cn=users,$LDAP_DC"
+sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "cn=Administrator,cn=users,$LDAP_DC"
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentPassword "$ADMIN_PASSWORD"
 # Disable the ssl certificate validation
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 turnOffCertCheck 1

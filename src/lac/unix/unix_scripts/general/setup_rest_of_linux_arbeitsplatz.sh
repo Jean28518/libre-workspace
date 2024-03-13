@@ -2,10 +2,8 @@
 # DOMAIN
 # ADMIN_PASSWORD
 # IP
+# LDAP_DC
 
-# Thrd Level:                                       # subdomain
-SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`    # int
-FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`    # de
 
 DEBIAN_FRONTEND=noninteractive
 
@@ -59,12 +57,12 @@ sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
 
 # Add the Samba AD settings to the cfg file
 echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_DC=\"dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
 echo "export AUTH_LDAP_BIND_PASSWORD=\"$ADMIN_PASSWORD\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,DC=$SCND_DOMAIN_LABEL,DC=$FRST_DOMAIN_LABEL\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
 
 # Enable the unix service
 /usr/bin/systemctl enable linux-arbeitsplatz-unix.service

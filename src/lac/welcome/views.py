@@ -79,11 +79,15 @@ def installation_running(request):
     os.environ["MATRIX"] = request.session["matrix"]
     os.environ["JITSI"] = request.session["jitsi"]
 
+    domain = os.environ["DOMAIN"]
+    os.environ["LDAP_DC"] = "dc=" + domain.split(".")[-2] + ",dc=" + domain.split(".")[-1]
+
     # Create env.sh file
     with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:
         f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
         f.write(f"export IP={os.environ['IP']}\n")
         f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
+        f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
 
     # Run installation script
     # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running exists

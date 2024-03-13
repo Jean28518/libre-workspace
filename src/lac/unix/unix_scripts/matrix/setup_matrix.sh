@@ -3,10 +3,7 @@
 # DOMAIN
 # IP
 # ADMIN_PASSWORD
-
-SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`
-FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`
-DC_DC="dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL"
+# LDAP_DC
 
 # Install matrix
 mkdir /root/matrix
@@ -23,12 +20,12 @@ modules:
      enabled: true
      uri: \"ldaps://$IP:636\"
      start_tls: false
-     base: \"dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"
+     base: \"$LDAP_DC\"
      attributes:
         uid: \"cn\"
         mail: \"mail\"
         name: \"displayName\"
-     bind_dn: \"cn=Administrator,cn=users,dc=$SCND_DOMAIN_LABEL,dc=$FRST_DOMAIN_LABEL\"
+     bind_dn: \"cn=Administrator,cn=users,$LDAP_DC\"
      bind_password: \"$ADMIN_PASSWORD\"
      #filter: \"(objectClass=posixAccount)\"
      tls_options:

@@ -123,3 +123,4 @@ The following variables are mandatory to be set. An example would be:
     export IP="1.2.3.4"
     export ADMIN_PASSWORD="AdminPasswordOfTheLDAPDomainOtherwiseSetItToAnEmptyString"
     export DOMAIN="int.de"
+    export LDAP_DC="dc=int,dc=de" # Keep it empty if you don't use LDAP

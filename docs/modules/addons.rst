@@ -82,6 +82,7 @@ It is automatically executed as root. Three variables are passed to the script:
 - $DOMAIN: The domain name of the service example: ``int.de``
 - $ADMIN_PASSWORD: The password of the administrator which is used for the ldap instance or the system user "systemv" which has also admin rights with sudo
 - $IP: The IP address of the server
+- $LDAP_DC: The domain component of the ldap instance
 
 It is a good practice to store the config of the service in the ``/root/[NAME]`` directory, for example the docker-compose.yml file. 
 The addon detection is based on the existence of this folder. Also it will be easier for system administrators to find the config of the service in the future.
@@ -95,7 +96,7 @@ An example of setup_nocodb.sh would be:
 .. code-block:: bash
 
   #!/bin/bash
-  # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD and $IP
+  # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC
   mkdir -p /root/nocodb
   # Dont forget to escape " with a backslash:
   echo "version: \"2.1\"
@@ -182,7 +183,7 @@ An example of remove_nocodb.sh would be:
 .. code-block:: bash
 
     #!/bin/bash
-    # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD and $IP
+    # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC
     docker-compose -f /root/nocodb/docker-compose.yml down --volumes
     rm -rf /root/nocodb
     # Remove the entry from the Caddyfile
