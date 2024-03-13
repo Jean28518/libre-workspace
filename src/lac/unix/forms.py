@@ -37,3 +37,7 @@ class ChangeLibreWorkspaceNameForm(forms.Form):
 
 class ChangeIpAdressForm(forms.Form):
     ip = forms.GenericIPAddressField(label="IP-Adresse", widget=forms.TextInput(attrs={"placeholder": "0.0.0.0"}))
+
+
+class MiscellaneousSettingsForm(forms.Form):
+    disable_nextcloud_user_administration = forms.BooleanField(label="Nextcloud Benutzerverwaltung deaktivieren", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")

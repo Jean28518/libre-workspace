@@ -1,5 +1,10 @@
 cloud.SED_DOMAIN {
   #tls internal
+
+  handle_path /index.php/settings/users {
+    redir https://portal.SED_DOMAIN/idm/user_overview
+  }
+
   root * /var/www/nextcloud
   file_server
 

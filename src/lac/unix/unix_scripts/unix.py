@@ -7,6 +7,7 @@ import idm.ldap as ldap
 import idm.idm as idm
 import welcome.views
 from app_dashboard.models import DashboardEntry
+from django.urls import reverse
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -859,3 +860,47 @@ def password_challenge(password):
     if len(password) < 8:
         message = "Passwort muss mindestens 8 Zeichen lang sein."
     return message
+
+
+def is_nextcloud_user_administration_enabled():
+    # Check if   handle_path /index.php/settings/users is in the Cadddyfile
+    caddyfile = open("/etc/caddy/Caddyfile").read()
+    return not ("handle_path /index.php/settings/users" in caddyfile)
+
+
+def enable_nextcloud_user_administration():
+    if is_nextcloud_user_administration_enabled():
+        return
+    domain = get_env_sh_variables().get("DOMAIN", "")
+    # Open caddyfile lines and add the line "handle_path /index.php/settings/users" after the line where cloud. is in
+    caddyfile = open("/etc/caddy/Caddyfile").read()
+    caddyfile = caddyfile.split("\n")
+    for i, line in enumerate(caddyfile):
+        if "cloud." in line:
+            caddyfile.insert(i+1, "handle_path /index.php/settings/users {")
+            caddyfile.insert(i+2, f"  redir https://portal.{domain}/" + reverse("user_overview"))
+            caddyfile.insert(i+3, "}")
+            break
+
+    with open("/etc/caddy/Caddyfile", "w") as f:
+        f.write("\n".join(caddyfile))
+    os.system("systemctl reload caddy")
+
+
+def disable_nextcloud_user_administration():
+    if not is_nextcloud_user_administration_enabled():
+        return
+    # Open caddyfile lines and remove the lines "handle_path /index.php/settings/users" and "redir https://portal.{domain}/" + reverse("user_overview")
+    caddyfile = open("/etc/caddy/Caddyfile").read()
+    caddyfile = caddyfile.split("\n")
+    for i, line in enumerate(caddyfile):
+        if "handle_path /index.php/settings/users" in line:
+            del caddyfile[i]
+            del caddyfile[i]
+            del caddyfile[i]
+            break
+
+    with open("/etc/caddy/Caddyfile", "w") as f:
+        f.write("\n".join(caddyfile))
+    os.system("systemctl reload caddy")
+    

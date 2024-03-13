@@ -574,3 +574,17 @@ def change_master_password(request):
                    "url": reverse("critical_system_configuration"), 
                    "danger": "True",
                    "description": "Bitte geben Sie das neue Master-Passwort ein. Das Master-Passwort wird direkt danach geändert und der Server wird direkt neu gestartet."})
+
+
+def miscellaneous_settings(request):
+    form = forms.MiscellaneousSettingsForm()
+    if request.method == "POST":
+        form = forms.MiscellaneousSettingsForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data["disable_nextcloud_user_administration"]:
+                unix.disable_nextcloud_user_administration()
+            else:
+                unix.enable_nextcloud_user_administration()
+            return message(request, "Einstellungen gespeichert.", "system_configuration")
+    form.fields["disable_nextcloud_user_administration"].initial = not unix.is_nextcloud_user_administration_enabled()
+    return render(request, "lac/generic_form.html", {"form": form, "heading": "Verschiedene Einstellungen", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True"})
