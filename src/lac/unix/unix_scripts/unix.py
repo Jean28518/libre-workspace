@@ -538,8 +538,11 @@ def get_env_sh_variables():
         return return_value
     for line in open("env.sh").readlines():
         if line.strip() != "":
+            if line.strip().startswith("#"):
+                continue
             line = line.replace("export ", "")
-            key, value = line.split("=")
+            # Split the first = sign
+            key, value = line.split("=", 1)
             return_value[key] = value.strip().strip('"').strip()
     return return_value
 

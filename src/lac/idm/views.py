@@ -11,6 +11,7 @@ from .idm import reset_password_for_email, get_user_information, set_user_new_pa
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
+import idm.challenges
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -23,7 +24,11 @@ django_auth_ldap.backend.ldap_error.connect(signal_handler)
 @login_required
 def dashboard(request):
     user_information = get_user_information(request.user)
-    return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED})
+    challenges = idm.challenges.get_all_libre_workspace_challenges()
+    # Only take the last three challenges because we don't want to overwhelm the user
+    if len(challenges) > 3:
+        challenges = challenges[-3:]
+    return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED, "challenges": challenges})
 
 
 # We have to set login_page=True to prevent the base template from displaying the login button

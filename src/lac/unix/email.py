@@ -15,3 +15,9 @@ def send_mail(recipient, subject, message, attachment_path=""):
         error_message = "Error while sending email: " + str(e)
         print(error_message)
         return error_message
+    
+
+def are_mail_settings_configured():
+    if settings.EMAIL_HOST_USER == "" or settings.EMAIL_HOST_PASSWORD == "" or settings.EMAIL_HOST == "" or settings.EMAIL_PORT == "":
+        return False
+    return True

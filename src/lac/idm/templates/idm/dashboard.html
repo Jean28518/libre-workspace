@@ -6,6 +6,8 @@
 
 {% if user_information.admin %}
 
+{% include "idm/libre_workspace_challenges.html" %}
+
 <div class="grid">
     {% if ldap_enabled %}
     <a class="secondary" href="{% url "user_overview" %}">
