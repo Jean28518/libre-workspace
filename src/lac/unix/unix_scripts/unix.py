@@ -567,17 +567,23 @@ def setup_module(module_name):
         url = addon.get("url", "")
         if url == "":
             return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
-        domain = get_env_sh_variables().get("DOMAIN", "")
-        if domain == "":
-            return "No domain found in the env.sh file. Please check the env.sh file."
+        
+        # Lets generate the samba_domain from LDAP_DC in env.sh
+        samba_domain = get_env_sh_variables().get("LDAP_DC", "")
+        if samba_domain == "":
+            return "No LDAP_DC found in the env.sh file. Please check the env.sh file."
+        
+        # Remove the dc= and ,dc= from the domain
+        samba_domain = samba_domain.replace("dc=", "").replace(",", ".")
+
         ip = get_env_sh_variables().get("IP", "")   
-        os.system(f"echo \"{ip} {url}.{domain}\" >> /etc/hosts")
+        os.system(f"echo \"{ip} {url}.{samba_domain}\" >> /etc/hosts")
 
         # Add the entry to the DNS server
         if settings.AUTH_LDAP_ENABLED:
             admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
             # Run this command: samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
-            os.system(f"samba-tool dns add la.{domain} {domain} {module_name} A {ip} -U administrator%{admin_password}")
+            os.system(f"samba-tool dns add la.{samba_domain} {samba_domain} {url} A {ip} -U administrator%{admin_password}")
         
 
     # Check if path extists: module_path/setup_module_name.sh
@@ -687,6 +693,8 @@ def install_addon(path_to_zip_file):
     for file in os.listdir(f"addons/{addon_id}"):
         if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
             os.system(f"cp addons/{addon_id}/{file} ../../lac/static/lac/icons/{file}")
+            # Also copy to /var/www/linux-arbeitsplatz-static/lac/icons/ (that is the folder where the static files are served from)
+            os.system(f"cp addons/{addon_id}/{file} /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
 
 
 def uninstall_addon(addon_id):
@@ -695,6 +703,7 @@ def uninstall_addon(addon_id):
     """
     os.system(f"rm -r addons/{addon_id}")
     os.system(f"rm lac/static/lac/icons/{addon_id}.*")
+    os.system(f"rm /var/www/linux-arbeitsplatz-static/lac/icons/{addon_id}.*")
 
 
 def get_all_installed_nextcloud_addons():

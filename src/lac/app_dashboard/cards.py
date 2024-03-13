@@ -1,5 +1,6 @@
 from .models import DashboardEntry
 from django.urls import reverse
+import unix.unix_scripts.unix as unix
 
 def get_card_for_dict(dict : dict):
     return get_card_for(dict["title"], dict["url"], dict["icon_path"], dict["description"])
@@ -22,6 +23,12 @@ def get_card_for(title, url, icon_path, description):
         </article>
     </a>'''
 
+def add_all_addon_cards_to_card_data():
+    addons = unix.get_all_addon_modules()
+    for addon in addons:
+        card_data.append({"order": 10, "title": addon["name"], "url": addon["url"], "icon_path": f"/static/lac/icons/{addon['id']}.webp", "description": addon["description"], "keywords": [addon["url"], addon["id"]]})
+
+# Only adds predefined system cards to the database not addon cards
 def ensure_all_cards_exist_in_database():
     caddyfile_lines = open("/etc/caddy/Caddyfile", "r").readlines()
     for card_dat in card_data:
@@ -48,7 +55,7 @@ def ensure_all_cards_exist_in_database():
         dashboard_entry.save()
 
     
-
+# Keywords are used to find the url in the caddyfile
 card_data = [
     {"order": 1,"title": "Rocket.Chat", "url": "", "icon_path": "/static/lac/icons/rocketchat.webp", "description": "Unternehmens-Chat", "keywords": ["chat", "rocketchat"]},
     {"order": 2,"title": "Nextcloud", "url": "", "icon_path": "/static/lac/icons/nextcloud.webp", "description": "Dateien, Kalender, ...", "keywords": ["cloud", "nextcloud"]},
