@@ -700,6 +700,8 @@ def install_addon(path_to_zip_file):
             os.system(f"cp addons/{addon_id}/{file} ../../lac/static/lac/icons/{file}")
             # Also copy to /var/www/linux-arbeitsplatz-static/lac/icons/ (that is the folder where the static files are served from)
             os.system(f"cp addons/{addon_id}/{file} /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
+            os.system(f"chown www-data:www-data /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
+            os.system(f"chmod 644 /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
 
 
 def uninstall_addon(addon_id):
