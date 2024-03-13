@@ -94,10 +94,14 @@ def change_superuser_password(new_password):
 
 
 def get_admin_user():
+    """Returns the user_information dict of the admin user."""
     if settings.AUTH_LDAP_ENABLED:
         return get_user_information("Administrator")
     else:
-        return User.objects.get(username="Administrator")
+        user_information = User.objects.get(username="Administrator").__dict__
+        user_information["admin"] = True
+        user_information["mail"] = user_information["email"]
+        return user_information
     
 
 def update_user(username, user_information):

@@ -7,6 +7,8 @@ import idm.idm as idm
 
 def get_user_information_of_cn(cn):
     if not settings.AUTH_LDAP_ENABLED:
+        if cn.lower() == "administrator":
+            return idm.get_admin_user()
         return None
 
     try:
