@@ -33,7 +33,7 @@ def get_all_libre_workspace_challenges():
 
     # Challenge 5: Is the status last_backup_failed?
     if backup_information["backup_status"] == "last_backup_failed":
-        challenges.append({"text": "Das letzte Backup ist fehlgeschlagen.", "link": reverse("unix_index")})
+        challenges.append({"text": "Das letzte Backup wurde mit Fehlern beendet.", "link": reverse("unix_index")})
     
     # Challenge 6: Has a backup been performed yet?
     if not backup_information.get("last_backup", False) and not backup_information["backup_status"] == "backup_running":
