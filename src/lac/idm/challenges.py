@@ -44,7 +44,7 @@ def get_all_libre_workspace_challenges():
         date_string = backup_information["last_backup"]["date"]
         date = datetime.datetime.strptime(date_string, "%Y-%m-%d")
         if (datetime.datetime.now() - date).days > 7:
-            challenges.append({"text": "Das letzte Backup ist älter als 7 Tage.", "link": reverse("unix_index")})
+            challenges.append({"text": "Das letzte vollständige Backup ist älter als 7 Tage.", "link": reverse("unix_index")})
 
     # Challenge 8: Are the email settings configured and working?
     if not unix_email.are_mail_settings_configured():
