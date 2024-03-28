@@ -124,6 +124,7 @@ def ldap_create_user(user_information):
     attrs = {}
     attrs['objectclass'] = [b'top', b'person', b'organizationalPerson', b'user']
     attrs['cn'] = [user_information["username"].encode('utf-8')]
+    attrs['sAMAccountName'] = [user_information["username"].encode('utf-8')]
     attrs['unicodePwd'] = [encode_password_for_samba(user_information["password"])]
     if user_information.get("first_name", "") != "":
         attrs['givenName'] = [user_information["first_name"].encode('utf-8')]
