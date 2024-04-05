@@ -441,11 +441,6 @@ def abort_current_nextcloud_import():
     os.system("rm nextcloud_import_process_running")
     os.system("pkill import_folder_to_nextcloud_user.sh")
 
-
-def is_rocketchat_available():
-    return os.path.isdir("/root/rocket.chat/")
-
-
 def is_matrix_available():
     return os.path.isdir("/root/matrix/")
 
@@ -468,10 +463,6 @@ def get_software_modules():
         modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
         modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
-    if is_rocketchat_available():
-        modules.append({ "id": "rocketchat", "name": "Rocket.Chat (Deprecated)", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
-    else:
-        modules.append({ "id": "rocketchat", "name": "Rocket.Chat (Deprecated)", "automaticUpdates": get_value("ROCKETCHAT_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
     if is_matrix_available():
         modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
     else:
@@ -771,7 +762,7 @@ def change_master_password(password):
     # Change the configured bind password in /usr/share/linux-arbeitsplatz/cfg
     os.system(f"sed -i 's/AUTH_LDAP_BIND_PASSWORD=.*/AUTH_LDAP_BIND_PASSWORD=\"{password}\"/g' /usr/share/linux-arbeitsplatz/cfg")
 
-    # Update the password in apps like nextcloud, rocketchat, matrix.
+    # Update the password in apps like nextcloud, matrix.
     # We are doing this by running the update_env.sh scripts in the specific folders.
     env = get_env_sh_variables()
     for module  in get_software_modules():
@@ -801,7 +792,7 @@ def change_ip(ip):
     for addon in get_all_addon_modules():
         os.system(f"samba-tool dns update {addon['url']}.{domain} {domain} {ip} A -U administrator%{admin_password}")
 
-    # Change the IP in apps like nextcloud, rocketchat, matrix and also in the addons.
+    # Change the IP in apps like nextcloud, matrix and also in the addons.
     env = get_env_sh_variables()
     for module  in get_software_modules():
         if module["installed"]:

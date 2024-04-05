@@ -34,11 +34,6 @@ if [ "$COLLABORA_AUTOMATIC_UPDATES" == "True" ]; then
     bash ../collabora/update_collabora.sh >> ../history/update-$DATE.log 2>&1
 fi
 
-if [ "$ROCKETCHAT_AUTOMATIC_UPDATES" == "True" ]; then
-    echo "Starting rocketchat update at $DATE" >> ../history/update-$DATE.log 2>&1
-    bash ../rocketchat/update_rocketchat.sh >> ../history/update-$DATE.log 2>&1
-fi
-
 if [ "$MATRIX_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting matrix update at $DATE" >> ../history/update-$DATE.log 2>&1
     bash ../matrix/update_matrix.sh >> ../history/update-$DATE.log 2>&1

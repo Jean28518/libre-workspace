@@ -33,7 +33,8 @@ chattr +i +a /etc/resolv.conf
 export REALM=$DOMAIN
 export KDC=la.$DOMAIN
 export ADMIN_SERVER=la.$DOMAIN
-apt update && apt install -y acl attr samba samba-dsdb-modules samba-vfs-modules smbclient winbind libpam-winbind libnss-winbind libpam-krb5 krb5-config krb5-user dnsutils chrony net-tools samba-ad-provision
+apt update 
+apt install -y acl attr samba samba-dsdb-modules samba-vfs-modules smbclient winbind libpam-winbind libnss-winbind libpam-krb5 krb5-config krb5-user dnsutils chrony net-tools samba-ad-provision
 
 systemctl disable --now smbd nmbd winbind
 systemctl unmask samba-ad-dc
@@ -120,7 +121,6 @@ samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSW
 echo "$IP cloud.$DOMAIN" >> /etc/hosts # Nextcloud
 echo "$IP office.$DOMAIN" >> /etc/hosts # Online Office
 echo "$IP portal.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Central
-echo "$IP chat.$DOMAIN" >> /etc/hosts # Rocket.Chat
 echo "$IP meet.$DOMAIN" >> /etc/hosts # Jitsi Meet
 echo "$IP element.$DOMAIN" >> /etc/hosts # Element
 echo "$IP matrix.$DOMAIN" >> /etc/hosts # Matrix

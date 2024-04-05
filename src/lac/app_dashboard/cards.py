@@ -58,7 +58,6 @@ def ensure_all_cards_exist_in_database():
     
 # Keywords are used to find the url in the caddyfile
 card_data = [
-    {"order": 1,"title": "Rocket.Chat", "url": "", "icon_path": "/static/lac/icons/rocketchat.webp", "description": "Unternehmens-Chat", "keywords": ["chat", "rocketchat"]},
     {"order": 2,"title": "Nextcloud", "url": "", "icon_path": "/static/lac/icons/nextcloud.webp", "description": "Dateien, Kalender, ...", "keywords": ["cloud", "nextcloud"]},
     {"order": 3,"title": "Element", "url": "", "icon_path": "/static/lac/icons/element.webp", "description": "Chat", "keywords": ["element"]},
     {"order": 4,"title": "Jitsi", "url": "", "icon_path": "/static/lac/icons/jitsi.webp", "description": "Videokonferenzen", "keywords": ["jitsi", "meet"]},

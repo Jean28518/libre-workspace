@@ -6,6 +6,6 @@ sed -i "/JITSI_IMAGE_VERSION/d" .env
 # Add the line "JITSI_IMAGE_VERSION=stable"
 echo "JITSI_IMAGE_VERSION=stable" >> .env
 
-# Update Rocket.Chat
+# Update Jitsi
 docker-compose pull
 docker-compose up -d

@@ -33,14 +33,7 @@ if [ ! -z "$ONLYOFFICE" ]; then
     . setup_onlyoffice.sh
 fi
 
-# If the environment variable ROCKETCHAT is not empty
-if [ ! -z "$ROCKETCHAT" ]; then
-    # Install Rocket.Chat
-    cd $LW_SCRIPTS/../rocketchat
-    . setup_rocketchat.sh
-fi
-
-# If the environment variable ROCKETCHAT is not empty
+# If the environment variable MATRIX is not empty
 if [ ! -z "$MATRIX" ]; then
     # Install Matrix
     cd $LW_SCRIPTS/../matrix

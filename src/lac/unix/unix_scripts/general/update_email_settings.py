@@ -3,8 +3,6 @@ import lac.settings as settings
 import unix.unix_scripts.unix as unix
 import os
 
-from ..rocketchat.rocketchat_mongo import update_setting, is_mongodb_available
-
 # email_settings:
 # {
 #      "server": "",
@@ -42,20 +40,4 @@ def update_email_settings(email_settings):
         os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpname --value="{email_settings["user"]}"')
         os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtppassword --value="{email_settings["password"]}"')
 
-    
-    # Change mail settings in rocket.chat if rocket.chat is installed
-    if os.path.isdir("/root/rocket.chat"):
-        try:
-            update_setting("SMTP_Host", email_settings["server"])
-            update_setting("SMTP_Port", email_settings["port"])
-            update_setting("SMTP_Username", email_settings["user"])
-            update_setting("SMTP_Password", email_settings["password"])
-            update_setting("SMTP_Encryption", email_settings["encryption"])
-            update_setting("SMTP_From", email_settings["user"])
-            update_setting("SMTP_Sendername", "Libre Workspace")
-            update_setting("SMTP_Sender_Email", email_settings["user"])
-            update_setting("SMTP_Keep_Alive", True)
-        except:
-            print("Rocket.Chat is not installed.")
-            pass
     
