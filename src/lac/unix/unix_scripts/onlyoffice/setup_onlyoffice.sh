@@ -14,7 +14,10 @@ bash /root/onlyoffice/run.sh
 if [ $DOMAIN = "int.de" ] ; then
   docker exec onlyoffice sed -i 's/"rejectUnauthorized": true/"rejectUnauthorized": false/g' /etc/onlyoffice/documentserver/default.json
   docker restart onlyoffice
+  # Add the ip cloud.$DOMAIN to /etc/hosts in docker container
+  docker exec onlyoffice bash -c "echo '$IP cloud.$DOMAIN' >> /etc/hosts"
 fi
+
 
 # Add the content of caddy_onlyoffice_entry.txt to /etc/caddy/Caddyfile
 cat caddy_onlyoffice_entry.txt >> /etc/caddy/Caddyfile
