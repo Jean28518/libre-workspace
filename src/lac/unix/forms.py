@@ -3,7 +3,7 @@ from django import forms
 
 class BackupSettings(forms.Form):
     enabled = forms.BooleanField(label="Automatische Backups aktivieren", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
-    borg_repository = forms.CharField(label="Borg Repository", max_length=100, widget=forms.TextInput(attrs={"placeholder": "ssh://borg@1.2.3.4:22/~/backups/Server1"}))
+    borg_repository = forms.CharField(label="Borg Repository", max_length=100, widget=forms.TextInput(attrs={"placeholder": "ssh://user@1.2.3.4:22/~/backups/Server1"}))
     trusted_fingerprint = forms.CharField(label="Fingerabdruck des SSH-Zugangs. (Siehe wichtige Hinweise)", widget=forms.Textarea())
     borg_encryption = forms.BooleanField(label="Borg Verschlüsselung", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
     borg_passphrase = forms.CharField(label="Borg Passphrase (nur bei aktivierter Verschlüsselung auszufüllen)", max_length=100, required=False)
