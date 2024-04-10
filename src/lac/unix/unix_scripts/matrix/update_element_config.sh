@@ -2,6 +2,7 @@
 
 # Write new element config
 # Change element app/config.json inside the docker container
+echo "Updating element config..."
 docker cp element:/app/config.json /root/matrix/config.json
 sed -i "s#https://matrix-client.matrix.org#https://matrix.$DOMAIN#g" /root/matrix/config.json
 sed -i "s#https://matrix.org#https://matrix.$DOMAIN#g" /root/matrix/config.json
