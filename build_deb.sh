@@ -20,7 +20,7 @@ chmod +x deb/usr/share/linux-arbeitsplatz/unix_service.sh
 chmod 755 deb/DEBIAN
 chmod 755 deb/DEBIAN/postinst
 
-dpkg-deb --build -Zxz deb 
+dpkg-deb --build -Zxz --root-owner-group deb 
 mv deb.deb linux-arbeitsplatz.deb
 
 echo "!!!Ensure that you build the deb package from a fresh cloned repository! (Otherwise some control files might disturb linux-arbeitplatz later)!!!"
