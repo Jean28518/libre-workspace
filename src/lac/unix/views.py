@@ -37,7 +37,7 @@ def set_update_configuration(request):
         software_modules = unix.get_software_modules()
         for module in software_modules:
             key = module["id"]
-            configKey = key.upper() + "_AUTOMATIC_UPDATES"
+            configKey = key.upper().replace("-", "_") + "_AUTOMATIC_UPDATES"
             if request.POST.get(key, "") == "on":
                 unix.set_value(configKey, "True")
             else:

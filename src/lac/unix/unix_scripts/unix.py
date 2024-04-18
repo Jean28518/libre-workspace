@@ -497,7 +497,7 @@ def get_software_modules():
     addons = get_all_addon_modules()
     for addon in addons:
         addon["installed"] = is_module_installed(addon["id"])
-        addon["automaticUpdates"] = get_value(f"{addon['id'].upper()}_AUTOMATIC_UPDATES", "False") == "True"
+        addon["automaticUpdates"] = get_value(f"{addon['id'].upper().replace('-', '_')}_AUTOMATIC_UPDATES", "False") == "True"
         addon["scriptsFolder"] = f"addons/{addon['id']}"
         modules.append(addon)
 
