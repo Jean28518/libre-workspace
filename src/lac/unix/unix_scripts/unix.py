@@ -571,22 +571,16 @@ def setup_module(module_name):
         if url == "":
             return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
         
-        # Lets generate the samba_domain from LDAP_DC in env.sh
-        samba_domain = get_env_sh_variables().get("LDAP_DC", "")
-        if samba_domain == "":
-            return "No LDAP_DC found in the env.sh file. Please check the env.sh file."
-        
-        # Remove the dc= and ,dc= from the domain
-        samba_domain = samba_domain.replace("dc=", "").replace(",", ".")
-
+        domain = get_env_sh_variables().get("DOMAIN", "")
         ip = get_env_sh_variables().get("IP", "")   
-        os.system(f"echo \"{ip} {url}.{samba_domain}\" >> /etc/hosts")
-
+        os.system(f"echo \"{ip} {url}.{domain}\" >> /etc/hosts")
+        
+        
         # Add the entry to the DNS server
         if settings.AUTH_LDAP_ENABLED:
             admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
             # Run this command: samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
-            os.system(f"samba-tool dns add la.{samba_domain} {samba_domain} {url} A {ip} -U administrator%{admin_password}")
+            os.system(f"samba-tool dns add la.{domain} {domain} {url} A {ip} -U administrator%{admin_password}")
         
 
     # Check if path extists: module_path/setup_module_name.sh
