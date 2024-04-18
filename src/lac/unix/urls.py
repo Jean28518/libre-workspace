@@ -47,4 +47,6 @@ urlpatterns = [
     path("addons", views.addons, name="addons"),
     path("add_addon", views.add_addon, name="add_addon"),
     path("remove_addon/<addon_id>", views.remove_addon, name="remove_addon"),
+
+    path("system_information" , views.system_information, name="system_information"),
 ]

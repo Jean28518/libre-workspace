@@ -238,9 +238,19 @@ def get_system_information():
     rv["lw_name"] = get_libre_workspace_name()
     rv["lw_version"] = get_libre_workspace_version()
     rv["hostname"] = subprocess.getoutput("hostname")
+
     rv["total_ram"] = subprocess.getoutput("free -h").split("\n")[1].split()[1].replace("Gi", "").replace("Mi", "")
-    rv["ram_usage"] = subprocess.getoutput("free -h").split("\n")[1].split()[2].replace("Gi", "").replace("Mi", "")
+    ram_usage = subprocess.getoutput("free -h").split("\n")[1].split()[2]
+    if "Mi" in ram_usage:
+        rv["ram_usage"] = str(int(ram_usage.replace("Mi", ""))/1024).replace(".", ",")
+    else:
+        rv["ram_usage"] = ram_usage.replace("Gi", "")
     rv["ram_percent"] = int(float(rv["ram_usage"].replace(",", ".")) / float(rv["total_ram"].replace(",", ".")) * 100)
+
+    load_avg = subprocess.getoutput("cat /proc/loadavg").split(" ")[0]
+    cpu_number = subprocess.getoutput("nproc")
+    rv["cpu_usage_percent"] = int(float(load_avg) / float(cpu_number) * 100)
+
     rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("months", "Monate").replace("years", "Jahre")
     rv["uptime"] = rv["uptime"].replace("min", "Min").replace("hour", "Stunde").replace("day", "Tag").replace("week", "Woche").replace("month", "Monat").replace("year", "Jahr")
     rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')

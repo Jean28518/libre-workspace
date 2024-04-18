@@ -17,7 +17,7 @@ import unix.email as email
 import idm.ldap
 from lac.templates import process_overview_dict, message
 import idm.forms
-
+import json
 
 # Create your views here.
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -576,6 +576,7 @@ def change_master_password(request):
                    "description": "Bitte geben Sie das neue Master-Passwort ein. Das Master-Passwort wird direkt danach geändert und der Server wird direkt neu gestartet."})
 
 
+@staff_member_required(login_url=settings.LOGIN_URL)
 def miscellaneous_settings(request):
     form = forms.MiscellaneousSettingsForm()
     if request.method == "POST":
@@ -588,3 +589,10 @@ def miscellaneous_settings(request):
             return message(request, "Einstellungen gespeichert.", "system_configuration")
     form.fields["disable_nextcloud_user_administration"].initial = not unix.is_nextcloud_user_administration_enabled()
     return render(request, "lac/generic_form.html", {"form": form, "heading": "Verschiedene Einstellungen", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True"})
+
+
+# API-Call
+@staff_member_required(login_url=settings.LOGIN_URL)
+def system_information(request):
+    data = json.dumps(unix.get_system_information())
+    return HttpResponse(data, content_type="application/json")
