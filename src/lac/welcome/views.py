@@ -55,10 +55,18 @@ def welcome_dns_settings(request):
                 message = "Bitte geben Sie eine Domain an."
             elif request.session["domain"].count(".") != 1:
                 message = "Bitte stellen Sie sicher, dass Sie nur die Domain angeben und keine Subdomain."
-            elif len(request.session["domain"]) > 12:
-                message = "Aufgrund von Einschränkungen bzgl. des NetBIOS-Namens darf die Domain (inklusive Punkt) nicht länger als 12 Zeichen sein. (la.[DOMAIN] <= 15). "
+            lvl1 = request.session["domain"].split(".")[1]
+            if len(lvl1) > 12:
+                message = "Bitte stellen Sie sicher, dass die lvl1 Domain nicht länger als 12 Zeichen ist."
+            lvl2 = request.session["domain"].split(".")[0]
+            # We need the -1 because of the dot
+            shortend_lvl2 = lvl2[:12-len(lvl1)-1]
+            request.session["ldap_dc"] = f"dc={shortend_lvl2},dc={lvl1}"
+            request.session["shortend_domain"] = f"{shortend_lvl2}.{lvl1}"
         else:
             request.session["domain"] = "int.de"
+            request.session["ldap_dc"] = "dc=int,dc=de"
+            request.session["shortend_domain"] = "int.de"
         if message == "":
             return redirect("installation_running")
     return render(request, "welcome/welcome_dns_settings.html", {"message": message, "subdomains": subdomains, "hide_login_button": True})
@@ -78,7 +86,9 @@ def installation_running(request):
     os.environ["JITSI"] = request.session["jitsi"]
 
     domain = os.environ["DOMAIN"]
-    os.environ["LDAP_DC"] = "dc=" + domain.split(".")[-2] + ",dc=" + domain.split(".")[-1]
+    os.environ["LDAP_DC"] = request.session["ldap_dc"]
+    # We only need the shortend domain for the installation of samba dc
+    os.environ["SHORTEND_DOMAIN"] = request.session["shortend_domain"]
 
     # Create env.sh file
     with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:

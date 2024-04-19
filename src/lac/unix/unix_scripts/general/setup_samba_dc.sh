@@ -3,15 +3,14 @@
 # DOMAIN
 # IP
 # ADMIN_PASSWORD
-export DEBIAN_FRONTEND=noninteractive
+# LDAP_DC
+# SHORTEND_DOMAIN (We need this for the samba dns server)
 
-# Thrd Level:                                       # subdomain
-SCND_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f1`    # int
-FRST_DOMAIN_LABEL=`echo $DOMAIN | cut -d'.' -f2`    # de
+export DEBIAN_FRONTEND=noninteractive
 
 ## Setup DNS-Environment ##################################
 hostnamectl set-hostname la
-echo "$IP la.$DOMAIN la" >> /etc/hosts # IP of the server itself
+echo "$IP la.$DOMAIN la.$SHORTEND_DOMAIN la" >> /etc/hosts # IP of the server itself
 
 # For ubuntu systems
 systemctl disable --now systemd-resolved
@@ -30,7 +29,7 @@ chattr +i +a /etc/resolv.conf
 ## Setup SAMBA DC #########################################
 
 # We need to set this variables that the krb5-config package does not ask for them
-export REALM=$DOMAIN
+export REALM=$SHORTEND_DOMAIN
 export KDC=la.$DOMAIN
 export ADMIN_SERVER=la.$DOMAIN
 apt update 
@@ -51,7 +50,7 @@ export SAMBA_DNS_FORWARDER=$IP
 # Administrator password
 export SAMBA_ADMIN_PASSWORD=$ADMIN_PASSWORD
 
-samba-tool domain provision --realm=$DOMAIN --domain=la.$DOMAIN --adminpass=$ADMIN_PASSWORD
+samba-tool domain provision --realm=$SHORTEND_DOMAIN --domain=la.$SHORTEND_DOMAIN --adminpass=$ADMIN_PASSWORD
 
 mv /etc/krb5.conf /etc/krb5.conf.orig
 cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
@@ -75,7 +74,7 @@ ST=BV
 O=Nbg
 localityName=Nuremberg
 commonName=$DOMAIN
-organizationalUnitName=Linux-Arbeitsplatz
+organizationalUnitName=Libre Workspace
 emailAddress=webmaster@$DOMAIN
 "
 
@@ -108,14 +107,20 @@ ufw allow ldaps
 
 # Add these subdomains to samba dns server:
 # .la .cloud .office .portal .chat .meet, .element, .matrix
-samba-tool dns add la.$DOMAIN $DOMAIN la A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $DOMAIN cloud A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $DOMAIN office A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $DOMAIN portal A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $DOMAIN chat A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $DOMAIN meet A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $DOMAIN element A $IP -U administrator%$ADMIN_PASSWORD
-samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$DOMAIN $SHORTEND_DOMAIN la A $IP -U administrator%$ADMIN_PASSWORD
+samba-tool dns add la.$SHORTEND_DOMAIN $SHORTEND_DOMAIN la A $IP -U administrator%$ADMIN_PASSWORD
+
+# We take here the normal Domain as the zone because it is only important for us to use these subdomains for the dns server if we are running this in local network (int.de)
+# -> So in local network the domain and shotend_domain are the same
+if [[ $DOMAIN == $SHORTEND_DOMAIN ]]; then
+    samba-tool dns add la.$DOMAIN $DOMAIN cloud A $IP -U administrator%$ADMIN_PASSWORD
+    samba-tool dns add la.$DOMAIN $DOMAIN office A $IP -U administrator%$ADMIN_PASSWORD
+    samba-tool dns add la.$DOMAIN $DOMAIN portal A $IP -U administrator%$ADMIN_PASSWORD
+    samba-tool dns add la.$DOMAIN $DOMAIN chat A $IP -U administrator%$ADMIN_PASSWORD
+    samba-tool dns add la.$DOMAIN $DOMAIN meet A $IP -U administrator%$ADMIN_PASSWORD
+    samba-tool dns add la.$DOMAIN $DOMAIN element A $IP -U administrator%$ADMIN_PASSWORD
+    samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
+fi
 
 # Add all these entries to /etc/hosts
 echo "$IP cloud.$DOMAIN" >> /etc/hosts # Nextcloud
