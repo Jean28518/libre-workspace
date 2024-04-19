@@ -309,6 +309,7 @@ def email_configuration(request):
         "server": cfg.get_value("EMAIL_HOST", ""),
         "port": cfg.get_value("EMAIL_PORT", ""),
         "user": cfg.get_value("EMAIL_HOST_USER", ""),
+        "email": cfg.get_value("EMAIL_HOST_EMAIL", ""),
         "password": cfg.get_value("EMAIL_HOST_PASSWORD", ""),       
     }
     if cfg.get_value("EMAIL_USE_TLS", "False") == "True":
@@ -323,6 +324,7 @@ def email_configuration(request):
             cfg.set_value("EMAIL_HOST", form.cleaned_data["server"])
             cfg.set_value("EMAIL_PORT", form.cleaned_data["port"])
             cfg.set_value("EMAIL_HOST_USER", form.cleaned_data["user"])
+            cfg.set_value("EMAIL_HOST_EMAIL", form.cleaned_data["email"])
             if form.cleaned_data["password"] != "":
                 # We need to escape the $ sign because of the bash syntax in our config file
                 cfg.set_value("EMAIL_HOST_PASSWORD", form.cleaned_data["password"].replace("$", "\$"))

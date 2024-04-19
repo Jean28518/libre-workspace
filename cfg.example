@@ -7,7 +7,8 @@ export LINUX_ARBEITSPLATZ_CONFIGURED=False
 # (This is only for the management interface, not for other services like nextcloud)
 export EMAIL_HOST=""                         
 export EMAIL_PORT=""                                   
-export EMAIL_HOST_USER=""                 
+export EMAIL_HOST_USER=""
+export EMAIL_HOST_EMAIL=""              
 export EMAIL_HOST_PASSWORD=""   
 
 # only activate (uncomment) one of these:

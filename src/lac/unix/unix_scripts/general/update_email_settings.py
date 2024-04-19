@@ -16,6 +16,7 @@ def update_email_settings(email_settings):
     settings.EMAIL_HOST = email_settings["server"]
     settings.EMAIL_PORT = email_settings["port"]
     settings.EMAIL_HOST_USER = email_settings["user"]
+    settings.EMAIL_HOST_EMAIL = email_settings["email"]
     settings.EMAIL_HOST_PASSWORD = email_settings["password"]
     if email_settings["encryption"] == "TLS":
         settings.EMAIL_USE_TLS = "True"
@@ -26,8 +27,8 @@ def update_email_settings(email_settings):
 
     # Change email settings in nextcloud if nextcloud is installed
     if unix.is_nextcloud_available():
-        from_adress = email_settings["user"].split("@")[0]
-        mail_domain = email_settings["user"].split("@")[1]
+        from_adress = email_settings["email"].split("@")[0]
+        mail_domain = email_settings["email"].split("@")[1]
         os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpauthtype --value="LOGIN"')
         os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpmode --value="smtp"')
         os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpsecure --value="{email_settings["encryption"]}"')
