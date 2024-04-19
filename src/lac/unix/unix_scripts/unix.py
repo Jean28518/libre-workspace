@@ -898,4 +898,23 @@ def disable_nextcloud_user_administration():
     with open("/etc/caddy/Caddyfile", "w") as f:
         f.write("\n".join(caddyfile))
     os.system("systemctl reload caddy")
+
+
+def get_additional_services_control_files():
+    """Returns a tuple with the content of (1) start_additional_services.sh and (2) stop_additional_services.sh"""
+    start_additional_services = ""
+    stop_additional_services = ""
+    if os.path.isfile("maintenance/start_additional_services.sh"):
+        start_additional_services = open("maintenance/start_additional_services.sh").read()
+    if os.path.isfile("maintenance/stop_additional_services.sh"):
+        stop_additional_services = open("maintenance/stop_additional_services.sh").read()
+    return (start_additional_services, stop_additional_services)
+
+
+def set_additional_services_control_files(start_additional_services, stop_additional_services):
+    """Sets the content of (1) start_additional_services.sh and (2) stop_additional_services.sh"""
+    with open("maintenance/start_additional_services.sh", "w") as f:
+        f.write(start_additional_services)
+    with open("maintenance/stop_additional_services.sh", "w") as f:
+        f.write(stop_additional_services)
     

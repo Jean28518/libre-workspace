@@ -596,3 +596,19 @@ def miscellaneous_settings(request):
 def system_information(request):
     data = json.dumps(unix.get_system_information())
     return HttpResponse(data, content_type="application/json")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def additional_services(request):
+    if request.method == "POST":
+        form = forms.AdditionalServicesForm(request.POST)
+        if form.is_valid():
+            unix.set_additional_services_control_files(form.cleaned_data["start_additional_services"], form.cleaned_data["stop_additional_services"])
+            return message(request, "Änderungen gespeichert.", "system_configuration")
+        return message(request, "Fehler: Eingaben ungültig.", "additional_services")
+    
+    form = forms.AdditionalServicesForm()
+    (start_additional_services, stop_additional_services) = unix.get_additional_services_control_files()
+    form.fields["start_additional_services"].initial = start_additional_services
+    form.fields["stop_additional_services"].initial = stop_additional_services
+    return render(request, "lac/generic_form.html", {"form": form, "heading": "Zusätzliche Dienste", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": "Fügen Sie gültige Bash-Befehle hinzu, welche für das Starten und Stoppen ihrer zusätlichen Dienste ausgeführt werden sollen. Verwenden Sie keine cd-Befehle oder ähnliches."})

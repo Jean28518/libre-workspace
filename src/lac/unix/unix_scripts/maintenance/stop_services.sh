@@ -6,3 +6,8 @@ if [ -f /var/www/nextcloud/occ ]; then
 fi
 
 systemctl stop docker
+
+# If file stop_additional_services.sh exists, run it
+if [ -f ./stop_additional_services.sh ]; then
+    bash ./stop_additional_services.sh
+fi

@@ -41,3 +41,8 @@ class ChangeIpAdressForm(forms.Form):
 
 class MiscellaneousSettingsForm(forms.Form):
     disable_nextcloud_user_administration = forms.BooleanField(label="Nextcloud Benutzerverwaltung deaktivieren", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
+
+
+class AdditionalServicesForm(forms.Form):
+    start_additional_services = forms.CharField(label="Startbefehl der zusätzlichen Dienste (Bash-Code)", widget=forms.Textarea(), required=False)
+    stop_additional_services = forms.CharField(label="Stopbefehl der zusätzlichen Dienste (Bash-Code)", widget=forms.Textarea(), required=False)
