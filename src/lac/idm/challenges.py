@@ -49,5 +49,10 @@ def get_all_libre_workspace_challenges():
     # Challenge 8: Are the email settings configured and working?
     if not unix_email.are_mail_settings_configured():
         challenges.append({"text": "Die E-Mail Einstellungen sind noch nicht konfiguriert oder funktionieren nicht.", "link": reverse("email_configuration")})
+
+
+    # Challenge 9: Is linux-arbeitsplatz-unix.service running?
+    if not unix.is_unix_service_running():
+        challenges.append({"text": "linux-arbeitsplatz-unix.service läuft aktuell nicht. Automatische Aufgaben wie Backups oder Updates werden somit nicht ausgeführt.", "link": reverse("unix_index")})
     
     return challenges

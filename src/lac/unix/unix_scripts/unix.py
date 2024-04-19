@@ -917,4 +917,9 @@ def set_additional_services_control_files(start_additional_services, stop_additi
         f.write(start_additional_services)
     with open("maintenance/stop_additional_services.sh", "w") as f:
         f.write(stop_additional_services)
+
+
+def is_unix_service_running():
+    """Checks if linux-arbeitsplatz-unix.service is running"""
+    return os.system("systemctl is-active --quiet linux-arbeitsplatz-unix") == 0
     
