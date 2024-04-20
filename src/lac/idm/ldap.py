@@ -5,6 +5,20 @@ from django.conf import settings
 import base64
 import idm.idm as idm
 
+
+def is_ldap_fine_and_working():
+    """Checks, if we can bind to the server. Also returns None if everythin is okay or ldap is disabled"""
+    if not settings.AUTH_LDAP_ENABLED:
+        return None
+    try:
+        conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+        conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    except LDAPError as e:
+        print("Can't connect to LDAP server: " + str(e))
+        return "Login nicht möglich, kontaktiere einen Administrator: Can't connect to LDAP server: " + str(e)
+    return None
+
+
 def get_user_information_of_cn(cn):
     if not settings.AUTH_LDAP_ENABLED:
         if cn.lower() == "administrator":

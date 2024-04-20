@@ -12,8 +12,8 @@
     <label for="text">Passwort</label>
     <input type="password" id="password" name="password">
     
-    {% if error_message %}
-    <p><strong>{{ error_message }}</strong></p>
+    {% if message %}
+    <p><strong>{{ message }}</strong></p>
     {% endif %}
     
     <input type="submit" value="Anmelden">

@@ -42,7 +42,7 @@ def user_login(request):
         if "@" in username and "." in username:
             userdn = get_user_dn_by_email(username)
             if userdn == None:
-                return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen.", "login_page": True})
+                return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen.", "login_page": True})
             username = ldap_get_cn_of_dn(userdn)
 
         user = authenticate(username=username, password=request.POST['password'])
@@ -55,8 +55,10 @@ def user_login(request):
                 return redirect("index")
         else:
             print("User is not authenticated")
-            return render(request, 'idm/login.html', {'error_message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True})
-    return render(request, "idm/login.html", {"request": request, "hide_login_button": True})
+            return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True})
+        
+    message = idm.ldap.is_ldap_fine_and_working()
+    return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message})
 
 
 def user_logout(request):

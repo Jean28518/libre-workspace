@@ -930,10 +930,18 @@ def set_additional_services_control_files(start_additional_services, stop_additi
         f.write(stop_additional_services)
 
 
+def is_systemd_service_running(service):
+    return os.system(f"systemctl is-active --quiet {service}") == 0
+
+
 def is_unix_service_running():
     """Checks if linux-arbeitsplatz-unix.service is running"""
-    return os.system("systemctl is-active --quiet linux-arbeitsplatz-unix") == 0
-    
+    return is_systemd_service_running("linux-arbeitsplatz-unix")
+
+
+def is_samba_ad_dc_running():
+    return is_systemd_service_running("samba-ad-dc")
+
 
 def update_libre_workspace():
     """Updates the Libre Workspace to the latest version"""
