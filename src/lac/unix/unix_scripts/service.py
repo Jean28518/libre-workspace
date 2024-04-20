@@ -96,6 +96,42 @@ while True:
         print("Exporting data")
         os.system("bash ./do_data_export.sh")
 
+    
+    ## CHECK IF WE NEED TO SHUTDOWN OR REBOOT #######################################################################
+
+    automatic_shutdown_enabled = unix_config.get_value("AUTOMATIC_SHUTDOWN_ENABLED", "False") == "True"
+    if automatic_shutdown_enabled:
+        shutdown_type_is_reboot = unix_config.get_value("AUTOMATIC_SHUTDOWN_TYPE") == "Reboot"
+        shutdown_time = unix_config.get_value("AUTOMATIC_SHUTDOWN_TIME", "00:00")
+        shutdown_weekday = unix_config.get_value("AUTOMATIC_SHUTDOWN_WEEKDAY", "6")
+
+        # Check if the current weekday is or it is set to daily
+        # The weekday is a number from 0 to 6, where 0 is Monday and 6 is Sunday
+        if shutdown_weekday == "daily" or shutdown_weekday == str(datetime.today().weekday()):
+
+            # Check if we already did this action today
+            last_date = ""
+            if os.path.isfile("history/last_shutdown"):
+                last_date = open("history/last_shutdown").read()
+            current_date = datetime.now().strftime("%Y-%m-%d")
+            if current_date != last_date.strip():
+
+                # Shutdown time limit: the latest time the server will restart for this period. (1 hour after shutdown time)
+                shutdown_time_limit = str(int(shutdown_time.split(":")[0]) + 1) + ":" + shutdown_time.split(":")[1]
+                if len(shutdown_time_limit) == 4:
+                    shutdown_time_limit = "0" + shutdown_time_limit
+                if shutdown_time_limit.split(":")[0] == "24":
+                    shutdown_time_limit = "00:" + shutdown_time_limit.split(":")[1]
+
+                # If we are in the timeslot between shutdown_tuime and shutdown_time_limit, then shutdown:
+                if datetime.now().strftime("%H:%M") >= shutdown_time and datetime.now().strftime("%H:%M") < shutdown_time_limit:
+                    with open("history/last_shutdown") as file:
+                        file.write(current_date)
+                    if shutdown_type_is_reboot:
+                        os.system("reboot")
+                    else:   
+                        os.system("shutdown now")
+
     ##################################################################################################################
     ## RUN EVERY HOUR ################################################################################################
     ##################################################################################################################

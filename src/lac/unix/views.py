@@ -622,3 +622,27 @@ def update_libre_workspace(request):
     if message != None:
         return message(request, f"Libre Workspace konnte nicht aktualisiert werden: <code>{m}</code>", "unix_index")
     return message(request, "Libre Workspace wird aktualisiert. Dies kann einige Minuten dauern. Libre Workspace ist für kurze Zeit nicht erreichbar.", "unix_index")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def automatic_shutdown(request):
+    form = forms.AutomaticShutdownForm()
+    form.fields["enabled"].initial = unix.get_value("AUTOMATIC_SHUTDOWN_ENABLED", "False") == "True"
+    form.fields["type"].initial = unix.get_value("AUTOMATIC_SHUTDOWN_TYPE", "Reboot")
+    form.fields["time"].initial = unix.get_value("AUTOMATIC_SHUTDOWN_TIME", "02:00")
+    form.fields["weekday"].initial = unix.get_value("AUTOMATIC_SHUTDOWN_WEEKDAY", "6")
+    if request.method == "POST":
+        form = forms.AutomaticShutdownForm(request.POST)
+        if form.is_valid():
+            unix.set_value("AUTOMATIC_SHUTDOWN_ENABLED", form.cleaned_data["enabled"])
+            unix.set_value("AUTOMATIC_SHUTDOWN_TYPE", form.cleaned_data["type"])
+            unix.set_value("AUTOMATIC_SHUTDOWN_WEEKDAY", form.cleaned_data["weekday"])
+            
+            if len(form.cleaned_data["time"]) != 5 or len(form.cleaned_data["time"].split(":")) != 2:
+                return message(request, "Fehler: Das Zeit-Format scheint nicht richtig zu sein.", "automatic_shutdown")
+
+            unix.set_value("AUTOMATIC_SHUTDOWN_TIME", form.cleaned_data["time"])
+            print(form.cleaned_data["weekday"])
+            return message(request, "Einstellungen gespeichert.", "system_configuration")
+        return message(request, "Fehler: Eingaben ungültig.", "automatic_shutdown")
+    return render(request, "lac/generic_form.html", {"form": form, "heading": "Automatische Abschaltung", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": "Hinweis: Der Vorgang wird nur ab der Konfigurierten Zeit innerhalb einer Stunde ausgeführt. Dauert also bspw. ein gleichzeitig terminiertes Backup oder Update länger als eine Stunde, wird der Server nicht heruntergefahren/neugestartet."})

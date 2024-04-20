@@ -42,6 +42,16 @@ def get_value(key):
     else:
         return ""
     
+
+def get_value(key, default):
+    read_config_file()
+    # Get the value of a key from the config file
+    if key in config:
+        return config[key]
+    else:
+        return default
+
+
 def set_value(key, value):
     read_config_file()
     value = str(value)

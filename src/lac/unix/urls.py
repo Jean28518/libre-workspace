@@ -37,6 +37,7 @@ urlpatterns = [
     path("module_management/uninstall/<name>", views.uninstall_module, name="uninstall_module"),
     path("additional_services", views.additional_services, name="additional_services"),
     path("miscellaneous_settings", views.miscellaneous_settings, name="miscellaneous_settings"),
+    path("automatic_shutdown", views.automatic_shutdown, name="automatic_shutdown"),
 
     path("mount_backups", views.mount_backups, name="mount_backups"),
     path("umount_backups", views.umount_backups, name="umount_backups"),

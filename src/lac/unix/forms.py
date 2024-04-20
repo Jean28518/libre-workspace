@@ -47,3 +47,10 @@ class MiscellaneousSettingsForm(forms.Form):
 class AdditionalServicesForm(forms.Form):
     start_additional_services = forms.CharField(label="Startbefehl der zusätzlichen Dienste (Bash-Code)", widget=forms.Textarea(), required=False)
     stop_additional_services = forms.CharField(label="Stopbefehl der zusätzlichen Dienste (Bash-Code)", widget=forms.Textarea(), required=False)
+
+
+class AutomaticShutdownForm(forms.Form):
+    enabled = forms.BooleanField(label="Automatisches Neustarten/Herunterfahren aktivieren", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
+    type = forms.ChoiceField(label="Aktion", choices=[("Reboot", "Neustart"), ("Shutdown", "Herunterfahren")], widget=forms.Select(attrs={"class": "form-control"}))
+    time = forms.CharField(label="Uhrzeit (Format: HH:MM)", max_length=100, widget=forms.TextInput())
+    weekday = forms.ChoiceField(label="Wochentag", choices=[("daily", "Täglich"), ("0", "Montag"), ("1", "Dienstag"), ("2", "Mittwoch"), ("3", "Donnerstag"), ("4", "Freitag"), ("5", "Samstag"), ("6", "Sonntag")], widget=forms.Select(attrs={"class": "form-control"}))
