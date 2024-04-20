@@ -1,11 +1,14 @@
 {% if domain == "int.de" %} 
     Stellen Sie auf Ihrem Router (und am besten auf Ihren Geräten) sicher, dass folgender DNS-Eintrag gesetzt ist: <strong>{{ ip }}</strong>
     In der Praxis zeigt sich leider manchmal, dass trotz richtiger DNS-Konfiguration aufgrund von Caches die Verbindungen nicht einwandfrei funktionieren.
-    Gegen solche Verbindungsprobleme können Sie bei Linux-Geräten folgende Einträge in der Datei <strong>/etc/hosts</strong> sicherstellen:
+    Gegen solche Verbindungsprobleme können Sie bei Linux-Geräten folgenden Eintrag in der Datei <strong>/etc/hosts</strong> sicherstellen:
     <pre>
 
-    {% for subdomain in subdomains %}{{ ip }} {{subdomain}}.{{ domain }}
-    {% endfor %}</pre>
+    {{ ip }}{% for subdomain in subdomains %} {{subdomain}}.{{ domain }}{% endfor %}    
+    </pre>
+
+    <small id="copy">Hier klicken, um Text kopieren</small><br><br>
+
 
     <p>
         Das Zertifikat für die https-Verbindungen können Sie {% if installation_running %}(nach der Installation){% endif %} jederzeit hier herunterladen: <a href="https://cert.{{ domain }}/lan.crt">https://cert.{{ domain }}/lan.crt</a>
@@ -25,5 +28,20 @@
     setTimeout(function(){
         window.location.reload(1);
      }, 60000);
+
+    // Copy to clipboard
+    document.getElementById('copy').style.cursor = 'pointer';
+    document.getElementById('copy').addEventListener('click', function(e) {
+        e.preventDefault();
+        var text = "{{ ip }}{% for subdomain in subdomains %} {{subdomain}}.{{ domain }}\n{% endfor %}";
+        var input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        document.getElementById('copy').textContent = 'Text wurde in die Zwischenablage kopiert!';
+    });
+        
 </script>
 
