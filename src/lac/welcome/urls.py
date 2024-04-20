@@ -8,4 +8,5 @@ urlpatterns = [
     path("dns_settings", views.welcome_dns_settings, name="welcome_dns_settings"),
     path("installation_running", views.installation_running, name="installation_running"),
     path("access", views.access, name="access"),
+    path("etc_hosts", views.etc_hosts, name="etc_hosts"),
 ]

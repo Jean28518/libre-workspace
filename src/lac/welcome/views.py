@@ -129,3 +129,17 @@ def installation_running(request):
 
 def access(request):
     return render(request, "welcome/access_rendered.html", {"hide_login_button": True})
+
+
+def etc_hosts(request):
+    env = unix.get_env_sh_variables()
+    etc_hosts = f"{env['IP']} {env['DOMAIN']}"
+    for subdomain in subdomains:
+        etc_hosts += f" {subdomain}.{env['DOMAIN']}"
+    # Also get all subdomains from installed addons
+    addons = unix.get_all_addon_modules()
+    for addon in addons:
+        if "url" in addon:
+            etc_hosts += f" {addon['url']}.{env['DOMAIN']}"
+    return HttpResponse(etc_hosts)
+    # Generate /etc/hosts file of IP and the subdomains with the domain
