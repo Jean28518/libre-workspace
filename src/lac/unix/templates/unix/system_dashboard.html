@@ -7,7 +7,11 @@
         </tr>
         <tr>
             <th>Libre-Workspace Version</th>
-            <td>{{ system_information.lw_version }}</td>
+            <td>{{ system_information.lw_version }}
+            {% if system_information.new_libre_workspace_version %}
+                - <a href="{% url "update_libre_workspace" %}" class="secondary">Auf Libre Workspace {{system_information.new_libre_workspace_version}} aktualisieren</a>
+            {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Hostname</th>

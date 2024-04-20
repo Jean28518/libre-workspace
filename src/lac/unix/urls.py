@@ -12,6 +12,7 @@ urlpatterns = [
     path("start_all_services", views.start_all_services, name="start_all_services"),
     path("stop_all_services", views.stop_all_services, name="stop_all_services"),
     path("change_libre_workspace_name", views.change_libre_workspace_name, name="change_libre_workspace_name"),
+    path("update_libre_workspace", views.update_libre_workspace, name="update_libre_workspace"),
 
     path("critical_system_configuration" , views.critical_system_configuration, name="critical_system_configuration"),
     path("change_ip_address", views.change_ip_address, name="change_ip_address"),

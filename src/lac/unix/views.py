@@ -614,3 +614,11 @@ def additional_services(request):
     form.fields["start_additional_services"].initial = start_additional_services
     form.fields["stop_additional_services"].initial = stop_additional_services
     return render(request, "lac/generic_form.html", {"form": form, "heading": "Zusätzliche Dienste", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": "Fügen Sie gültige Bash-Befehle hinzu, welche für das Starten und Stoppen ihrer zusätlichen Dienste ausgeführt werden sollen. Verwenden Sie keine cd-Befehle oder ähnliches."})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def update_libre_workspace(request):
+    m = unix.update_libre_workspace()
+    if message != None:
+        return message(request, f"Libre Workspace konnte nicht aktualisiert werden: <code>{m}</code>", "unix_index")
+    return message(request, "Libre Workspace wird aktualisiert. Dies kann einige Minuten dauern. Libre Workspace ist für kurze Zeit nicht erreichbar.", "unix_index")

@@ -3,6 +3,7 @@ import os
 import subprocess
 from django.conf import settings
 import unix.unix_scripts.unix as unix
+from django.http import HttpResponse
 
 
 # List of subdomains
@@ -90,21 +91,21 @@ def installation_running(request):
     # We only need the shortend domain for the installation of samba dc
     os.environ["SHORTEND_DOMAIN"] = request.session["shortend_domain"]
 
-    # Create env.sh file
-    with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:
-        f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
-        f.write(f"export IP={os.environ['IP']}\n")
-        f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
-        f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
+    # # Create env.sh file
+    # with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:
+    #     f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
+    #     f.write(f"export IP={os.environ['IP']}\n")
+    #     f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
+    #     f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
 
-    # Run installation script
-    # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running exists
-    if not os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running"):
-        if os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"):
-            subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"], cwd="/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/" )
-        else:
-            print("WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation.")
-            message = "WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
+    # # Run installation script
+    # # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running exists
+    # if not os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running"):
+    #     if os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"):
+    #         subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"], cwd="/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/" )
+    #     else:
+    #         print("WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation.")
+    #         message = "WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
     
     if not "cert" in subdomains:
         subdomains.append("cert")
@@ -117,11 +118,11 @@ def installation_running(request):
         "hide_login_button": True,
     }
 
-    # Create rendered access_rendered.html
-    with open(f'{settings.BASE_DIR}/welcome/templates/welcome/access_rendered.html', 'w') as f:
-        string = render(request, "welcome/access.html", variables).content.decode("utf-8")
-        string = "{% extends \"lac/base.html\" %}\n{% block content %}\n" + string + "\n{% endblock %}"
-        f.write(string)
+    # # Create rendered access_rendered.html
+    # with open(f'{settings.BASE_DIR}/welcome/templates/welcome/access_rendered.html', 'w') as f:
+    #     string = render(request, "welcome/access.html", variables).content.decode("utf-8")
+    #     string = "{% extends \"lac/base.html\" %}\n{% block content %}\n" + string + "\n{% endblock %}"
+    #     f.write(string)
 
     variables["installation_running"] = True
     return render(request, "welcome/installation_running.html", variables)
