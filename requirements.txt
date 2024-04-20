@@ -2,4 +2,3 @@ django
 python-ldap
 django-auth-ldap
 gunicorn
-pymongo
