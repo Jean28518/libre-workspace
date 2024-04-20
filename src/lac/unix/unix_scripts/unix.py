@@ -790,10 +790,18 @@ def change_ip(ip):
     # Change the IP in the /etc/hosts file
     os.system(f"sed -i 's/{old_ip}/{ip}/g' /etc/hosts")
 
+    # Change the IP-Adress in /etc/resolv.conf
+    os.system("chattr -i -a /etc/resolv.conf")
+    os.system(f"sed -i 's/{old_ip}/{ip}/g' /etc/resolv.conf")
+    os.system("chattr +i +a /etc/resolv.conf")
+
+
     # Change the IP in the DNS server of samba
     domain = get_env_sh_variables().get("DOMAIN", "")
     admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
 
+    # This only works if the domain of samba-ac-dc is the same as the real domain.
+    # (See SHORTEND_DOMAIN in setup_samba_ad_dc.sh)
     for subdomain in welcome.views.subdomains:
         os.system(f"samba-tool dns update {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
     for addon in get_all_addon_modules():
