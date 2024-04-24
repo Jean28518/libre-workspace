@@ -186,8 +186,13 @@ An example of remove_nocodb.sh would be:
     # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC
     docker-compose -f /root/nocodb/docker-compose.yml down --volumes
     rm -rf /root/nocodb
+
+
     # Remove the entry from the Caddyfile
     sed -i "/db.$DOMAIN {/,/}/d" /etc/caddy/Caddyfile
+    # On more complicated entries you can also use:
+    # python3 /usr/share/linux-arbeitsplatz/unix/unix_scripts/remove_caddy_service.py db.$DOMAIN
+    
     systemctl restart caddy
 
 
