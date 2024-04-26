@@ -885,8 +885,8 @@ def is_nextcloud_user_administration_enabled():
     return not ("handle_path /index.php/settings/users" in caddyfile)
 
 
-def enable_nextcloud_user_administration():
-    if is_nextcloud_user_administration_enabled():
+def disable_nextcloud_user_administration():
+    if not is_nextcloud_user_administration_enabled():
         return
     domain = get_env_sh_variables().get("DOMAIN", "")
     # Open caddyfile lines and add the line "handle_path /index.php/settings/users" after the line where cloud. is in
@@ -895,7 +895,7 @@ def enable_nextcloud_user_administration():
     for i, line in enumerate(caddyfile):
         if "cloud." in line:
             caddyfile.insert(i+1, "handle_path /index.php/settings/users {")
-            caddyfile.insert(i+2, f"  redir https://portal.{domain}/" + reverse("user_overview"))
+            caddyfile.insert(i+2, f"  redir https://portal.{domain}" + reverse("user_overview"))
             caddyfile.insert(i+3, "}")
             break
 
@@ -904,8 +904,8 @@ def enable_nextcloud_user_administration():
     os.system("systemctl reload caddy")
 
 
-def disable_nextcloud_user_administration():
-    if not is_nextcloud_user_administration_enabled():
+def enable_nextcloud_user_administration():
+    if is_nextcloud_user_administration_enabled():
         return
     # Open caddyfile lines and remove the lines "handle_path /index.php/settings/users" and "redir https://portal.{domain}/" + reverse("user_overview")
     caddyfile = open("/etc/caddy/Caddyfile").read()
