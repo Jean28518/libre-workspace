@@ -668,8 +668,10 @@ def get_all_addon_modules():
             addons.append(get_config_of_addon(folder))
     return addons
 
-
+addon_config_cache = {}
 def get_config_of_addon(addon):
+    if addon in addon_config_cache.keys():
+        return addon_config_cache[addon]
     # Read the config file of the addon
     config = {}
     for line in open(f"addons/{addon}/{addon}.conf"):
@@ -684,6 +686,7 @@ def get_config_of_addon(addon):
         for file in os.listdir(f"addons/{addon}"):
             if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
                 config["icon_file_format"] = file.split(".")[-1]
+    addon_config_cache[addon] = config
     return config
 
 
@@ -706,6 +709,9 @@ def install_addon(path_to_zip_file):
             os.system(f"cp addons/{addon_id}/{file} /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
             os.system(f"chown www-data:www-data /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
             os.system(f"chmod 644 /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
+    
+    # Ensure that the addon cache is cleared
+    addon_config_cache.clear()
 
 
 def uninstall_addon(addon_id):

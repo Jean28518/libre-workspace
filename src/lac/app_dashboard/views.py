@@ -15,8 +15,6 @@ import idm.ldap
 import idm.views
 import unix.unix_scripts.unix as unix
 
-# Cache for 10 seconds
-@cache_page(10)
 def index(request):
     ensure_all_cards_exist_in_database()
     idm.idm.ensure_superuser_exists()

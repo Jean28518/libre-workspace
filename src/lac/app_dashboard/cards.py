@@ -26,6 +26,9 @@ def get_card_for(title, url, icon_path, description):
 def add_all_addon_cards_to_card_data():
     addons = unix.get_all_addon_modules()
     for addon in addons:
+        for card in card_data:
+            if addon["id"] == card["title"].lower():
+                continue
         card_data.append({"order": 10, "title": addon["name"], "url": addon["url"], "icon_path": f"/static/lac/icons/{addon['id']}.{addon.get('icon_file_format', '')}", "description": addon["description"], "keywords": [addon["url"], addon["id"]]})
 
 # Only adds predefined system cards to the database not addon cards
