@@ -2,5 +2,5 @@
 docker-compose -f /root/matrix/docker-compose.yml pull
 docker-compose -f /root/matrix/docker-compose.yml up -d
 
-. ../env.sh
-. ./update_element_config.sh
+. /usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh
+. /usr/share/linux-arbeitsplatz/unix/unix_scripts/matrix/update_element_config.sh
