@@ -688,11 +688,16 @@ def get_config_of_addon(addon):
 
 
 def install_addon(path_to_zip_file):
-    addon_id = path_to_zip_file.split('/')[-1].split('.')[0]
     # Remove the old folder of the addon if it exists
+    if os.path.exists("/tmp/lw-addons/"):
+        os.system("rm -r /tmp/lw-addons/")
+    os.system("mkdir -p /tmp/lw-addons/")
+    os.system(f"unzip {path_to_zip_file} -d /tmp/lw-addons/")
+    addon_id = os.listdir("/tmp/lw-addons/")[0]
     os.system(f"rm -r addons/{addon_id}")
-    os.system(f"unzip {path_to_zip_file} -d addons/")
+    os.system(f"mv /tmp/lw-addons/{addon_id} addons/")
     os.system(f"rm {path_to_zip_file}")
+    os.system(f"rm -r /tmp/lw-addons/")
     # Copy the image file which could have the ending .png .svg .jpg .webp to the static folder
     for file in os.listdir(f"addons/{addon_id}"):
         if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
