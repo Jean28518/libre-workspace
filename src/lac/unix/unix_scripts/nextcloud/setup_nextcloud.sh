@@ -22,9 +22,9 @@ mysql --execute "FLUSH PRIVILEGES;"
 # Setup nextcloud
 wget https://download.nextcloud.com/server/releases/latest.zip
 unzip latest.zip
-sudo mkdir -p /var/www/
-sudo cp -r nextcloud /var/www/
-sudo chown -R www-data:www-data /var/www/nextcloud
+mkdir -p /var/www/
+mv nextcloud /var/www/nextcloud
+chown -R www-data:www-data /var/www/nextcloud
 rm latest.zip
 
 # Add the content of caddy_nextcloud_entry.txt to /etc/caddy/Caddyfile
@@ -81,6 +81,9 @@ sudo -u www-data php /var/www/nextcloud/occ app:install tasks
 sudo -u www-data php /var/www/nextcloud/occ app:install collectives
 sudo -u www-data php /var/www/nextcloud/occ app:install drawio
 sudo -u www-data php /var/www/nextcloud/occ app:install groupfolders
+
+# Update the database because nextcloud 29.0.0 doen't add the missing indices?!
+sudo -u www-data php /var/www/nextcloud/occ db:add-missing-indices
 
 
 # PHP-Optimizations
