@@ -1001,3 +1001,42 @@ def is_libre_workspace_update_available():
         cached_libre_workspace_update_available = None
     cached_libre_workspace_update_available_time = time.time()
     return cached_libre_workspace_update_available
+
+
+# We implement no automatic delete function for the groupfolders,
+# because in them could be important data of the users.
+# The admin has to remove the groupfolders manually in the nextcloud web interface.
+def create_nextcloud_groupfolder(group):
+    # If we are not running as root, return
+    if os.getuid() != 0:
+        return "Error: You should run this function as root. In development mode this is okay for now."
+    # If nextcloud is not available, return
+    if not is_nextcloud_available():
+        return "Error: Nextcloud is not available. Please install Nextcloud first."
+
+    # Example for groupname test:
+    # sudo -u www-data php /var/www/nextcloud/occ groupfolder:create test -> returns 1 as groupfolder_id
+    # sudo -u www-data php /var/www/nextcloud/occ groupfolder:group 1 test read
+    # sudo -u www-data php /var/www/nextcloud/occ groupfolders:group 1 test write
+    # sudo -u www-data php /var/www/nextcloud/occ groupfolders:group 1 test create
+    # sudo -u www-data php /var/www/nextcloud/occ groupfolders:group 1 test share
+    # sudo -u www-data php /var/www/nextcloud/occ groupfolders:group 1 test delte
+    groupfolder_id = subprocess.getoutput(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolder:create {group}").strip()
+    # if groupfolder_id is not numeric, then the groupfolder was not created
+    if not groupfolder_id.isnumeric():
+        return groupfolder_id
+    os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolder:group {groupfolder_id} {group} read")
+    os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolders:group {groupfolder_id} {group} write")
+    os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolders:group {groupfolder_id} {group} create")
+    os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolders:group {groupfolder_id} {group} share")
+    os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolders:group {groupfolder_id} {group} delete")
+
+
+def nextcloud_groupfolder_exists(group):
+    # Check if the groupfolder exists
+    if not is_nextcloud_available():
+        return False
+    # If we are not running as root, return
+    if os.getuid() != 0:
+        return False
+    return os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolder:list | grep -q {group}") == 0

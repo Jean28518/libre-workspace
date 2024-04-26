@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 import idm.challenges
+import unix.unix_scripts.unix as unix
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -200,6 +201,8 @@ def create_group(request):
         if form.is_valid():
             group_information = form.cleaned_data
             message = ldap_create_group(group_information)
+            if form.cleaned_data.get("nextcloud_groupfolder", False):
+                message = unix.create_nextcloud_groupfolder(group_information["cn"])
             if message == None:
                 cn = group_information.get("cn", "")
                 message = f"Gruppe '{cn}' erfolgreich erstellt!"
@@ -224,6 +227,10 @@ def edit_group(request, cn):
         if form.is_valid():
             group_information = form.cleaned_data
             message = ldap_update_group(cn, group_information)
+            if form.cleaned_data.get("nextcloud_groupfolder", False) and not unix.nextcloud_groupfolder_exists(cn):
+                message = unix.create_nextcloud_groupfolder(cn)
+            if form.cleaned_data.get("nextcloud_groupfolder", False) == False and unix.nextcloud_groupfolder_exists(cn):
+                message = "Nextcloud-Gruppenordner wird nicht gelöscht (evtl. wichtige Daten enthalten), bitte manuell im Nextcloud-Admin-Interface löschen."
             if message == None:
                 message = f"Änderungen erfolgreich gespeichert!"
         else:
@@ -231,6 +238,7 @@ def edit_group(request, cn):
         form_data = form.cleaned_data
     form = GroupEditForm()
     if form_data != {}:
+        form_data["nextcloud_groupfolder"] = unix.nextcloud_groupfolder_exists(cn)
         form = GroupEditForm(form_data)
     return render(request, "idm/admin/edit_group.html", {"form": form, "message": message, "cn": cn})
 

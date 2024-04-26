@@ -37,7 +37,9 @@ class GroupCreateForm(forms.Form):
     cn = forms.CharField(label="Gruppenname", max_length=100)
     description = forms.CharField(label="Beschreibung", max_length=100, required=False)
     defaultGroup = forms.BooleanField(label="Standardgruppe (Von nun an werden neu erstellte Nutzer dieser Gruppe hinzugefügt)", required=False, widget=forms.CheckboxInput)
+    nextcloud_groupfolder = forms.BooleanField(label="Nextcloud-Gruppenordner", required=False, widget=forms.CheckboxInput)
 
 class GroupEditForm(forms.Form):
     description = forms.CharField(label="Beschreibung", max_length=100, required=False)
     defaultGroup = forms.BooleanField(label="Standardgruppe (Von nun an werden neu erstellte Nutzer dieser Gruppe hinzugefügt)", required=False, widget=forms.CheckboxInput)
+    nextcloud_groupfolder = forms.BooleanField(label="Nextcloud-Gruppenordner", required=False, widget=forms.CheckboxInput)
