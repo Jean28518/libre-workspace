@@ -13,6 +13,8 @@
     <p>
         Das Zertifikat für die https-Verbindungen können Sie {% if installation_running %}(nach der Installation){% endif %} jederzeit hier herunterladen: <a href="https://cert.{{ domain }}/lan.crt">https://cert.{{ domain }}/lan.crt</a>
     </p>
+
+    
 {% endif %}
 
 <br>
@@ -22,6 +24,99 @@
 </div>
 {% if installation_running %}
 <center>(Dieser Link funktioniert erst, wenn der Server fertig installiert ist und ggf. die DNS-Einträge aktualisiert wurden.)</center>
+{% endif %}
+
+{% if domain == "int.de" %}
+<h2>So installieren Sie Zertifikate auf Ihren Geräten</h2>
+<p>
+    Damit die Verbindungen zum Libre Workspace authentifiziert sind, müssen Sie das Zertifikat auf Ihren Geräten installieren.<br>
+    Die Datei lan.crt können Sie hier herunterladen: <a href="https://cert.int.de/lan.crt">https://cert.int.de/lan.crt</a><br>
+    Sollten Sie https://cert.int.de/ nicht erreichen, stellen Sie sichcer, dass Sie sich im selben Netzwerk wie der Libre Workspace befinden und als DNS-Server die IP-Adresse des Libre Workspace eingetragen haben.
+</p>
+
+
+<h3>Linux</h3>
+<h4>Systemweit</h4>
+<p>
+    <ol>
+        <li>Kopieren Sie die Datei <strong>lan.crt</strong> nach <strong>/usr/local/share/ca-certificates/</strong></li>
+        <li>Öffnen Sie ein Terminal und führen Sie <strong>sudo update-ca-certificates</strong> aus</li>
+    </ol>
+</p>
+
+<h4>Für Firefox</h4>
+<p>
+    <ol>
+        <li>Öffnen Sie Firefox</li>
+        <li>Öffnen Sie die Einstellungen</li>
+        <li>Wählen Sie <strong>Datenschutz & Sicherheit</strong></li>
+        <li>Scrollen Sie nach unten und suchen Sie den Abschnitt <strong>Zertifikate</strong></li>
+        <li>Klicken Sie auf <strong>Zertifikate anzeigen</strong></li>
+        <li>Wählen Sie <strong>Zertifikatstellen</strong></li>
+        <li>Wählen Sie <strong>Importieren...</strong></li>
+        <li>Wählen Sie die Datei <strong>lan.crt</strong></li>
+        <li>Wählen Sie alle Optionen</li>
+        <li>Klicken Sie auf <strong>OK</strong></li>
+        <li>Starten Sie Firefox neu</li>
+    </ol>
+</p>
+
+
+<h4>Für Chromium, Google Chrome, Brave, ...</h4>
+<p>
+    <ol>
+        <li>Öffnen Sie die Einstellungen</li>
+        <li>Wählen Sie Datenschutz und Sicherheit</li>
+        <li>Wählen Sie Sicherheit</li>
+        <li>Scrollen Sie weiter nach unten und klicken Sie auf <strong>Zertifikate verwalten</strong></li>
+        <li>Wählen Sie <strong>Zertifizierungsstellen</strong></li>
+        <li>Klicken Sie auf <strong>Importieren</strong></li>
+        <li>Wählen Sie die Datei <strong>lan.crt</strong></li>
+        <li>Wählen Sie alle Optionen</li>
+        <li>Klicken Sie auf <strong>OK</strong></li>
+        <li>Starten Sie den Browser neu</li>
+    </ol>
+</p>
+
+<h3>MacOS</h3>
+<p>
+    <ol>
+        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
+        <li>Klicken Sie auf <strong>Installieren</strong></li>
+        <li>Wählen Sie <strong>System</strong></li>
+        <li>Klicken Sie auf <strong>Hinzufügen</strong></li>
+    </ol>
+
+<h3>Windows</h3>
+<p>
+    <ol>
+        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
+        <li>Klicken Sie auf <strong>Installieren</strong></li>
+        <li>Wählen Sie <strong>Alle Zertifikate in folgenden Speicher speichern</strong></li>
+        <li>Wählen Sie <strong>Vertrauenswürdige Stammzertifizierungsstellen</strong></li>
+        <li>Klicken Sie auf <strong>OK</strong></li>
+    </ol>
+</p>
+
+<h3>Android</h3>
+<p>
+    <ol>
+        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
+        <li>Wählen Sie <strong>Installieren</strong></li>
+        <li>Wählen Sie <strong>System</strong></li>
+        <li>Wählen Sie <strong>OK</strong></li>
+    </ol>
+</p>
+
+<h3>iOS</h3>
+<p>
+    <ol>
+        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
+        <li>Wählen Sie <strong>Installieren</strong></li>
+        <li>Wählen Sie <strong>Installieren</strong></li>
+    </ol>
+</p>
+
 {% endif %}
 
 <script>
