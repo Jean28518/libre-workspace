@@ -145,10 +145,10 @@ while True:
 
     ## CHECK IF CPU, MEMORY IS TOO HIGH #############################################################################
 
-    if utils.get_cpu_usage(five_min=True) > 0.8:
+    if utils.get_cpu_usage(five_min=True) > 80:
         os.system("curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
 
-    if utils.get_ram_usage()["ram_percent"] > 0.8:
+    if utils.get_ram_usage()["ram_percent"] > 80:
         os.system("curl -X POST -F 'subject=💾📈 RAM-Auslastung hoch📈' -F 'message=Die RAM-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
 
     ##################################################################################################################

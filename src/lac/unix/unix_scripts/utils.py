@@ -41,7 +41,7 @@ def get_disks_stats():
         while '' in line:
             line.remove('')
         name = line[0]
-        if "/dev/loop" in name or "udev" in name or "tmpfs" in name or "overlay" in name:
+        if "/dev/loop" in name or "udev" in name or "tmpfs" in name or "overlay" in name or "fuse" in name:
             continue
         size = line[1]
         # If the size is in megabytes, skip this disk, because it is very small

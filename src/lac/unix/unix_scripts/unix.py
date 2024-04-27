@@ -220,10 +220,11 @@ def get_system_information():
     rv["ram_usage"] = v["ram_usage"]
     rv["ram_percent"] = v["ram_percent"]
 
-    rv["cpu_usage"] = utils.get_cpu_usage()
+    rv["cpu_usage_percent"] = utils.get_cpu_usage()
 
     rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("months", "Monate").replace("years", "Jahre")
     rv["uptime"] = rv["uptime"].replace("min", "Min").replace("hour", "Stunde").replace("day", "Tag").replace("week", "Woche").replace("month", "Monat").replace("year", "Jahr")
+    rv["uptime_in_seconds"] = int(subprocess.getoutput("cat /proc/uptime").split(" ")[0].split(".")[0])
     rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
 
     rv["new_libre_workspace_version"] = is_libre_workspace_update_available()

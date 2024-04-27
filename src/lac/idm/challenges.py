@@ -54,5 +54,10 @@ def get_all_libre_workspace_challenges():
     # Challenge 9: Is linux-arbeitsplatz-unix.service running?
     if not unix.is_unix_service_running():
         challenges.append({"text": "linux-arbeitsplatz-unix.service läuft aktuell nicht. Automatische Aufgaben wie Backups oder Updates werden somit nicht ausgeführt.", "link": reverse("unix_index")})
+
+    # Challenge 10: The system is running longer than 31 days
+    system_information = unix.get_system_information()
+    if system_information["uptime_in_seconds"] > 31*24*60*60:
+        challenges.append({"text": "Der Server läuft schon länger als 31 Tage ohne Neustart. Es ist empfohlen, den Server regelmäßig neu zu starten, um Sicherheitsaktualisierungen anzuwenden.", "link": reverse("unix_index")})
     
     return challenges
