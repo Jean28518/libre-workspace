@@ -25,6 +25,7 @@ class AdministratorUserForm(forms.Form):
     admin = forms.BooleanField(label="Administrator", required=False, widget=forms.CheckboxInput)
 
 class AdministratorUserEditForm(forms.Form):
+    guid = forms.CharField(label="objectGUID", max_length=100, disabled=True, required=False)
     password = forms.CharField(label="Neues Passwort setzen", max_length=100, widget=forms.PasswordInput, required=False)
     first_name = forms.CharField(label="Vorname", max_length=100, required=False)
     last_name = forms.CharField(label="Nachname", max_length=100, required=False)

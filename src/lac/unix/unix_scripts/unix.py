@@ -403,7 +403,7 @@ def get_nextcloud_user_directories():
     for ldap_user in ldap_users:
         for nextcloud_user in nextcloud_users:
             # Match only the last 8 characters of the objectGUID with the last 8 characters of the username, because the objectGUID of ldap_users is slightly different from the username of nextcloud_users
-            if ldap_user["objectGUID"].upper()[-8:-1] == nextcloud_user["name"].replace("-", "")[-8:-1]:
+            if ldap_user["guid"].upper()[-8:-1] == nextcloud_user["name"].replace("-", "")[-8:-1]:
                 nextcloud_user["name"] = ldap_user["cn"]
 
     return nextcloud_users

@@ -180,6 +180,7 @@ def edit_user(request, cn):
     form = AdministratorUserEditForm()
     if form_data != {}:
         form = AdministratorUserEditForm(form_data)
+    form.fields["guid"].initial = form_data.get("guid", "")
     return render(request, "idm/admin/edit_user.html", {"form": form, "message": message, "cn": cn})#
 
 @staff_member_required(login_url=settings.LOGIN_URL)

@@ -50,7 +50,7 @@ def get_user_information_of_cn(cn):
     user_information["last_name"] = ldap_reply[0][1].get("sn", [b""])[0].decode('utf-8')
     user_information["displayName"] = ldap_reply[0][1].get("displayName", [b""])[0].decode('utf-8')
     user_information["mail"] = ldap_reply[0][1].get("mail", [b""])[0].decode('utf-8')
-    user_information["objectGUID"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
+    user_information["guid"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
     user_information["enabled"] = int(ldap_reply[0][1].get("userAccountControl", [b'512'])[0]) & 2 == 0
     user_information["dn"] = dn
     user_information["cn"] = cn
@@ -205,7 +205,7 @@ def ldap_get_all_users():
             mail = user.get("mail", [b''])[0].decode('utf-8')
             cn = user.get("cn", [b''])[0].decode('utf-8')
             groups = user.get("memberOf", [])
-            objectGUID = user.get("objectGUID", [b''])[0].hex()
+            guid = user.get("objectGUID", [b''])[0].hex()
             enabled = int(user.get("userAccountControl", [b'512'])[0]) & 2 == 0
             for i in range(len(groups)):
                 groups[i] = groups[i].decode('utf-8')
@@ -213,7 +213,7 @@ def ldap_get_all_users():
             if ldap_is_system_user(cn):
                 continue
 
-            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "objectGUID": objectGUID, "enabled": enabled, "admin": is_user_in_group({"groups": groups}, "Administrators")})
+            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "guid": guid, "enabled": enabled, "admin": is_user_in_group({"groups": groups}, "Administrators")})
     return users
 
 def ldap_is_system_user(cn):
