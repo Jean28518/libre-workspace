@@ -206,32 +206,7 @@ def set_backup_enabled(enabled):
 
 
 def get_disks_stats():
-    # Return disk name, the mountpoint, the foll size and the used size.
-    lines = subprocess.getoutput("df -h")
-
-    lines = lines.split("\n")
-    lines = lines[1:]
-    disks = []
-    for line in lines:
-        line = line.split(" ")
-        while '' in line:
-            line.remove('')
-        name = line[0]
-        if "/dev/loop" in name or "udev" in name or "tmpfs" in name or "overlay" in name:
-            continue
-        size = line[1]
-        # If the size is in megabytes, skip this disk, because it is very small
-        if "M" in size:
-            continue
-        disk = {}
-        disk["name"] = name.replace("/dev/", "")
-        disk["size"] = size
-        disk["used"] = line[2]
-        disk["used_percent"] = line[4].replace("%", "")
-        disk["mountpoint"] = line[5]
-        disks.append(disk)
-    return disks
-
+    return utils.get_disks_stats()
 
 def get_system_information():
     # Get hostname, ram usage, cpu usage, uptime, os version
@@ -240,17 +215,12 @@ def get_system_information():
     rv["lw_version"] = get_libre_workspace_version()
     rv["hostname"] = subprocess.getoutput("hostname")
 
-    rv["total_ram"] = subprocess.getoutput("free -h").split("\n")[1].split()[1].replace("Gi", "").replace("Mi", "")
-    ram_usage = subprocess.getoutput("free -h").split("\n")[1].split()[2]
-    if "Mi" in ram_usage:
-        rv["ram_usage"] = str(int(ram_usage.replace("Mi", ""))/1024).replace(".", ",")
-    else:
-        rv["ram_usage"] = ram_usage.replace("Gi", "")
-    rv["ram_percent"] = int(float(rv["ram_usage"].replace(",", ".")) / float(rv["total_ram"].replace(",", ".")) * 100)
+    v = utils.get_ram_usage()
+    rv["total_ram"] = v["total_ram"]
+    rv["ram_usage"] = v["ram_usage"]
+    rv["ram_percent"] = v["ram_percent"]
 
-    load_avg = subprocess.getoutput("cat /proc/loadavg").split(" ")[0]
-    cpu_number = subprocess.getoutput("nproc")
-    rv["cpu_usage_percent"] = int(float(load_avg) / float(cpu_number) * 100)
+    rv["cpu_usage"] = utils.get_cpu_usage()
 
     rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("months", "Monate").replace("years", "Jahre")
     rv["uptime"] = rv["uptime"].replace("min", "Min").replace("hour", "Stunde").replace("day", "Tag").replace("week", "Woche").replace("month", "Monat").replace("year", "Jahr")

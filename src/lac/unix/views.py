@@ -256,7 +256,7 @@ def pick_path(request):
 # We are checking if the remote ip address is 127.0.0.1
 def unix_send_mail(request):
     if request.method != "POST":
-        return HttpResponse("Unauthorized")
+        return HttpResponseBadRequest("Only POST requests are allowed")
 
     # if ip address 127.0.0.1 return
     if request.META.get("REMOTE_ADDR", "") != "127.0.0.1":

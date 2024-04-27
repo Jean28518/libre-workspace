@@ -34,12 +34,14 @@ def ensure_fingerprint_is_trusted():
 
 counter = 60
 hourly_counter = 3600
+five_minute_counter = 300
 while True:
     ## Run every minute ############################################################################################
     # If run_service file exists, remove it and run service immediately
     time.sleep(1)
     counter += 1
     hourly_counter += 1
+    five_minute_counter += 1
     if os.path.isfile("run_service"):
         os.remove("run_service")
         counter = 60
@@ -134,12 +136,34 @@ while True:
                         os.system("shutdown now")
 
     ##################################################################################################################
+    ## RUN EVERY 5 MINUTES ##########################################################################################
+    ##################################################################################################################
+
+    if five_minute_counter < 300:
+        continue
+    five_minute_counter = 0
+
+    ## CHECK IF CPU, MEMORY IS TOO HIGH #############################################################################
+
+    if utils.get_cpu_usage(five_min=True) > 0.8:
+        os.system("curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+
+    if utils.get_ram_usage()["ram_percent"] > 0.8:
+        os.system("curl -X POST -F 'subject=💾📈 RAM-Auslastung hoch📈' -F 'message=Die RAM-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+
+    ##################################################################################################################
     ## RUN EVERY HOUR ################################################################################################
     ##################################################################################################################
 
     if hourly_counter < 3600:
         continue
     hourly_counter = 0
+
+    ## CHECK IF DISK SPACE IS LOW ####################################################################################
+    disks = utils.get_disks_stats()
+    for disk in disks:
+        if int(disk["used_percent"]) > 90:
+            os.system(f"curl -X POST -F 'subject=💿📈 Festplattenauslastung hoch📈' -F 'message=Die Festplattenauslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
 
     ## Get list of upgradable packages
     os.system("apt list --upgradable > upgradable_packages")
