@@ -51,13 +51,3 @@ greeter-show-manual-login=true
 #greeter-hide-users=true" >> /etc/lightdm/lightdm.conf
 
 echo "Please restart the system to apply the changes."
-
-
-# #!/bin/sh
-# #Replace MYDOMAIN.NET with your AD configuration
-# #Pass parameters when running the script. $1 = computer name, $2 = domain administrator account
-# apt-get install -y sssd-ad sssd-tools realmd adcli
-# echo "[libdefaults]\n\tdefault_realm = $REALM\n\trdns = false" > /etc/krb5.conf
-# apt-get install -y krb5-user sssd-krb5
-# hostnamectl set-hostname $CLIENT.mydomain.net
-# realm join -v -U administrator mydomain.net
