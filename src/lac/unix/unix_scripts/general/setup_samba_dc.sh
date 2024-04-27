@@ -104,6 +104,8 @@ systemctl restart samba-ad-dc
 
 # Allow ldaps in the firewall
 ufw allow ldaps
+# Allow DNS in the firewall
+ufw allow 53
 
 # Add these subdomains to samba dns server:
 # .la .cloud .office .portal .chat .meet, .element, .matrix
