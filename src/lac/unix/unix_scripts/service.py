@@ -4,6 +4,7 @@ import unix_config # (its in the same directory)
 import time
 from datetime import datetime
 import subprocess
+import utils
 
 # If cron is not running as root, exit
 if os.geteuid() != 0:
@@ -59,7 +60,7 @@ while True:
         date = time.strftime("%Y-%m-%d")
 
         # If current time is higher than backup time, run backup
-        if time.strftime("%H:%M") > backup_time and not os.path.isfile("maintenance/backup_running") and not os.path.isfile(f"history/borg_errors_{date}.log"):
+        if time.strftime("%H:%M") > backup_time and not utils.is_backup_running() and not os.path.isfile(f"history/borg_errors_{date}.log"):
             print("Running backup")
             # Run do_backup.sh script with cwd in the maintenance directory
             p = subprocess.Popen(["bash", "do_backup.sh"], cwd="maintenance")

@@ -9,6 +9,7 @@ import welcome.views
 from app_dashboard.models import DashboardEntry
 from django.urls import reverse
 import requests
+import unix.unix_scripts.utils as utils
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -127,8 +128,7 @@ def get_borg_information_for_dashboard():
             if not rv["last_backup"]["success"]:
                 rv["backup_status"] = "last_backup_failed"
     
-    # If file "backup_running" exists, set backup status to "running"
-    if os.path.isfile("maintenance/backup_running"):
+    if utils.is_backup_running():
         rv["backup_status"] = "running"
     
     if os.path.isfile("maintenance/recovery_running"):
@@ -177,7 +177,7 @@ def set_trusted_fingerprint(fingerprint):
 def retry_backup():
     read_config_file()
     # If the backup is currently running, exit
-    if os.path.isfile("maintenance/backup_running"):
+    if utils.is_backup_running():
         return
     # If the backup is deactivated, exit
     if os.path.isfile("maintenance/backup_disabled"):

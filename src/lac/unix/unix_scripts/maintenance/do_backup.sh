@@ -1,8 +1,6 @@
 #!/bin/bash
 source ../unix.conf
 
-touch backup_running
-
 # Dump all databases
 # --default-character-set=utf8mb4: For emojis and similar, otherwise its broken 
 mysqldump -u root --all-databases --default-character-set=utf8mb4 > /mysql_all_databases.sql    
@@ -70,5 +68,3 @@ borg prune -v --keep-within=$MAXIMUM_AGE_IN_DAYS $BORG_REPOSITORY
 
 borg list --short $BORG_REPOSITORY > ../history/borg_list
 borg info $BORG_REPOSITORY > ../history/borg_info
-
-rm backup_running
