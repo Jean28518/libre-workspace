@@ -352,7 +352,7 @@ def get_rsync_history():
     rsync_history = open("history/rsync.log").read().replace("\n", "<br>")
     return rsync_history
 
-def is_nextcloud_available():
+def is_nextcloud_installed():
     return os.path.isfile(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/config/config.php")
 
 # Format: [{"name": "user1", "path": "/path/to/user1"}, {"name": "user2", "path": "/path/to/user2"}]
@@ -425,44 +425,30 @@ def abort_current_nextcloud_import():
     os.system("rm nextcloud_import_process_running")
     os.system("pkill import_folder_to_nextcloud_user.sh")
 
-def is_matrix_available():
+def is_matrix_installed():
     return os.path.isdir("/root/matrix/")
 
 
-def is_jitsi_available():
+def is_jitsi_installed():
     return os.path.isdir("/root/jitsi/")
 
 
-def is_collabora_available():
+def is_collabora_installed():
     return os.path.isdir("/root/collabora/")
 
 
-def is_onlyoffice_available():
+def is_onlyoffice_installed():
     return os.path.isdir("/root/onlyoffice/")
 
 
 def get_software_modules():
     modules = []
-    if is_nextcloud_available():
-        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
-    else:
-        modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
-    if is_matrix_available():
-        modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
-    else:
-        modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
-    if is_jitsi_available():
-        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
-    else:
-        modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
-    if is_collabora_available():
-        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
-    else:
-        modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
-    if is_onlyoffice_available():
-        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": True })
-    else:
-        modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": False })
+    modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": is_nextcloud_installed() })
+    modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": is_matrix_installed() })
+    modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": is_jitsi_installed() })
+    modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": is_collabora_installed() })
+    modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_onlyoffice_installed() })
+    modules.append({ "id": "xfce", "name": "XFCE", "automaticUpdates": get_value("XFCE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_xfce_installed() })
     
     for module in modules:
         module["scriptsFolder"] = f"{module['id']}"
@@ -596,9 +582,9 @@ def remove_module(module_name):
     
 
 def get_online_office_module():
-    if is_collabora_available():
+    if is_collabora_installed():
         return "collabora"
-    if is_onlyoffice_available():
+    if is_onlyoffice_installed():
         return "onlyoffice"
     return None
 
@@ -702,7 +688,7 @@ def get_all_installed_nextcloud_addons():
     Returns a list of all installed nextcloud addons.
     """
     addons = []
-    if not is_nextcloud_available():
+    if not is_nextcloud_installed():
         return addons
     for folder in os.listdir(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/apps"):
         if os.path.isdir(settings.NEXTCLOUD_INSTALLATION_DIRECTORY + "/apps/" + folder):
@@ -982,7 +968,7 @@ def create_nextcloud_groupfolder(group):
     if os.getuid() != 0:
         return "Error: You should run this function as root. In development mode this is okay for now."
     # If nextcloud is not available, return
-    if not is_nextcloud_available():
+    if not is_nextcloud_installed():
         return "Error: Nextcloud is not available. Please install Nextcloud first."
 
     # Example for groupname test:
@@ -1005,9 +991,13 @@ def create_nextcloud_groupfolder(group):
 
 def nextcloud_groupfolder_exists(group):
     # Check if the groupfolder exists
-    if not is_nextcloud_available():
+    if not is_nextcloud_installed():
         return False
     # If we are not running as root, return
     if os.getuid() != 0:
         return False
     return os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolder:list | grep -q {group}") == 0
+
+
+def is_xfce_installed():
+    return os.path.isdir("/usr/share/xfce4")

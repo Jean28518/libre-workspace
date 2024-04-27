@@ -135,7 +135,7 @@ def data_management(request):
     partitions = unix.get_partitions()
     data_export_status = unix.get_data_export_status()
     rsync_history = unix.get_rsync_history()
-    if unix.is_nextcloud_available():
+    if unix.is_nextcloud_installed():
         nextcloud_user_directories = unix.get_nextcloud_user_directories()
         nextcloud_import_process_running = unix.nextcloud_import_process_running()
     else:
@@ -356,13 +356,13 @@ def module_management(request):
         form = forms.OnlineOfficeInstallationForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            if data["online_office"] == "Deaktivieren" and (unix.is_onlyoffice_available() or unix.is_collabora_available()):
+            if data["online_office"] == "Deaktivieren" and (unix.is_onlyoffice_installed() or unix.is_collabora_installed()):
                 unix.remove_module("onlyoffice")
                 unix.remove_module("collabora")
-            elif data["online_office"] == "OnlyOffice" and (not unix.is_onlyoffice_available() or unix.is_collabora_available()):
+            elif data["online_office"] == "OnlyOffice" and (not unix.is_onlyoffice_installed() or unix.is_collabora_installed()):
                 unix.remove_module("collabora")
                 unix.setup_module("onlyoffice")
-            elif data["online_office"] == "Collabora" and (unix.is_onlyoffice_available() or not unix.is_collabora_available()):
+            elif data["online_office"] == "Collabora" and (unix.is_onlyoffice_installed() or not unix.is_collabora_installed()):
                 unix.remove_module("onlyoffice")
                 unix.setup_module("collabora")
             message = "Änderungen werden angewendet. Dies kann einige Minuten dauern."
@@ -371,7 +371,7 @@ def module_management(request):
     # Remove the modules with the id "onlyoffice" and "collabora"
     modules = [module for module in modules if module["id"] not in ["onlyoffice", "collabora"]]
     # We check here if the message is empty because when an action is running the form selection (the pre selected) will be wrong
-    if unix.is_nextcloud_available() and message == "":
+    if unix.is_nextcloud_installed() and message == "":
         form = forms.OnlineOfficeInstallationForm()
         currentOnlineModule = unix.get_online_office_module()
         match currentOnlineModule:

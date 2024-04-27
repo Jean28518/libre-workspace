@@ -26,7 +26,7 @@ def update_email_settings(email_settings):
         settings.EMAIL_USE_SSL = "True"
 
     # Change email settings in nextcloud if nextcloud is installed
-    if unix.is_nextcloud_available():
+    if unix.is_nextcloud_installed():
         from_adress = email_settings["email"].split("@")[0]
         mail_domain = email_settings["email"].split("@")[1]
         os.system(f'sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ config:system:set mail_smtpauthtype --value="LOGIN"')

@@ -47,6 +47,13 @@ if [ ! -z "$JITSI" ]; then
     . setup_jitsi.sh
 fi
 
+# If the environment variable XFCE is not empty
+if [ ! -z "$XFCE" ]; then
+    # Install XFCE
+    cd $LW_SCRIPTS/../xfce
+    . setup_xfce.sh
+fi
+
 # Distribute the certificates for local installations
 if [ $DOMAIN = "int.de" ] ; then
     cd $LW_SCRIPTS/../general
