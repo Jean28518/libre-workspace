@@ -11,7 +11,7 @@ cp cfg.example deb/usr/share/linux-arbeitsplatz/
 cp openbox-autostart deb/usr/share/linux-arbeitsplatz/
 cp prepare_for_first_boot.sh deb/usr/share/linux-arbeitsplatz/
 cp requirements.txt deb/usr/share/linux-arbeitsplatz/
-cp update_venv.sh deb/usr/share/linux-arbeitsplatz/
+cp update_libre_workspace.sh deb/usr/share/linux-arbeitsplatz/
 
 chmod +x deb/usr/share/linux-arbeitsplatz/install.sh
 chmod +x deb/usr/share/linux-arbeitsplatz/run.sh
