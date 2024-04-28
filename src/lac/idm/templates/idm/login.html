@@ -1,11 +1,11 @@
 {% extends "lac/base.html" %}
-{% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
 <h2>Anmelden</h2>
 
 
 <form method="post">
+    {% csrf_token %}
     <label for="text">Kontoname oder E-Mail</label>
     <input type="text" id="username" name="username">
     

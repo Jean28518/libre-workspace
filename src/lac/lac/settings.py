@@ -28,7 +28,28 @@ SECRET_KEY = 'django-insecure-c7&zjd(1l0)(&z2n4&t=g8im6$(tconv@y-$3ic+hhlo%x3fh-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1"
+]
+
+# Add the ip address of the server to the allowed hosts
+_ip = os.popen("hostname -I").read().split(" ")[0]
+ALLOWED_HOSTS.append(_ip)
+# Get the domain name in the caddyfile
+if os.path.exists("/etc/caddy/Caddyfile"):
+    with open("/etc/caddy/Caddyfile", "r") as f:
+        _caddyfile = f.readlines()
+        for line in _caddyfile:
+            _words = line.split(" ")
+            for i in range(len(_words)):
+                if "portal." in _words[i]:
+                    ALLOWED_HOSTS.append(_words[i].replace(";", ""))
+# Add all hosts from the environment variable separated by a comma
+_hosts = os.getenv("ALLOWED_HOSTS", "").split(",")
+for host in _hosts:
+    if host.strip() != "":
+        ALLOWED_HOSTS.append(host)
 
 
 # Application definition
@@ -49,7 +70,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -183,8 +204,6 @@ STATICFILES_DIRS = [
 
 # Needed for gunicon
 STATIC_ROOT = '/var/www/linux-arbeitsplatz-static/'
-
-ALLOWED_HOSTS = ['*']
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
