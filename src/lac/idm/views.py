@@ -17,6 +17,7 @@ from oidc_provider.models import Client
 import lac.templates as templates
 from django.urls import reverse
 import random
+import datetime
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -37,7 +38,18 @@ def dashboard(request):
 
 
 # We have to set login_page=True to prevent the base template from displaying the login button
+login_tries = []
+banned_ips = {}
 def user_login(request):
+    # Ban IPs that have tried to login more than 5 times for 30 minutes
+    _clear_old_login_tries_and_banned_ips()
+    ip_adress = request.META.get('REMOTE_ADDR')
+    print(ip_adress)
+    if _get_login_tries(ip_adress) > 5 and not ip_adress in banned_ips.keys():
+        banned_ips[ip_adress] = datetime.datetime.now()
+    if ip_adress in banned_ips.keys():
+        return render(request, 'idm/login.html', {'message': "Zu viele Anmeldeversuche! Bitte versuchen Sie es später erneut.", "hide_login_button": True})
+    
     if request.user.is_authenticated:
         return redirect("index")
     if request.method == 'POST':
@@ -47,6 +59,7 @@ def user_login(request):
         if "@" in username and "." in username:
             userdn = get_user_dn_by_email(username)
             if userdn == None:
+                login_tries.append((ip_adress, datetime.datetime.now()))
                 return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen.", "login_page": True})
             username = ldap_get_cn_of_dn(userdn)
 
@@ -59,12 +72,31 @@ def user_login(request):
             else: 
                 return redirect("index")
         else:
+            login_tries.append((ip_adress, datetime.datetime.now()))
             print("User is not authenticated")
             return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True})
         
     message = idm.ldap.is_ldap_fine_and_working()
     return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message})
 
+
+def _clear_old_login_tries_and_banned_ips():
+    """Clears login tries that are older than 5 minutes, and banned IPs that are older than 30 minutes."""
+    for i in range(len(login_tries)):
+        if datetime.datetime.now() - login_tries[i][1] > datetime.timedelta(minutes=5):
+            login_tries.pop(i)
+            i -= 1
+    for ip in banned_ips.keys():
+        if datetime.datetime.now() - banned_ips[ip] > datetime.timedelta(minutes=30):
+            banned_ips.pop(ip)
+
+
+def _get_login_tries(ip):
+    count = 0
+    for i in range(len(login_tries)):
+        if login_tries[i][0] == ip:
+            count += 1
+    return count
 
 def user_logout(request):
     logout(request)
