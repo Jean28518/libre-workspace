@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
-from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm
+from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm
 from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
 from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct
 from django.contrib.auth.decorators import login_required
@@ -13,6 +13,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 import idm.challenges
 import unix.unix_scripts.unix as unix
+from oidc_provider.models import Client
+import lac.templates as templates
+from django.urls import reverse
+import random
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -316,3 +320,82 @@ def assign_groups_to_user(request, cn):
     
     return render(request, "idm/admin/assign_groups_to_user.html", {"groups": groups, "user_information": user_information, "message": message})
     
+@staff_member_required(login_url=settings.LOGIN_URL)
+def oidc_client_overview(request):
+    overview = templates.process_overview_dict({
+        "heading": "OIDC Clients",
+        "element_name": "OIDC Client",
+        "element_url_key": "id",
+        "elements": Client.objects.all(),
+        "t_headings": ["Name"],
+        "t_keys": ["name"],
+        "add_url_name": "create_oidc_client",
+        "edit_url_name": "edit_oidc_client",
+        "delete_url_name": "delete_oidc_client",
+    })
+    return render(request, "lac/overview_x.html", {"overview": overview})
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def create_oidc_client(request):
+    form = OIDCClientForm()
+    if request.method == 'POST':
+        form = OIDCClientForm(request.POST)
+        if form.is_valid():
+            print("342")
+            print(form.cleaned_data["response_types"])
+            client = Client()
+            client.name = form.cleaned_data["name"]
+            client.client_type = form.cleaned_data["client_type"]
+            client.redirect_uris = form.cleaned_data["redirect_uris"].split("\n")
+            client.client_id = form.cleaned_data["client_id"]
+            client.client_secret = form.cleaned_data["client_secret"]
+            client.jwt_alg = form.cleaned_data["jwt_alg"]
+            client.require_consent = form.cleaned_data["require_consent"]
+            client.reuse_consent = form.cleaned_data["reuse_consent"]
+            client.save()
+            client.response_types.set(form.cleaned_data["response_types"])
+            return redirect(oidc_client_overview)
+    # Get random id and secret
+    client_id = ''.join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", k=8))
+    client_secret = ''.join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", k=32))
+    form.fields["client_id"].initial = client_id
+    form.fields["client_secret"].initial = client_secret
+    return render(request, "lac/create_x.html", {"form": form, "url": reverse("oidc_client_overview")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def edit_oidc_client(request, id):
+    client = Client.objects.get(id=id)
+    print(client.response_types.all())
+    form = OIDCClientForm(initial={
+        "name": client.name,
+        "client_type": client.client_type,
+        "response_types": client.response_types.all(),
+        "redirect_uris": "\n".join(client.redirect_uris),
+        "client_id": client.client_id,
+        "client_secret": client.client_secret,
+        "jwt_alg": client.jwt_alg,
+        "require_consent": client.require_consent,
+        "reuse_consent": client.reuse_consent,
+    })
+    if request.method == 'POST':
+        form = OIDCClientForm(request.POST)
+        if form.is_valid():
+            client.name = form.cleaned_data["name"]
+            client.client_type = form.cleaned_data["client_type"]
+            client.response_types.set(form.cleaned_data["response_types"])
+            client.redirect_uris = form.cleaned_data["redirect_uris"].split("\n")
+            client.client_id = form.cleaned_data["client_id"]
+            client.client_secret = form.cleaned_data["client_secret"]
+            client.jwt_alg = form.cleaned_data["jwt_alg"]
+            client.require_consent = form.cleaned_data["require_consent"]
+            client.reuse_consent = form.cleaned_data["reuse_consent"]
+            client.save()
+            return redirect(oidc_client_overview)
+    return render(request, "lac/edit_x.html", {"form": form, "id": id, "url": reverse("oidc_client_overview")})
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def delete_oidc_client(request, id):
+    client = Client.objects.get(id=id)
+    client.delete()
+    return redirect(oidc_client_overview)

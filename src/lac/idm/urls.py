@@ -22,4 +22,10 @@ urlpatterns = [
     path("edit_group/<str:cn>", views.edit_group, name="edit_group"),
     path("delete_group/<str:cn>", views.delete_group, name="delete_group"),
     path("assign_users_to_group/<str:cn>", views.assign_users_to_group, name="assign_users_to_group"),
+
+    path("oidc_client_overview", views.oidc_client_overview, name="oidc_client_overview"),
+    path("create_oidc_client", views.create_oidc_client, name="create_oidc_client"),
+    path("edit_oidc_client/<str:id>", views.edit_oidc_client, name="edit_oidc_client"),
+    path("delete_oidc_client/<str:id>", views.delete_oidc_client, name="delete_oidc_client"),
+
 ]

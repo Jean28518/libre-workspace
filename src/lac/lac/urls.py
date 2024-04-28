@@ -24,5 +24,5 @@ urlpatterns = [
     path("unix/", include("unix.urls")),
     path("welcome/", include("welcome.urls")),
     path("", include("app_dashboard.urls")),
-
+    path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,3 +3,4 @@ python-ldap
 django-auth-ldap
 gunicorn
 requests
+django-oidc-provider

@@ -4,43 +4,55 @@
 <h2>{{ overview.heading }}</h2>
 
 {% if overview.add_url %}
-    <a href="{{ overview.add_url }}" role="button" class="primary">{{ overview.element_name }} hinzufügen</a>
+<a href="{{ overview.add_url }}" role="button" class="primary">{{ overview.element_name }} hinzufügen</a>
 {% endif %}
 
+{% if overview.message != "" %}
+<br><br>
+<p><strong>{{ overview.message | safe }}</strong></p>
+{% endif %}
 <hr>
 
 <table>
     <thead>
         <tr>
+        <th scope="col">{{overview.first_t_heading}}</th>
         {% for t_heading in overview.t_headings %}
-            <th scope="col">{{t_heading}} </th>
+        <th scope="col"><center>{{t_heading}} </center></th>
         {% endfor %}
         {% if overview.edit_url_name %}
-            <th scope="col">Bearbeiten</th>
+            <th scope="col"><center>Bearbeiten</center></th>
         {% endif %}
         {% if overview.delete_url_name %}
-            <th scope="col">Löschen</th>
+            <th scope="col"><center>Löschen</center></th>
         {% endif %}
       </tr>
     </thead>
     <tbody>
     {% for t_row in overview.table_content %}
         <tr>
+            <td>{{t_row.first_field}}</td>
             {% for field in t_row.content %}
-                    <td>{{field | safe}}</td>
+                    <td><center>{{field | safe}}</center></td>
             {% endfor %}
             {% if t_row.edit_url %}
-                <td><a href="{{t_row.edit_url}}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
+                <td>
+                    <center>
+                        <a href="{{t_row.edit_url}}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a>
+                    </center>
+                </td>
             {% endif %}
             {% if t_row.delete_url %}
                 <td>
-                <button class="secondary outline"
-                data-target="modal-{{t_row.delete_url}}"
-                onClick="toggleModal(event)"
-                style="width: 56px; margin-bottom: 0;"
-                title="Löschen">
-                <span class="material-icons md-16">delete</span>
-                </button>
+                <center>
+                    <button class="secondary outline"
+                        data-target="modal-{{t_row.delete_url}}"
+                        onClick="toggleModal(event)"
+                        style="width: 3.5rem; margin-bottom: 0;"
+                        title="Löschen">
+                        <span class="material-icons md-16">delete</span>
+                    </button>
+                </center>
                 {% comment %} <a href="{{t_row.delete_url}}"  role="button" ></a></td> {% endcomment %}
             {% endif %}
         </tr>
@@ -53,7 +65,7 @@
                 data-target="modal-{{t_row.delete_url}}"
                 onClick="toggleModal(event)">
                 </a>
-                <h3>{{t_row.content | first}} wirklich löschen?</h3>
+                <h3>{{t_row.first_field}} wirklich löschen?</h3>
                 <p>
                 Dieser Vorgang ist nicht mehr umkehrbar!
                 </p>
