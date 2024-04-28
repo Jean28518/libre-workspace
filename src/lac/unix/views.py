@@ -619,7 +619,7 @@ def additional_services(request):
 @staff_member_required(login_url=settings.LOGIN_URL)
 def update_libre_workspace(request):
     m = unix.update_libre_workspace()
-    if message != None:
+    if m != None:
         return message(request, f"Libre Workspace konnte nicht aktualisiert werden: <code>{m}</code>", "unix_index")
     return message(request, "Libre Workspace wird aktualisiert. Dies kann einige Minuten dauern. Libre Workspace ist für kurze Zeit nicht erreichbar.", "unix_index")
 
