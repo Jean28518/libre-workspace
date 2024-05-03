@@ -1,5 +1,4 @@
 {% extends "lac/base.html" %}
-{% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
 <h2>Benutzereinstellungen</h2>
@@ -12,7 +11,7 @@
 
 <hr>
 
-<form method="post">
+<form method="post">{% csrf_token %}
     {{ form }}
     <div class="grid">
         <div>

@@ -11,7 +11,7 @@
 <p><strong>{{ message | safe }}</strong></p>
 {% endif %}
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
     {% if hide_buttons_top %}
     
     {% else %}

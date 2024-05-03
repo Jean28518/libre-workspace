@@ -4,8 +4,7 @@
 <h2>Anmelden</h2>
 
 
-<form method="post">
-    {% csrf_token %}
+<form method="post">{% csrf_token %}
     <label for="text">Kontoname oder E-Mail</label>
     <input type="text" id="username" name="username">
     

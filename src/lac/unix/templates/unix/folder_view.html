@@ -1,4 +1,4 @@
-<form method="post" style="display: inline;">
+<form method="post" style="display: inline;">{% csrf_token %}
     <input type="hidden" name="pick" value="..">
     <button type="submit" name="pick" value=".." class="contrast outline">
     Nach oben
@@ -12,7 +12,7 @@
 
 {% for folder in folder_list %}
 <tr>
-    <form method="post" style="display: inline;">
+    <form method="post" style="display: inline;">{% csrf_token %}
         <input type="hidden" name="pick" value="{{ folder }}">
         <button type="submit" name="pick" value="{{ folder }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" class="secondary outline" >
             <span class="material-icons md-28">folder</span> 
@@ -24,7 +24,7 @@
 
 {% for file in file_list %}
 <tr>   
-    <form method="post" style="display: inline;">
+    <form method="post" style="display: inline;">{% csrf_token %}
         <button name="pick" value="{{ file }}" style="background:none;border:none;outline:none;cursor:pointer;padding: 0 0;margin-bottom:0;text-align:left;" class="secondary outline" {% if not enable_file_link %}disabled{% endif %}>
             <span class="material-icons md-28">description</span> 
             {{file}}

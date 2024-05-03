@@ -1,5 +1,4 @@
 {% extends "lac/base.html" %}
-{% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
 <h2>'{{cn}}' bearbeiten</h2>
@@ -21,7 +20,7 @@ BENUTZER LÖSCHEN
 </div>
 <br>
 
-<form method="post">
+<form method="post">{% csrf_token %}
     <div class="grid">
         <div>
             <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>

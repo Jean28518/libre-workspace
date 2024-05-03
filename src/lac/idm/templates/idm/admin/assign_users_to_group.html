@@ -11,7 +11,7 @@
 <a href="?deselect_all=1" role="button" class="secondary outline">Alle abwählen</a>
 <br><br>
 
-<form method="post">
+<form method="post">{% csrf_token %}
     
     {% for user in users %}
     

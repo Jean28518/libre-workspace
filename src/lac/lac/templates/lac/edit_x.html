@@ -17,7 +17,7 @@ LÖSCHEN
 </button>
 {% endif %}
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
     <div class="grid">
         <div>
             <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>

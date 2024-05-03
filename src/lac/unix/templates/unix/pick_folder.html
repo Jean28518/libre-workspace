@@ -1,5 +1,4 @@
 {% extends "lac/base.html" %}
-{% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
 <h2> Ordner auswählen </h2>
@@ -10,7 +9,7 @@
 
 
 <div class="grid">
-    <form method="post" style="display: inline;">
+    <form method="post" style="display: inline;">{% csrf_token %}
         <input type="hidden" name="cancel" value="cancel">
         <div>
             <button type="submit" name="cancel" value="cancel" class="secondary">
@@ -19,7 +18,7 @@
             </button>
         </div>
     </form>
-    <form method="post" style="display: inline;">
+    <form method="post" style="display: inline;">{% csrf_token %}
         <input type="hidden" name="select" value="select">
         <button type="submit" name="select" value="select" class="primary">
         Aktuellen Ordner "{{current_directory}}" auswählen

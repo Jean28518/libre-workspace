@@ -1,5 +1,4 @@
 {% extends "lac/base.html" %}
-{% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
 <h2>Libre Workspace Module</h2>
@@ -99,7 +98,7 @@
 {% if form != "" %}
     <h3> Online Office Module </h3>
 
-    <form method="post">
+    <form method="post">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="primary">Anwenden</button>
     </form>

@@ -1,5 +1,4 @@
 {% extends "lac/base.html" %}
-{% comment %} {% csrf_token %} {% endcomment %}
 {% block content %}
 
     <h2> E-Mail Konfiguration </h2>
@@ -16,7 +15,7 @@
     <a href="{% url "test_mail" %}" role="button" class="secondary" style="display: block;">Test-Mail senden</a>
 
     
-    <form method="post">  
+    <form method="post">  {% csrf_token %}
         {{ form }}
 
         <div class="grid">
