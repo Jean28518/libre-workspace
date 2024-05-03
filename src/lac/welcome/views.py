@@ -4,6 +4,7 @@ import subprocess
 from django.conf import settings
 import unix.unix_scripts.unix as unix
 from django.http import HttpResponse
+from lac.templates import message as message_func
 
 
 # List of subdomains
@@ -75,6 +76,8 @@ def welcome_dns_settings(request):
 
 
 def installation_running(request):
+    if os.environ["LINUX_ARBEITSPLATZ_CONFIGURED"] == "True":
+        return message_func(request, "Libre Workspace ist bereits konfiguriert. Bitte loggen Sie sich ein.")
     message = ""
     os.environ["DOMAIN"] = request.session["domain"]
     os.environ["ADMIN_PASSWORD"] = request.session["password"]
