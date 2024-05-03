@@ -1,5 +1,5 @@
 Package: linux-arbeitsplatz
-Version: 0.5.2
+Version: 0.5.3
 Depends: libldap2-dev, python3-venv, libsasl2-dev, caddy, gcc, python3-dev, borgbackup, python-llfuse | python3-llfuse, rsync
 Maintainer: Jean28518
 Architecture: all
