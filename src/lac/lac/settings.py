@@ -33,9 +33,16 @@ ALLOWED_HOSTS = [
     "127.0.0.1"
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',
+    'http://127.0.0.1',
+]
+
+
 # Add the ip address of the server to the allowed hosts
 _ip = os.popen("hostname -I").read().split(" ")[0]
 ALLOWED_HOSTS.append(_ip)
+CSRF_TRUSTED_ORIGINS.append(f"https://{_ip}")
 # Get the domain name in the caddyfile
 if os.path.exists("/etc/caddy/Caddyfile"):
     with open("/etc/caddy/Caddyfile", "r") as f:
@@ -45,6 +52,7 @@ if os.path.exists("/etc/caddy/Caddyfile"):
             for i in range(len(_words)):
                 if "portal." in _words[i]:
                     ALLOWED_HOSTS.append(_words[i].replace(";", ""))
+                    CSRF_TRUSTED_ORIGINS.append(f"https://{_words[i].replace(";", "")}")
 # Add all hosts from the environment variable separated by a comma
 _hosts = os.getenv("ALLOWED_HOSTS", "").split(",")
 for host in _hosts:
