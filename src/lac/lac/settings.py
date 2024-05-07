@@ -51,8 +51,9 @@ if os.path.exists("/etc/caddy/Caddyfile"):
             _words = line.split(" ")
             for i in range(len(_words)):
                 if "portal." in _words[i]:
-                    ALLOWED_HOSTS.append(_words[i].replace(";", ""))
-                    CSRF_TRUSTED_ORIGINS.append(f"https://{_words[i].replace(";", "")}")
+                    domain = _words[i].replace(";", "")
+                    ALLOWED_HOSTS.append(domain)
+                    CSRF_TRUSTED_ORIGINS.append(f"https://{domain}")
 # Add all hosts from the environment variable separated by a comma
 _hosts = os.getenv("ALLOWED_HOSTS", "").split(",")
 for host in _hosts:
