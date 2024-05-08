@@ -22,7 +22,7 @@
         </p>
 
 
-        <form action="{% url "data_import_1" %}" method="post">
+        <form action="{% url "data_import_1" %}" method="post">{% csrf_token %}
         <label for="current_directory">Festplatte</label>
         <select name="current_directory" id="current_directory" required>
             <option value="" selected>Wähle die Quell-Festplatte aus...</option>

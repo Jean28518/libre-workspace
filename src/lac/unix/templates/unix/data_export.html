@@ -50,7 +50,7 @@
             Es wird nicht überprüft, ob auf dem Ziel genügend Speicherplatz vorhanden ist.
         </p>
 
-        <form action="{% url "data_export" %}" method="post">
+        <form action="{% url "data_export" %}" method="post">{% csrf_token %}
         <label for="partition-export">Festplatte</label>
         <select name="partition-export" id="partition-export" required>
             <option value="" selected>Wähle ein Ziel...</option>
