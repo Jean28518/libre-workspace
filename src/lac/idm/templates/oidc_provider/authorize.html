@@ -5,9 +5,7 @@
 
 <p><strong>{{ client.name }}</strong> möchte auf folgende Informationen zugreifen ...</p>
 
-<form method="post" action="{% url 'oidc_provider:authorize' %}">
-
-    {% csrf_token %}
+<form method="post" action="{% url 'oidc_provider:authorize' %}">{% csrf_token %}
 
     {{ hidden_inputs }}
 

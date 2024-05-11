@@ -3,7 +3,7 @@
     <h3>Konfiguration</h3>
     <div>
         <fieldset>
-            <form action="{% url "set_update_configuration" %}" method="POST">
+            <form action="{% url "set_update_configuration" %}" method="POST">{% csrf_token %}
                     {% for module in update_information.software_modules %}
                         {% if module.installed %}
                             <label for="{{module.id}}">
