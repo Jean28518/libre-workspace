@@ -60,11 +60,11 @@ Installation on an existing Debian or Ubuntu system
 
     This is not recommended for beginners. It is recommended to use the ISO image instead.
 
-1. Download the latest .deb file from the `releases page <https://github.com/Jean28518/linux-arbeitsplatz-central/releases/latest>`_.
-2. You can install the .deb file with the following command:
+You can download and install the .deb file with the following commands:
 
 .. code-block:: bash
 
+    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/linux-arbeitsplatz.deb
     sudo apt install ./linux-arbeitsplatz.deb
     sudo systemctl start linux-arbeitsplatz-web
     # If you don't run the welcome assistant:
