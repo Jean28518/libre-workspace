@@ -179,6 +179,10 @@ def create_user(request):
             user_information = form.cleaned_data
             message = ldap_create_user(user_information)
             if message == None:
+                if user_information.get("create_linux_user", False):
+                    print(user_information)
+                    message = unix.create_linux_user(user_information["username"], str(user_information["first_name"]) + " " +  str(user_information["last_name"]), user_information["password"], user_information.get("admin", False))
+            if message == None:
                 username = user_information.get("username", "")
                 message = f"Benutzer '{username}' erfolgreich erstellt!"
         else:
@@ -222,7 +226,8 @@ def edit_user(request, cn):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def delete_user(request, cn):
-    ldap_delete_user(cn)
+    print(ldap_delete_user(cn))
+    print(unix.delete_linux_user(cn))
     return redirect(user_overview)
 
 @staff_member_required(login_url=settings.LOGIN_URL)

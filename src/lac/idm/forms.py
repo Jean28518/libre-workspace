@@ -24,6 +24,7 @@ class AdministratorUserForm(forms.Form):
     last_name = forms.CharField(label="Nachname", max_length=100, required=False)
     mail = forms.EmailField(label="E-Mail-Adresse", max_length=100, required=False)
     admin = forms.BooleanField(label="Administrator", required=False, widget=forms.CheckboxInput)
+    create_linux_user = forms.BooleanField(label="Zusätzlich Linux-Benutzer direkt auf dem Server erstellen (Gruppen werden nicht synchronisiert) (Logins auf Linux-Clients sind davon nicht betroffen)", required=False, widget=forms.CheckboxInput)
 
 class AdministratorUserEditForm(forms.Form):
     guid = forms.CharField(label="objectGUID", max_length=100, disabled=True, required=False)

@@ -1005,3 +1005,43 @@ def nextcloud_groupfolder_exists(group):
 
 def is_xfce_installed():
     return os.path.isdir("/usr/share/xfce4")
+
+
+# Creates a user at the current linux operating system
+def create_linux_user(username, display_name, password, admin):
+    # Check if group libre-workspace-users exists
+    if os.system("getent group libre-workspace-users") != 0:
+        os.system("groupadd libre-workspace-users")
+    
+    # Create the user in the linux operating system
+    return_code = os.system(f"adduser --gecos \"{display_name}\" --disabled-password {username}")
+    if return_code != 0:
+        message = subprocess.getoutput(f"adduser --gecos \"{display_name}\" --disabled-password {username}")
+        return "Error: User in linux: could not be created: " + message + "\n<br>\n(If you are in a development environment, this is okay for now.)"
+    # Get output for this command
+    
+    output = subprocess.getoutput(f"echo \"{username}:{password}\" | chpasswd")
+    if output.strip() != "":
+        return output
+    
+    # If the user should be an admin, add the user to the sudo group
+    if admin:
+        os.system(f"usermod -aG sudo {username}")
+
+    # Add the user to the libre-workspace-users group
+    os.system(f"usermod -aG libre-workspace-users {username}")
+
+
+def delete_linux_user(username):
+    """Deletes the user in the linux operating system, if the user is in the libre-workspace-users group and exists."""
+    
+    # check if the user exists and is in the libre-workspace-users group
+    if os.system(f"getent passwd {username}") != 0:
+        return
+    if os.system(f"groups {username} | grep -q libre-workspace-users") != 0:
+        return
+    # Delete the user in the linux operating system
+    return_code = os.system(f"userdel -r {username}")
+    if return_code != 0:
+        return "Error: User in linux: could not be deleted."
+    return
