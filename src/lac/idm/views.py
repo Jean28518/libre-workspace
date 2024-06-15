@@ -215,6 +215,8 @@ def edit_user(request, cn):
             if user_information["password"] != "":
                 pw_message = set_ldap_user_new_password(cn, user_information["password"])
                 if pw_message == None:
+                    pw_message = unix.change_password_for_linux_user(cn, user_information["password"])
+                if pw_message == None:
                     pw_message = f"Passwort erfolgreich geändert!"
             user_information.pop("password")
             message = ldap_update_user(cn, user_information)

@@ -6,6 +6,7 @@ import idm.ldap as ldap
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
+import unix.unix_scripts.unix as unix
 
 
 # user: ldap user, user object or username
@@ -36,6 +37,7 @@ def reset_password_for_email(email):
         return
     random_password = _generate_random_password()
     ldap.set_ldap_user_new_password(user, random_password)
+    unix.change_password_for_linux_user(user, random_password)
     print(random_password)
     send_mail(subject="Neues Passwort (Linux-Arbeisplatz Zentrale)", from_email=os.getenv("EMAIL_HOST_USER"), message=f"Das neue Passwort ist:\n\n{random_password}", recipient_list=[email])
     pass
@@ -55,6 +57,8 @@ def _generate_random_password():
 def set_user_new_password(user, password):
     if settings.AUTH_LDAP_ENABLED:
         message = ldap.set_ldap_user_new_password(user.ldap_user.dn, password)
+    if message == None:
+        message = unix.change_password_for_linux_user(user, password)
     else:
         message = None
         user.set_password(password)

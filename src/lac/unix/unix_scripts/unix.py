@@ -1045,3 +1045,18 @@ def delete_linux_user(username):
     if return_code != 0:
         return "Error: User in linux: could not be deleted."
     return
+
+
+def change_password_for_linux_user(username, new_password):
+    """Only changes the password for the user in the linux operating system, if the user exists. Otherwise, it does nothing."""
+    # Check if the user exists
+    if os.system(f"getent passwd {username}") != 0:
+        return
+    # If user is not member of the libre-workspace-users group, return
+    if os.system(f"groups {username} | grep -q libre-workspace-users") != 0:
+        return
+    # Change the password for the user in the linux operating system
+    return_code = os.system(f"echo \"{username}:{new_password}\" | chpasswd")
+    if return_code != 0:
+        return "Error: Password for user in linux: could not be changed."
+    return
