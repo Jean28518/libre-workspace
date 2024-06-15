@@ -97,11 +97,14 @@ def installation_running(request):
     os.environ["SHORTEND_DOMAIN"] = request.session["shortend_domain"]
 
     # Create env.sh file
-    with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:
-        f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
-        f.write(f"export IP={os.environ['IP']}\n")
-        f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
-        f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
+    try:
+        with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:
+            f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
+            f.write(f"export IP={os.environ['IP']}\n")
+            f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
+            f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
+    except Exception as e:
+        message = f"Error while creating env.sh file: {str(e)} (If you are in a development environment, this is okay. If you are in a production environment, please check your installation.)"
 
     # Run installation script
     # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running exists
