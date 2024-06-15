@@ -512,10 +512,10 @@ def add_addon(request):
         # Install the addon
         response = unix.install_addon("/tmp/" + file.name)
         if response != None:
-            return message(request, f"Das Addon konnte nicht installiert werden: {response}", "addons")
-        return message(request, "Das Addon wurde installiert.", "addons")
+            return message(request, f"Das Addon konnte nicht hochgeladen werden: {response}", "addons")
+        return message(request, "Das Addon wurde hochgeladen.", "module_management")
     form = AddonForm()
-    return render(request, "lac/create_x.html", {"form": form, "heading": "Add-On hinzufügen", "hide_buttons_top": "True"})
+    return render(request, "lac/generic_form.html", {"form": form, "heading": "Add-On hinzufügen", "hide_buttons_top": "True", "action": "Hochladen", "url": reverse("addons")})
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def remove_addon(request, addon_id):
