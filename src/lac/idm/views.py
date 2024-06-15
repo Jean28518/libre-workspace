@@ -127,7 +127,6 @@ def user_settings(request):
         return render(request, "idm/user_settings.html", {"form": form})    
 
 
-@login_required
 def user_password_reset(request):
     message = ""
     if request.method == 'POST':
