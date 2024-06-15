@@ -238,11 +238,12 @@ def create_group(request):
         if form.is_valid():
             group_information = form.cleaned_data
             message = ldap_create_group(group_information)
-            if form.cleaned_data.get("nextcloud_groupfolder", False):
-                message = unix.create_nextcloud_groupfolder(group_information["cn"])
             if message == None:
-                cn = group_information.get("cn", "")
-                message = f"Gruppe '{cn}' erfolgreich erstellt!"
+                if form.cleaned_data.get("nextcloud_groupfolder", False):
+                    message = unix.create_nextcloud_groupfolder(group_information["cn"])
+                if message == None:
+                    cn = group_information.get("cn", "")
+                    message = f"Gruppe '{cn}' erfolgreich erstellt!"
         else:
             print("Form is not valid")
             print(form.errors)

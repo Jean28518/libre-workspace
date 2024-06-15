@@ -981,7 +981,11 @@ def create_nextcloud_groupfolder(group):
     groupfolder_id = subprocess.getoutput(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolder:create {group}").strip()
     # if groupfolder_id is not numeric, then the groupfolder was not created
     if not groupfolder_id.isnumeric():
-        return groupfolder_id
+        return groupfolder_id # Then return the error message
+    
+    # At first make sure that the new group is already synced from the LDAP server (ldap:check-group)
+    os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ ldap:check-group {group}")
+
     os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolder:group {groupfolder_id} {group} read")
     os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolders:group {groupfolder_id} {group} write")
     os.system(f"sudo -u www-data php {settings.NEXTCLOUD_INSTALLATION_DIRECTORY}/occ groupfolders:group {groupfolder_id} {group} create")
