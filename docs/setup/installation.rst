@@ -88,8 +88,8 @@ A detailed explanation of the installation script can be found upper in the sect
 Manual configuration
 --------------------
 
-This is not recommended for beginners. This only installs the Libre Workspace Portal.
-With this option you can "connect" existing installations of nextcloud, samba-dc ... to the management portal.
+This is not recommended for complete beginners in linux administration. The recommended linux distribution is Debian (Stable).
+With this option you are also able to "connect" existing installations of nextcloud, samba-dc ... to the management portal (but also the automated install script for the rest is available here).
 
 If you are using caddy, replace the two last caddy blocks in the caddyfile e.g. with the following (you may want to change the domain):
 
