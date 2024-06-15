@@ -37,6 +37,8 @@ def get_disks_stats():
     lines = lines[1:]
     disks = []
     for line in lines:
+        if "error" in line.lower() or "warning" in line.lower():
+            continue
         line = line.split(" ")
         while '' in line:
             line.remove('')
@@ -53,5 +55,11 @@ def get_disks_stats():
         disk["used"] = line[2]
         disk["used_percent"] = line[4].replace("%", "")
         disk["mountpoint"] = line[5]
-        disks.append(disk)
+        try:
+            float(disk["size"].replace("G", "").replace("T", "").replace("M", "").replace("K", ""))
+            float(disk["used"].replace("G", "").replace("T", "").replace("M", "").replace("K", ""))
+            float(disk["used_percent"])
+            disks.append(disk)
+        except:
+            continue
     return disks
