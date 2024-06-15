@@ -91,8 +91,8 @@ def set_ldap_user_new_password(user_dn, password):
     cn = ldap_get_cn_of_dn(user_dn)
     if not "," in user_dn:
         user_dn = ldap_get_dn_of_cn(cn)
-    if ldap_is_system_user(cn):
-        return f"Benutzer '{cn}' ist ein Systembenutzer. Aufgrund technischen Gründen kann das Passwort nicht verändert werden."
+    if ldap_is_system_user(cn) or cn.lower() == "administrator":
+        return f"Benutzer '{cn}' ist ein Systembenutzer. Aufgrund technischen Gründen kann das Passwort nicht verändert werden. Das Masterpasswort kann unter Systemkonfiguration geändert werden."
 
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
@@ -217,10 +217,11 @@ def ldap_get_all_users():
     return users
 
 def ldap_is_system_user(cn):
+    """The Administrator user is not handled as a system user here because the user should see it in the admin interface."""
     hidden_users = settings.HIDDEN_LDAP_USERS.lower()
     hidden_users = hidden_users.split(",")
     cn = cn.lower()
-    return cn == "guest" or cn == "krbtgt" or cn == "administrator" or cn == "admin" or cn in hidden_users
+    return cn == "guest" or cn == "krbtgt" or cn == "admin" or cn in hidden_users
 
 def ldap_is_system_group(cn):
     system_groups = ["administrators", "domain admins", "domain computers", "domain guests", "domain users", "enterprise admins", "group policy creator owners", "schema admins", "cert publishers", "dnsadmins", "dnsupdateproxy", "ras and ias servers", "allowed rodc password replication group", "denied rodc password replication group", "read-only domain controllers", "protected users", "enterprise read-only domain controllers", "domain controllers"]
