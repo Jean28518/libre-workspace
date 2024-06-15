@@ -142,6 +142,8 @@ def user_password_reset(request):
 
 @login_required
 def change_password(request):
+    if request.user.username.lower() == "administrator":
+        return redirect("critical_system_configuration")
     if request.method == 'POST':
         form = PasswordForm(request.POST)
         message = ""
