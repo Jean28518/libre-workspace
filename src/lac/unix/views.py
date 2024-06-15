@@ -567,7 +567,7 @@ def change_master_password(request):
         errors = unix.password_challenge(password)
         if errors == "":
             unix.change_master_password(password)
-            return message(request, "Das Master-Passwort wurde geändert.", "critical_system_configuration")
+            return message(request, "Das Master-Passwort wurde geändert. Der Server startet gleich neu.", "critical_system_configuration")
         else:
             return message(request, f"Das neue Passwort ist nicht sicher genug: {errors}", "critical_system_configuration")
     form = idm.forms.PasswordForm()

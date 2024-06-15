@@ -727,9 +727,9 @@ def change_master_password(password):
     idm.change_superuser_password(password)
         
     # Update the password of the systemv (linux) user by changing the password in the /etc/shadow file
-    os.system("pam-auth-update --disable krb5")
-    os.system(f"chpasswd <<<\"systemv:{password}\"")
-    os.system("pam-auth-update --enable krb5")
+    os.system("pam-auth-update --force --disable krb5")
+    os.system(f"echo \"systemv:{password}\" | chpasswd")
+    os.system("pam-auth-update --force --enable krb5")
 
     # Update the password in the env.sh file
     os.system(f"sed -i 's/ADMIN_PASSWORD=.*/ADMIN_PASSWORD=\"{password}\"/g' env.sh")
