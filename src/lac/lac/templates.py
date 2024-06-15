@@ -47,4 +47,10 @@ def _get_attr(obj, attr):
 def message(request, message : str, url_name : str = "", url_args : list = []):
     if url_name == "":
         url_name = "index"
+    # Check if url_name can be reversed or its a direct url
+    try:
+        reverse(url_name, args=url_args)
+    except:
+        return render(request, "lac/message.html", {"message": message, "url": url_name})
+    
     return render(request, "lac/message.html", {"message": message, "url": reverse(url_name, args=url_args)})

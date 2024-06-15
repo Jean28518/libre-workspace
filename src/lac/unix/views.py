@@ -658,3 +658,9 @@ def automatic_shutdown(request):
             return message(request, "Einstellungen gespeichert.", "system_configuration")
         return message(request, "Fehler: Eingaben ungültig.", "automatic_shutdown")
     return render(request, "lac/generic_form.html", {"form": form, "heading": "Automatische Abschaltung", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": "Hinweis: Der Vorgang wird nur ab der Konfigurierten Zeit innerhalb einer Stunde ausgeführt. Dauert also bspw. ein gleichzeitig terminiertes Backup oder Update länger als eine Stunde, wird der Server nicht heruntergefahren/neugestartet."})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def get_system_data_for_support(request):
+    unix.get_system_data_for_support()
+    return message(request, "Systeminformationen wurden gesammelt und Passwörter entfernt. Klicken Sie auf weiter, um diese jetzt herunterzuladen.", "/static/support_data.zip")

@@ -52,4 +52,5 @@ urlpatterns = [
     path("remove_addon/<addon_id>", views.remove_addon, name="remove_addon"),
 
     path("system_information" , views.system_information, name="system_information"),
+    path("get_system_data_for_support", views.get_system_data_for_support, name="get_system_data_for_support"),
 ]

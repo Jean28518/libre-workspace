@@ -1060,3 +1060,45 @@ def change_password_for_linux_user(username, new_password):
     if return_code != 0:
         return "Error: Password for user in linux: could not be changed."
     return
+
+
+def get_system_data_for_support():
+    """Creates a zip file with all necessary data for the support."""
+
+    # Create a temporary directory
+    os.system("rm -r /tmp/support_data/")
+    os.system("mkdir /tmp/support_data/")
+
+    # Copy the files to the temporary directory
+    files_to_copy = ["/etc/caddy/Caddyfile", "/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/etc/krb5.conf", "/etc/ssh/sshd_config", "/etc/fstab", "/usr/share/linux-arbeitsplatz/cfg", "/var/log/syslog", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/unix.conf", "/etc/os-release"]
+    for file in files_to_copy:
+        os.system(f"cp {file} /tmp/support_data/")
+        # For every line which contains the word password or passphrase, replace the line with "PASSWORD REMOVED"
+        try:
+            lines = open(f"/tmp/support_data/{file.split('/')[-1]}").readlines()
+        except:
+            continue
+        for i, line in enumerate(lines):
+            if "password" in line.lower() or "passphrase" in line.lower() or "secret" in line.lower():
+                lines[i] = "*** PASSWORD/SECRET REMOVED ***\n"
+        with open(f"/tmp/support_data/{file.split('/')[-1]}", "w") as f:
+            f.write("".join(lines))
+            f.close()
+
+    # Get the output of df -h and ip a
+    commands = ["df -h", "ip a"]
+    for command in commands:
+        output = subprocess.getoutput(command)
+        with open(f"/tmp/support_data/{command.replace(' ', '_')}", "w") as f:
+            f.write(output)
+            f.close()
+
+    # Create the zip file
+    os.system("cd /tmp/; zip -r support_data.zip support_data/")
+
+    # Mv the zip file to static folder
+    os.system("mv /tmp/support_data.zip /var/www/linux-arbeitsplatz-static/support_data.zip")
+
+    # Start a process which deletes the temporary directory and .zip file after 5 minutes
+    subprocess.Popen(["/usr/bin/bash", "-c", "sleep 300; rm -r /tmp/support_data/"])
+    subprocess.Popen(["/usr/bin/bash", "-c", "sleep 300; rm /var/www/linux-arbeitsplatz-static/support_data.zip"])
