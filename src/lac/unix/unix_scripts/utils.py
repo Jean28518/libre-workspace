@@ -56,8 +56,8 @@ def get_disks_stats():
         disk["used_percent"] = line[4].replace("%", "")
         disk["mountpoint"] = line[5]
         try:
-            float(disk["size"].replace("G", "").replace("T", "").replace("M", "").replace("K", ""))
-            float(disk["used"].replace("G", "").replace("T", "").replace("M", "").replace("K", ""))
+            float(disk["size"].replace("G", "").replace("T", "").replace("M", "").replace("K", "").replace(",", ""))
+            float(disk["used"].replace("G", "").replace("T", "").replace("M", "").replace("K", "").replace(",", ""))
             float(disk["used_percent"])
             disks.append(disk)
         except:
