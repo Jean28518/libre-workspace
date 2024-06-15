@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 import subprocess
 import utils
+import requests
 
 # If cron is not running as root, exit
 if os.geteuid() != 0:
@@ -31,6 +32,9 @@ def ensure_fingerprint_is_trusted():
     # Write the fingerprints to the /root/.ssh/known_hosts file
     with open("/root/.ssh/known_hosts", "w") as f:
         f.writelines(known_hosts)
+
+# In here the time for a last message is stored in seconds
+last_message_sent = {}
 
 counter = 60
 hourly_counter = 3600
@@ -157,10 +161,34 @@ while True:
     ## CHECK IF CPU, MEMORY IS TOO HIGH #############################################################################
 
     if utils.get_cpu_usage(five_min=True) > 80:
-        os.system("curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+        if not "cpu" in last_message_sent or time.time() - last_message_sent["cpu"] > 3600:
+            last_message_sent["cpu"] = time.time()
+            os.system("curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
 
     if utils.get_ram_usage()["ram_percent"] > 80:
+        if not "ram" in last_message_sent or time.time() - last_message_sent["ram"] > 3600:
+            last_message_sent["ram"] = time.time()
         os.system("curl -X POST -F 'subject=💾📈 RAM-Auslastung hoch📈' -F 'message=Die RAM-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+
+    ## CHECK EVERY DOMAIN IN CADDY CONFIG IF THE SPECIFIED SERVICE IS STILL WORKING ##################################
+
+    caddy_config = open("/etc/caddy/Caddyfile").read()
+    for line in caddy_config.split("\n"):
+        if line.strip().startswith("#"):
+            continue
+        line = line.split("#")[0]
+        words = line.split()
+        # If the first word has two dots or one : in it, it is a domain we want to check
+        if len(words) > 0 and (words[0].count(".") == 2 or words[0].count(":") == 1) and line.strip().endswith("{"):
+            domain = words[0]
+            # print(f"Checking domain {domain}")
+            # Check if the domain is reachable and the code is not 200
+            respose = requests.get(f"https://{domain}")
+            if respose.status_code != 200:
+                if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
+                    last_message_sent[domain] = time.time()
+                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+    
 
     ##################################################################################################################
     ## RUN EVERY HOUR ################################################################################################
