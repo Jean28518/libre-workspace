@@ -56,6 +56,8 @@ sed -i "/EMAIL/d" /usr/share/linux-arbeitsplatz/cfg
 sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
 
 # Add the Samba AD settings to the cfg file
+# Ensure that we put in a new line
+echo "" >> /usr/share/linux-arbeitsplatz/cfg
 echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/usr/share/linux-arbeitsplatz/cfg
 echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
 echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
