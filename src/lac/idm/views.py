@@ -44,7 +44,6 @@ def user_login(request):
     # Ban IPs that have tried to login more than 5 times for 30 minutes
     _clear_old_login_tries_and_banned_ips()
     ip_adress = request.META.get('REMOTE_ADDR')
-    print(ip_adress)
     if _get_login_tries(ip_adress) > 5 and not ip_adress in banned_ips.keys():
         banned_ips[ip_adress] = datetime.datetime.now()
     if ip_adress in banned_ips.keys():
@@ -60,7 +59,7 @@ def user_login(request):
             userdn = get_user_dn_by_email(username)
             if userdn == None:
                 login_tries.append((ip_adress, datetime.datetime.now()))
-                return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen.", "login_page": True})
+                return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Nutzernamen.", "login_page": True, "username": username})
             username = ldap_get_cn_of_dn(userdn)
 
         user = authenticate(username=username, password=request.POST['password'])
@@ -74,10 +73,17 @@ def user_login(request):
         else:
             login_tries.append((ip_adress, datetime.datetime.now()))
             print("User is not authenticated")
-            return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True})
+            return render(request, 'idm/login.html', {'message': "Anmeldung fehlgeschlagen! Bitte versuchen Sie es erneut.", "login_page": True, "username": username})
         
     message = idm.ldap.is_ldap_fine_and_working()
-    return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message})
+    username = ""
+
+    if message == None:
+        # If only one user exists, we can directly set the username
+        if len(ldap_get_all_users()) <= 1:
+            username = "Administrator"
+    
+    return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message, "username": username})
 
 
 def _clear_old_login_tries_and_banned_ips():
