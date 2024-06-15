@@ -157,7 +157,7 @@ h1, h2, h3, h4, h5, h6 {
       <ul>
         <li style="padding: 0px;">
           <a href="/" class="contrast">
-            <img src="/static/lac/icons/linux-arbeitsplatz.webp" alt="Logo" style="height: 64px;">
+            <img src="/static/lac/icons/linux-arbeitsplatz.webp" alt="Logo" style="height: 64px;padding: 8px;">
             <!-- <span style="margin-top: 5px" class="material-icons md-32">apps</span>  -->
           </a>
         </li>
@@ -171,6 +171,20 @@ h1, h2, h3, h4, h5, h6 {
       {% if request.user.is_authenticated %}
         <ul>
           {% comment %} <li><a href="#">Link</a></li> {% endcomment %}
+          {% if request.user.is_superuser %}
+            <li>
+              <details role="list" dir="rtl">
+                <summary aria-haspopup="listbox" role="link" class="secondary">
+                  <span class="material-icons">help</span>
+                </summary>
+                <ul role="listbox">
+                  <li><a href="https://docs.libre-workspace.org/">Dokumentation</a></li>
+                  <li><a href="https://forum.libre-workspace.org/">Forum</a></li>
+                  <li><a href="https://www.linuxguides.de/linux-support/">Kostenpflichtiger Support</a></li>
+                </ul>
+              </details>
+            </li>
+          {% endif %}
           <li>
             <details role="list" dir="rtl">
               <summary aria-haspopup="listbox" role="link" class="secondary">
