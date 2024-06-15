@@ -274,13 +274,20 @@ def unix_send_mail(request):
             recipient = admin_user["mail"]
         if recipient == "":
             return HttpResponseBadRequest("No recipient given and no admin email address found")
+        
+    recipients = []
+    recipients.append(recipient)
+    for additional_recepient in unix.get_value("ADDITIONAL_MAIL_ADDRESSES_FOR_SYSTEM_MAILS", "").split(","):
+        if additional_recepient != "":
+            recipients.append(additional_recepient)
+    
     subject = request.POST.get("subject", "")
     subject += f" - ({unix.get_libre_workspace_name()})"
     message = request.POST.get("message", "").replace("\\n", "\n")
     message += f"\n\nMessage from: {unix.get_libre_workspace_name()}"
     attachment_path = request.POST.get("attachment_path", "")
 
-    email.send_mail(recipient, subject, message, attachment_path)
+    email.send_mail(recipients, subject, message, attachment_path)
 
     return HttpResponse("Mail send successfully")
 
@@ -469,7 +476,7 @@ def test_mail(request):
     mail_adress = user_information.get("mail", "")
     if mail_adress == "" or mail_adress == None:
         return render(request, "lac/message.html", {"message": "Keine E-Mail-Adresse gefunden. Bitte definieren Sie eine Mail-Adresse in Ihren Benutzereinstellungen.", "url": reverse("user_settings")})
-    message = email.send_mail(mail_adress, "Testmail - Libre Workspace", "Das ist eine Testmail.\nIhre Mail-Einstellungen scheinen korrekt zu sein.")
+    message = email.send_mail([mail_adress], "Testmail - Libre Workspace", "Das ist eine Testmail.\nIhre Mail-Einstellungen scheinen korrekt zu sein.")
     if message != None:
         return render(request, "lac/message.html", {"message": f"Testmail konnte nicht versendet werden: <code>{message}</code>", "url": reverse("email_configuration")})
     return render(request, "lac/message.html", {"message": "Testmail wurde erfolgreich versendet. Bitte überprüfen Sie Ihr Postfach.", "url": reverse("email_configuration")})
@@ -591,8 +598,10 @@ def miscellaneous_settings(request):
                 unix.disable_nextcloud_user_administration()
             else:
                 unix.enable_nextcloud_user_administration()
+            unix.set_value("ADDITIONAL_MAIL_ADDRESSES_FOR_SYSTEM_MAILS", form.cleaned_data["additional_mail_addresses_for_system_mails"])
             return message(request, "Einstellungen gespeichert.", "system_configuration")
     form.fields["disable_nextcloud_user_administration"].initial = not unix.is_nextcloud_user_administration_enabled()
+    form.fields["additional_mail_addresses_for_system_mails"].initial = unix.get_value("ADDITIONAL_MAIL_ADDRESSES_FOR_SYSTEM_MAILS", "")
     return render(request, "lac/generic_form.html", {"form": form, "heading": "Verschiedene Einstellungen", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True"})
 
 

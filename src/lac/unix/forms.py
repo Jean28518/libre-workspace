@@ -41,6 +41,7 @@ class ChangeIpAdressForm(forms.Form):
 
 
 class MiscellaneousSettingsForm(forms.Form):
+    additional_mail_addresses_for_system_mails = forms.CharField(label="Zusätzliche E-Mail-Adressen für System-E-Mails (bei mehreren mit Komma trennen)", max_length=100, widget=forms.TextInput(), required=False)
     disable_nextcloud_user_administration = forms.BooleanField(label="Nextcloud Benutzerverwaltung deaktivieren", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
 
 
