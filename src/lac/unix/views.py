@@ -463,7 +463,7 @@ def recover_path(request):
 @staff_member_required(login_url=settings.LOGIN_URL)
 def enter_recovery_selector(request):
     request.session["redirection_after_selection"] = "recover_path"
-    request.session["redirection_on_cancel"] = "data_management"
+    request.session["redirection_on_cancel"] = "unix_index"
     request.session["description"] = "Bitte wählen Sie das Verzeichnis oder die Datei aus, welche Sie wiederherstellen möchten. Die Wiederherstellung wird bestehende Dateien überschreiben."
     request.session["allow_files"] = "True"
     request.session["current_directory"] = "/backups"
