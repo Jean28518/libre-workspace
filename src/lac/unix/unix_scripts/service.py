@@ -183,7 +183,12 @@ while True:
             domain = words[0]
             # print(f"Checking domain {domain}")
             # Check if the domain is reachable and the code is not 200
-            respose = requests.get(f"https://{domain}")
+            try:
+                respose = requests.get(f"https://{domain}", verify=False)
+            except:
+                if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
+                    last_message_sent[domain] = time.time()
+                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
             if respose.status_code != 200:
                 if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                     last_message_sent[domain] = time.time()
