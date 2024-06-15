@@ -110,7 +110,7 @@ while True:
 
         # Check if the current weekday is or it is set to daily
         # The weekday is a number from 0 to 6, where 0 is Monday and 6 is Sunday
-        if shutdown_weekday == "daily" or shutdown_weekday == str(datetime.today().weekday()):
+        if shutdown_weekday == "daily" or str(shutdown_weekday) == str(datetime.today().weekday()):
 
             # Check if we already did this action today
             last_date = ""
@@ -126,10 +126,11 @@ while True:
                 if shutdown_time_limit.split(":")[0] == "24":
                     shutdown_time_limit = "00:" + shutdown_time_limit.split(":")[1]
 
-                # If we are in the timeslot between shutdown_tuime and shutdown_time_limit, then shutdown:
+                # If we are in the timeslot between shutdown_time and shutdown_time_limit, then shutdown:
                 if datetime.now().strftime("%H:%M") >= shutdown_time and datetime.now().strftime("%H:%M") < shutdown_time_limit:
-                    with open("history/last_shutdown") as file:
+                    with open("history/last_shutdown", "w") as file:
                         file.write(current_date)
+                        file.close()
                     if shutdown_type_is_reboot:
                         os.system("reboot")
                     else:   
