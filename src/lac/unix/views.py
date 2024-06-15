@@ -18,6 +18,7 @@ import idm.ldap
 from lac.templates import process_overview_dict, message
 import idm.forms
 import json
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -254,6 +255,8 @@ def pick_path(request):
 # We are using the djano module here
 # This is only for local scripts.
 # We are checking if the remote ip address is 127.0.0.1
+# Disable csrf:
+@csrf_exempt
 def unix_send_mail(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Only POST requests are allowed")
