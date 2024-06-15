@@ -10,7 +10,7 @@ echo "docker pull onlyoffice/documentserver:latest
 docker run -i -t -d -p 10923:80 --restart=unless-stopped --name onlyoffice -e JWT_ENABLED='true' -e JWT_SECRET='$ADMIN_PASSWORD' --add-host \"cloud.$DOMAIN:$IP\" onlyoffice/documentserver:latest" > /root/onlyoffice/run.sh
 
 
-if [ $DOMAIN = "int.de" ] ; then
+if [ "$DOMAIN" = "int.de" ] ; then
   echo "
 docker exec onlyoffice sed -i 's/\"rejectUnauthorized\": true/\"rejectUnauthorized\": false/g' /etc/onlyoffice/documentserver/default.json
 docker restart onlyoffice
@@ -25,7 +25,7 @@ sed -i "s/SED_DOMAIN/$DOMAIN/g" /etc/caddy/Caddyfile
 
 
 # if $DOMAIN = "int.de" then uncomment #tls internal
-if [ $DOMAIN = "int.de" ] ; then
+if [ "$DOMAIN" = "int.de" ] ; then
   sed -i "s/#tls internal/tls internal/g" /etc/caddy/Caddyfile
 fi
 
@@ -43,7 +43,7 @@ sudo -u www-data php /var/www/nextcloud/occ config:app:set onlyoffice DocumentSe
 # Set the secret ($ADMIN_PASSWORD)
 sudo -u www-data php /var/www/nextcloud/occ config:app:set onlyoffice jwt_secret --value="$ADMIN_PASSWORD"
 # if $DOMAIN = "int.de" then deactivate the certificate verification
-if [ $DOMAIN = "int.de" ] ; then
+if [ "$DOMAIN" = "int.de" ] ; then
   sudo -u www-data php /var/www/nextcloud/occ config:app:set onlyoffice verify_peer_off --value="true"
 fi
 # Disable the document preview

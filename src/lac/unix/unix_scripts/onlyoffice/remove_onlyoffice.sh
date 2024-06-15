@@ -7,6 +7,7 @@ python3 /usr/share/linux-arbeitsplatz/unix/unix_scripts/remove_caddy_service.py 
 # If nextcloud is installed, remove the onlyoffice app
 if [ -d "/var/www/nextcloud" ]; then
     sudo -u www-data php /var/www/nextcloud/occ app:disable onlyoffice
+    sudo -u www-data php /var/www/nextcloud/occ app:remove onlyoffice
 fi
 
 # Remove the onlyoffice container
