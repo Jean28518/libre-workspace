@@ -14,7 +14,7 @@ def get_all_libre_workspace_challenges():
     challenges = []
 
     # Challenge 1: Create a new user (if LDAP is enabled)
-    if settings.AUTH_LDAP_ENABLED and len(ldap.ldap_get_all_users()) == 0:
+    if settings.AUTH_LDAP_ENABLED and len(ldap.ldap_get_all_users()) <= 1:
         challenges.append({"text": "Noch bist Du ganz alleine hier. Lasst uns neue Nutzer erstellen!", "link": reverse("create_user")})
 
     # Challenge 2: Do all variables exist in env.sh?
