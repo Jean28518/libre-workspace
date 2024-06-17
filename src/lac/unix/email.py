@@ -10,7 +10,7 @@ def send_mail(recipients: list, subject, message, attachment_path=""):
     # Check also if attachment_path exists
     if attachment_path != "" and attachment_path is not None and os.path.exists(attachment_path):
         email.attach_file(attachment_path)
-    print("Sending email with subject: " + subject + " to: " + recipients)
+    print("Sending email with subject: " + subject + " to: " + str(recipients))
     try:
         email.send()
     except Exception as e:
