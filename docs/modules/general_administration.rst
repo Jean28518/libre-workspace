@@ -8,7 +8,7 @@ SSH-Access
 You can access the server via SSH on Port 22 with for example the following commands:
 
 .. code-block:: bash
-    
+
     ssh systemv@<IP-Address>
     ssh systemv@portal.int.de
 
@@ -123,8 +123,10 @@ Make also sure for the next automated processes that the domain is set correctly
 
 Also you need to add the new cloud.my-libre-workspace.com to nextcloud as a trusted domain and set the overwrite.cli.url to the new domain:
 
-``sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_domains 2 --value=cloud.my-libre-workspace.com``
-``sudo -u www-data php /var/www/nextcloud/occ config:system:set overwrite.cli.url --value=https://cloud.my-libre-workspace.com``
+.. code-block:: bash
+
+    sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_domains 2 --value=cloud.my-libre-workspace.com``
+    sudo -u www-data php /var/www/nextcloud/occ config:system:set overwrite.cli.url --value=https://cloud.my-libre-workspace.com``
 
 Also some other additional services like jitsi or collabora need to be adjusted to the new domain. Unless these both services do not store any data, you can just reinstall them in the web interface.
 
