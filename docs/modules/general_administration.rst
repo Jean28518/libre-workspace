@@ -125,8 +125,8 @@ Also you need to add the new cloud.my-libre-workspace.com to nextcloud as a trus
 
 .. code-block:: bash
 
-    sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_domains 2 --value=cloud.my-libre-workspace.com``
-    sudo -u www-data php /var/www/nextcloud/occ config:system:set overwrite.cli.url --value=https://cloud.my-libre-workspace.com``
+    sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_domains 2 --value=cloud.my-libre-workspace.com
+    sudo -u www-data php /var/www/nextcloud/occ config:system:set overwrite.cli.url --value=https://cloud.my-libre-workspace.com
 
 Also some other additional services like jitsi or collabora need to be adjusted to the new domain. Unless these both services do not store any data, you can just reinstall them in the web interface.
 
