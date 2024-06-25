@@ -21,8 +21,8 @@ Installation using the ISO image (recommended)
     If you want to test the ISO image in a virtual machine, you can use `VirtualBox <https://www.virtualbox.org/>`_.
     It is important to set the network adapter to "Bridged Adapter" in the settings of the virtual machine.
 
-1. Boot the installation media, the installer will start automatically.
-2. Almost all points are done automatically unless you are asked for the disk partitioning.
+3. Boot the installation media, the installer will start automatically.
+4. Almost all points are done automatically unless you are asked for the disk partitioning.
    If you are asked for the disk partitioning, you can select "Guided - use entire disk" and confirm the following questions with "Yes".
 
 .. tip::
@@ -31,22 +31,28 @@ Installation using the ISO image (recommended)
    If you choose '/data' as a mountpoint, Libre Workspace will use this directory as the data directory and stores all nextcloud data there.
    
 
-1. After the installation is complete, the system will reboot. Discover the IP address of the system and open it in your browser. Otherwise you can just follow the instructions of the server display.
+5. After the installation is complete, the system will reboot. Discover the IP address of the system and open it in your browser. Otherwise you can just follow the instructions of the server display.
 
 .. note::
 
     From now you can also access the server via SSH. The default user is 'systemv' and the password is currently 'LibreWorkspace'.
 
-1. At the webpage an installer opens. You will be asked to set a password for the admin user. This has to be very secure, because it is also used as administrative password for the other components like nextcloud or samba-dc. **At the current time you can't change your password later.**
-2. In the next step you can choose which components you want to install. At the moment this can't be changed later automatically. Samba-DC (central user management) is always automatically installed.
-3. In the Domain Settings you can choose if the libre workspace server should be externally accessible. This can't be changed later automatically. An external access is highly recommended if you want easy access to your data from outside your home network and don't want to handle DNS-Settings on your own. But for that you need a domain name.
+6. At the webpage an installer opens. You will be asked to set a password for the admin user. This has to be very secure, because it is also used as administrative password for the other components like nextcloud or samba-dc. **At the current time you can't change your password later.**
+7. In the next step you can choose which components you want to install. At the moment this can't be changed later automatically. Samba-DC (central user management) is always automatically installed.
+8. In the Domain Settings you can choose if the libre workspace server should be externally accessible. This can't be changed later automatically. An external access is highly recommended if you want easy access to your data from outside your home network and don't want to handle DNS-Settings on your own. But for that you need a domain name.
 
 .. tip::
     If you are unsure whether to use public or private access, it is recommended to use the private access.
     For this you don't need a domain name and you can still access your data from outside your home network via VPN.
 
-10. Now the installation starts. This can take a while. There are instructions displayed on the screen, how to access the libre workspace after the installation is complete.
-11. Your login at the web interface is "Administrator" with the password you set in step 6.
+9. Now the installation starts. This can take a while. There are instructions displayed on the screen, how to access the libre workspace after the installation is complete.
+
+.. note::
+
+    The server needs access to the internet to download the necessary packages. As DNS-Server `OpenDNS <https://www.opendns.com/>`_  is used.
+
+
+10.  Your login at the web interface is "Administrator" with the password you set in step 6.
 
 .. warning::
 
