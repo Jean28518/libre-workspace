@@ -144,6 +144,7 @@ An example of setup_nocodb.sh would be:
   " >> /etc/caddy/Caddyfile
 
   # If domain is "int.de" uncomment the tls internal line for internal https
+  # IT IS RECOMMENDED THAT YOU DO NOT EDIT THESE 3 LINES unless you know what you're doing.
   if [ "$DOMAIN" = "int.de" ]; then
     sed -i 's/#tls internal/tls internal/g' /etc/caddy/Caddyfile
   fi
