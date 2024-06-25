@@ -48,3 +48,6 @@ if [ "$DOMAIN" = "int.de" ] ; then
 fi
 # Disable the document preview
 sudo -u www-data php /var/www/nextcloud/occ config:app:set onlyoffice preview --value="false"
+
+# Set the check interval to 0 to prevent disabling the app itself
+sudo -u www-data php /var/www/nextcloud/occ config:app:set onlyoffice editors_check_interval --value='0'
