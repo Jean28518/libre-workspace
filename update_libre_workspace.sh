@@ -1,3 +1,14 @@
+# Get current installed version of Libre Workspace
+INSTALLED_VERSION=$(dpkg -s linux-arbeitsplatz | grep Version | cut -d " " -f 2)
+
+# Get latest version of Libre Workspace from GitHub
+LATEST_VERSION=$(curl -s https://api.github.com/repos/Jean28518/libre-workspace/releases/latest | grep tag_name | cut -d '"' -f 4)
+
+# If the installed version is the same as the latest version, then exit
+if [ "v$INSTALLED_VERSION" == "$LATEST_VERSION" ]; then
+    echo "Libre Workspace is already up to date. Exiting..."
+    exit 0
+fi
 
 wget https://github.com/Jean28518/libre-workspace/releases/latest/download/linux-arbeitsplatz.deb
 

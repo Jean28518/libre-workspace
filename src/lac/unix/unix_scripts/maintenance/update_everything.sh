@@ -6,9 +6,9 @@ echo "Hint: This script runs every day wether some update procedure is enabled o
 
 if [ "$SYSTEM_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting system update at $DATE" >> ../history/update-$DATE.log 2>&1
-    # Get the update log also to our log file
-    cat history/update.log >> ../history/update-$DATE.log
     bash do_update.sh >> ../history/update-$DATE.log 2>&1
+    # Because do_update.sh has its own log file, we append it to our log file
+    cat ../history/update.log >> ../history/update-$DATE.log 2>&1
 fi
 
 if [ "$NEXTCLOUD_AUTOMATIC_UPDATES" == "True" ]; then
@@ -57,6 +57,6 @@ if [ "$LIBRE_WORKSPACE_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting libre workspace update at $DATE" >> ../history/update-$DATE.log 2>&1
     # Get the update log also to our log file
     cd /usr/share/linux-arbeitsplatz/
-    bash ./update_libre_workspace.sh >> ../history/update-$DATE.log 2>&1
+    bash ./update_libre_workspace.sh >> /usr/share/linux-arbeitsplatz/unix/unix_scripts/history/update-$DATE.log 2>&1
     cd /usr/share/linux-arbeitsplatz/unix/unix_scripts/maintenance
 fi
