@@ -72,6 +72,8 @@ You can download and install the .deb file with the following commands:
 
     wget https://github.com/Jean28518/libre-workspace/releases/latest/download/linux-arbeitsplatz.deb
     sudo apt install ./linux-arbeitsplatz.deb
+    # This message can be ignored:
+    # N: Download is performed unsandboxed as root as file '/root/linux-arbeitsplatz.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
     sudo systemctl start linux-arbeitsplatz-web
     # If you don't run the welcome assistant:
     sudo systemctl enable linux-arbeitsplatz-unix --now
