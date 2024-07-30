@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Ensure that the dns server is set to the ip address of libre workspace (very important)
+
 # You can start this script with two arguments:
 # 1. The domain name of the realm. Example: int.de
 # 2. The client name for joining the realm. Example: client1
