@@ -18,10 +18,10 @@ if [ -x "$(command -v redis-server)" ]; then
 fi
 
 # Install redis and php packages
-apt-get install redis php-redis php-apcu php-memcache -y
+apt-get install redis php-redis php-apcu php-memcache pwgen -y
 
 # Set redis password
-REDIS_PASSWORD=$(cat /dev/random | tr -dc '[:alnum:]' | head -c 20)
+REDIS_PASSWORD=$(pwgen -n 20 1)
 echo "" >> /etc/redis/redis.conf
 echo "requirepass $REDIS_PASSWORD" >> /etc/redis/redis.conf
 
