@@ -200,7 +200,7 @@ def create_user(request):
     form = AdministratorUserForm()
     if form_data != {}:
         form = AdministratorUserForm(form_data)
-    return render(request, "idm/admin/create_user.html", {"form": form, "message": message})
+    return render(request, "lac/create_x.html", {"form": form, "message": message, "type": "Benutzer", "url": reverse("user_overview")})
 
     
 @staff_member_required(login_url=settings.LOGIN_URL)

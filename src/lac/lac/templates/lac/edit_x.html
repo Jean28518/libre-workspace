@@ -6,8 +6,18 @@
 {% if description %} {{ description | safe }} <br> <br> {% endif %}
 
 {% if message != "" %}
-<p><strong>{{ message | safe }}</strong></p>
+<div class="grid">
+    <div style="padding-bottom: 1rem;">
+        <a role="button" class="contrast" style="display: block; opacity: 1;
+            {% if "Error" in message or "Fehler" in message %}
+             background-color: orange; border-color: orange;
+            {% endif %}
+        
+        "><strong>{{ message | safe }}</strong></a>
+    </div>
+</div>
 {% endif %}
+
 
 {% if delete_url %}
 <button class="contrast outline"

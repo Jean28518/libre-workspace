@@ -8,9 +8,18 @@
 {% endif %}
 
 {% if overview.message != "" %}
-<br><br>
-<p><strong>{{ overview.message | safe }}</strong></p>
+<div class="grid">
+    <div style="padding-bottom: 1rem;">
+        <a role="button" class="contrast" style="display: block; opacity: 1;
+            {% if "Error" in overview.message or "Fehler" in overview.message %}
+             background-color: orange; border-color: orange;
+            {% endif %}
+        
+        "><strong>{{ overview.message | safe }}</strong></a>
+    </div>
+</div>
 {% endif %}
+
 <hr>
 
 <table>
