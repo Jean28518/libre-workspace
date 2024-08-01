@@ -10,7 +10,7 @@
 - **Cloud for files, calendars, Office, chats, conferences ...**
 - **Open source by definition**
 
-## Technincal Information
+## Technical Information
 
 Libre Workspace consists of a set of software packages which should implement a modern cloud infrastructure for small companies or individuals. It is based on the following software:
 
