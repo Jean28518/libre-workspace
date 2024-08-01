@@ -176,8 +176,7 @@ def user_overview(request):
 @staff_member_required(login_url=settings.LOGIN_URL)
 def create_user(request):
     message = ""
-    form_data = {}
-    print(request)
+    form = AdministratorUserForm()
     if request.method == 'POST':
         form = AdministratorUserForm(request.POST)
         if form.is_valid():
@@ -195,11 +194,7 @@ def create_user(request):
             print("Form is not valid")
             print(form.errors)
             message = form.errors
-            form_data = form.cleaned_data
 
-    form = AdministratorUserForm()
-    if form_data != {}:
-        form = AdministratorUserForm(form_data)
     return render(request, "lac/create_x.html", {"form": form, "message": message, "type": "Benutzer", "url": reverse("user_overview")})
 
     
