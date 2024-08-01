@@ -837,23 +837,27 @@ def password_challenge(password):
 
 
 def is_nextcloud_user_administration_enabled():
-    # Check if   handle_path /index.php/settings/users is in the Cadddyfile
+    # Check if @lw_usersettings { is in the Cadddyfile
     caddyfile = open("/etc/caddy/Caddyfile").read()
-    return not ("handle_path /index.php/settings/users" in caddyfile)
+    return not ("@lw_usersettings {" in caddyfile)
 
 
 def disable_nextcloud_user_administration():
     if not is_nextcloud_user_administration_enabled():
         return
     domain = get_env_sh_variables().get("DOMAIN", "")
-    # Open caddyfile lines and add the line "handle_path /index.php/settings/users" after the line where cloud. is in
+    # Open caddyfile lines and add the handler line after the line where cloud. is in
     caddyfile = open("/etc/caddy/Caddyfile").read()
     caddyfile = caddyfile.split("\n")
     for i, line in enumerate(caddyfile):
         if "cloud." in line:
-            caddyfile.insert(i+1, "handle_path /index.php/settings/users {")
-            caddyfile.insert(i+2, f"  redir https://portal.{domain}" + reverse("user_overview"))
-            caddyfile.insert(i+3, "}")
+            caddyfile.insert(i+1, "@lw_usersettings {")
+            caddyfile.insert(i+2, "  path /settings/users")
+            caddyfile.insert(i+3, "  path /index.php/settings/users")
+            caddyfile.insert(i+4, "}")
+            caddyfile.insert(i+5, "handle @lw_usersettings {")
+            caddyfile.insert(i+6, f"  redir https://portal.{domain}" + reverse("user_overview"))
+            caddyfile.insert(i+7, "}")
             break
 
     with open("/etc/caddy/Caddyfile", "w") as f:
@@ -868,10 +872,9 @@ def enable_nextcloud_user_administration():
     caddyfile = open("/etc/caddy/Caddyfile").read()
     caddyfile = caddyfile.split("\n")
     for i, line in enumerate(caddyfile):
-        if "handle_path /index.php/settings/users" in line:
-            del caddyfile[i]
-            del caddyfile[i]
-            del caddyfile[i]
+        if "@lw_usersettings {" in line:
+            for j in range(7):
+                del caddyfile[i]
             break
 
     with open("/etc/caddy/Caddyfile", "w") as f:
