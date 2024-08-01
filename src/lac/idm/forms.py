@@ -1,5 +1,6 @@
 from django import forms
 from oidc_provider.models import ResponseType
+from django.utils.safestring import mark_safe
 
 
 class BasicUserForm(forms.Form):
@@ -24,7 +25,10 @@ class AdministratorUserForm(forms.Form):
     last_name = forms.CharField(label="Nachname", max_length=100, required=False)
     mail = forms.EmailField(label="E-Mail-Adresse", max_length=100, required=False)
     admin = forms.BooleanField(label="Administrator", required=False, widget=forms.CheckboxInput)
-    create_linux_user = forms.BooleanField(label="Zusätzlich Linux-Benutzer direkt auf dem Server erstellen (Gruppen werden nicht synchronisiert) (Logins auf Linux-Clients sind davon nicht betroffen)", required=False, widget=forms.CheckboxInput)
+    create_linux_user = forms.BooleanField(label=mark_safe("""<b>Für Profis:</b> Zusätzlicher Linux-Benutzer<br>
+        <i>(Achtung: Dieser Benutzer wird nur auf dem Linux-Server erstellt. Gruppen werden nicht synchronisiert. Logins auf Linux-Clients sind davon nicht betroffen.)</i>
+        """), 
+        required=False, widget=forms.CheckboxInput)
 
 class AdministratorUserEditForm(forms.Form):
     guid = forms.CharField(label="objectGUID", max_length=100, disabled=True, required=False)
