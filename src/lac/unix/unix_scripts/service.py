@@ -131,7 +131,7 @@ while True:
         possible_modules = os.listdir("/usr/share/linux-arbeitsplatz/unix/unix_scripts/")
         # Filter all folders which don't have a path like /root/[folder]
         # (Because we only want to run patches for installed modules or addons)
-        possible_modules = [folder for folder in possible_modules if os.path.isdir(f"/root/{folder}") or folder == "nextcloud"]
+        possible_modules = [folder for folder in possible_modules if os.path.isdir(f"/root/{folder}") or folder == "nextcloud" or folder == "general"]
         # Make the paths absolute
         for i in range(len(possible_modules)):
             possible_modules[i] = f"/usr/share/linux-arbeitsplatz/unix/unix_scripts/{possible_modules[i]}"

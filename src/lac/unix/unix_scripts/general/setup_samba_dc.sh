@@ -99,6 +99,11 @@ echo "tls keyfile  = /etc/samba/tls/myKey.pem" >> /etc/samba/smb.conf
 echo "tls certfile = /etc/samba/tls/myCert.pem" >> /etc/samba/smb.conf
 echo "tls cafile   =" >> /etc/samba/smb.conf
 
+# Because of <https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Cyber-Sicherheitslage/Reaktion/CERT-Bund/CERT-Bund-Reports/HowTo/Offene-DNS-Resolver/Offene-DNS-Resolver.html>
+echo "" >> /etc/samba/smb.conf
+echo "# Only resolve DNS requests via the forwarder" >> /etc/samba/smb.conf
+echo "dns forwarder resolve only = yes" >> /etc/samba/smb.conf
+
 # Restart samba
 systemctl restart samba-ad-dc
 
