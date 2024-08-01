@@ -4,15 +4,32 @@
     <div>
         <fieldset>
             <form action="{% url "set_update_configuration" %}" method="POST">{% csrf_token %}
-                    {% for module in update_information.software_modules %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Modul</th>
+                            <th scope="col">Jetzt Aktualisieren</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for module in update_information.software_modules %}
                         {% if module.installed %}
-                            <label for="{{module.id}}">
-                            <input type="checkbox" id="{{module.id}}" name="{{module.id}}" role="switch" {% if module.automaticUpdates %}checked{% endif %}>
-                            {{module.name}}
-                            </label>
-                        {% endif %}
-                        <!-- Time -->
-                    {% endfor %}
+                                <tr>
+                                    <td>
+                                        <label for="{{module.id}}">
+                                        <input type="checkbox" id="{{module.id}}" name="{{module.id}}" role="switch" {% if module.automaticUpdates %}checked{% endif %}>
+                                        {{module.name}}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <a href="{% url "update_module_now" module.id %}">Jetzt aktualisieren</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                    <!-- Time -->
                     <label for="time">Automatische Updates ausführen um:
                         <input type="time" id="time" name="time" value="{{update_information.update_time}}" required>
                     </label>

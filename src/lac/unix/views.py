@@ -664,3 +664,11 @@ def automatic_shutdown(request):
 def get_system_data_for_support(request):
     unix.get_system_data_for_support()
     return message(request, "Systeminformationen wurden gesammelt und Passwörter entfernt. Klicken Sie auf weiter, um diese jetzt herunterzuladen.", "/static/support_data.zip")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def update_module_now(request, module):
+    m = unix.update_module(module)
+    if m != None:
+        return message(request, f"Das Modul konnte nicht aktualisiert werden: <code>{m}</code>", "unix_index")
+    return message(request, "Das Modul wird nun im Hintergrund aktualisiert. Dies kann einige Minuten dauern.", "unix_index")

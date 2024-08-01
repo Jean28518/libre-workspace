@@ -461,8 +461,34 @@ def get_software_modules():
         addon["scriptsFolder"] = f"addons/{addon['id']}"
         modules.append(addon)
 
-
     return modules
+
+
+def update_module(module_id):
+    """
+    Works for addons and modules.
+    """
+    software_modules = get_software_modules()
+
+    if module_id in ["system", "xfce"]:
+        update_system()
+        return
+    
+    if module_id == "libre_workspace":
+        update_libre_workspace()
+        return
+
+    for module in software_modules:
+        if module["id"] == module_id:
+            if module["installed"]:
+                # Get absolute path for the module
+                module_path = get_module_path(module_id)
+                env = get_env_sh_variables()
+                p = subprocess.Popen(["/usr/bin/bash", f"update_{module_id}.sh"], cwd=module_path, env=env)
+                return
+            else:
+                return "Error: Module not installed."
+    return "Error: Module not found."
 
 
 # We determine if a module is installed by checking if the module's directory exists in the root directory
