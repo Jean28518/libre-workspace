@@ -16,6 +16,22 @@ print("Running unix service...")
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
+# Get current directory
+current_directory = os.getcwd()
+
+
+# Let us get the environment of env.sh
+env_file_path = "/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh"
+env = {}
+lines = open(env_file_path).readlines()
+for line in lines:
+    line = line.strip()
+    if line == "" or line.startswith("#"):
+        continue
+    line = line.replace("export ", "")
+    key = line.split("=")[0]
+    value = line.split("=")[1]
+    env[key] = value
 
 def ensure_fingerprint_is_trusted():
     ## Ensure trusted ssh fingerprints are available
@@ -61,6 +77,8 @@ while True:
     # Read config file
     unix_config.read_config_file()
 
+    current_date = time.strftime("%Y-%m-%d")
+
     ## BACKUP ######################################################################################################
 
     # Get backup time from config file
@@ -94,12 +112,72 @@ while True:
 
     # All other updates:
     update_time = unix_config.get_value("UPDATE_TIME")
-    current_date = time.strftime("%Y-%m-%d")
     if time.strftime("%H:%M") > update_time and not os.path.isfile("maintenance/update_running") and not os.path.isfile(f"history/update-{current_date}.log"):
         print("Starting automatic updates")
         p = subprocess.Popen(["bash", "update_everything.sh"], cwd="maintenance")
         p.wait()
 
+    
+    ## RUN PATCHES ###################################################################################################
+
+    # We run patches at the defined backup time (after the backups of course). It this is not defined, then we take 02:00 as default
+    # We check if we had run the patches today already by checking the history folder (DATE-patch.log)
+    patch_time = unix_config.get_value("BORG_BACKUP_TIME", "02:00")
+    patch_log_path = f"history/patch-{current_date}.log"
+    if time.strftime("%H:%M") > patch_time and not os.path.isfile(patch_log_path):
+        print("Running patches")
+
+        # Get all folders in /usr/share/linux-arbeitsplatz/unix/unix_scripts/
+        possible_modules = os.listdir("/usr/share/linux-arbeitsplatz/unix/unix_scripts/")
+        # Filter all folders which don't have a path like /root/[folder]
+        # (Because we only want to run patches for installed modules or addons)
+        possible_modules = [folder for folder in possible_modules if os.path.isdir(f"/root/{folder}") or folder == "nextcloud"]
+        # Make the paths absolute
+        for i in range(len(possible_modules)):
+            possible_modules[i] = f"/usr/share/linux-arbeitsplatz/unix/unix_scripts/{possible_modules[i]}"
+                
+        # Now do everything again for the addons folder:
+        possible_addons = os.listdir("/usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/")
+        possible_addons = [folder for folder in possible_addons if os.path.isdir(f"/root/{folder}")]
+        for i in range(len(possible_addons)):
+            possible_addons[i] = f"/usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/{possible_addons[i]}"
+
+        possible_module_or_addon_folders = possible_modules + possible_addons
+
+        # In this state also some other folders are in the list, so we need to filter all folders out wich don't have a patches folder
+        possible_module_or_addon_folders = [folder for folder in possible_module_or_addon_folders if os.path.isdir(folder+"/patches")]
+      
+
+        # Now we have a list of all folders which have a patches folder
+        # Let's get all patch.sh in all patches folders (absolute path)
+        patch_files = []
+        for folder in possible_module_or_addon_folders:
+            patch_files += [folder+"/patches/"+file for file in os.listdir(folder+"/patches") if file.endswith(".sh")]
+
+        # Now we have a list of all patch files
+        # The Files have a DATE schema at the beginning of the filename
+        # Sort the files by date (oldest first)
+        patch_files.sort()
+        # Run every patch file with cwd in the directory of the patch file
+        for patch_file in patch_files:
+            try:
+                p = subprocess.Popen(["bash", patch_file], 
+                                        cwd="/".join(patch_file.split("/")[:-1]), 
+                                        stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE,
+                                        env=env)
+                p.wait()
+                # Get output of the patch file
+                output = p.stdout.read().decode("utf-8") + p.stderr.read().decode("utf-8")
+                # Write the output to the patch log file
+                with open(patch_log_path, "a") as file:
+                    file.write(f"Running {patch_file}:\n{output}\n\n")
+                    file.close()
+            except Exception as e:
+                print(f"Error while running patch file {patch_file}: {e}")
+                pass
+
+    
 
     ## DO DATA EXPORT ################################################################################################
 

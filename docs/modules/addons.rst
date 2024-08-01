@@ -37,6 +37,8 @@ An example of the structure of the addon nocodb would be:
 .. code-block:: bash
 
     - nocodb/
+        - patches/ (optional)
+            - 1970-01-01_my_first_patch.sh (optional)
         - nocodb.conf
         - setup_nocodb.sh
         - update_nocodb.sh
@@ -85,7 +87,7 @@ It is automatically executed as root. Three variables are passed to the script:
 - $LDAP_DC: The domain component of the ldap instance
 
 It is a good practice to store the config of the service in the ``/root/[NAME]`` directory, for example the docker-compose.yml file. 
-The addon detection is based on the existence of this folder. Also it will be easier for system administrators to find the config of the service in the future.
+**The addon detection is based on the existence of this folder.** For example even patches are not run, if this folder ``/root/[NAME]`` does not exist. And it will be easier for system administrators to find the config of the service in the future.
 Also you have to mind adding an entry to the ``/etc/caddy/Caddyfile`` to make the service accessible.
 
 The current working directory is the root directory of the addon. It may be at /usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/[NAME].
@@ -207,6 +209,52 @@ If your addon doesn't rely on the IP address or the master password, you can ign
 
 In our example of nocodb we don't need this file, because we don't rely on the IP address or the master password.
 So we don't even have to create this file.
+
+
+patches
+-------
+
+For future updates of the addon, you can add patches to the patches folder (which is optional)
+It is a good practice to name the patch at the date when it was created, so you can easily see the order of the patches.
+These patch scripts are executed after a daily backup and update of the system or daily at 02:00 am. 
+The run order is based on the filename. The patch with the oldest date is executed first.
+The patch scripts are executed as root and the current working directory is the root directory of the addon.
+The environment variables $DOMAIN, $ADMIN_PASSWORD, $IP and $LDAP_DC are passed to the script and are available in the script.
+
+The patch should only patch your addon once.
+But for this you have to check by yourself if the patched settings are present or not. This can be different for every single patch.
+Also it is highly recommended to keep your addon constistent over time, so it should disable itself after 1 year of its release.
+
+Here you can see an example of a redis patch for nextloud:
+
+```bash
+#!/bin/bash
+
+# IS THIS PATCH OLDER THAN 365 DAYS?
+# Get the current file name
+FILE_NAME=$(basename $0)
+# Get the date of the filename which is like this: 2024-06-25
+DATE=${FILE_NAME:0:10}
+# Check if the file is older than 365 days
+if [ $(( ($(date +%s) - $(date -d $DATE +%s)) / 86400 )) -gt 365 ]; then
+  echo "Patch is older than 365 days. Exiting patch."
+  exit 0
+fi
+
+
+# Check if we need to apply the patch
+# Is redis installed?
+if [ -x "$(command -v redis-server)" ]; then
+  echo "Redis is already installed. Exiting patch."
+  exit 0
+fi
+
+# BEGIN APPLYING PATCH
+# Install redis and php packages
+apt-get install redis php-redis php-apcu php-memcache pwgen -y
+
+# ... do the rest 
+```
 
 
 General Tips
