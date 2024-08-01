@@ -140,4 +140,8 @@ sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapEmailAttribu
 # Set configuration active
 sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapConfigurationActive 1
 
+# Remove index.php from the URL:
+sudo -u www-data php /var/www/nextcloud/occ config:system:set htaccess.RewriteBase --value="/"
+sudo -u www-data php /var/www/nextcloud/occ maintenance:update:htaccess
+
 systemctl restart php*

@@ -9,7 +9,8 @@ cloud.SED_DOMAIN {
   file_server
 
   php_fastcgi unix//var/run/php/php-fpm.sock {
-
+    # This is for removing "index.php" from the URL
+    env front_controller_active true
   }
 
   header {
