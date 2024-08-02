@@ -19,7 +19,10 @@ python3 -m venv .env
 ln -s /usr/bin/python3 /usr/bin/python
 
 source .env/bin/activate
-pip install -r requirements.txt
+pip install --upgrade pip
+pip install -r requirements.txt 
+# Make sure that the database is up to date (sometimes e.g. oidc_provider needs to be updated)
+python3 manage.py makemigrations --no-input
 python manage.py migrate --no-input
 
 # Get the current IP-Adress
