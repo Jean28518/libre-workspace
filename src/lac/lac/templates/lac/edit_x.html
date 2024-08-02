@@ -5,7 +5,7 @@
 
 {% if description %} {{ description | safe }} <br> <br> {% endif %}
 
-{% if message != "" %}
+{% if message and message != "" %}
 <div class="grid">
     <div style="padding-bottom: 1rem;">
         <a role="button" class="contrast" style="display: block; opacity: 1;
