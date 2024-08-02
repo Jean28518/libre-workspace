@@ -187,9 +187,13 @@ def create_user(request):
                 if user_information.get("create_linux_user", False):
                     print(user_information)
                     message = unix.create_linux_user(user_information["username"], str(user_information["first_name"]) + " " +  str(user_information["last_name"]), user_information["password"], user_information.get("admin", False))
+                    # Reset form even if an error occured on linux side because the ldap user was created successfully
+                    form = AdministratorUserForm()
             if message == None:
                 username = user_information.get("username", "")
                 message = f"Benutzer '{username}' erfolgreich erstellt!"
+                # Reset form
+                form = AdministratorUserForm()
         else:
             print("Form is not valid")
             print(form.errors)
