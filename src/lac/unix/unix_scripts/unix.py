@@ -666,9 +666,9 @@ def get_config_of_addon(addon):
         # remove the " and ' characters from the outer ends of the string
         config[key.strip()] = value.strip("'\"\n ")
         # Get icon file format
-        for file in os.listdir(f"addons/{addon}"):
-            if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
-                config["icon_file_format"] = file.split(".")[-1]
+    for file in os.listdir(f"addons/{addon}"):
+        if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
+            config["icon_file_format"] = file.split(".")[-1]
     addon_config_cache[addon] = config
     return config
 
