@@ -64,9 +64,6 @@ card_data = [
     {"order": 2,"title": "Nextcloud", "url": "", "icon_path": "/static/lac/icons/nextcloud.webp", "description": "Dateien, Kalender, ...", "keywords": ["cloud", "nextcloud"]},
     {"order": 3,"title": "Element", "url": "", "icon_path": "/static/lac/icons/element.webp", "description": "Chat", "keywords": ["element"]},
     {"order": 4,"title": "Jitsi", "url": "", "icon_path": "/static/lac/icons/jitsi.webp", "description": "Videokonferenzen", "keywords": ["jitsi", "meet"]},
-    {"order": 5,"title": "ERP", "url": "", "icon_path": "/static/lac/icons/erp.webp", "description": "Enterprise Resource Planning", "keywords": ["erp", "erpnext", "kivitendo"]},
-    {"order": 6,"title": "NocoDB", "url": "", "icon_path": "/static/lac/icons/nocodb.webp", "description": "Datenbanken", "keywords": ["nocodb", "database", "db"]},
-    {"order": 7,"title": "Video", "url": "", "icon_path": "/static/lac/icons/video.webp", "description": "Video-Anleitungen", "keywords": ["video", "youtube", "peertube"]},
-    {"order": 8,"title": "Zertifikate", "url": "", "icon_path": "/static/lac/icons/lock.webp", "description": "Für sicheren Zugriff", "keywords": ["certificate", "ssl", "cert"]},
-    {"order": 9,"title": "Verwaltung", "url": "/idm/dashboard", "icon_path": "/static/lac/icons/company.webp", "description": "Benutzer, Gruppen, ...", "keywords": ["central", "verwaltung", "ldap", "portal"]},
+    {"order": 5,"title": "Zertifikate", "url": "", "icon_path": "/static/lac/icons/lock.webp", "description": "Für sicheren Zugriff", "keywords": ["certificate", "ssl", "cert"]},
+    {"order": 6,"title": "Verwaltung", "url": "/idm/dashboard", "icon_path": "/static/lac/icons/company.webp", "description": "Benutzer, Gruppen, ...", "keywords": ["central", "verwaltung", "ldap", "portal"]},
 ]
