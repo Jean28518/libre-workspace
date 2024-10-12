@@ -7,15 +7,15 @@ name: Deb
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: bash build_deb.sh
       - name: Upload deb
         uses: actions/upload-artifact@v1
