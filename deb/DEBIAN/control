@@ -3,7 +3,7 @@ Version: 0.7.1
 Depends: libldap2-dev, python3-venv, libsasl2-dev, caddy, gcc, python3-dev, borgbackup, python-llfuse | python3-llfuse, rsync, zip, cron, unzip
 Maintainer: Jean28518
 Architecture: all
-Hompage: https://libre-workspace.org
+Homepage: https://libre-workspace.org
 Section: admin
 Description: Libre Workspace Management Software
 Installed-Size: 0
