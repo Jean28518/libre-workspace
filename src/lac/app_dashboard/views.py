@@ -7,13 +7,18 @@ from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 
 from .models import DashboardEntry
-from .forms import DashboardEntryForm
+from .forms import DashboardEntryForm, DashboardAppearanceForm
 from .cards import *
 
 import idm.idm
 import idm.ldap
 import idm.views
 import unix.unix_scripts.unix as unix
+
+import app_dashboard.settings as app_dashboard_settings
+
+branding = app_dashboard_settings.get_all_values()
+
 
 def index(request):
     ensure_all_cards_exist_in_database()
@@ -24,9 +29,23 @@ def index(request):
     cards = []
     dashboard_entries = DashboardEntry.objects.all()
     dashboard_entries = sorted(dashboard_entries, key=lambda x: abs(x.order))
+    user_information = None
     for dashboard_entry in dashboard_entries:
         if not dashboard_entry.is_active:
             continue
+        if dashboard_entry.groups and len(dashboard_entry.groups) > 0 and not request.user.is_superuser:
+            groups = [group.strip() for group in dashboard_entry.groups.split(",")]
+            if not request.user.is_authenticated:
+                continue
+            if user_information == None:
+                user_information = idm.idm.get_user_information(request.user)
+            add_card = False
+            for group in groups:
+                if idm.ldap.is_user_in_group(user_information, group):
+                    add_card = True
+                    break
+            if not add_card:
+                continue
         if dashboard_entry.order >= 0:
             cards.append(get_card_for_dashboard_entry(dashboard_entry))
         else:
@@ -48,7 +67,7 @@ def index(request):
         while len(grid[-1]) < 4:
             grid[-1].append("<div></div>")
 
-    return render(request, "app_dashboard/index.html", {"request": request, "grid": grid})
+    return render(request, "app_dashboard/index.html", {"request": request, "grid": grid, "branding": branding})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -56,7 +75,7 @@ def app_dashboard_entries(request):
     dashboard_entries = DashboardEntry.objects.all()
     dashboard_entries = sorted(dashboard_entries, key=lambda x: x.order)
     dashboard_entries = [dashboard for dashboard in dashboard_entries if not (dashboard.is_system and not dashboard.is_active)]
-    return render(request, "app_dashboard/app_dashboard_entries.html", {"request": request, "dashboard_entries": dashboard_entries})
+    return render(request, "app_dashboard/app_dashboard_entries.html", {"request": request, "dashboard_entries": dashboard_entries, "branding": branding})
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def new_app_dashboard_entry(request):
@@ -75,7 +94,7 @@ def new_app_dashboard_entry(request):
             message = "Es ist ein Fehler aufgetreten: " + str(form.errors)
     else:
         form = DashboardEntryForm()
-    return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "Dasboard-Eintrag", "url": reverse("app_dashboard_entries"), "message": message})
+    return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "Dasboard-Eintrag", "url": reverse("app_dashboard_entries"), "message": message, "branding": branding})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -94,10 +113,8 @@ def edit_app_dashboard_entry(request, id):
     description = ""
     delete_url = reverse("delete_app_dashboard_entry", kwargs={"id": id})
     if dashboard_entry.is_system:
-        form.fields["link"].disabled = True
-        form.fields["is_active"].disabled = True
         delete_url = None
-        description = "Hinweis: Dieser Eintrag ist ein Systemeintrag."
+        description = "Hinweis: Dieser Eintrag ist ein Systemeintrag. Der Link und die Aktivierung werden automatisch aus der Konfiguration generiert."
     return render(request, "lac/edit_x.html", 
                   {"request": request, 
                    "form": form,
@@ -105,7 +122,8 @@ def edit_app_dashboard_entry(request, id):
                    "name": dashboard_entry.title, 
                    "url": reverse("app_dashboard_entries"), 
                    "message": message, 
-                   "delete_url": delete_url})
+                   "delete_url": delete_url, 
+                   "branding": branding})
 
 def delete_app_dashboard_entry(request, id):
     object = DashboardEntry.objects.get(id=id)
@@ -148,3 +166,43 @@ def entries_json(request):
         nextcloud_entry["nextcloud_apps"] = nextcloud_apps
     
     return JsonResponse(entries, safe=False)
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def app_dashboard_appearance(request):
+    form = DashboardAppearanceForm()
+    message = ""
+    if request.method == "POST":
+        form = DashboardAppearanceForm(request.POST, request.FILES)
+        if form.is_valid():
+            if form.cleaned_data["portal_branding_logo"]:
+                # Save the logo for static files
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+                filename = fs.save(form.cleaned_data["portal_branding_logo"].name, form.cleaned_data["portal_branding_logo"])
+                app_dashboard_settings.set_value("portal_branding_logo", filename)
+            app_dashboard_settings.set_value("force_dark_mode", form.cleaned_data["force_dark_mode"])
+            app_dashboard_settings.set_value("portal_branding_title", form.cleaned_data["portal_branding_title"])
+            app_dashboard_settings.set_value("primary_color", form.cleaned_data["primary_color"])
+            app_dashboard_settings.set_value("secondary_color", form.cleaned_data["secondary_color"])
+            message = "Die Einstellungen wurden erfolgreich gespeichert."
+    
+    form.fields["force_dark_mode"].initial = app_dashboard_settings.get_value("force_dark_mode", False)
+    form.fields["portal_branding_title"].initial = app_dashboard_settings.get_value("portal_branding_title", "")
+    form.fields["primary_color"].initial = app_dashboard_settings.get_value("primary_color", "")
+    form.fields["secondary_color"].initial = app_dashboard_settings.get_value("secondary_color", "")
+    if app_dashboard_settings.get_value("portal_branding_logo", "") != "":
+        form.fields["portal_branding_logo"].label = "Logo des Portals (Aktuell: " + app_dashboard_settings.get_value("portal_branding_logo", "") + ")"
+    reset_url = reverse("reset_app_dashboard_appearance")
+    branding = app_dashboard_settings.get_all_values()
+    return render(request, "lac/generic_form.html", {"request": request, "form": form, "heading": "Erscheinungsbild", "description": "Diese Einstellungen betreffen alle Benutzer<br>Aktuell wird nur der Bereich des Portals (ohne Verwaltung) angepasst." , "url": "/", "message": message, "action": "Speichern", "hide_buttons_top": True, "additional_content": f"<center><a href='{reset_url}'>Zurücksetzen</a></center>", "branding": branding})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def reset_app_dashboard_appearance(request):
+    app_dashboard_settings.set_value("force_dark_mode", False)
+    app_dashboard_settings.set_value("portal_branding_title", "")
+    app_dashboard_settings.set_value("portal_branding_logo", "")
+    app_dashboard_settings.set_value("portal_branding_favicon", "")
+    app_dashboard_settings.set_value("primary_color", "")
+    app_dashboard_settings.set_value("secondary_color", "")
+    return redirect("app_dashboard_appearance")

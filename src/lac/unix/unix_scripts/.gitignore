@@ -8,3 +8,4 @@ upgradable_packages
 export_data
 os
 env.sh
+app_dashboard_settings.json

@@ -4,3 +4,4 @@ django-auth-ldap
 gunicorn
 requests
 django-oidc-provider
+image

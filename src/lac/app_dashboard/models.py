@@ -10,6 +10,9 @@ class DashboardEntry(models.Model):
     order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     is_system = models.BooleanField(default=False)
+    # comma separated list of group names which can see this entry
+    # If this field is empty, all users (also not logged in) can see this entry
+    groups = models.CharField(max_length=1000, default="", blank=True) 
 
     def __str__(self):
         return self.title
@@ -23,7 +26,8 @@ class DashboardEntry(models.Model):
             "icon_url": self.icon_url,
             "order": self.order,
             "is_active": self.is_active,
-            "is_system": self.is_system
+            "is_system": self.is_system,
+            "groups": self.groups
         }
         if self.icon:
             dict["icon_url"] = self.icon.url

@@ -30,7 +30,7 @@
             <div>
                 <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
             </div>
-            <input type="submit" value="Erstellen">
+            <input type="submit" value="{{action}}" {% if danger %}class="danger"{% endif %}>
         </div>
     {% endif %}
     {{ form }}
@@ -42,6 +42,10 @@
         <input type="submit" value="{{action}}" {% if danger %}class="danger"{% endif %}>
     </div>
 </form>
+
+{% if additional_content %}
+    {{ additional_content | safe }}
+{% endif %}
     
 {% endblock %}
     

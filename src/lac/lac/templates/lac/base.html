@@ -1,12 +1,20 @@
 {% load static %}
 {% load i18n %}
 <!doctype html>
-<html lang="en">
+<html lang="de" {% if branding.force_dark_mode %}data-theme="dark"{% endif %}>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% trans "Libre-Workspace Portal" %} </title>
+    {% if branding.portal_branding_title %}
+      <title>{{branding.portal_branding_title}} </title>
+    {% else %}
+      <title>{% trans "Libre-Workspace Portal" %} </title>
+    {% endif %}
+    {% if branding.portal_branding_logo %}
+    <link rel="icon" type="image/x-icon" href="/media/{{branding.portal_branding_logo}}">
+    {% else %}
     <link rel="icon" type="image/x-icon" href="/static/lac/icons/linux-arbeitsplatz.webp">
+    {% endif %}
     <link rel="stylesheet" href="{% static 'lac/css/pico.min.css' %}">
     <script src="{% static 'lac/js/modal.js' %}"></script>
     <script src="{% static 'lac/js/jquery-3.7.1.min.js' %}"></script>
@@ -92,8 +100,17 @@
 /* Color settings for PicoCSS */
 [data-theme="light"],
 :root:not([data-theme="dark"]) {
+  {% if branding.primary_color %}
+  --primary: {{ branding.primary_color }};  
+  {% else %}
   --primary: #09928b;
+  {% endif %}
+
+  {% if branding.secondary_color %}
+  --primary-hover: {{ branding.secondary_color }};
+  {% else %}
   --primary-hover: #07746d;
+  {% endif %} 
   --primary-focus: rgba(0, 172, 193, 0.125);
   --primary-inverse: #FFF;
 }
@@ -102,8 +119,17 @@
 /* Automatically enabled if user has Dark mode enabled */
 @media only screen and (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
+    {% if branding.primary_color %}
+    --primary: {{ branding.primary_color }};  
+    {% else %}
     --primary: #09928b;
+    {% endif %}
+  
+    {% if branding.secondary_color %}
+    --primary-hover: {{ branding.secondary_color }};
+    {% else %}
     --primary-hover: #07746d;
+    {% endif %} 
     --primary-focus: rgba(0, 172, 193, 0.25);
     --primary-inverse: #FFF;
   }
@@ -112,8 +138,17 @@
 /* Cyan Dark scheme (Forced) */
 /* Enabled if forced with data-theme="dark" */
 [data-theme="dark"] {
+  {% if branding.primary_color %}
+  --primary: {{ branding.primary_color }};  
+  {% else %}
   --primary: #09928b;
+  {% endif %}
+
+  {% if branding.secondary_color %}
+  --primary-hover: {{ branding.secondary_color }};
+  {% else %}
   --primary-hover: #07746d;
+  {% endif %} 
   --primary-focus: rgba(0, 172, 193, 0.25);
   --primary-inverse: #FFF;
 }
@@ -130,6 +165,17 @@
   --font-size: 1rem;
   --block-spacing-vertical: 1rem;
 
+  {% if branding.primary_color %}
+  --primary: {{ branding.primary_color }};  
+  {% else %}
+  --primary: #09928b;
+  {% endif %}
+
+  {% if branding.secondary_color %}
+  --primary-hover: {{ branding.secondary_color }};
+  {% else %}
+  --primary-hover: #07746d;
+  {% endif %} 
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -157,12 +203,20 @@ h1, h2, h3, h4, h5, h6 {
       <ul>
         <li style="padding: 0px;">
           <a href="/" class="contrast">
+            {% if branding.portal_branding_logo %}
+            <img src="/media/{{branding.portal_branding_logo}}" alt="Logo" style="height: 64px;padding: 8px;">
+            {% else %}
             <img src="/static/lac/icons/linux-arbeitsplatz.webp" alt="Logo" style="height: 64px;padding: 8px;">
+            {% endif %}
             <!-- <span style="margin-top: 5px" class="material-icons md-32">apps</span>  -->
           </a>
         </li>
         <li>
-          <a href="/" class="contrast"><strong>Libre-Workspace Portal</strong></a>
+          {% if branding.portal_branding_title %}
+            <a href="/" class="contrast"><strong>{{ branding.portal_branding_title }}</strong></a>
+          {% else %}
+            <a href="/" class="contrast"><strong>Libre-Workspace Portal</strong></a>
+          {% endif %}
         </li>
         {% if request.user.is_authenticated %}
           <li><a href="/idm/dashboard">Verwaltung</a></li> 
