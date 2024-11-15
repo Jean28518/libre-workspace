@@ -11,13 +11,15 @@ if [ $(( ($(date +%s) - $(date -d $DATE +%s)) / 86400 )) -gt 365 ]; then
 fi
 
 # Check if we need to apply the patch
-# Check if "dns forwarder resolve only" is set in /etc/samba/smb.conf. If yes, then we need to exit the patch
-if grep -q "dns forwarder resolve only" /etc/samba/smb.conf; then
-  echo "dns forwarder resolve only is already set. Exiting patch."
+# Check if "dns forwarder resolve only" is set in /etc/samba/smb.conf. If not, then exit the patch.
+if ! grep -q "dns forwarder resolve only" /etc/samba/smb.conf; then
+  echo "dns forwarder resolve only is not set in /etc/samba/smb.conf. Exiting patch."
   exit 0
 fi
 
-# Set "dns forwarder resolve only" in /etc/samba/smb.conf
-echo "" >> /etc/samba/smb.conf
-echo "# Only resolve DNS requests via the forwarder" >> /etc/samba/smb.conf
-echo "dns forwarder resolve only = yes" >> /etc/samba/smb.conf
+# Remove "dns forwarder resolve only" from /etc/samba/smb.conf
+sed -i '/dns forwarder resolve only/d' /etc/samba/smb.conf
+
+# Update November 2024:
+# The "dns forwarder resolve only" option is no longer supported in Samba 4.16 and later.
+# So we remove the option from the configuration file to avoid any issues.

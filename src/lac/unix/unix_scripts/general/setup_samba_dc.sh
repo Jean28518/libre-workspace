@@ -99,18 +99,16 @@ echo "tls keyfile  = /etc/samba/tls/myKey.pem" >> /etc/samba/smb.conf
 echo "tls certfile = /etc/samba/tls/myCert.pem" >> /etc/samba/smb.conf
 echo "tls cafile   =" >> /etc/samba/smb.conf
 
-# Because of <https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Cyber-Sicherheitslage/Reaktion/CERT-Bund/CERT-Bund-Reports/HowTo/Offene-DNS-Resolver/Offene-DNS-Resolver.html>
-echo "" >> /etc/samba/smb.conf
-echo "# Only resolve DNS requests via the forwarder" >> /etc/samba/smb.conf
-echo "dns forwarder resolve only = yes" >> /etc/samba/smb.conf
-
 # Restart samba
 systemctl restart samba-ad-dc
 
 # Allow ldaps in the firewall
 ufw allow ldaps
-# Allow DNS in the firewall
-ufw allow 53
+# Allow DNS in the firewall if we are running in int.de mode
+# Because of <https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Cyber-Sicherheitslage/Reaktion/CERT-Bund/CERT-Bund-Reports/HowTo/Offene-DNS-Resolver/Offene-DNS-Resolver.html>
+if [[ $DOMAIN == "int.de" ]]; then
+    ufw allow 53
+fi
 # Allow 88 and 464 for kerberos
 ufw allow 88
 ufw allow 464
