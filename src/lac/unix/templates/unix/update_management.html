@@ -49,36 +49,36 @@
                     </tr>
                 </thead>
                     <tbody>
-                        {% for log in update_information.update_history %}
+                        {% for update_log in update_information.update_history %}
                         <tr>
-                            <td>{{ log.date }}</td>
+                            <td>{{ update_log.date }}</td>
                             <td>
                                <!-- Button to trigger the modal -->
                                 <a class="outline"
-                                data-target="backup-error{{ log.date }}"
+                                data-target="update_log{{ update_log.date }}"
                                 onClick="toggleModal(event)"
                                 href="#">
                                 Bericht anzeigen
                                 </a>
                                 <!-- Modal -->
                                 <!-- Modal -->
-                                <dialog id="backup-error{{ log.date }}">
+                                <dialog id="update_log{{ update_log.date }}">
                                     <article>
                                     <a href="#close"
                                         aria-label="Close"
                                         class="close"
-                                        data-target="backup-error{{ log.date }}"
+                                        data-target="update_log{{ update_log.date }}"
                                         onClick="toggleModal(event)">
                                     </a>
-                                    <h3>Update am {{ log.date }}</h3>
+                                    <h3>Update am {{ update_log.date }}</h3>
                                     <code>
-                                        {{ log.content | safe }}
+                                        {{ update_log.content | safe }}
                                     </code>
                                     <footer>
                                         <a href="#cancel"
                                         role="button"
                                         class="secondary"
-                                        data-target="backup-error{{ log.date }}"
+                                        data-target="update_log{{ update_log.date }}"
                                         onClick="toggleModal(event)">
                                         Schließen
                                         </a>
