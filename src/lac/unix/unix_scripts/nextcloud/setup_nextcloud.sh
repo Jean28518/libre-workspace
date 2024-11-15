@@ -144,4 +144,15 @@ sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapConfiguratio
 sudo -u www-data php /var/www/nextcloud/occ config:system:set htaccess.RewriteBase --value="/"
 sudo -u www-data php /var/www/nextcloud/occ maintenance:update:htaccess
 
+# Setup error log in /var/log/php_error.log for fpm and cli
+echo "" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "error_reporting = E_ALL" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "error_reporting = E_ALL" >> /etc/php/$PHP_VERSION/cli/php.ini
+echo "log_errors = On" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "log_errors = On" >> /etc/php/$PHP_VERSION/cli/php.ini
+echo "error_log = /var/log/php_errors.log" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "error_log = /var/log/php_errors.log" >> /etc/php/$PHP_VERSION/cli/php.ini
+touch /var/log/php_errors.log
+chown www-data:www-data /var/log/php_errors.log
+
 systemctl restart php*
