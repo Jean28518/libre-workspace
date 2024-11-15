@@ -38,3 +38,16 @@ If the nextcloud instance is installed at another server you can also integrate 
 It is not recommended to connect the user database of libre workspace with an existing nextcloud via e.g. ldap, or SSO because ldap and SSO are using an objectid for the nextcloud username (internally) so your existing users would be "changed" to new users. (Your data will not be lost, but the user will be "linked" to a new one.)
 
 You can also move (if you want) your existing nextcloud webserver to caddy, which is recommended for libre workspace. You can find the complete nextcloud caddy entry here: https://github.com/Jean28518/libre-workspace/blob/main/src/lac/unix/unix_scripts/nextcloud/caddy_nextcloud_entry.txt (You have to replace "SED_DOMAIN" with your real domain name.)
+
+
+Known issues
+============
+
+LDAP/AD-Integration Settings UI in Nextcloud is not working.
+------------------------------------------------------------
+
+This is because the "index.php" part of the URL is removed.
+But the LDAP/AD-Integration itself is working fine, it is set via occ.
+
+If you want to get the ui working you have to revert the changes which are listed here:
+<https://github.com/Jean28518/libre-workspace/commit/7edec7e12275adca5041490d59e7d8c64968fd36>
