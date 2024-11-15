@@ -146,6 +146,9 @@ def ldap_create_user(user_information):
         attrs['sn'] = [user_information["last_name"].encode('utf-8')]
     if user_information.get("first_name", "") != "" or user_information.get("last_name", "") != "":
         attrs['displayName'] = [f"{user_information.get('first_name', '')} {user_information.get('last_name', '')}".encode('utf-8')]
+    # Make sure displayName is not empty:
+    else:
+        attrs['displayName'] = [user_information["username"].encode('utf-8')]
     if user_information.get("mail", "") != "":
         attrs['mail'] = [user_information["mail"].encode('utf-8')]
     ldif = modlist.addModlist(attrs)
