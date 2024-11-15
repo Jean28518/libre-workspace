@@ -173,6 +173,7 @@ def ldap_create_user(user_information):
 
 
 # Revokes or grants admin rights to a user. If nothing changes, nothing happens.
+# (We need the Domain Admins group because the the Administrators Group is only in BuiltIn and not in Users LDAP container) (e.g. for nextcloud)
 def ldap_ensure_admin_status_of_user(cn : str, admin : bool):
     dn = ldap_get_dn_of_cn(cn)
     user_information = get_user_information_of_cn(cn)
@@ -181,8 +182,10 @@ def ldap_ensure_admin_status_of_user(cn : str, admin : bool):
     current_admin_status = user_information["admin"]
     if admin and not current_admin_status:
         ldap_add_user_to_group(dn, f"cn=Administrators,cn=Builtin,{settings.AUTH_LDAP_DC}")
+        ldap_add_user_to_group(dn, f"cn=Domain Admins,cn=Users,{settings.AUTH_LDAP_DC}")
     elif not admin and current_admin_status:
         ldap_remove_user_from_group(dn, f"cn=Administrators,cn=Builtin,{settings.AUTH_LDAP_DC}")
+        ldap_remove_user_from_group(dn, f"cn=Domain Admins,cn=Users,{settings.AUTH_LDAP_DC}")
 
 
 def ldap_get_all_users():

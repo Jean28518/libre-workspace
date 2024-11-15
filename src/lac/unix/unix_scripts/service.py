@@ -49,6 +49,55 @@ def ensure_fingerprint_is_trusted():
     with open("/root/.ssh/known_hosts", "w") as f:
         f.writelines(known_hosts)
 
+
+def update_nextcloud_admin_status_for_all_users():
+        # Check if nextcloud is installed (if /var/www/nextcloud/occ exists)
+        if not os.path.isfile("/var/www/nextcloud/occ"):
+            return
+        # Example output of the command "sudo -u www-data php occ group:list":
+        # sudo -u www-data php occ group:list
+        #   - admin:
+        #     - 292AA37A-E99E-4379-8852-DAFAB82FD411
+        #     - systemv
+        #   - Domain Admins:
+        #     - 70D5EC5B-1B3B-46E8-9198-5F2463AB4BA2
+        #     - 292AA37A-E99E-4379-8852-DAFAB82FD411
+
+        # Make sure that all the users which are in "Domain Admins" in the LDAP server are also in the "admin" group in the nextcloud database
+        output = subprocess.getoutput("sudo -u www-data php /var/www/nextcloud/occ group:list")
+        lines = output.split("\n")
+        nextcloud_admins = []
+        domain_admins = []
+        in_admin_section = False
+        in_domain_admins_section = False
+        for line in lines:
+            if "admin:" in line:
+                in_admin_section = True
+                in_domain_admins_section = False
+                continue
+            if "Domain Admins:" in line:
+                in_admin_section = False
+                in_domain_admins_section = True
+                continue
+            if in_admin_section:
+                nextcloud_admins.append(line.strip().split(" ")[1])
+            if in_domain_admins_section:
+                domain_admins.append(line.strip().split(" ")[1])
+            if ":" in line and not "admin:" in line and not "Domain Admins:" in line:
+                in_admin_section = False
+                in_domain_admins_section = False
+
+        # Add all domain admins to the nextcloud admin group
+        for domain_admin in domain_admins:
+            if domain_admin not in nextcloud_admins:
+                os.system(f"sudo -u www-data php /var/www/nextcloud/occ group:adduser admin {domain_admin}")
+        
+        # Remove all users from the nextcloud admin group which are not in the domain admins group
+        for nextcloud_admin in nextcloud_admins:
+            if nextcloud_admin not in domain_admins:
+                os.system(f"sudo -u www-data php /var/www/nextcloud/occ group:removeuser admin {nextcloud_admin}")
+
+
 # In here the time for a last message is stored in seconds
 last_message_sent = {}
 
@@ -271,6 +320,11 @@ while True:
                 if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                     last_message_sent[domain] = time.time()
                     os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+    
+    
+    # Check nextcloud admin status for all users (if nextcloud is installed)
+    update_nextcloud_admin_status_for_all_users()     
+
     
 
     ##################################################################################################################
