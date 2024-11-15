@@ -488,6 +488,10 @@ def ldap_disable_user(user_dn):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
     mod_attrs = [(ldap.MOD_REPLACE, 'userAccountControl', [b'514'])]
+    # Don't allow disabling of system user or administrator
+    cn = ldap_get_cn_of_dn(user_dn)
+    if ldap_is_system_user(cn) or cn.lower() == "administrator":
+        return "Fehler: Benutzer ist ein Systembenutzer und kann nicht deaktiviert werden."
     try:
         conn.modify_s(user_dn, mod_attrs)
     except LDAPError as e:
