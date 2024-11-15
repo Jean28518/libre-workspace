@@ -12,6 +12,7 @@ class BackupSettings(forms.Form):
     keep_weekly_backups = forms.IntegerField(label="Anzahl der wöchentlichen Backups", min_value=0, max_value=100, widget=forms.NumberInput(attrs={"placeholder": "6"}))
     keep_monthly_backups = forms.IntegerField(label="Anzahl der monatlichen Backups", min_value=0, max_value=100, widget=forms.NumberInput(attrs={"placeholder": "12"}))
     borg_repo_is_on_synology = forms.BooleanField(label="Borg Repository ist auf einem Synology NAS", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
+    additional_borg_options = forms.CharField(label="Zusätzliche Borg Optionen (für Experten)", max_length=1000, required=False, widget=forms.TextInput())
 
 
 class EmailConfiguration(forms.Form):

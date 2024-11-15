@@ -67,7 +67,8 @@ def backup_settings(request):
         "keep_weekly_backups": unix.get_value("BORG_KEEP_WEEKLY"),
         "keep_monthly_backups": unix.get_value("BORG_KEEP_MONTHLY"),
         "borg_repo_is_on_synology": unix.get_value("REMOTEPATH") != "",
-        "trusted_fingerprint": unix.get_trusted_fingerprint()
+        "trusted_fingerprint": unix.get_trusted_fingerprint(),
+        "additional_borg_options": unix.get_value("ADDITIONAL_BORG_OPTIONS", "")
     }
     form = forms.BackupSettings(initial=current_config)
     if request.method == "POST":
@@ -82,7 +83,8 @@ def backup_settings(request):
             unix.set_value("BORG_KEEP_WEEKLY", form.cleaned_data["keep_weekly_backups"])
             unix.set_value("BORG_KEEP_MONTHLY", form.cleaned_data["keep_monthly_backups"])
             unix.set_value("REMOTEPATH", "/usr/local/bin/borg" if form.cleaned_data["borg_repo_is_on_synology"] else "")
-            unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"])
+            unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"]),
+            unix.set_value("ADDITIONAL_BORG_OPTIONS", form.cleaned_data["additional_borg_options"])
             # message = "Einstellungen gespeichert."
             message = "Einstellungen gespeichert."
         else:
