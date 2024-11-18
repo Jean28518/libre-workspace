@@ -47,9 +47,9 @@ borg prune -v --glob-archives '*-system' $BORG_REPOSITORY \
 # Also there are no databases in /data, so it is not a problem to backup it after the critical services
 if [ -d /data ]; then
   if [ -z "$REMOTEPATH" ] ; then
-    borg create --exclude-caches $BORG_REPOSITORY::$DATE-data $ADDITIONAL_BORG_OPTIONS /data 2>> ../history/borg_errors_$DATE.log
+    borg create --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> ../history/borg_errors_$DATE.log
   else
-    borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-data $ADDITIONAL_BORG_OPTIONS /data 2>> ../history/borg_errors_$DATE.log
+    borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> ../history/borg_errors_$DATE.log
   fi
   # BORG_KEEP_DAILY=$((2*$BORG_KEEP_DAILY))
   # BORG_KEEP_WEEKLY=$((2*$BORG_KEEP_WEEKLY))
