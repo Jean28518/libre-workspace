@@ -93,8 +93,9 @@ def update_nextcloud_admin_status_for_all_users():
                 os.system(f"sudo -u www-data php /var/www/nextcloud/occ group:adduser admin {domain_admin}")
         
         # Remove all users from the nextcloud admin group which are not in the domain admins group
+        # One exception: The User called "Administrator" should always be in the admin group
         for nextcloud_admin in nextcloud_admins:
-            if nextcloud_admin not in domain_admins:
+            if nextcloud_admin not in domain_admins and nextcloud_admin.lower() != "administrator":
                 os.system(f"sudo -u www-data php /var/www/nextcloud/occ group:removeuser admin {nextcloud_admin}")
 
 
