@@ -120,10 +120,23 @@ Then a link in the end of the app_dashboard appears to manage the tiles.
 How to update
 =============
 
-To update Libre Workspace Portal you can install the new .deb package over the old one and restart the services.
-It is also recommended to have a look to the regular update logs some days after the update to see if everything is running fine.
-For example the configurations in /root are not overwritten by the update. So you have to check if there are new configurations for the services and adjust them manually. 
-You can find these configurations in these scripts: https://github.com/Jean28518/libre-workspace/tree/main/src/lac/unix/unix_scripts.
+There are two methods: The first one is the update inside the web interface and the second one is the manual update via the command line.
+
+The first one can be found in the menu entry "Systemverwaltung". At the "version" line you can find a link to the update the application, if a new version is available.
+The portal looks for updates every hour and if a new version is available it will be displayed in the web interface.
+If you want to have a look at the automated update script from libre workspace: https://github.com/Jean28518/libre-workspace/blob/main/update_libre_workspace.sh
+
+The second method is the manual update via the command line. For that you have to connect to the libre workspace server via ssh. The instructions for that are available in the ``General Administration`` section of this documentation.
+For that you have to connect via SSH to the server and execute the following commands:
+
+.. code-block:: bash
+
+    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/linux-arbeitsplatz.deb
+    apt-get install ./linux-arbeitsplatz.deb -y
+    rm linux-arbeitsplatz.deb
+    systemctl enable linux-arbeitsplatz-unix
+    systemctl enable linux-arbeitsplatz-web
+    systemctl restart linux-arbeitsplatz-*
 
 
 Troubleshooting
