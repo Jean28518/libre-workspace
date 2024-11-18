@@ -124,3 +124,25 @@ To update Libre Workspace Portal you can install the new .deb package over the o
 It is also recommended to have a look to the regular update logs some days after the update to see if everything is running fine.
 For example the configurations in /root are not overwritten by the update. So you have to check if there are new configurations for the services and adjust them manually. 
 You can find these configurations in these scripts: https://github.com/Jean28518/libre-workspace/tree/main/src/lac/unix/unix_scripts.
+
+
+Troubleshooting
+===============
+
+If you have any problems for example the Error 500 while accessing the portal, you could enable the debug mode in the django settings.
+For that you have to connect to the libre workspace server via ssh. The instructions for that are available in the ``General Administration`` section of this documentation.
+Then you have to edit the settings.py file of the django application:
+
+.. code-block:: bash
+
+    sudo nano /usr/share/linux-arbeitsplatz/lac/settings.py
+
+Then set the ``DEBUG variable`` to ``True`` and restart the webserver:
+
+.. code-block:: bash
+
+    sudo systemctl restart linux-arbeitsplatz-web
+
+.. warning::
+
+    Do not forget to disable the debug mode for security reasons after you have fixed the problem.
