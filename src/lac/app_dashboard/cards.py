@@ -63,15 +63,18 @@ def ensure_all_cards_exist_in_database():
             new_dashboard_entry.save()
         if card_dat["url"] == "":
             continue
-        dashboard_entry = DashboardEntry.objects.get(link=card_dat["url"])
-        dashboard_entry.is_active = found_in_caddyfile
-        dashboard_entry.save()
+        
+        # Sometimes there are multiple cards with the same link, so we need to update all of them
+        dashboard_entries = DashboardEntry.objects.filter(link=card_dat["url"])
+        for dashboard_entry in dashboard_entries:
+            dashboard_entry.is_active = found_in_caddyfile
+            dashboard_entry.save()
 
         # Remove the card from the list of all system cards
         if dashboard_entry in remaining_system_cards:
             remaining_system_cards.remove(dashboard_entry)
    
-    # # So now we remove all the remaining system cards wich are active but not in the caddyfile
+    # So now we remove all the remaining system cards wich are active but not in the caddyfile
     for system_card in remaining_system_cards:
         DashboardEntry.objects.filter(link=system_card.link).delete()
 
