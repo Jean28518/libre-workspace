@@ -3,10 +3,10 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Deb
+name: jannahnurul5858@gmail.com
 
-on:
-  push:
+on: now 
+  push: on 
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
