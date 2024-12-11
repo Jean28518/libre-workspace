@@ -1,9 +1,9 @@
-# This workflow uses actions that are not certified by GitHub.
+# [![Deb](https://github.com/Jean28518/libre-workspace/actions/workflows/build.yml/badge.svg?event=pull_request_target)](https://github.com/Jean28518/libre-workspace/actions/workflows/build.yml) workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Deb
+name: jannahnurul5858@gmail.com
 
 on:
   push:
