@@ -54,6 +54,15 @@ def update_nextcloud_admin_status_for_all_users():
         # Check if nextcloud is installed (if /var/www/nextcloud/occ exists)
         if not os.path.isfile("/var/www/nextcloud/occ"):
             return
+        # Also check if in the config file the LDAP server is enabled
+        # If there is no LDAP server URI, then we don't need to do anything
+        if os.environ.get("AUTH_LDAP_SERVER_URI") == "":
+            return
+        
+        # If the environment variable IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS is set to "*", then we don't need to do anything
+        if os.environ.get("IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS", "") == "*":
+            return
+
         # Example output of the command "sudo -u www-data php occ group:list":
         # sudo -u www-data php occ group:list
         #   - admin:
@@ -80,12 +89,21 @@ def update_nextcloud_admin_status_for_all_users():
                 in_domain_admins_section = True
                 continue
             if in_admin_section:
-                nextcloud_admins.append(line.strip().split(" ")[1])
+                nextcloud_admins.append(line.strip().split(" ")[1].lower())
             if in_domain_admins_section:
-                domain_admins.append(line.strip().split(" ")[1])
+                domain_admins.append(line.strip().split(" ")[1].lower())
             if ":" in line and not "admin:" in line and not "Domain Admins:" in line:
                 in_admin_section = False
                 in_domain_admins_section = False
+
+        # Remove all users from the nextcloud admin group which are in the ignore_users list
+        # TODO: Remove the default value by Feb 2025. This is just for compatibility with older versions
+        ignore_users = os.environ.get("IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS", "Administrator").lower().split(",")
+        for ignore_user in ignore_users:
+            if ignore_user in domain_admins:
+                domain_admins.remove(ignore_user)
+            if ignore_user in nextcloud_admins:
+                nextcloud_admins.remove(ignore_user)
 
         # Add all domain admins to the nextcloud admin group
         for domain_admin in domain_admins:
@@ -95,7 +113,7 @@ def update_nextcloud_admin_status_for_all_users():
         # Remove all users from the nextcloud admin group which are not in the domain admins group
         # One exception: The User called "Administrator" should always be in the admin group
         for nextcloud_admin in nextcloud_admins:
-            if nextcloud_admin not in domain_admins and nextcloud_admin.lower() != "administrator":
+            if nextcloud_admin not in domain_admins:
                 os.system(f"sudo -u www-data php /var/www/nextcloud/occ group:removeuser admin {nextcloud_admin}")
 
 

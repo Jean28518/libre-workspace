@@ -37,5 +37,8 @@ export AUTH_LDAP_GROUP_ADMIN_DN="CN=Administrators,CN=Builtin,DC=int,DC=de"
 
 # Separate them with a ,
 export HIDDEN_LDAP_USERS="dns-hostname"
+# Don't change the admin status for these nextcloud users automatically also if they are not in group "Domain Admin". Separate them with ,
+# If set this value to "*" then the whole admin sync operation will be disabled.
+export IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS="Administrator"
 
 export NEXTCLOUD_INSTALLATION_DIRECTORY="/var/www/nextcloud/"
