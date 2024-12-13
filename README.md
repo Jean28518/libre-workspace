@@ -61,6 +61,9 @@ cd ../../
 cp cfg.example cfg
 vim cfg # Configure example
 
+sudo mkdir -p /var/www/linux-arbeitsplatz-static
+sudo chown -R $USER:$USER /var/www/linux-arbeitsplatz-static
+
 
 # If you did the setup above once, you can start the django server with this command
 bash run_development.sh
