@@ -44,6 +44,10 @@ def welcome_select_apps(request):
         request.session["matrix"] = request.POST.get("matrix", "")
         request.session["jitsi"] = request.POST.get("jitsi", "")
         request.session["xfce"] = request.POST.get("xfce", "")
+
+        if not (request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"] or request.session["xfce"]):
+            return redirect("libreworkspace_lite")
+
         return redirect("welcome_dns_settings")
 
     return render(request, "welcome/welcome_select_apps.html", {"hide_login_button": True})
@@ -53,25 +57,54 @@ def welcome_dns_settings(request):
     message = ""
     if request.method == "POST":
         request.session["visibility"] = request.POST.get("visibility", "")
-        request.session["domain"] = request.POST.get("domain", "")
         if request.session["visibility"] == "public":
-            if request.session["domain"] == "":
-                message = "Bitte geben Sie eine Domain an."
-            elif request.session["domain"].count(".") != 1:
-                message = "Bitte stellen Sie sicher, dass Sie nur die Domain angeben und keine Subdomain."
-            lvl1 = request.session["domain"].split(".")[1]
-            if len(lvl1) > 12:
-                message = "Bitte stellen Sie sicher, dass die lvl1 Domain nicht länger als 12 Zeichen ist."
-            lvl2 = request.session["domain"].split(".")[0]
-            # We need the -1 because of the dot
-            shortend_lvl2 = lvl2[:12-len(lvl1)-1]
-            request.session["ldap_dc"] = f"dc={shortend_lvl2},dc={lvl1}"
+            message = check_domain(request.session["domain"])
+            request.session["domain"] = request.session["domain"].lower()
+            request.session["ldap_dc"] = get_ldap_dc(request.session["domain"])
         else:
             request.session["domain"] = "int.de"
             request.session["ldap_dc"] = "dc=int,dc=de"
-        if message == "":
+        if message == "" or message == None:
             return redirect("installation_running")
     return render(request, "welcome/welcome_dns_settings.html", {"message": message, "subdomains": subdomains, "hide_login_button": True})
+
+
+def libreworkspace_lite(request):
+    message = ""
+    if request.method == "POST":
+        if request.POST["visibility"] == "port":
+            request.session["custom_access"] = ":23816"
+        else:
+            request.session["custom_access"] = request.POST.get("portal_domain_field", "")
+            message = check_domain(request.session["portal_domain_field"], True)
+        if message == "" or message == None:
+            message = check_domain(request.POST.get("further_root_domain", "int.de"))
+            if message == "" or message == None:
+                request.session["domain"] = request.POST.get("further_root_domain", "int.de")
+                request.session["ldap_dc"] = get_ldap_dc(request.session["domain"])
+                return redirect("installation_running")
+    return render(request, "welcome/libreworkspace_lite.html", {"message": message, "hide_login_button": True})
+
+
+def check_domain(domain, subdomain=False):
+    if domain == "":
+        return "Bitte geben Sie eine Domain an."
+    if domain.count(".") != 1 and not subdomain:
+        return "Bitte stellen Sie sicher, dass Sie nur die Domain angeben und keine Subdomain."
+    if not (domain.count(".") == 1 and len(domain.split(".")[0]) > 0 and len(domain.split(".")[1]) > 0 and not subdomain):
+        return "Bitte geben Sie eine gültige Domain an."
+    lvl1 = domain.split(".")[-1]
+    if len(lvl1) > 12:
+        return "Bitte stellen Sie sicher, dass die lvl1 Domain nicht länger als 12 Zeichen ist."
+    return None
+
+
+def get_ldap_dc(domain):
+    lvl1 = domain.split(".")[1]
+    lvl2 = domain.split(".")[0]
+    # We need the -1 because of the dot
+    shortend_lvl2 = lvl2[:12-len(lvl1)-1]
+    return f"dc={shortend_lvl2},dc={lvl1}"
 
 
 def installation_running(request):
@@ -91,6 +124,7 @@ def installation_running(request):
     os.environ["MATRIX"] = request.session["matrix"]
     os.environ["JITSI"] = request.session["jitsi"]
     os.environ["XFCE"] = request.session["xfce"]
+    os.environ["CUSTOM_ACCESS"] = request.session.get("custom_access", "")
 
     # Create env.sh file
     try:

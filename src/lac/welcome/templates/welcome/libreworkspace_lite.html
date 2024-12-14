@@ -1,0 +1,63 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2>Libre Workspace Lite</h2>
+
+<p>
+    Sie haben keine Module ausgewählt. Dadurch wird nun Libre Workspace Lite installiert.
+    Dies bedeutet, dass lediglich das Portal mit der dahinterliegenden Verwaltung installiert wird. Das zentrale Nutzermanagement wird ebenfalls erstmal nicht installiert.
+    Dies ist optimal für die Administration eines einfachen Linux-Servers. Ein vergleichbares Projekt (mit anderen Funktionen) ist bspw. <a href="https://cockpit-project.org/" target="_blank">Cockpit</a>.
+    Sollten Sie zu einem späteren Zeitpunkt Module oder AddOns installieren wollen, ist dies nach der Installation jederzeit wie gewohnt möglich über das Portal möglich.
+</p>
+
+<h2>Erreichbarkeit des Portals</h2>
+
+{% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+<form method="post">{% csrf_token %}
+    <fieldset>
+        <label for="port">
+            <input type="radio" id="port" name="visibility" value="port" onclick="change()" checked>
+            über den Port 23816 (für Anfänger empfohlen)
+        </label>
+        <label for="portal_domain_select">
+          <input type="radio" id="portal_domain_select" name="visibility" value="portal_domain_select" onclick="change()">
+          über eine öffentliche Donain
+        </label>
+      </fieldset>
+
+    <div id="portal_domain_field" style="display: none">
+        <label for="portal_domain">
+            Portal-Domain
+            <input type="text" id="portal_domain" name="portal_domain" placeholder="myportal.example.com">
+            Die oben angegebene Domain muss in Ihrer Kontrolle sein.
+        </label>
+
+    </div>
+
+    <label for="further_root_domain">
+        Root-Domain
+        <input type="text" id="further_root_domain" name="further_root_domain" placeholder="int.de" value="int.de">
+        Die Root-Domain kann später für zusätzliche Module oder AddOns benötigt werden. Wenn Sie sich unsicher sind, belassen Sie das Feld bei int.de.
+    </label>
+
+    <br>
+    
+    <input type="submit" value="Weiter">
+</form>
+
+<script>
+function change() {
+    console.log("test");
+    port = document.getElementById("port");
+    portal_domain_select = document.getElementById("portal_domain_select");
+    portal_domain_field = document.getElementById("portal_domain_field");
+    if (portal_domain_select.checked) {
+        portal_domain_field.style.display = "block";
+    } else {
+        portal_domain_field.style.display = "none";
+    }
+}
+</script>
+
+{% endblock %}

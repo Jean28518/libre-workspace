@@ -25,4 +25,4 @@ python3 manage.py collectstatic --no-input
 python manage.py creatersakey
 
 echo "Starting server..."
-python3 manage.py runserver 0.0.0.0:8000
+python3 manage.py runserver localhost:8000
