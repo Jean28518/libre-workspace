@@ -1,3 +1,7 @@
+{% if custom_access != "" %}
+    Sie erreichen Libre Workspace Lite nach der Installation unter <href="https://{{ custom_access }}">{{ custom_access }}</a>
+{% endif %}
+
 {% if domain == "int.de" %} 
     Stellen Sie auf Ihrem Router (und am besten auf Ihren Geräten) sicher, dass folgender DNS-Eintrag gesetzt ist: <strong>{{ ip }}</strong>
     In der Praxis zeigt sich leider manchmal, dass trotz richtiger DNS-Konfiguration aufgrund von Caches die Verbindungen nicht einwandfrei funktionieren.

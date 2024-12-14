@@ -14,15 +14,22 @@ sed -i "/# SED-LOCALHOST-ENTRY/,+10d" /etc/caddy/Caddyfile
 
 # If we have set $CUSTOM_ACCESS
 if [ -n "$CUSTOM_ACCESS" ] ; then
+
+
   # Change the linux arbeits zentrale to the finished domain to $CUSTOM_ACCESS
-  sed -i "s/:443 :23816/$CUSTOM_ACCESS/g" /etc/caddy/Caddyfile
+  if [ $CUSTOM_ACCESS = ":23816" ] ; then
+    sed -i "s/:443/https:\/\/$IP:23816/g" /etc/caddy/Caddyfile
+    # Insert the line with tls internal after the line with :23816
+    sed -i "/https:\/\/$IP:23816/a \    tls internal" /etc/caddy/Caddyfile
+  else
+    sed -i "s/:443/$CUSTOM_ACCESS/g" /etc/caddy/Caddyfile
+  fi
+
   # Remove the line from tls internal { and the two lines after it if $CUSTOM_ACCESS is not :23816
   #  tls internal {
   #     on_demand
   # }
-  if [ $CUSTOM_ACCESS != ":23816" ] ; then
-    sed -i "/    tls internal {/,+2d" /etc/caddy/Caddyfile
-  fi
+  sed -i "/    tls internal {/,+2d" /etc/caddy/Caddyfile
 
   if [ $CUSTOM_ACCESS = ":23816" ] ; then
     # If we have set $CUSTOM_ACCESS to :23816, we need to open the port 23816
@@ -53,7 +60,7 @@ else
   # - Set the correct domain in the caddyfile
   sed -i "s/SED_DOMAIN/$DOMAIN/g" /etc/caddy/Caddyfile
   # - Set the correct domain for the portal in the caddyfile
-  sed -i "s/:443 :23816/portal.$DOMAIN/g" /etc/caddy/Caddyfile 
+  sed -i "s/:443/portal.$DOMAIN/g" /etc/caddy/Caddyfile 
   # Remove the line from tls internal { and the two lines after it if domain is not int.de:
   #  tls internal {
   #     on_demand

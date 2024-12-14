@@ -148,12 +148,17 @@ def installation_running(request):
     if not "cert" in subdomains:
         subdomains.append("cert")
 
+    custom_access = os.environ.get("CUSTOM_ACCESS", "")
+    if custom_access == ":23816":
+        custom_access = os.environ["IP"] + custom_access
+
     variables = {
         "message": message, 
         "subdomains": subdomains, 
         "domain": os.environ["DOMAIN"],
         "ip": os.environ["IP"],
         "hide_login_button": True,
+        "custom_access": custom_access
     }
 
     # Create rendered access_rendered.html

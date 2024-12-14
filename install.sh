@@ -36,7 +36,7 @@ if ! grep -q "# PORTAL-ENTRY" /etc/caddy/Caddyfile; then
 python3 /usr/share/linux-arbeitsplatz/unix/unix_scripts/remove_caddy_service.py :80
 
 echo "# PORTAL-ENTRY
-:443 :23816 {
+:443 {
     tls internal {
         on_demand
     }
