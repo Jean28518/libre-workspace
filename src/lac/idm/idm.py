@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 import unix.unix_scripts.unix as unix
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 
 # user: ldap user, user object or username
@@ -85,6 +86,9 @@ def ensure_superuser_exists():
             )
             print("Created superuser 'Administrator' with password '{}'".format(settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP))
 
+
+def is_2fa_enabled(user):
+    return TOTPDevice.objects.filter(user=user).count() > 0
 
 
 def change_superuser_password(new_password):

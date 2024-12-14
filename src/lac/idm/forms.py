@@ -65,3 +65,8 @@ class OIDCClientForm(forms.Form):
     require_consent = forms.BooleanField(label="Benutzer muss Datenzugriff zustimmen", required=False, widget=forms.CheckboxInput)
     reuse_consent = forms.BooleanField(label="Konsentierung wiederverwenden", required=False, widget=forms.CheckboxInput)
     
+class TOTPChallengeForm(forms.Form):
+    # Select Field for the TOTP device
+    totp_device = forms.ChoiceField(label="TOTP Gerät", choices=[], required=False)
+    # Input Field for the TOTP token
+    token = forms.CharField(label="Token", max_length=100, required=False)

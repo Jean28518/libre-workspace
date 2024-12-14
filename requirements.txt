@@ -5,3 +5,5 @@ gunicorn
 requests
 django-oidc-provider
 image
+django_otp
+qrcode

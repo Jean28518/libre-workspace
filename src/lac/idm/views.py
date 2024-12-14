@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
-from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm
+from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm, TOTPChallengeForm
 from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
 from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct
 from django.contrib.auth.decorators import login_required
@@ -16,6 +16,11 @@ import unix.unix_scripts.unix as unix
 from oidc_provider.models import Client
 import lac.templates as templates
 from django.urls import reverse
+from django_otp.forms import OTPTokenForm
+from django_otp.plugins.otp_totp.models import TOTPDevice
+import qrcode
+from base64 import b32encode
+import lac.templates
 import random
 import datetime
 
@@ -30,7 +35,7 @@ django_auth_ldap.backend.ldap_error.connect(signal_handler)
 @login_required
 def dashboard(request):
     user_information = get_user_information(request.user)
-    challenges = idm.challenges.get_all_libre_workspace_challenges()
+    challenges = idm.challenges.get_all_libre_workspace_challenges(request.user)
     # Only take the last three challenges because we don't want to overwhelm the user
     if len(challenges) > 3:
         challenges = challenges[-3:]
@@ -40,6 +45,7 @@ def dashboard(request):
 # We have to set login_page=True to prevent the base template from displaying the login button
 login_tries = []
 banned_ips = {}
+totp_challenge = {}
 def user_login(request):
     # Ban IPs that have tried to login more than 5 times for 30 minutes
     _clear_old_login_tries_and_banned_ips()
@@ -52,6 +58,26 @@ def user_login(request):
     if request.user.is_authenticated:
         return redirect("index")
     if request.method == 'POST':
+        # If the request is a totp challenge from the last 5 minutes
+        # And also make sure that this is definitely not the user login with username password field
+        (timestamp, user) = totp_challenge.get(request.session.session_key, ((datetime.datetime.now() - datetime.timedelta(minutes=10) ), request.user))
+        if timestamp.timestamp() > (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp() and request.POST.get("username", "") == "":
+            totp_challenge.pop(request.session.session_key)
+            form = TOTPChallengeForm(request.POST)
+            device = TOTPDevice.objects.get(id=request.POST.get("totp_device", ""))
+            print("Request POST: " + str(request.POST))
+            if device.verify_token(request.POST.get("token", "")):
+                print("TOTP code is correct")
+                login(request, user)
+                if request.GET.get("next", "") != "":
+                    return HttpResponseRedirect(request.GET['next'])
+                else: 
+                    return redirect("index")
+            else:
+                print("TOTP code is not correct: " + request.POST.get("token", ""))
+                # return lac.templates.message(request, "Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.", "login")
+                return get_totp_challenge_site(request, user, "Fehler: Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.")
+
         username = request.POST['username']
 
         # Check if user entered email address, if so, convert to username
@@ -64,7 +90,11 @@ def user_login(request):
 
         user = authenticate(username=username, password=request.POST['password'])
         if user and user.is_authenticated:
-            print("User is authenticated")
+            print("User is authenticated.")
+            
+            if user.totpdevice_set.all().count() > 0:
+                return get_totp_challenge_site(request, user)
+
             login(request, user)
             if request.GET.get("next", "") != "":
                 return HttpResponseRedirect(request.GET['next'])
@@ -86,6 +116,92 @@ def user_login(request):
     return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message, "username": username})
 
 
+def get_totp_challenge_site(request, user, message=""):
+    # Check if user has totp enabled
+    totp_challenge[request.session.session_key] = (datetime.datetime.now(), user)
+    form = TOTPChallengeForm()
+    # Populate choice field with all totp devices of the user
+    form.fields["totp_device"].choices = [(device.id, device.name) for device in user.totpdevice_set.all()]
+    return render(request, "lac/generic_form.html", {"form": form, "user": user, "message": message, "heading": "2-Faktor Authentifizierung", "action": "Anmelden", "hide_buttons_top": True, "hide_login_button": True})
+
+def otp_settings(request):
+    # Get all totp devices of the user
+    totp_devices = []
+    for device in request.user.totpdevice_set.all():
+        totp_devices.append(device)
+    overview = lac.templates.process_overview_dict({
+        "heading": "2-Faktor-Authentifizierung",
+        "element_name": "TOTP-Gerät",
+        "element_url_key": "id",
+        "elements": totp_devices,
+        "t_headings": ["Name"],
+        "t_keys": ["name"],
+        "add_url_name": "create_totp_device",
+        # "edit_url_name": "edit_totp_device",
+        "delete_url_name": "delete_totp_device",
+        "hint": "<a href=\"javascript:history.back()\" role=\"button\" class=\"secondary\" style=\"display: block;\">Zurück</a>"
+    })
+    return render(request, "lac/overview_x.html", {"overview": overview})
+
+user_totp_device_challenges = {}
+def create_totp_device(request):
+    username = request.user.get_username()
+    if request.method == 'POST':
+        if username in user_totp_device_challenges.keys():
+            device = user_totp_device_challenges[username]
+        else:
+            return lac.templates.message(request, "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.", "create_totp_device")
+        # Check the totp code the user entered
+        totp_code = request.POST.get("totp_code", "").replace(" ", "")
+        if len(totp_code) != 6:
+            return lac.templates.message(request, "Der TOTP-Code muss 6 Ziffern lang sein!", "create_totp_device")
+        # If we are here we have to remove the challange because also on a wrong verify the device would save to the user
+        user_totp_device_challenges.pop(username)
+        if not device.verify_token(totp_code):
+            device.delete()
+            return lac.templates.message(request, "Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.", "create_totp_device")
+        
+        device.name = request.POST.get("device_name", device.name)
+        device.confirmed = True
+        device.save()
+        
+        return lac.templates.message(request, "Erfolgreich. 2-Faktor Authentifizierung erfolgreich eingerichtet.", "otp_settings")
+
+
+    device = TOTPDevice(user=request.user, name="TOTP (Authenticator App)")
+
+    # Check if the user has a totp device challenge
+    if username in user_totp_device_challenges.keys():
+        device = user_totp_device_challenges[username]
+       
+    # Create a new totp device for the user
+    user_totp_device_challenges[username] = device
+
+    baseurl_of_libre_workspace = unix.get_env_sh_variables().get("DOMAIN", "")
+
+    url = device.config_url
+    url = url.replace(username, "Libre Workspace: " + baseurl_of_libre_workspace + " - " + username)
+
+    # Generate QR code with qrcode module
+    img = qrcode.make(url)
+    img.save(settings.MEDIA_ROOT + f"/totp_{device.id}.png")
+
+    base32_code = str(b32encode(device.bin_key))[2:-1]
+
+    return render(request, "idm/add_new_totp_device.html", {"base32_code": base32_code, "img": settings.MEDIA_URL + f"totp_{device.id}.png", "device_name": device.name})
+
+    pass
+
+def delete_totp_device(request, id):
+    device = TOTPDevice.objects.get(id=id)
+    device.delete()
+    # Also remove all totp_*.png files
+    import os
+    for file in os.listdir(settings.MEDIA_ROOT):
+        if file.startswith("totp_" + str(id)):
+            os.remove(settings.MEDIA_ROOT + "/" + file)
+    return redirect(otp_settings)
+
 def _clear_old_login_tries_and_banned_ips():
     """Clears login tries that are older than 5 minutes, and banned IPs that are older than 30 minutes."""
     for i in range(len(login_tries)):
@@ -95,6 +211,10 @@ def _clear_old_login_tries_and_banned_ips():
     for ip in banned_ips.keys():
         if datetime.datetime.now() - banned_ips[ip] > datetime.timedelta(minutes=30):
             banned_ips.pop(ip)
+    for session_key in totp_challenge.keys():
+        (timestamp, user) = totp_challenge[session_key]
+        if datetime.datetime.now() - timestamp > datetime.timedelta(minutes=5):
+            totp_challenge.pop(session_key)
 
 
 def _get_login_tries(ip):

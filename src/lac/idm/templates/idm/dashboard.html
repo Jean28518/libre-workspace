@@ -3,9 +3,9 @@
 
 <h2>Willkommen {{ user_information.displayName }}</h2>
 
-{% if user_information.admin %}
-
 {% include "idm/libre_workspace_challenges.html" %}
+
+{% if user_information.admin %}
 
 <div class="grid">
     {% if ldap_enabled %}

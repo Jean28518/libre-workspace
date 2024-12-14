@@ -10,6 +10,10 @@ urlpatterns = [
     path("change_password", views.change_password, name="change_password"),
     path("user_settings", views.user_settings, name="user_settings"),
 
+    path("create_totp_device", views.create_totp_device, name="create_totp_device"),
+    path("delete_totp_device/<str:id>", views.delete_totp_device, name="delete_totp_device"),
+    path("otp_settings", views.otp_settings, name="otp_settings"),
+
     path("user_overview", views.user_overview, name="user_overview"),
     path("create_user", views.create_user, name="create_user"),
     path("edit_user/<str:cn>", views.edit_user, name="edit_user"),
