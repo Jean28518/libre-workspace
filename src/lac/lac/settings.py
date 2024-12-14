@@ -42,7 +42,8 @@ CSRF_TRUSTED_ORIGINS = [
 # Add the ip address of the server to the allowed hosts
 _ip_adresses = os.popen("hostname -I").read().split(" ")
 ALLOWED_HOSTS += _ip_adresses
-CSRF_TRUSTED_ORIGINS.append(f"https://{_ip}")
+for _ip in _ip_adresses:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{_ip}")
 # Get the domain name in the caddyfile
 if os.path.exists("/etc/caddy/Caddyfile"):
     with open("/etc/caddy/Caddyfile", "r") as f:
