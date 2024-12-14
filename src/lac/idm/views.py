@@ -115,9 +115,7 @@ def user_login(request):
     
     return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message, "username": username})
 
-@login_required
 def get_totp_challenge_site(request, user, message=""):
-    # Check if user has totp enabled
     totp_challenge[request.session.session_key] = (datetime.datetime.now(), user)
     form = TOTPChallengeForm()
     # Populate choice field with all totp devices of the user
