@@ -38,5 +38,5 @@ systemctl restart linux-arbeitsplatz-web.service
 
 # Reset the local Administrator by setting the password to $ADMIN_PASSWORD
 cd /usr/share/linux-arbeitsplatz
-./django_set_local_Administrator_password.sh $ADMIN_PASSWORD
-./django_reset_2fa_for_Administrator.sh
+. ./django_set_local_Administrator_password.sh $ADMIN_PASSWORD
+. ./django_reset_2fa_for_Administrator.sh
