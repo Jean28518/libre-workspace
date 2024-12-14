@@ -52,20 +52,6 @@ sed -i "s/LINUX_ARBEITSPLATZ_CONFIGURED=False/LINUX_ARBEITSPLATZ_CONFIGURED=True
 # Remove the lines with "EMAIL" in it
 sed -i "/EMAIL/d" /usr/share/linux-arbeitsplatz/cfg
 
-# Remove the lines with "AUTH_LDAP" in it
-sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
-
-# Add the Samba AD settings to the cfg file
-# Ensure that we put in a new line
-echo "" >> /usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_BIND_PASSWORD=\"$ADMIN_PASSWORD\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-
 # Enable the unix service
 /usr/bin/systemctl enable linux-arbeitsplatz-unix.service
 

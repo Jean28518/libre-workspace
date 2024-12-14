@@ -37,7 +37,8 @@ def welcome_select_apps(request):
         elif request.POST.get("online_office", "") == "collabora":
             request.session["collabora"] = "collabora"
             request.session["onlyoffice"] = ""
-        else:
+        # Don't install onlyoffice or collabora if nextcloud is not installed
+        if not request.session["nextcloud"]:
             request.session["onlyoffice"] = ""
             request.session["collabora"] = ""
         request.session["matrix"] = request.POST.get("matrix", "")
@@ -65,11 +66,9 @@ def welcome_dns_settings(request):
             # We need the -1 because of the dot
             shortend_lvl2 = lvl2[:12-len(lvl1)-1]
             request.session["ldap_dc"] = f"dc={shortend_lvl2},dc={lvl1}"
-            request.session["shortend_domain"] = f"{shortend_lvl2}.{lvl1}"
         else:
             request.session["domain"] = "int.de"
             request.session["ldap_dc"] = "dc=int,dc=de"
-            request.session["shortend_domain"] = "int.de"
         if message == "":
             return redirect("installation_running")
     return render(request, "welcome/welcome_dns_settings.html", {"message": message, "subdomains": subdomains, "hide_login_button": True})
@@ -83,18 +82,15 @@ def installation_running(request):
     os.environ["ADMIN_PASSWORD"] = request.session["password"]
     # Get output of script: in lac/unix/unix_scripts/get_ip.sh
     os.environ["IP"] = os.popen("hostname -I").read().split(" ")[0]
+    os.environ["LDAP_DC"] = request.session["ldap_dc"]
     # Run basics script
+    os.environ["SAMBA_DC"] = request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"]
     os.environ["NEXTCLOUD"] = request.session["nextcloud"]
     os.environ["ONLYOFFICE"] = request.session["onlyoffice"]
     os.environ["COLLABORA"] = request.session["collabora"]
     os.environ["MATRIX"] = request.session["matrix"]
     os.environ["JITSI"] = request.session["jitsi"]
     os.environ["XFCE"] = request.session["xfce"]
-
-    domain = os.environ["DOMAIN"]
-    os.environ["LDAP_DC"] = request.session["ldap_dc"]
-    # We only need the shortend domain for the installation of samba dc
-    os.environ["SHORTEND_DOMAIN"] = request.session["shortend_domain"]
 
     # Create env.sh file
     try:

@@ -443,6 +443,7 @@ def is_onlyoffice_installed():
 
 def get_software_modules():
     modules = []
+    modules.append({ "id": "samba_dc", "name": "Samba DC (Zentrale Nutzerverwaltung)", "automaticUpdates": get_value("SAMBA_DC_AUTOMATIC_UPDATES", "False") == "True", "installed": is_samba_dc_installed() })
     modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": is_nextcloud_installed() })
     modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": is_matrix_installed() })
     modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": is_jitsi_installed() })
@@ -1034,6 +1035,9 @@ def nextcloud_groupfolder_exists(group):
 
 def is_xfce_installed():
     return os.path.isdir("/usr/share/xfce4")
+
+def is_samba_dc_installed():
+    return os.path.isdir("/root/samba_dc")
 
 
 # Creates a user at the current linux operating system

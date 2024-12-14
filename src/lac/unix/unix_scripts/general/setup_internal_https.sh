@@ -13,8 +13,11 @@ mkdir -p /var/www/cert/
 cp /etc/ssl/certs/Caddy_Local_Authority_* /var/www/cert/lan.crt
 
 echo "$IP cert.$DOMAIN" >> /etc/hosts # Domain itself
-samba-tool dns add la.$DOMAIN $DOMAIN cert A $IP -U administrator%$ADMIN_PASSWORD
 
+# If samba-tool is installed:
+if [ -f /usr/bin/samba-tool ]; then
+    samba-tool dns add la.$DOMAIN $DOMAIN cert A $IP -U administrator%$ADMIN_PASSWORD
+fi
 
 echo "cert.int.de {
     tls internal

@@ -8,9 +8,12 @@ touch installation_running
 cd $LW_SCRIPTS/../general
 . basics.sh
 
-# Install SAMBA DC
-cd $LW_SCRIPTS/../general
-. setup_samba_dc.sh
+# Install SAMBA DC if the environment variable SAMBA_DC is not empty
+if [ ! -z "$SAMBA_DC" ]; then
+    # Install SAMBA DC
+    cd $LW_SCRIPTS/../samba_dc
+    . setup_samba_dc.sh
+fi
 
 # If the environment variable NEXTCLOUD is not empty
 if [ ! -z "$NEXTCLOUD" ]; then

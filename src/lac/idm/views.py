@@ -66,7 +66,7 @@ def user_login(request):
             form = TOTPChallengeForm(request.POST)
             device = TOTPDevice.objects.get(id=request.POST.get("totp_device", ""))
             print("Request POST: " + str(request.POST))
-            if device.verify_token(request.POST.get("token", "")):
+            if device.verify_token(request.POST.get("totp_code", "")):
                 print("TOTP code is correct")
                 login(request, user)
                 if request.GET.get("next", "") != "":
@@ -74,7 +74,7 @@ def user_login(request):
                 else: 
                     return redirect("index")
             else:
-                print("TOTP code is not correct: " + request.POST.get("token", ""))
+                print("TOTP code is not correct: " + request.POST.get("totp_code", ""))
                 # return lac.templates.message(request, "Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.", "login")
                 return get_totp_challenge_site(request, user, "Fehler: Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.")
 
@@ -115,15 +115,14 @@ def user_login(request):
     
     return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message, "username": username})
 
-
 def get_totp_challenge_site(request, user, message=""):
-    # Check if user has totp enabled
     totp_challenge[request.session.session_key] = (datetime.datetime.now(), user)
     form = TOTPChallengeForm()
     # Populate choice field with all totp devices of the user
     form.fields["totp_device"].choices = [(device.id, device.name) for device in user.totpdevice_set.all()]
     return render(request, "lac/generic_form.html", {"form": form, "user": user, "message": message, "heading": "2-Faktor Authentifizierung", "action": "Anmelden", "hide_buttons_top": True, "hide_login_button": True})
 
+@login_required
 def otp_settings(request):
     # Get all totp devices of the user
     totp_devices = []
@@ -139,11 +138,11 @@ def otp_settings(request):
         "add_url_name": "create_totp_device",
         # "edit_url_name": "edit_totp_device",
         "delete_url_name": "delete_totp_device",
-        "hint": "<a href=\"javascript:history.back()\" role=\"button\" class=\"secondary\" style=\"display: block;\">Zurück</a>"
     })
     return render(request, "lac/overview_x.html", {"overview": overview})
 
 user_totp_device_challenges = {}
+@login_required
 def create_totp_device(request):
     username = request.user.get_username()
     if request.method == 'POST':
@@ -192,6 +191,7 @@ def create_totp_device(request):
 
     pass
 
+@login_required
 def delete_totp_device(request, id):
     device = TOTPDevice.objects.get(id=id)
     device.delete()
@@ -275,7 +275,7 @@ def change_password(request):
         if form.is_valid():
             if form.cleaned_data["new_password"] == form.cleaned_data["new_password_repeat"]:
                 if is_user_password_correct(request.user, form.cleaned_data["old_password"]):
-                    message = set_user_new_password(request.user, form.cleaned_data["new_password"])
+                    message = set_user_new_password(request.user.username, form.cleaned_data["new_password"])
                     if message == None:
                         message = "Das Passwort wurde erfolgreich geändert!"
                 else:
