@@ -66,7 +66,7 @@ def user_login(request):
             form = TOTPChallengeForm(request.POST)
             device = TOTPDevice.objects.get(id=request.POST.get("totp_device", ""))
             print("Request POST: " + str(request.POST))
-            if device.verify_token(request.POST.get("token", "")):
+            if device.verify_token(request.POST.get("totp_code", "")):
                 print("TOTP code is correct")
                 login(request, user)
                 if request.GET.get("next", "") != "":
@@ -74,7 +74,7 @@ def user_login(request):
                 else: 
                     return redirect("index")
             else:
-                print("TOTP code is not correct: " + request.POST.get("token", ""))
+                print("TOTP code is not correct: " + request.POST.get("totp_code", ""))
                 # return lac.templates.message(request, "Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.", "login")
                 return get_totp_challenge_site(request, user, "Fehler: Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.")
 
