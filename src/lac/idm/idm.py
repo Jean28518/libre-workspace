@@ -55,16 +55,21 @@ def _generate_random_password():
     return "".join(password)
 
 
-def set_user_new_password(user, password):
-    if settings.AUTH_LDAP_ENABLED:
-        message = ldap.set_ldap_user_new_password(user.ldap_user.dn, password)
-    if message == None:
-        message = unix.change_password_for_linux_user(user, password)
+def set_user_new_password(username, password):
+    # Also returns the local admin user if LDAP is disabled
+    user = ldap.get_user_information_of_cn(username)
+    if user == None:
+        print("User not found")
+        return "User not found"
+    # If we got a user_information dict:
+    if type(user) == dict:
+        message = ldap.set_ldap_user_new_password(user["dn"], password)
+        return message
+    # Else we got the local user object
     else:
-        message = None
         user.set_password(password)
         user.save()
-    return message
+        return None
 
 
 def is_user_password_correct(user, password):
@@ -103,9 +108,13 @@ def change_superuser_password(new_password):
     if settings.AUTH_LDAP_ENABLED:
         pass
     else:
+        # Check if user exists
+        if not User.objects.filter(username="Administrator").exists():
+            print("User 'Administrator' does not exist")
         user = User.objects.get(username="Administrator")
         user.set_password(new_password)
         user.save()
+        print("Local Administrator password changed")
 
 
 def get_admin_user():

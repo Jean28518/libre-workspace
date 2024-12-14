@@ -14,7 +14,6 @@ cp requirements.txt deb/usr/share/linux-arbeitsplatz/
 cp update_libre_workspace.sh deb/usr/share/linux-arbeitsplatz/
 cp django_reset_2fa_for_Administrator.sh deb/usr/share/linux-arbeitsplatz/
 cp django_set_local_Administrator_password.sh deb/usr/share/linux-arbeitsplatz/
-cp django_set_local_Administrator_password.py deb/usr/share/linux-arbeitsplatz/
 
 chmod +x deb/usr/share/linux-arbeitsplatz/install.sh
 chmod +x deb/usr/share/linux-arbeitsplatz/run.sh

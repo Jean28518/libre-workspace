@@ -1,5 +1,11 @@
 #!/bin/bash
 
+. cfg
+
+if [ -d src/lac ]; then
+    cd src/lac
+fi
+
 # Activate the virtual environment
 if [ -f .env/bin/activate ]; then
     source .env/bin/activate

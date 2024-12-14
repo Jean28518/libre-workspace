@@ -277,7 +277,7 @@ def change_password(request):
         if form.is_valid():
             if form.cleaned_data["new_password"] == form.cleaned_data["new_password_repeat"]:
                 if is_user_password_correct(request.user, form.cleaned_data["old_password"]):
-                    message = set_user_new_password(request.user, form.cleaned_data["new_password"])
+                    message = set_user_new_password(request.user.username, form.cleaned_data["new_password"])
                     if message == None:
                         message = "Das Passwort wurde erfolgreich geändert!"
                 else:
