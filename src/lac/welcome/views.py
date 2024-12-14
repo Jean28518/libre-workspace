@@ -76,7 +76,7 @@ def libreworkspace_lite(request):
             request.session["custom_access"] = ":23816"
         else:
             request.session["custom_access"] = request.POST.get("portal_domain_field", "")
-            message = check_domain(request.session["portal_domain_field"], True)
+            message = check_domain(request.session["custom_access"], True)
         if message == "" or message == None:
             message = check_domain(request.POST.get("further_root_domain", "int.de"))
             if message == "" or message == None:
@@ -91,7 +91,7 @@ def check_domain(domain, subdomain=False):
         return "Bitte geben Sie eine Domain an."
     if domain.count(".") != 1 and not subdomain:
         return "Bitte stellen Sie sicher, dass Sie nur die Domain angeben und keine Subdomain."
-    if not (domain.count(".") == 1 and len(domain.split(".")[0]) > 0 and len(domain.split(".")[1]) > 0 and not subdomain):
+    if not (domain.count(".") >= 1 and len(domain.split(".")[-2]) > 0 and len(domain.split(".")[-1])):
         return "Bitte geben Sie eine gültige Domain an."
     lvl1 = domain.split(".")[-1]
     if len(lvl1) > 12:
