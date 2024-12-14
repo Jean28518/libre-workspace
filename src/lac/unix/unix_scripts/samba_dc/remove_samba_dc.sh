@@ -32,11 +32,11 @@ rm /root/samba_dc
 # Remove the /etc/samba directory
 rm -rf /etc/samba
 
-# Restart Libre Worksapce Services
-systemctl restart linux-arbeitsplatz-unix.service
-systemctl restart linux-arbeitsplatz-web.service
-
 # Reset the local Administrator by setting the password to $ADMIN_PASSWORD
 cd /usr/share/linux-arbeitsplatz
 bash ./django_set_local_Administrator_password.sh "$ADMIN_PASSWORD"
 bash ./django_reset_2fa_for_Administrator.sh
+
+# Restart Libre Worksapce Services
+systemctl restart linux-arbeitsplatz-unix.service
+systemctl restart linux-arbeitsplatz-web.service
