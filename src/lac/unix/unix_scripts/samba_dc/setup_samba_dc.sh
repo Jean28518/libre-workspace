@@ -4,13 +4,27 @@
 # IP
 # ADMIN_PASSWORD
 # LDAP_DC
-# SHORTEND_DOMAIN (We need this for the samba dns server)
+
+# If samba-tool is installed, abort the setup because wo don't want to overwrite it at this state.
+if [ -f /usr/bin/samba-tool ]; then
+    echo "Samba DC is already installed. Aborting setup. Remove all samba components first before running this script."
+    exit 0
+fi
+
+# We need a shortend domain for the samba dc bnecause of the 15 character limit: len(la.$SHORTEND_DOMAIN) <= 15
+LVL1=$(echo $DOMAIN | cut -d'.' -f2)
+LVL2=$(echo $DOMAIN | cut -d'.' -f1)
+SHORTEND_LVL2=$(echo $LVL2 | cut -c1-$(expr 12 - ${#LVL1} - 1))
+SHORTEND_DOMAIN="$SHORTEND_LVL2.$LVL1"
 
 export DEBIAN_FRONTEND=noninteractive
 
 ## Setup DNS-Environment ##################################
 hostnamectl set-hostname la
-echo "$IP la.$DOMAIN la.$SHORTEND_DOMAIN la" >> /etc/hosts # IP of the server itself
+# if la.$DOMAIN is not in /etc/hosts, add it
+if ! grep -q "la.$DOMAIN" /etc/hosts; then
+    echo "$IP la.$DOMAIN la.$SHORTEND_DOMAIN la" >> /etc/hosts # IP of the server itself
+fi
 
 # For ubuntu systems
 systemctl disable --now systemd-resolved
@@ -135,10 +149,37 @@ if [[ $DOMAIN == $SHORTEND_DOMAIN ]]; then
 fi
 
 # Add all these entries to /etc/hosts
-echo "$IP cloud.$DOMAIN" >> /etc/hosts # Nextcloud
-echo "$IP office.$DOMAIN" >> /etc/hosts # Online Office
-echo "$IP portal.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Central
-echo "$IP meet.$DOMAIN" >> /etc/hosts # Jitsi Meet
-echo "$IP element.$DOMAIN" >> /etc/hosts # Element
-echo "$IP matrix.$DOMAIN" >> /etc/hosts # Matrix
-echo "$IP $DOMAIN" >> /etc/hosts # Domain itself
+if ! grep -q "cloud.$DOMAIN" /etc/hosts; then
+    echo "$IP cloud.$DOMAIN" >> /etc/hosts # Nextcloud
+    echo "$IP office.$DOMAIN" >> /etc/hosts # Online Office
+    echo "$IP portal.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Central
+    echo "$IP meet.$DOMAIN" >> /etc/hosts # Jitsi Meet
+    echo "$IP element.$DOMAIN" >> /etc/hosts # Element
+    echo "$IP matrix.$DOMAIN" >> /etc/hosts # Matrix
+    echo "$IP $DOMAIN" >> /etc/hosts # Domain itself
+fi
+
+
+# Update cfg file:
+# Remove the lines with "AUTH_LDAP" in it
+sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
+
+# Add the Samba AD settings to the cfg file
+# Ensure that we put in a new line
+echo "" >> /usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_BIND_PASSWORD=\"$ADMIN_PASSWORD\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+
+# Mark samba_dc installed
+ln -s /etc/samba /root/samba_dc
+
+systemctl enable --now samba-ad-dc
+systemctl restart samba-ad-dc
+# Restart Libre Worksapce Services
+systemctl restart linux-arbteitsplatz-web.service
+systemctl restart linux-arbteitsplatz-unix.service
