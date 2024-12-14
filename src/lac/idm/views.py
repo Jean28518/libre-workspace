@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
+
+import idm.idm
 from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm, TOTPChallengeForm
 from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
 from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct
@@ -286,6 +288,13 @@ def change_password(request):
     else:
         form = PasswordForm()
         return render(request, "idm/change_password.html", {"form": form})
+    
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def reset_2fa(request, username):
+    idm.idm.reset_2fa_for_username(username)
+    return lac.templates.message(request, f"2-Faktor-Authentifizierung für {username} erfolgreich zurückgesetzt!", "user_overview")
+
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def user_overview(request):

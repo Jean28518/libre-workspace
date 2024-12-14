@@ -99,7 +99,7 @@ def is_2fa_enabled(user):
 def reset_2fa_for_username(username):
     devices = TOTPDevice.objects.all()
     for device in devices:
-        if device.user.username == username:
+        if device.user.username.lower() == username.lower():
             device.delete()
     
 

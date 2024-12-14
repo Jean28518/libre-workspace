@@ -69,4 +69,4 @@ class TOTPChallengeForm(forms.Form):
     # Select Field for the TOTP device
     totp_device = forms.ChoiceField(label="TOTP Gerät", choices=[], required=False)
     # Input Field for the TOTP token
-    totp_code = forms.CharField(label="TOTP-Code (Sechsstellig)", max_length=100, required=False)
+    totp_code = forms.CharField(label="TOTP-Code (Sechsstellig)", required=True)

@@ -13,6 +13,7 @@ urlpatterns = [
     path("create_totp_device", views.create_totp_device, name="create_totp_device"),
     path("delete_totp_device/<str:id>", views.delete_totp_device, name="delete_totp_device"),
     path("otp_settings", views.otp_settings, name="otp_settings"),
+    path("reset_2fa/<str:username>", views.reset_2fa, name="reset_2fa"),
 
     path("user_overview", views.user_overview, name="user_overview"),
     path("create_user", views.create_user, name="create_user"),

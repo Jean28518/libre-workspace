@@ -17,8 +17,12 @@ BENUTZER LÖSCHEN
     <div>
         <a href="{% url "assign_groups_to_user" cn %}"role="button" class="secondary" style="display: block;">Gruppen-Mitgliedschaften</a>
     </div>
+    <div>
+        <a href="{% url "reset_2fa" cn %}"role="button" class="secondary" style="display: block;">2-Faktor-Authentifizierung zurücksetzen</a>
+    </div>
 </div>
-<br>
+
+<hr style="margin-top: 20px; margin-bottom: 20px;">
 
 <form method="post">{% csrf_token %}
     <div class="grid">
