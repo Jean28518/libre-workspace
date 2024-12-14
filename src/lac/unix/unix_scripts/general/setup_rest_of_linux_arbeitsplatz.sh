@@ -16,13 +16,15 @@ sed -i "/# SED-LOCALHOST-ENTRY/,+10d" /etc/caddy/Caddyfile
 if [ -n "$CUSTOM_ACCESS" ] ; then
 
 
-  # Change the linux arbeits zentrale to the finished domain to $CUSTOM_ACCESS
+  # Change the linux arbeits zentrale to the finished domain to $CUSTOM_ACCESS and set the allowed hosts properly
   if [ $CUSTOM_ACCESS = ":23816" ] ; then
     sed -i "s/:443/https:\/\/$IP:23816/g" /etc/caddy/Caddyfile
     # Insert the line with tls internal after the line with :23816
     sed -i "/https:\/\/$IP:23816/a \    tls internal" /etc/caddy/Caddyfile
+    echo "export ALLOWED_HOSTS=\"$IP:23816\"" >> /usr/share/linux-arbeitsplatz/cfg
   else
     sed -i "s/:443/$CUSTOM_ACCESS/g" /etc/caddy/Caddyfile
+    echo "export ALLOWED_HOSTS=\"$CUSTOM_ACCESS\"" >> /usr/share/linux-arbeitsplatz/cfg
   fi
 
   # Remove the line from tls internal { and the two lines after it if $CUSTOM_ACCESS is not :23816
