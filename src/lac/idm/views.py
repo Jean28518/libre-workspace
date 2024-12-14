@@ -115,7 +115,7 @@ def user_login(request):
     
     return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message, "username": username})
 
-
+@login_required
 def get_totp_challenge_site(request, user, message=""):
     # Check if user has totp enabled
     totp_challenge[request.session.session_key] = (datetime.datetime.now(), user)
@@ -124,6 +124,7 @@ def get_totp_challenge_site(request, user, message=""):
     form.fields["totp_device"].choices = [(device.id, device.name) for device in user.totpdevice_set.all()]
     return render(request, "lac/generic_form.html", {"form": form, "user": user, "message": message, "heading": "2-Faktor Authentifizierung", "action": "Anmelden", "hide_buttons_top": True, "hide_login_button": True})
 
+@login_required
 def otp_settings(request):
     # Get all totp devices of the user
     totp_devices = []
@@ -139,11 +140,11 @@ def otp_settings(request):
         "add_url_name": "create_totp_device",
         # "edit_url_name": "edit_totp_device",
         "delete_url_name": "delete_totp_device",
-        "hint": "<a href=\"javascript:history.back()\" role=\"button\" class=\"secondary\" style=\"display: block;\">Zurück</a>"
     })
     return render(request, "lac/overview_x.html", {"overview": overview})
 
 user_totp_device_challenges = {}
+@login_required
 def create_totp_device(request):
     username = request.user.get_username()
     if request.method == 'POST':
@@ -192,6 +193,7 @@ def create_totp_device(request):
 
     pass
 
+@login_required
 def delete_totp_device(request, id):
     device = TOTPDevice.objects.get(id=id)
     device.delete()

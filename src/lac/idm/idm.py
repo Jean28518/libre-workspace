@@ -91,6 +91,13 @@ def is_2fa_enabled(user):
     return TOTPDevice.objects.filter(user=user).count() > 0
 
 
+def reset_2fa_for_username(username):
+    devices = TOTPDevice.objects.all()
+    for device in devices:
+        if device.user.username == username:
+            device.delete()
+    
+
 def change_superuser_password(new_password):
     """Only changes the password of the django superuser."""
     if settings.AUTH_LDAP_ENABLED:

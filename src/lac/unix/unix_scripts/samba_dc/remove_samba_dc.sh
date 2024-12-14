@@ -7,6 +7,7 @@
 
 # Remove samba dc
 apt purge -y acl attr samba samba-dsdb-modules samba-vfs-modules smbclient winbind libpam-winbind libnss-winbind libpam-krb5 krb5-config krb5-user dnsutils chrony net-tools samba-ad-provision
+sudo apt autoremove --purge -y
 
 # Install dnsmasq as replacement for samba dns server
 apt install -y dnsmasq
@@ -32,5 +33,10 @@ rm /root/samba_dc
 rm -rf /etc/samba
 
 # Restart Libre Worksapce Services
-systemctl restart linux-arbteitsplatz-web.service
-systemctl restart linux-arbteitsplatz-unix.service
+systemctl restart linux-arbeitsplatz-unix.service
+systemctl restart linux-arbeitsplatz-web.service
+
+# Reset the local Administrator by setting the password to $ADMIN_PASSWORD
+cd /usr/share/linux-arbeitsplatz
+./django_set_local_Administrator_password.sh $ADMIN_PASSWORD
+./django_reset_2fa_for_Administrator.sh
