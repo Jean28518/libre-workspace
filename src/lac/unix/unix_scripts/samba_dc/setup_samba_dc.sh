@@ -181,5 +181,5 @@ ln -s /etc/samba /root/samba_dc
 systemctl enable --now samba-ad-dc
 systemctl restart samba-ad-dc
 # Restart Libre Worksapce Services
-systemctl restart linux-arbteitsplatz-web.service
-systemctl restart linux-arbteitsplatz-unix.service
+systemctl restart linux-arbeitsplatz-unix.service
+systemctl restart linux-arbeitsplatz-web.service
