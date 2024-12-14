@@ -93,6 +93,11 @@ Automated install script
 You can now access the libre workspace portal via https by the IP.
 A detailed explanation of the installation script can be found upper in the section "Installation using the ISO image".
 
+.. tip::
+
+    If you want to follow the installation output you can run ``journalctl -u linux-arbeitsplatz-web.service -f``.
+
+
 Manual configuration
 --------------------
 
@@ -132,3 +137,13 @@ The following variables are mandatory to be set. An example would be:
     export ADMIN_PASSWORD="AdminPasswordOfTheLDAPDomainOtherwiseSetItToAnEmptyString"
     export DOMAIN="int.de"
     export LDAP_DC="dc=int,dc=de" # Keep it empty if you don't use LDAP
+
+
+Libre Workspace Lite
+====================
+
+You can also just install the management portal without the other components. This is called "Libre Workspace Lite".
+Start the installation via the web interface like for normal installations. In the component selection you can deselect all components.
+Then the installation will only install the management portal, the webserver caddy, docker and docker-compose.
+Here you can also define how the management portal should be accessible. The default is via https on port 23816.
+Afterwards it is possible to install the other components and addons via the management portal.
