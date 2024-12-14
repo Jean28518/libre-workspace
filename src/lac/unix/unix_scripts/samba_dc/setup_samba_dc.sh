@@ -180,6 +180,8 @@ ln -s /etc/samba /root/samba_dc
 
 systemctl enable --now samba-ad-dc
 systemctl restart samba-ad-dc
-# Restart Libre Worksapce Services
-systemctl restart linux-arbeitsplatz-unix.service
-systemctl restart linux-arbeitsplatz-web.service
+# Restart Libre Worksapce Services if the installation_running file is not present, so we are not in the middle of another installation
+if [ ! -f /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running ]; then
+    systemctl restart linux-arbeitsplatz-unix.service
+    systemctl restart linux-arbeitsplatz-web.service
+fi
