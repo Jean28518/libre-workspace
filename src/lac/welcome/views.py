@@ -60,6 +60,7 @@ def welcome_dns_settings(request):
         if request.session["visibility"] == "public" and request.POST.get("domain", "") == "":
             message = "Bitte geben Sie eine Domain an."
         if request.session["visibility"] == "public" and message == "":
+            request.session["domain"] = request.POST.get("domain", "")
             message = check_domain(request.session["domain"])
             request.session["domain"] = request.session["domain"].lower()
             request.session["ldap_dc"] = get_ldap_dc(request.session["domain"])
