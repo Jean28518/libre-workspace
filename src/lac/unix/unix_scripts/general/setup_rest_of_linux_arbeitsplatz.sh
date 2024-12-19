@@ -24,7 +24,10 @@ if [ -n "$CUSTOM_ACCESS" ] ; then
     echo "export ALLOWED_HOSTS=\"$IP:23816\"" >> /usr/share/linux-arbeitsplatz/cfg
   else
     sed -i "s/:443/$CUSTOM_ACCESS/g" /etc/caddy/Caddyfile
-    echo "export ALLOWED_HOSTS=\"$CUSTOM_ACCESS\"" >> /usr/share/linux-arbeitsplatz/cfg
+
+    # Get the CUSTOM_ACCESS without : extension if it is e.g. my.domain.com:23816
+    CUSTOM_ACCESS_DOMAIN=$(echo $CUSTOM_ACCESS | cut -d ":" -f 1)
+    echo "export ALLOWED_HOSTS=\"$CUSTOM_ACCESS_DOMAIN\"" >> /usr/share/linux-arbeitsplatz/cfg
   fi
 
   # Remove the line from tls internal { and the two lines after it if $CUSTOM_ACCESS is not :23816
@@ -33,7 +36,8 @@ if [ -n "$CUSTOM_ACCESS" ] ; then
   # }
   sed -i "/    tls internal {/,+2d" /etc/caddy/Caddyfile
 
-  if [ $CUSTOM_ACCESS = ":23816" ] ; then
+  # Check if :23816 is in $CUSTOM_ACCESS
+  if [[ $CUSTOM_ACCESS == *":23816"* ]] ; then
     # If we have set $CUSTOM_ACCESS to :23816, we need to open the port 23816
     ufw allow 23816
   fi
