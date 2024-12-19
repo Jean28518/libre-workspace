@@ -223,6 +223,8 @@ STATIC_ROOT = '/var/www/linux-arbeitsplatz-static/'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Make sure the media directory exists
+os.makedirs(MEDIA_ROOT, exist_ok=True)
 
 # Email Settings
 EMAIL_HOST = os.getenv("EMAIL_HOST")                 # <- host name [e.g. smtp.gmail.com for gmail]
