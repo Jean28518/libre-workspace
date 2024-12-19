@@ -37,6 +37,15 @@ if [ -n "$CUSTOM_ACCESS" ] ; then
     # If we have set $CUSTOM_ACCESS to :23816, we need to open the port 23816
     ufw allow 23816
   fi
+
+  # Set the password for the local admin user (django)
+  # Set INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP in /usr/share/linux-arbeitsplatz/cfg
+  sed -i "s/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=.*/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=$ADMIN_PASSWORD/g" /usr/share/linux-arbeitsplatz/cfg
+  # Set the Password for the admin user via script
+  cd /usr/share/linux-arbeitsplatz
+  bash django_set_local_Administrator_password.sh "$ADMIN_PASSWORD"
+  cd -
+
 else
   # Otherwise we need to:
   # - Add access page reverse proxy on ip address
