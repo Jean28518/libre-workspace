@@ -4,6 +4,7 @@ from ldap import LDAPError
 from django.conf import settings
 import base64
 import idm.idm as idm
+import uuid
 
 
 def is_ldap_fine_and_working():
@@ -50,7 +51,14 @@ def get_user_information_of_cn(cn):
     user_information["last_name"] = ldap_reply[0][1].get("sn", [b""])[0].decode('utf-8')
     user_information["displayName"] = ldap_reply[0][1].get("displayName", [b""])[0].decode('utf-8')
     user_information["mail"] = ldap_reply[0][1].get("mail", [b""])[0].decode('utf-8')
-    user_information["guid"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
+    raw_guid = ldap_reply[0][1].get("objectGUID", [b""])[0]
+    # Correct the byte order
+    part1 = raw_guid[0:4][::-1]   # Reverse first 4 bytes
+    part2 = raw_guid[4:6][::-1]   # Reverse next 2 bytes
+    part3 = raw_guid[6:8][::-1]   # Reverse next 2 bytes
+    part4 = raw_guid[8:]          # Keep the rest as is
+    raw_guid = part1 + part2 + part3 + part4
+    user_information["guid"] = uuid.UUID(bytes=raw_guid, version=4)
     user_information["enabled"] = int(ldap_reply[0][1].get("userAccountControl", [b'512'])[0]) & 2 == 0
     user_information["dn"] = dn
     user_information["cn"] = cn
