@@ -71,3 +71,25 @@ class CustomScopeClaims(ScopeClaims):
         }
 
         return dic
+    
+
+    info_groups = (
+        (u'Groups'),
+        (u'Groups of the user.'),
+    )
+
+    def scope_groups(self):
+        userinfo = get_user_information(str(self.user))
+        group_names = []
+        for group in userinfo['groups']:
+            # Check if group is a CN then extract the group name (LDAP)
+            if str(group).lower().startswith('cn='):
+                group_name = str(group)[3:]
+                group_name = group_name.split(',')[0]
+                group_names.append(group_name)
+        dic = {
+            'groups': group_names,
+            'groups_ldap': userinfo['groups'],
+        }
+
+        return dic

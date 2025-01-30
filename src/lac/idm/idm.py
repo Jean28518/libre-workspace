@@ -129,6 +129,7 @@ def get_admin_user():
         user_information = User.objects.get(username="Administrator").__dict__
         user_information["admin"] = True
         user_information["mail"] = user_information["email"]
+        user_information["groups"] = ["admin", "Domain Admins"]
         return user_information
     
 
