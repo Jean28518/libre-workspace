@@ -246,3 +246,4 @@ LINUX_ARBEITSPLATZ_CONFIGURED = os.getenv("LINUX_ARBEITSPLATZ_CONFIGURED", "fals
 LOGIN_URL="/idm/login"
 
 OIDC_USERINFO = 'idm.oidc_provider_settings.userinfo'
+OIDC_EXTRA_SCOPE_CLAIMS = 'idm.oidc_provider_settings.CustomScopeClaims'
