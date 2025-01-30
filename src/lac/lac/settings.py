@@ -244,3 +244,5 @@ NEXTCLOUD_INSTALLATION_DIRECTORY = os.getenv("NEXTCLOUD_INSTALLATION_DIRECTORY",
 LINUX_ARBEITSPLATZ_CONFIGURED = os.getenv("LINUX_ARBEITSPLATZ_CONFIGURED", "false").lower() == "true"
 
 LOGIN_URL="/idm/login"
+
+OIDC_USERINFO = 'idm.oidc_provider_settings.userinfo'

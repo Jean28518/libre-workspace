@@ -14,8 +14,12 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 def get_user_information(user):
     user_information = {}
     if type(user) == str:
-        if settings.AUTH_LDAP_ENABLED:
+        if settings.AUTH_LDAP_ENABLED and user.lower() == "administrator":
             user_information = ldap.get_user_information_of_cn("Administrator")
+        # If LDAP is enabled AND we get a username which is not "Administrator", then let's get the user_information from LDAP
+        elif settings.AUTH_LDAP_ENABLED:
+            user_information = ldap.get_user_information_of_cn(user)
+        # Otherwise we get the user_information from the local user object (if it exists)
         else:
             user = User.objects.get(username=user)
     elif settings.AUTH_LDAP_ENABLED:     

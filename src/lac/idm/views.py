@@ -497,6 +497,7 @@ def assign_groups_to_user(request, cn):
     
 @staff_member_required(login_url=settings.LOGIN_URL)
 def oidc_client_overview(request):
+    discovery_url = request.build_absolute_uri(reverse("oidc_provider:provider-info"))
     overview = templates.process_overview_dict({
         "heading": "OIDC Clients",
         "element_name": "OIDC Client",
@@ -507,6 +508,7 @@ def oidc_client_overview(request):
         "add_url_name": "create_oidc_client",
         "edit_url_name": "edit_oidc_client",
         "delete_url_name": "delete_oidc_client",
+        "hint": "OpenID Connect Discovery URL: <a href='" + discovery_url + "'>" + discovery_url + "</a>",
     })
     return render(request, "lac/overview_x.html", {"overview": overview})
 
