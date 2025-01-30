@@ -100,10 +100,24 @@ If you as administrator locked yourself out you can disable 2FA by connecting vi
 OIDC (OpenID Connect)
 ---------------------
 
-The OIDC module provides the possibility to login via OIDC. The provider url is `https://portal.int.de/openid`.
-The authorization endpoint is `https://portal.int.de/openid/authorize` and the token endpoint is `https://portal.int.de/openid/token`.
-To get the well known configuration you can access `https://portal.int.de/openid/.well-known/openid-configuration`.
+The OIDC module provides the possibility to login via OIDC. The provider url is ``https://portal.int.de/openid``.
+The authorization endpoint is ``https://portal.int.de/openid/authorize`` and the token endpoint is ``https://portal.int.de/openid/token``.
+To get the well known configuration you can access ``https://portal.int.de/openid/.well-known/openid-configuration``.
 You can create a new OIDC client in the portal under the menu entry "Systemverwaltung" -> "OpenID Connect (SSO)".
+
+.. tip::
+
+    If you want to test the functionality of the oidc provider inside Libre Workspace, have a look in the git repository under /tests/oidc.
+
+
+You can get the following scopes:
+
+* openid
+* profile
+* email
+* groups
+* guid
+
 
 unix
 ----

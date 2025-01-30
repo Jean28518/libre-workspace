@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>OIDC RP</title>
+
+</head>
+<body>
+
+    <center>
+        <h1>OpenID Connect RP Example</h1>
+        <button id="login-button">Login</button>
+        <p>By <a href="https://nat.sakimura.org/2014/12/10/making-a-javascript-openid-connect-client/" target="_blank">Nat Sakimura</a></p>
+
+        <hl>
+
+        </center>
+        <h2>How to use</h2>
+            <ul>
+                <li>Serve this file at a separate web server and access this via webbrowser.</li>
+                <li>Adjust the redirect_uri in this file to the url whith which you can access this file.</li>
+                <li>Add a OIDC client in /idm/create_oidc_client on your Libre Workspace instance</li>
+                <li>Don't forget to add the redirect_uri to the allowed redirect_uris in the client configuration.</li>
+                <li>Insert the generated client id in this file.</li>
+                <li>Adjust the libre workspace url in this file.</li>
+                <li>You are ready to login! If everything works, you will see a info box of your webbrowser with all user information.</li>
+                <li>If you have trouble open the developer console of your webbrowser to see the error messages and access some mentioned urls manually.</li>
+            </ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://www.sakimura.org/test/openidconnect.js"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        var clientInfo = {
+            // You have to create a client in /idm/create_oidc_client and add the response type "id_token token (Implicit Flow)"
+            // INSERT HERE YOUR CLIENT ID like 3QkZK24a   
+            client_id : 'INSERT_CLIENT_ID',
+            redirect_uri : 'http://localhost'
+        };
+
+        OIDC.setClientInfo(clientInfo);
+
+        // INSERT HERE YOUR LIBRE WORKSPACE URL like 'https://portal.int.de/openid'
+        var providerInfo = OIDC.discover('http://localhost:8000/openid');
+
+        OIDC.setProviderInfo(providerInfo);
+        OIDC.storeInfo(providerInfo, clientInfo);
+
+        // Restore configuration information.
+        OIDC.restoreInfo();
+
+        // Get Access Token
+        var token = OIDC.getAccessToken();
+
+        // Make userinfo request using access_token.
+        if (token !== null) {
+            // INSERT HERE ALSO YOUR LIBRE WORKSPACE URL like 'https://portal.int.de/openid/userinfo?access_token='
+            $.get('http://localhost:8000/openid/userinfo?access_token='+token, function( data ) {
+                alert('USERINFO: '+ JSON.stringify(data));
+            });
+        }
+
+        // Make an authorization request if the user click the login button.
+        $('#login-button').click(function (event) {
+            OIDC.login({
+                scope : 'openid profile email guid groups',
+                response_type : 'id_token token'
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>
