@@ -10,7 +10,6 @@ def userinfo(claims, user):
     claims['middle_name'] = ''
     claims['nickname'] = user_info['username']
     claims['preferred_username'] = user_info['username']
-    claims['profile'] = ''
     claims['picture'] = ''
     claims['website'] = ''
     claims['gender'] = ''
@@ -18,6 +17,22 @@ def userinfo(claims, user):
     claims['zoneinfo'] = ''
     claims['locale'] = ''
     claims['updated_at'] = ''
+
+    claims["profile"] = {
+        "name": user_info["displayName"],
+        "given_name": user_info["first_name"],
+        "family_name": user_info["last_name"],
+        "middle_name": "",
+        "nickname": user_info["username"],
+        "preferred_username": user_info["username"],
+        "picture": "",
+        "website": "",
+        "gender": "",
+        "birthdate": "",
+        "zoneinfo": "",
+        "locale": "",
+        "updated_at": "",
+    }
 
     claims['email'] = user_info['mail']
     claims['email_verified'] = True
