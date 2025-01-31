@@ -1,5 +1,6 @@
 #from django.utils.translation import ugettext_lazy as _
 from oidc_provider.lib.claims import ScopeClaims
+from oidc_provider.models import Client
 
 from idm.idm import get_user_information
 def userinfo(claims, user):
@@ -93,3 +94,17 @@ class CustomScopeClaims(ScopeClaims):
         }
 
         return dic
+
+
+def add_oidc_provider_client(cleaned_data):
+        client = Client()
+        client.name = cleaned_data["name"]
+        client.client_type = cleaned_data["client_type"]
+        client.redirect_uris = cleaned_data["redirect_uris"].split("\n")
+        client.client_id = cleaned_data["client_id"]
+        client.client_secret = cleaned_data["client_secret"]
+        client.jwt_alg = cleaned_data["jwt_alg"]
+        client.require_consent = cleaned_data["require_consent"]
+        client.reuse_consent = cleaned_data["reuse_consent"]
+        client.save()
+        client.response_types.set(cleaned_data["response_types"])

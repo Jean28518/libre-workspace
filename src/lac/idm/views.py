@@ -25,6 +25,7 @@ from base64 import b32encode
 import lac.templates
 import random
 import datetime
+from .oidc_provider_settings import add_oidc_provider_client
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -518,19 +519,7 @@ def create_oidc_client(request):
     if request.method == 'POST':
         form = OIDCClientForm(request.POST)
         if form.is_valid():
-            print("342")
-            print(form.cleaned_data["response_types"])
-            client = Client()
-            client.name = form.cleaned_data["name"]
-            client.client_type = form.cleaned_data["client_type"]
-            client.redirect_uris = form.cleaned_data["redirect_uris"].split("\n")
-            client.client_id = form.cleaned_data["client_id"]
-            client.client_secret = form.cleaned_data["client_secret"]
-            client.jwt_alg = form.cleaned_data["jwt_alg"]
-            client.require_consent = form.cleaned_data["require_consent"]
-            client.reuse_consent = form.cleaned_data["reuse_consent"]
-            client.save()
-            client.response_types.set(form.cleaned_data["response_types"])
+            add_oidc_provider_client(form.cleaned_data)
             return redirect(oidc_client_overview)
     # Get random id and secret
     client_id = ''.join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", k=8))

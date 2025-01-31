@@ -113,32 +113,60 @@ echo "*/5  *  *  *  * php -f /var/www/nextcloud/cron.php" >> /tmp/crontab
 crontab -u www-data /tmp/crontab
 
 
-# Add nextcloud to samba-dc active directory
-apt install php-ldap -y
-systemctl restart php*
+# # Add nextcloud to samba-dc active directory
+# apt install php-ldap -y
+# systemctl restart php*
 
-sudo -u www-data php /var/www/nextcloud/occ app:enable user_ldap
-sudo -u www-data php /var/www/nextcloud/occ ldap:create-empty-config
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapHost ldaps://la.$DOMAIN
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapPort 636
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBase "$LDAP_DC"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "cn=users,$LDAP_DC"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseUsers "cn=users,$LDAP_DC"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "cn=Administrator,cn=users,$LDAP_DC"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentPassword "$ADMIN_PASSWORD"
-# Disable the ssl certificate validation
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 turnOffCertCheck 1
-# custom ldap request (user search filter)
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilter "(objectclass=*)"
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilter "(&(objectclass=*)(|(cn=%uid)(|(mailPrimaryAddress=%uid)(mail=%uid))))"
-# custom ldap request (group search filter)
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilter "(&(|(objectclass=group)))"
-# Group member association member(AD)
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupMemberAssocAttr "member"
-# mail field
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapEmailAttribute "mail"
-# Set configuration active
-sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapConfigurationActive 1
+# sudo -u www-data php /var/www/nextcloud/occ app:enable user_ldap
+# sudo -u www-data php /var/www/nextcloud/occ ldap:create-empty-config
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapHost ldaps://la.$DOMAIN
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapPort 636
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBase "$LDAP_DC"
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "cn=users,$LDAP_DC"
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseUsers "cn=users,$LDAP_DC"
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "cn=Administrator,cn=users,$LDAP_DC"
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentPassword "$ADMIN_PASSWORD"
+# # Disable the ssl certificate validation
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 turnOffCertCheck 1
+# # custom ldap request (user search filter)
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilter "(objectclass=*)"
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilter "(&(objectclass=*)(|(cn=%uid)(|(mailPrimaryAddress=%uid)(mail=%uid))))"
+# # custom ldap request (group search filter)
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilter "(&(|(objectclass=group)))"
+# # Group member association member(AD)
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupMemberAssocAttr "member"
+# # mail field
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapEmailAttribute "mail"
+# # Set configuration active
+# sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapConfigurationActive 1
+
+
+# Enable SSO (OIDC) for nextcloud
+sudo -u www-data php /var/www/nextcloud/occ app:install oidc_login
+
+CLIENT_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+CLIENT_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_client_id --value="$CLIENT_ID"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_client_secret --value="$CLIENT_SECRET"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_provider_url --value="https://portal.$DOMAIN/openid"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_end_session_redirect --value=true
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_logout_url --value="https://cloud.$DOMAIN/apps/oidc_login/oidc"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_auto_redirect --value=true
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_redir_fallback --value=true
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes --value='{"id":"preferred_username","mail":"email","name":"name","ldap_uid":"preferred_username"}'
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_scope --value="openid profile email guid groups"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set allow_user_to_change_display_name --value=false
+sudo -u www-data php /var/www/nextcloud/occ config:system:set lost_password_link --value="disabled"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_hide_password_form --value=false
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_disable_registration --value=false
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_create_groups --value=true
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_proxy_ldap --value=false # Enable this if your instance has ldap enabled
+
+# Add the oidc client to the oidc provider
+cd /usr/share/linux-arbeitsplatz/
+bash django_add_oidc_provider_client.sh "Nextcloud" "$CLIENT_ID" "$CLIENT_SECRET" "https://cloud.$DOMAIN/index.php/apps/oidc_login/oidc\nhttps://cloud.$DOMAIN/apps/oidc_login/oidc"
+cd -
+
 
 # Remove index.php from the URL:
 sudo -u www-data php /var/www/nextcloud/occ config:system:set htaccess.RewriteBase --value="/"
