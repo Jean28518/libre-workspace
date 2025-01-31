@@ -12,24 +12,47 @@ cp docker_matrix_entry.txt /root/matrix/docker-compose.yml
 mkdir /root/matrix/synapse-data
 docker run --rm --volume /root/matrix/synapse-data:/data -e SYNAPSE_SERVER_NAME=matrix.$DOMAIN -e SYNAPSE_REPORT_STATS=no matrixdotorg/synapse:latest generate
 
+# Add LDAP authentication to homeserver.yaml
+# echo "
+# modules:
+#  - module: \"ldap_auth_provider.LdapAuthProviderModule\"
+#    config:
+#      enabled: true
+#      uri: \"ldaps://$IP:636\"
+#      start_tls: false
+#      base: \"$LDAP_DC\"
+#      attributes:
+#         uid: \"cn\"
+#         mail: \"mail\"
+#         name: \"displayName\"
+#      bind_dn: \"cn=Administrator,cn=users,$LDAP_DC\"
+#      bind_password: \"$ADMIN_PASSWORD\"
+#      #filter: \"(objectClass=posixAccount)\"
+#      tls_options:
+#        validate: false" >> /root/matrix/synapse-data/homeserver.yaml
 
+# Add SSO to homeserver.yaml
+CLIENT_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+CLIENT_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 echo "
-modules:
- - module: \"ldap_auth_provider.LdapAuthProviderModule\"
-   config:
-     enabled: true
-     uri: \"ldaps://$IP:636\"
-     start_tls: false
-     base: \"$LDAP_DC\"
-     attributes:
-        uid: \"cn\"
-        mail: \"mail\"
-        name: \"displayName\"
-     bind_dn: \"cn=Administrator,cn=users,$LDAP_DC\"
-     bind_password: \"$ADMIN_PASSWORD\"
-     #filter: \"(objectClass=posixAccount)\"
-     tls_options:
-       validate: false" >> /root/matrix/synapse-data/homeserver.yaml
+oidc_providers:
+  - idp_id: libreworkspace
+    idp_name: \"Libre Workspace\"
+    issuer: \"https://portal.$DOMAIN/openid\"
+    client_id: \"$CLIENT_ID\"
+    client_secret: \"$CLIENT_SECRET\"
+    scopes: [\"openid\", \"profile\", \"email\", \"groups\", \"guid\"]
+    user_profile_method: \"userinfo_endpoint\"
+    user_mapping_provider:
+      config:
+        localpart_template: \"{{ user.preferred_username }}\"
+        display_name_template: \"{{ user.name }}\"
+" >> /root/matrix/synapse-data/homeserver.yaml
+
+# Add the oidc client to the oidc provider
+cd /usr/share/linux-arbeitsplatz/
+bash django_add_oidc_provider_client.sh "Matrix" "$CLIENT_ID" "$CLIENT_SECRET" "https://matrix.$DOMAIN/_synapse/client/oidc/callback"
+cd -
 
 
 # Delete the line which starts with databas: and is 3 lines long

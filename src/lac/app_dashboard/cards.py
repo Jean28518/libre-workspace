@@ -1,6 +1,7 @@
 from .models import DashboardEntry
 from django.urls import reverse
 import unix.unix_scripts.unix as unix
+from oidc_provider.models import Client
 
 def get_card_for_dict(dict : dict):
     return get_card_for(dict["title"], dict["url"], dict["icon_path"], dict["description"])
@@ -12,6 +13,10 @@ def get_card_for_dashboard_entry(dashboard_entry):
     return get_card_for(dashboard_entry.title, dashboard_entry.link, icon_path, dashboard_entry.description)
 
 def get_card_for(title, url, icon_path, description):
+    # Add special redirection for sso for element
+    if "element." in url and Client.objects.filter(name="Matrix").count() > 0:
+        url = f"{url}/#/start_sso"
+
     return f'''<a class="secondary" href="{url}">
         <article>
             <center>
