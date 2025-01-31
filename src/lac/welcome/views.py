@@ -33,14 +33,8 @@ def welcome_select_apps(request):
         request.session["nextcloud"] = request.POST.get("nextcloud", "")
         if request.POST.get("online_office", "") == "onlyoffice":
             request.session["onlyoffice"] = "onlyoffice"
-            request.session["collabora"] = ""
         elif request.POST.get("online_office", "") == "collabora":
             request.session["collabora"] = "collabora"
-            request.session["onlyoffice"] = ""
-        # Don't install onlyoffice or collabora if nextcloud is not installed
-        if not request.session["nextcloud"]:
-            request.session["onlyoffice"] = ""
-            request.session["collabora"] = ""
         request.session["matrix"] = request.POST.get("matrix", "")
         request.session["jitsi"] = request.POST.get("jitsi", "")
         request.session["xfce"] = request.POST.get("xfce", "")
@@ -122,8 +116,8 @@ def installation_running(request):
     # Run basics script
     os.environ["SAMBA_DC"] = request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"]
     os.environ["NEXTCLOUD"] = request.session["nextcloud"]
-    os.environ["ONLYOFFICE"] = request.session["onlyoffice"]
-    os.environ["COLLABORA"] = request.session["collabora"]
+    os.environ["ONLYOFFICE"] = request.session.get("onlyoffice", "")
+    os.environ["COLLABORA"] = request.session.get("collabora", "")
     os.environ["MATRIX"] = request.session["matrix"]
     os.environ["JITSI"] = request.session["jitsi"]
     os.environ["XFCE"] = request.session["xfce"]
