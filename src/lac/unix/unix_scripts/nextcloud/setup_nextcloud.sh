@@ -153,14 +153,21 @@ sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_end_ses
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_logout_url --value="https://cloud.$DOMAIN/apps/oidc_login/oidc"
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_auto_redirect --value=true
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_redir_fallback --value=true
-sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes --value='{"id":"preferred_username","mail":"email","name":"name","ldap_uid":"preferred_username"}'
+# sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes --value='{"id":"preferred_username","mail":"email","name":"name","ldap_uid":"preferred_username"}'
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes id --value="preferred_username"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes mail --value="email"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes name --value="name"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes ldap_uid --value="preferred_username"
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_scope --value="openid profile email guid groups"
-sudo -u www-data php /var/www/nextcloud/occ config:system:set allow_user_to_change_display_name --value=false
+sudo -u www-data php /var/www/nextcloud/occ config:system:set allow_user_to_change_display_name --value=
 sudo -u www-data php /var/www/nextcloud/occ config:system:set lost_password_link --value="disabled"
-sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_hide_password_form --value=false
-sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_disable_registration --value=false
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_hide_password_form --value=
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_disable_registration --value=
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_create_groups --value=true
-sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_proxy_ldap --value=false # Enable this if your instance has ldap enabled
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_proxy_ldap --value= # Set this to true this if your instance has ldap enabled
+if [ $DOMAIN = "int.de" ]; then
+  sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_tls_verify --value=false
+fi
 
 # Add the oidc client to the oidc provider
 cd /usr/share/linux-arbeitsplatz/
