@@ -18,6 +18,7 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
+# The response_types is set to ['1'] because the response type is 'code'
 CLEANED_DATA="""{
     'name': '$1',
     'client_type': 'confidential',
