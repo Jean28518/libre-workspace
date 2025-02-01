@@ -21,7 +21,7 @@ fi
 # Add "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS" to /usr/share/linux-arbeitsplatz/cfg
 echo "
 # Don't change the admin status for these nextcloud users automatically also if they are not in group "Domain Admin". Separate them with ,
-export IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS="Administrator"
+export IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS=""
 " >> /usr/share/linux-arbeitsplatz/cfg
 
 systemctl restart linux-arbeitsplatz-unix.service

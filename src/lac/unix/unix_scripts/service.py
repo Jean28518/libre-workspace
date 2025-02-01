@@ -88,17 +88,17 @@ def update_nextcloud_admin_status_for_all_users():
                 in_admin_section = False
                 in_domain_admins_section = True
                 continue
+            if ":" in line and not "admin:" in line and not "Domain Admins:" in line:
+                in_admin_section = False
+                in_domain_admins_section = False
             if in_admin_section:
                 nextcloud_admins.append(line.strip().split(" ")[1].lower())
             if in_domain_admins_section:
                 domain_admins.append(line.strip().split(" ")[1].lower())
-            if ":" in line and not "admin:" in line and not "Domain Admins:" in line:
-                in_admin_section = False
-                in_domain_admins_section = False
+
 
         # Remove all users from the nextcloud admin group which are in the ignore_users list
-        # TODO: Remove the default value by Feb 2025. This is just for compatibility with older versions
-        ignore_users = os.environ.get("IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS", "Administrator").lower().split(",")
+        ignore_users = os.environ.get("IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS", "").lower().split(",")
         for ignore_user in ignore_users:
             if ignore_user in domain_admins:
                 domain_admins.remove(ignore_user)
