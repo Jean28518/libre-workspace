@@ -79,6 +79,21 @@ class CustomScopeClaims(ScopeClaims):
         (u'Groups of the user.'),
     )
 
+
+    def scope_admin(self):
+        userinfo = get_user_information(str(self.user))
+        dic = {
+            'admin': userinfo['admin'],
+        }
+
+        return dic
+    
+    info_admin = (
+        (u'Admin'),
+        (u'Check if admin rights are given.'),
+    )
+
+
     def scope_groups(self):
         userinfo = get_user_information(str(self.user))
         group_names = []

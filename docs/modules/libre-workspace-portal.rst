@@ -117,6 +117,7 @@ You can get the following scopes:
 * email
 * groups
 * guid
+* admin
 
 
 unix

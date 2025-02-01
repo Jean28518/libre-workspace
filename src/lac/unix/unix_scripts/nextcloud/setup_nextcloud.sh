@@ -159,7 +159,8 @@ sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attribu
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes name --value="name"
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes ldap_uid --value="preferred_username"
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes groups --value="groups"
-sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_scope --value="openid profile email guid groups"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_attributes is_admin --value="admin"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_scope --value="openid profile email guid groups admin"
 sudo -u www-data php /var/www/nextcloud/occ config:system:set allow_user_to_change_display_name --value=
 sudo -u www-data php /var/www/nextcloud/occ config:system:set lost_password_link --value="disabled"
 sudo -u www-data php /var/www/nextcloud/occ config:system:set oidc_login_hide_password_form --value=
