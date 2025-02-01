@@ -70,4 +70,9 @@ borg prune -v --keep-within=$MAXIMUM_AGE_IN_DAYS $BORG_REPOSITORY
 
 
 borg list --short $BORG_REPOSITORY > ../history/borg_list
-borg info $BORG_REPOSITORY > ../history/borg_info
+
+if [ -z "$REMOTEPATH" ] ; then
+  borg info $BORG_REPOSITORY > ../history/borg_info
+else
+  borg info --remote-path $REMOTEPATH $BORG_REPOSITORY > ../history/borg_info
+fi
