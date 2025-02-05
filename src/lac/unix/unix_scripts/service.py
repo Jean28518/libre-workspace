@@ -51,6 +51,8 @@ def ensure_fingerprint_is_trusted():
 
 
 def update_nextcloud_admin_status_for_all_users():
+        # Disable it because in the long run we go via sso which is much more reliable.
+        return
         # Check if nextcloud is installed (if /var/www/nextcloud/occ exists)
         if not os.path.isfile("/var/www/nextcloud/occ"):
             return
