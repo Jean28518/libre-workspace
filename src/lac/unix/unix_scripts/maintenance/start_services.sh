@@ -1,5 +1,5 @@
-systemctl start docker
 systemctl stop mariadb
+systemctl start docker
 
 # Turn on maintenance mode of Nextcloud
 if [ -f /var/www/nextcloud/occ ]; then
