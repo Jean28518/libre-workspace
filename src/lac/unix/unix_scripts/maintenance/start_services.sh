@@ -1,4 +1,4 @@
-systemctl stop mariadb
+systemctl start mariadb
 systemctl start docker
 
 # Turn on maintenance mode of Nextcloud
