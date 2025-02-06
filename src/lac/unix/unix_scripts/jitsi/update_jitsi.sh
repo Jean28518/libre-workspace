@@ -9,3 +9,10 @@ echo "JITSI_IMAGE_VERSION=stable" >> .env
 # Update Jitsi
 docker-compose pull
 docker-compose up -d
+
+
+# docker compose compatibility:
+docker compose pull
+# Because sometimes docker has problems by itself, we need to remove the containers and start them again
+docker compose down
+docker compose up -d
