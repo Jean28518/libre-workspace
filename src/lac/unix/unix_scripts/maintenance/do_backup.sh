@@ -30,9 +30,9 @@ fi
 
 # If $REMOTEPATH is set, then use this command:
 if [ -z "$REMOTEPATH" ] ; then
-  borg create --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /var/lib/mysql/ib_logfile0 -e /data $ADDITIONAL_BORG_OPTIONS 2> ../history/borg_errors_$DATE.log
+  borg create --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> ../history/borg_errors_$DATE.log
 else
-  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /var/lib/mysql/ib_logfile0 -e /data $ADDITIONAL_BORG_OPTIONS 2> ../history/borg_errors_$DATE.log
+  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> ../history/borg_errors_$DATE.log
 fi
 
 # Start all services
