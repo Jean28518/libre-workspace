@@ -3,7 +3,7 @@ source ../unix.conf
 
 # Dump all databases
 # --default-character-set=utf8mb4: For emojis and similar, otherwise its broken 
-mysqldump -u root --all-databases --default-character-set=utf8mb4 > /mysql_all_databases.sql    
+mysqldump -u root --all-databases --default-character-set=utf8mb4 --lock-all-tables > /mysql_all_databases.sql    
 # To restore a Single MySQL Database from a Full MySQL Dump:
 # mysql -p -o database_name < mysql_all_databases.sql
 # Otherwise e.g.:
