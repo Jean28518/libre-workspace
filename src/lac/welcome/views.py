@@ -26,6 +26,8 @@ def welcome_start(request):
             return redirect("welcome_select_apps")
         
     ip = os.popen("hostname -I").read().split(" ")[0]
+    if ":" in ip:
+        ip = f"[{ip}]" # IPv6
 
     return render(request, "welcome/welcome_start.html", {"message": message, "hide_login_button": True, "ip": ip})
 
