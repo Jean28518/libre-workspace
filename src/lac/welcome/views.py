@@ -24,8 +24,10 @@ def welcome_start(request):
             message = "Passwörter stimmen nicht überein. Bitte versuchen Sie es erneut."
         if message == "":
             return redirect("welcome_select_apps")
+        
+    ip = os.popen("hostname -I").read().split(" ")[0]
 
-    return render(request, "welcome/welcome_start.html", {"message": message, "hide_login_button": True})
+    return render(request, "welcome/welcome_start.html", {"message": message, "hide_login_button": True, "ip": ip})
 
 
 def welcome_select_apps(request):

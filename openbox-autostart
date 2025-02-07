@@ -3,4 +3,7 @@
 # If .config/chromium folder exists remove it
 rm -rf ~/.config/chromium
 
+# Because the portal page could not be ready, we need to wait a bit
+sleep 10
+
 chromium --kiosk --temp-profile --noerrdialogs --enable-features=OverlayScrollbar --disable-restore-session-state http://localhost
