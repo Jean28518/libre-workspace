@@ -24,7 +24,7 @@ CLEANED_DATA="""{
     'client_type': 'confidential',
     'client_id': '$2',
     'client_secret': '$3',
-    'response_types': ['1'],
+    'response_types': ['1', '2', '3'],
     'jwt_alg': 'RS256',
     'redirect_uris': '$4',
     'require_consent': False,

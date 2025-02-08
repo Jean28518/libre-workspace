@@ -1,0 +1,41 @@
+services:
+  guacamole:
+    image: guacamole/guacamole:SED_GUACAMOLE_VERSION
+    ports:
+      - "28925:8080"
+    links:
+      - guacd
+      - mysql
+    environment:
+      GUACD_HOSTNAME: guacd
+      MYSQL_HOSTNAME: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: guacamole
+      MYSQL_USER: guacamole
+      MYSQL_PASSWORD: epho8Uk0
+      MYSQL_ROOT_PASSWORD: Fei1woo9
+      OPENID_AUTHORIZATION_ENDPOINT: SED_OPENID_AUTHORIZATION_ENDPOINT
+      OPENID_JWKS_ENDPOINT: SED_OPENID_JWKS_ENDPOINT
+      OPENID_ISSUER: SED_OPENID_ISSUER
+      OPENID_CLIENT_ID: SED_OPENID_CLIENT_ID
+      OPENID_REDIRECT_URI: SED_OPENID_REDIRECT_URI
+      OPENID_USERNAME_CLAIM_TYPE: SED_OPENID_USERNAME_CLAIM_TYPE
+      OPENID_GROUPS_CLAIM_TYPE: SED_OPENID_GROUPS_CLAIM_TYPE
+      OPENID_MAX_TOKEN_VALIDITY: SED_OPENID_MAX_TOKEN_VALIDITY
+
+  guacd:
+    image: guacamole/guacd
+
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: Fei1woo9
+      MYSQL_DATABASE: guacamole
+      MYSQL_USER: guacamole
+      MYSQL_PASSWORD: epho8Uk0
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - /root/desktop/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+
+volumes:
+  mariadb_data:

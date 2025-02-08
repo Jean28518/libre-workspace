@@ -1,0 +1,167 @@
+#!/bin/bash
+
+# This script adds a user to this linux-server and to the guacamole database.
+# If the user already exists, the script is able to handle this case.
+
+# This script should be run as root
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
+# We need these variables:
+# USERNAME
+# PASSWORD
+# ADMIN_STATUS
+
+# Check if the number of arguments is equal to 3
+if [ "$#" -ne 3 ]; then
+    echo "Illegal number of parameters"
+    echo "Usage: $0 <username> <password> <admin_status>"
+    exit 1
+fi
+
+USERNAME=$1
+PASSWORD=$2
+ADMIN_STATUS=$3 # Values: 1=admin, 0=user
+
+########################## Unix Authentication ##########################
+
+change_password() {
+    local username=$1
+    local password=$2
+
+    passwd $username <<< "$password"$'\n'"$password"
+}
+
+# Check if the user already exists
+if id "lw.$USERNAME" &>/dev/null; then
+    echo "User lw.$USERNAME already exists"
+    # Change the password
+    change_password lw.$USERNAME $PASSWORD
+else
+    # Add the user
+    useradd -m -s /bin/bash lw.$USERNAME
+    change_password lw.$USERNAME $PASSWORD
+    echo "User lw.$USERNAME has been added"
+fi
+
+# Add the user to the sudo group if the user is an admin
+if [ $ADMIN_STATUS = "1" ] ; then
+    usermod -aG sudo lw.$USERNAME
+    echo "User lw.$USERNAME has been added to the sudo group"
+fi
+
+# Disable ssh password authentication for the user
+sed -i "/Match User lw.$USERNAME/d" /etc/ssh/sshd_config
+sed -i "/    PasswordAuthentication no/d" /etc/ssh/sshd_config
+echo "
+Match User lw.$USERNAME 
+    PasswordAuthentication no
+" >> /etc/ssh/sshd_config
+systemctl restart sshd
+
+########################## Guacamole Database ##########################
+MYSQL_HOST="localhost"
+MYSQL_PORT="3307"
+MYSQL_DATABASE="guacamole"
+MYSQL_USER="guacamole"
+MYSQL_PASSWORD="epho8Uk0"
+
+# Check if the user already exists in the guacamole database, table guacamole_user
+# The documentation about adding a user is:
+# -- Generate salt
+# SET @salt = UNHEX(SHA2(UUID(), 256));
+
+# -- Create guacamole_entity
+# INSERT INTO guacamole_entity (name, type) VALUES ('USER', 'USER');
+# ENTITY_ID = SELECT entity_id FROM guacamole_entity WHERE name='USER';
+
+# -- Create user and hash password with salt
+# INSERT INTO guacamole_user (entity_id, password_salt, password_hash)
+#      VALUES ($ENTITY_ID, @salt, UNHEX(SHA2(CONCAT('mypassword', HEX(@salt)), 256)));
+
+if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_entity WHERE name='$USERNAME'" | grep -q "$USERNAME"; then
+    echo "User $USERNAME already exists in the guacamole database"
+    # Update the password
+    ENTITY_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT entity_id FROM guacamole_entity WHERE name='$USERNAME'" | tail -n 1)
+    echo $ENTITY_ID
+    SALT=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT password_salt FROM guacamole_user WHERE entity_id=$ENTITY_ID" | tail -n 1)
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "UPDATE guacamole_user SET password_hash=UNHEX(SHA2(CONCAT('$PASSWORD', HEX('$SALT')), 256)) WHERE entity_id=$ENTITY_ID"
+else
+    # Add the user
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SET @salt = UNHEX(SHA2(UUID(), 256)); INSERT INTO guacamole_entity (name, type) VALUES ('$USERNAME', 'USER'); SET @entity_id = LAST_INSERT_ID(); INSERT INTO guacamole_user (entity_id, password_salt, password_hash, password_date) VALUES (@entity_id, @salt, UNHEX(SHA2(CONCAT('$PASSWORD', HEX(@salt)), 256)), NOW());"
+    echo "User $USERNAME has been added to the guacamole database"
+fi
+
+
+# Add admin status to the user if the user is an admin
+# The documentation about adding an admin is:
+# The guacamole_system_permission table contains the following columns:
+# - user_id
+#   The value of the user_id column of the entry associated with the user owning this permission.
+# - permission
+#   The permission being granted. This column can have one of three possible values: ADMINISTER, which grants the ability to administer the entire system (essentially a wildcard permission), CREATE_CONNECTION, which grants the ability to create connections, CREATE_CONNECTION_GROUP, which grants the ability to create connections groups, or CREATE_USER, which grants the ability to create users.
+if [ $ADMIN_STATUS = "admin" ] ; then
+    USER_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT user_id FROM guacamole_user WHERE username='$USERNAME'" | tail -n 1)
+    if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_system_permission WHERE user_id=$USER_ID AND permission='ADMINISTER'" | grep -q "ADMINISTER"; then
+        echo "User $USERNAME is already an admin in the guacamole database"
+    else
+        mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_system_permission (user_id, permission) VALUES ($USER_ID, 'ADMINISTER')"
+        echo "User $USERNAME has been added as an admin to the guacamole database"
+    fi
+fi
+
+
+
+# Now we add the connection to the linux server to the guacamole database for the user
+# The documentation about adding a connection is:
+# -- Create connection
+# INSERT INTO guacamole_connection (connection_name, protocol) VALUES ('DESKTOP_$USERNAME', 'rdp');
+
+# -- Determine the connection_id
+# SELECT * FROM guacamole_connection WHERE connection_name = 'DESKTOP_$USERNAME' AND parent_id IS NULL;
+
+# -- Add parameters to the new connection
+# INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'hostname', '172.17.0.1'); # The IP of the docker host
+# INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'port', '3389');
+# INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'username', '$USERNAME');
+# INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'password', '$PASSWORD');
+# INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'security', 'any');
+# INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'ignore-cert', 'true');
+if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_connection WHERE connection_name='DESKTOP_$USERNAME' AND parent_id IS NULL" | grep -q "DESKTOP_$USERNAME"; then
+    echo "Connection DESKTOP_$USERNAME already exists in the guacamole database"
+    # Update the connection:
+    CONNECTION_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT connection_id FROM guacamole_connection WHERE connection_name='DESKTOP_$USERNAME' AND parent_id IS NULL" | tail -n 1)
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "UPDATE guacamole_connection_parameter SET parameter_value='$PASSWORD' WHERE connection_id=$CONNECTION_ID AND parameter_name='password'"
+else
+    # Add the connection
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection (connection_name, protocol) VALUES ('DESKTOP_$USERNAME', 'rdp')"
+    CONNECTION_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT connection_id FROM guacamole_connection WHERE connection_name='DESKTOP_$USERNAME' AND parent_id IS NULL" | tail -n 1)
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'hostname', '172.17.0.1')"
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'port', '3389')"
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'username', 'lw.$USERNAME')"
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'password', '$PASSWORD')"
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'security', 'any')"
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'ignore-cert', 'true')"
+    echo "Connection DESKTOP_$USERNAME has been added to the guacamole database"
+fi
+
+
+# Now we have to add the connection to the user via the guacamole_connection_permission table
+# The fields are: ENTITY_ID, CONNECTION_ID, PERMISSION
+# As permission we use READ
+if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_connection_permission WHERE entity_id=$ENTITY_ID AND connection_id=$CONNECTION_ID AND permission='READ'" | grep -q "READ"; then
+    echo "Connection DESKTOP_$USERNAME is already assigned to user $USERNAME in the guacamole database"
+else
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_permission (entity_id, connection_id, permission) VALUES ($ENTITY_ID, $CONNECTION_ID, 'READ')"
+    echo "Connection DESKTOP_$USERNAME has been assigned to user $USERNAME in the guacamole database"
+fi
+
+mkdir -p /home/lw.$USERNAME/.scripts
+cp /usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/scripts/* /home/lw.$USERNAME/.scripts/
+chmod +x /home/lw.$USERNAME/.scripts/*
+mkdir -p /home/lw.$USERNAME/.config/autostart
+ln -s /home/lw.$USERNAME/.scripts/* /home/lw.$USERNAME/.config/autostart/
+chmod 770 /home/lw.$USERNAME/
+chown -R lw.$USERNAME:lw.$USERNAME /home/lw.$USERNAME/

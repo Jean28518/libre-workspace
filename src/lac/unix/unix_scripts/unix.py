@@ -449,6 +449,7 @@ def get_software_modules():
     modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": is_jitsi_installed() })
     modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": is_collabora_installed() })
     modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_onlyoffice_installed() })
+    modules.append({ "id": "desktop", "name": "Cloud Desktop", "automaticUpdates": get_value("DESKTOP_AUTOMATIC_UPDATES", "False") == "True", "installed": os.path.isdir("/root/desktop/") })
     modules.append({ "id": "xfce", "name": "XFCE", "automaticUpdates": get_value("XFCE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_xfce_installed() })
     
     for module in modules:

@@ -16,6 +16,11 @@ if [ "$NEXTCLOUD_AUTOMATIC_UPDATES" == "True" ]; then
     bash ../nextcloud/update_nextcloud.sh >> ../history/update-$DATE.log 2>&1
 fi
 
+if [ "$DESKTOP_AUTOMATIC_UPDATES" == "True" ]; then
+    echo "Starting cloud desktop update at $DATE" >> ../history/update-$DATE.log 2>&1
+    bash ../desktop/update_desktop.sh >> ../history/update-$DATE.log 2>&1
+fi
+
 if [ "$ONLYOFFICE_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting onlyoffice update at $DATE" >> ../history/update-$DATE.log 2>&1
     bash ../onlyoffice/update_onlyoffice.sh >> ../history/update-$DATE.log 2>&1

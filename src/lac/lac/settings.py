@@ -252,3 +252,4 @@ LOGIN_URL="/idm/login"
 
 OIDC_USERINFO = 'idm.oidc_provider_settings.userinfo'
 OIDC_EXTRA_SCOPE_CLAIMS = 'idm.oidc_provider_settings.CustomScopeClaims'
+OIDC_IDTOKEN_INCLUDE_CLAIMS = True
