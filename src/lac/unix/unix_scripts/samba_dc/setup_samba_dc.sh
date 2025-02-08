@@ -37,7 +37,12 @@ chattr -i -a /etc/resolv.conf
 rm -f /etc/resolv.conf
 touch /etc/resolv.conf
 echo "nameserver $IP" >> /etc/resolv.conf # This is the IP of the server itself. Needed for docker containers e.g.
-echo "nameserver 208.67.222.222" >> /etc/resolv.conf # OpenDNS
+# Check if IP is IPv6 and add appropriate entry to resolv.conf
+if [[ $IP =~ : ]]; then
+    echo "nameserver 2606:4700:4700::1111" >> /etc/resolv.conf # Google DNS IPv6
+else
+    echo "nameserver 208.67.222.222" >> /etc/resolv.conf # OpenDNS
+fi
 chattr +i +a /etc/resolv.conf
 
 ## Setup SAMBA DC #########################################
