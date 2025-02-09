@@ -39,11 +39,12 @@ def welcome_select_apps(request):
             request.session["onlyoffice"] = "onlyoffice"
         elif request.POST.get("online_office", "") == "collabora":
             request.session["collabora"] = "collabora"
+        request.session["desktop"] = request.POST.get("desktop", "")
         request.session["matrix"] = request.POST.get("matrix", "")
         request.session["jitsi"] = request.POST.get("jitsi", "")
         request.session["xfce"] = request.POST.get("xfce", "")
 
-        if not (request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"] or request.session["xfce"]):
+        if not (request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"] or request.session["xfce"] or request.session["desktop"]):
             return redirect("libreworkspace_lite")
 
         return redirect("welcome_dns_settings")
@@ -122,6 +123,7 @@ def installation_running(request):
     os.environ["NEXTCLOUD"] = request.session["nextcloud"]
     os.environ["ONLYOFFICE"] = request.session.get("onlyoffice", "")
     os.environ["COLLABORA"] = request.session.get("collabora", "")
+    os.environ["DESKTOP"] = request.session["desktop"]
     os.environ["MATRIX"] = request.session["matrix"]
     os.environ["JITSI"] = request.session["jitsi"]
     os.environ["XFCE"] = request.session["xfce"]

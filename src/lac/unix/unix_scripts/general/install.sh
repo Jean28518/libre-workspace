@@ -42,6 +42,14 @@ if [ ! -z "$ONLYOFFICE" ]; then
     . setup_onlyoffice.sh
 fi
 
+# If the environment variable DESKTOP is not empty
+if [ ! -z "$DESKTOP" ]; then
+    echo "Desktop installation..."
+    # Install Desktop
+    cd $LW_SCRIPTS/../desktop
+    . setup_desktop.sh
+fi
+
 # If the environment variable MATRIX is not empty
 if [ ! -z "$MATRIX" ]; then
     echo "Matrix installation..."
