@@ -18,6 +18,13 @@ if [ ! -z "$SAMBA_DC" ]; then
     . setup_samba_dc.sh
 fi
 
+# Distribute the certificates for local installations
+if [ $DOMAIN = "int.de" ] ; then
+    echo "Setting up internal https..."
+    cd $LW_SCRIPTS/../general
+    . setup_internal_https.sh
+fi
+
 # If the environment variable NEXTCLOUD is not empty
 if [ ! -z "$NEXTCLOUD" ]; then
     echo "Nextcloud installation..."
@@ -72,13 +79,6 @@ if [ ! -z "$XFCE" ]; then
     # Install XFCE
     cd $LW_SCRIPTS/../xfce
     . setup_xfce.sh
-fi
-
-# Distribute the certificates for local installations
-if [ $DOMAIN = "int.de" ] ; then
-    echo "Setting up internal https..."
-    cd $LW_SCRIPTS/../general
-    . setup_internal_https.sh
 fi
 
 # Install the rest of the linux-arbeitsplatz

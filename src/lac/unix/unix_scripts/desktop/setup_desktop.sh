@@ -95,7 +95,7 @@ for USER in $USERS; do
     fi
 
     # The second argument is the password. We set it to an empty string because its then generated automatically.
-    bash /usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/add_user.sh "$USERNAME" "" "$ADMINISTRATOR"
+    bash /usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/administration/add_user.sh "$USERNAME" "" "$ADMINISTRATOR"
     echo "$USERNAME"   
 done
 
