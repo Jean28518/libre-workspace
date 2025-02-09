@@ -88,3 +88,10 @@ for USER in $USERS; do
     echo "$USERNAME"   
 done
 
+
+# If user systemv exists on linux we need to add him into autologin in lightdm
+if [ -d "/home/systemv" ]; then
+    echo "[Seat:*]
+autologin-user=systemv
+autologin-user-timeout=0" > /etc/lightdm/lightdm.conf
+fi

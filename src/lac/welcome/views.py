@@ -119,7 +119,7 @@ def installation_running(request):
     os.environ["IP"] = os.popen("hostname -I").read().split(" ")[0]
     os.environ["LDAP_DC"] = request.session["ldap_dc"]
     # Run basics script
-    os.environ["SAMBA_DC"] = request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"]
+    os.environ["SAMBA_DC"] = request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"] or request.session["desktop"]
     os.environ["NEXTCLOUD"] = request.session["nextcloud"]
     os.environ["ONLYOFFICE"] = request.session.get("onlyoffice", "")
     os.environ["COLLABORA"] = request.session.get("collabora", "")

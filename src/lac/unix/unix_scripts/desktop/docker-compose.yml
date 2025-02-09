@@ -22,9 +22,11 @@ services:
       OPENID_USERNAME_CLAIM_TYPE: SED_OPENID_USERNAME_CLAIM_TYPE
       OPENID_GROUPS_CLAIM_TYPE: SED_OPENID_GROUPS_CLAIM_TYPE
       OPENID_MAX_TOKEN_VALIDITY: SED_OPENID_MAX_TOKEN_VALIDITY
+    restart: unless-stopped
 
   guacd:
     image: guacamole/guacd
+    restart: unless-stopped
 
   mysql:
     image: mariadb:latest
@@ -36,6 +38,7 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - /root/desktop/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    restart: unless-stopped
 
 volumes:
   mariadb_data:
