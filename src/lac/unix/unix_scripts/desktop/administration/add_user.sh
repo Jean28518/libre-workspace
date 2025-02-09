@@ -25,6 +25,11 @@ USERNAME=$1
 PASSWORD=$2
 ADMIN_STATUS=$3 # Values: 1=admin, 0=user
 
+# If password is empty, then generate a random password
+if [ -z "$PASSWORD" ]; then
+    PASSWORD=$(openssl rand -base64 32)
+fi
+
 ########################## Unix Authentication ##########################
 
 change_password() {
@@ -117,10 +122,10 @@ fi
 # Now we add the connection to the linux server to the guacamole database for the user
 # The documentation about adding a connection is:
 # -- Create connection
-# INSERT INTO guacamole_connection (connection_name, protocol) VALUES ('DESKTOP_$USERNAME', 'rdp');
+# INSERT INTO guacamole_connection (connection_name, protocol) VALUES ('Cloud Desktop $USERNAME', 'rdp');
 
 # -- Determine the connection_id
-# SELECT * FROM guacamole_connection WHERE connection_name = 'DESKTOP_$USERNAME' AND parent_id IS NULL;
+# SELECT * FROM guacamole_connection WHERE connection_name = 'Cloud Desktop $USERNAME' AND parent_id IS NULL;
 
 # -- Add parameters to the new connection
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'hostname', '172.17.0.1'); # The IP of the docker host
@@ -129,39 +134,60 @@ fi
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'password', '$PASSWORD');
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'security', 'any');
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'ignore-cert', 'true');
-if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_connection WHERE connection_name='DESKTOP_$USERNAME' AND parent_id IS NULL" | grep -q "DESKTOP_$USERNAME"; then
-    echo "Connection DESKTOP_$USERNAME already exists in the guacamole database"
+if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_connection WHERE connection_name='Cloud Desktop $USERNAME' AND parent_id IS NULL" | grep -q "Cloud Desktop $USERNAME"; then
+    echo "Connection Cloud Desktop $USERNAME already exists in the guacamole database"
     # Update the connection:
-    CONNECTION_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT connection_id FROM guacamole_connection WHERE connection_name='DESKTOP_$USERNAME' AND parent_id IS NULL" | tail -n 1)
+    CONNECTION_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT connection_id FROM guacamole_connection WHERE connection_name='Cloud Desktop $USERNAME' AND parent_id IS NULL" | tail -n 1)
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "UPDATE guacamole_connection_parameter SET parameter_value='$PASSWORD' WHERE connection_id=$CONNECTION_ID AND parameter_name='password'"
 else
     # Add the connection
-    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection (connection_name, protocol) VALUES ('DESKTOP_$USERNAME', 'rdp')"
-    CONNECTION_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT connection_id FROM guacamole_connection WHERE connection_name='DESKTOP_$USERNAME' AND parent_id IS NULL" | tail -n 1)
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection (connection_name, protocol) VALUES ('Cloud Desktop $USERNAME', 'rdp')"
+    CONNECTION_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT connection_id FROM guacamole_connection WHERE connection_name='Cloud Desktop $USERNAME' AND parent_id IS NULL" | tail -n 1)
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'hostname', '172.17.0.1')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'port', '3389')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'username', 'lw.$USERNAME')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'password', '$PASSWORD')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'security', 'any')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'ignore-cert', 'true')"
-    echo "Connection DESKTOP_$USERNAME has been added to the guacamole database"
+    echo "Connection Cloud Desktop $USERNAME has been added to the guacamole database"
 fi
 
 
 # Now we have to add the connection to the user via the guacamole_connection_permission table
 # The fields are: ENTITY_ID, CONNECTION_ID, PERMISSION
 # As permission we use READ
+ENTITY_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT entity_id FROM guacamole_entity WHERE name='$USERNAME'" | tail -n 1)
 if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_connection_permission WHERE entity_id=$ENTITY_ID AND connection_id=$CONNECTION_ID AND permission='READ'" | grep -q "READ"; then
-    echo "Connection DESKTOP_$USERNAME is already assigned to user $USERNAME in the guacamole database"
+    echo "Connection Cloud Desktop $USERNAME is already assigned to user $USERNAME in the guacamole database"
 else
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_permission (entity_id, connection_id, permission) VALUES ($ENTITY_ID, $CONNECTION_ID, 'READ')"
-    echo "Connection DESKTOP_$USERNAME has been assigned to user $USERNAME in the guacamole database"
+    echo "Connection Cloud Desktop $USERNAME has been assigned to user $USERNAME in the guacamole database"
 fi
+
+create_autostart() {
+    local username=$1
+    local script_name=$2
+
+    mkdir -p /home/lw.$USERNAME/.config/autostart
+
+    echo "[Desktop Entry]
+Type=Application
+Exec=/home/lw.$username/.scripts/$script_name
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[de_DE]=$script_name
+Comment[de_DE]=Created by the Libre Workspace
+" > /home/lw.$username/.config/autostart/$script_name.desktop
+    
+}
 
 mkdir -p /home/lw.$USERNAME/.scripts
 cp /usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/scripts/* /home/lw.$USERNAME/.scripts/
 chmod +x /home/lw.$USERNAME/.scripts/*
-mkdir -p /home/lw.$USERNAME/.config/autostart
-ln -s /home/lw.$USERNAME/.scripts/* /home/lw.$USERNAME/.config/autostart/
+for SCRIPT in /home/lw.$USERNAME/.scripts/*; do
+    SCRIPT_NAME=$(basename $SCRIPT)
+    create_autostart $USERNAME $SCRIPT_NAME
+done
 chmod 770 /home/lw.$USERNAME/
 chown -R lw.$USERNAME:lw.$USERNAME /home/lw.$USERNAME/

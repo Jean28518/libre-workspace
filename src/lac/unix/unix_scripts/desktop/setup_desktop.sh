@@ -10,7 +10,7 @@
 
 # Install Cinnamon, Xrdp and recommended software
 export DEBIAN_FRONTEND=noninteractive
-sudo apt install task-cinnamon-desktop xrdp chromium yaru-theme-icon yaru-theme-gtk arc-theme libreoffice-l10n-de hunspell hunspell-de-de hyphen-de remmina keepassxc remmina-plugin-rdp remmina-plugin-vnc gimp inkscape flameshot gnome-calendar filezilla pdfarranger xournalpp gdebi -y
+sudo apt install task-cinnamon-desktop cinnamon-l10n xrdp chromium yaru-theme-icon yaru-theme-gtk arc-theme libreoffice-l10n-de hunspell hunspell-de-de hyphen-de remmina keepassxc remmina-plugin-rdp remmina-plugin-vnc gimp inkscape flameshot gnome-calendar filezilla pdfarranger xournalpp gdebi -y
 wget https://github.com/Jean28518/linux-assistant/releases/latest/download/linux-assistant.deb
 sudo apt install ./linux-assistant.deb -y
 rm linux-assistant.deb
@@ -57,6 +57,9 @@ desktop.$DOMAIN {
 " >> /etc/caddy/Caddyfile
 
 systemctl reload caddy
+
+chmod 600 /usr/share/linux-arbeitsplatz/cfg
+chmod 700 /usr/share/linux-arbeitsplatz/unix
 
 ufw allow from 192.168.0.0/16 to any port 3389
 

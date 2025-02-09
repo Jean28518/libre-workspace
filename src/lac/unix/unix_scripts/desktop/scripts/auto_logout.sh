@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Time in seconds to wait before locking the screen (30 minutes)
-IDLE_TIME=1800
+# Time in seconds to wait before locking the screen (60 minutes)
+IDLE_TIME=3600
 
 # Function to lock the screen
 lock_screen() {
@@ -20,10 +20,16 @@ while true; do
     # Get the current mouse position
     current_mouse_position=$(xdotool getmouselocation --shell | grep -E 'X|Y' | awk -F '=' '{print $2}')
 
+    # If the cinnamon session is not active anymore for $USER, then exit
+    if ! pgrep -u $USER -x cinnamon > /dev/null; then
+        exit
+    fi
+
     # Check if the mouse position has changed
     if [ "$initial_mouse_position" == "$current_mouse_position" ]; then
         # Lock the screen
         lock_screen
+        break
     else
         # Update the initial mouse position
         initial_mouse_position=$current_mouse_position
