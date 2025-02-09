@@ -8,7 +8,7 @@ from lac.templates import message as message_func
 
 
 # List of subdomains
-subdomains = ["cloud", "office", "portal", "la", "chat", "meet", "element", "matrix"]
+subdomains = ["cloud", "office", "portal", "la", "chat", "meet", "element", "matrix", "desktop"]
 
 # Create your views here.
 def welcome_start(request):
@@ -35,9 +35,9 @@ def welcome_start(request):
 def welcome_select_apps(request):
     if request.method == "POST":
         request.session["nextcloud"] = request.POST.get("nextcloud", "")
-        if request.POST.get("online_office", "") == "onlyoffice":
+        if request.POST.get("online_office", "") == "onlyoffice" and request.POST.get("nextcloud", ""):
             request.session["onlyoffice"] = "onlyoffice"
-        elif request.POST.get("online_office", "") == "collabora":
+        elif request.POST.get("online_office", "") == "collabora" and request.POST.get("nextcloud", ""):
             request.session["collabora"] = "collabora"
         request.session["desktop"] = request.POST.get("desktop", "")
         request.session["matrix"] = request.POST.get("matrix", "")
