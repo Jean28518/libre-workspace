@@ -23,6 +23,8 @@ services:
       OPENID_GROUPS_CLAIM_TYPE: SED_OPENID_GROUPS_CLAIM_TYPE
       OPENID_MAX_TOKEN_VALIDITY: SED_OPENID_MAX_TOKEN_VALIDITY
     restart: unless-stopped
+    extra_hosts:
+      - "portal.int.de:SED_IP"
 
   guacd:
     image: guacamole/guacd
@@ -38,6 +40,8 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - /root/desktop/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    ports:
+      - "3307:3306"
     restart: unless-stopped
 
 volumes:

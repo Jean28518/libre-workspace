@@ -35,8 +35,9 @@ fi
 change_password() {
     local username=$1
     local password=$2
-
+    pam-auth-update --force --disable krb5
     passwd $username <<< "$password"$'\n'"$password"
+    pam-auth-update --force --enable krb5
 }
 
 # Check if the user already exists
@@ -112,21 +113,22 @@ fi
 # - permission
 #   The permission being granted. This column can have one of three possible values: ADMINISTER, which grants the ability to administer the entire system (essentially a wildcard permission), CREATE_CONNECTION, which grants the ability to create connections, CREATE_CONNECTION_GROUP, which grants the ability to create connections groups, or CREATE_USER, which grants the ability to create users.
 if [ $ADMIN_STATUS = "admin" ] ; then
-    USER_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT user_id FROM guacamole_user WHERE username='$USERNAME'" | tail -n 1)
-    if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_system_permission WHERE user_id=$USER_ID AND permission='ADMINISTER'" | grep -q "ADMINISTER"; then
+    ENTITY_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT entity_id FROM guacamole_entity WHERE name='$USERNAME'" | tail -n 1)
+    if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_system_permission WHERE entity_id=$ENTITY_ID AND permission='ADMINISTER'" | grep -q "ADMINISTER"; then
         echo "User $USERNAME is already an admin in the guacamole database"
     else
-        mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_system_permission (user_id, permission) VALUES ($USER_ID, 'ADMINISTER')"
+        mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_system_permission (entity_id, permission) VALUES ($ENTITY_ID, 'ADMINISTER')"
         echo "User $USERNAME has been added as an admin to the guacamole database"
     fi
 else
     # Remove the admin status from the user if the user is still an admin in the guacamole database
-    USER_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT user_id FROM guacamole_user WHERE username='$USERNAME'" | tail -n 1)
-    if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_system_permission WHERE user_id=$USER_ID AND permission='ADMINISTER'" | grep -q "ADMINISTER"; then
-        mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "DELETE FROM guacamole_system_permission WHERE user_id=$USER_ID AND permission='ADMINISTER'"
+    ENTITY_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT entity_id FROM guacamole_entity WHERE name='$USERNAME'" | tail -n 1)
+    if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_system_permission WHERE entity_id=$ENTITY_ID AND permission='ADMINISTER'" | grep -q "ADMINISTER"; then
+        mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "DELETE FROM guacamole_system_permission WHERE entity_id=$ENTITY_ID AND permission='ADMINISTER'"
         echo "User $USERNAME has been removed as an admin from the guacamole database"
     else
         echo "User $USERNAME is not an admin in the guacamole database"
+    fi
 fi
 
 
@@ -188,8 +190,8 @@ Exec=/home/lw.$username/.scripts/$script_name
 X-GNOME-Autostart-enabled=true
 NoDisplay=false
 Hidden=false
-Name[de_DE]=$script_name
-Comment[de_DE]=Created by the Libre Workspace
+Name=$script_name
+Comment=Created by the Libre Workspace
 " > /home/lw.$username/.config/autostart/$script_name.desktop
     
 }
@@ -203,3 +205,4 @@ for SCRIPT in /home/lw.$USERNAME/.scripts/*; do
 done
 chmod 770 /home/lw.$USERNAME/
 chown -R lw.$USERNAME:lw.$USERNAME /home/lw.$USERNAME/
+

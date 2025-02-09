@@ -480,6 +480,11 @@ def desktop_add_user(username, password, admin_status):
     if not is_desktop_installed():
         return
     
+    if admin_status:
+        admin_status = "1"
+    else:
+        admin_status = "0"
+    
     subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/administration/add_user.sh", username, password, admin_status], cwd="desktop/", env=get_env_sh_variables())
 
 

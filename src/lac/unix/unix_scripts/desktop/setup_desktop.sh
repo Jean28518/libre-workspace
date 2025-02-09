@@ -8,9 +8,9 @@
 
 . guacamole_version.sh
 
-# Install Cinnamon, Xrdp and recommended software
+# Install Cinnamon, Xrdp and recommended software and mysql-client
 export DEBIAN_FRONTEND=noninteractive
-sudo apt install task-cinnamon-desktop cinnamon-l10n xrdp chromium yaru-theme-icon yaru-theme-gtk arc-theme libreoffice-l10n-de hunspell hunspell-de-de hyphen-de remmina keepassxc remmina-plugin-rdp remmina-plugin-vnc gimp inkscape flameshot gnome-calendar filezilla pdfarranger xournalpp gdebi -y
+sudo apt install default-mysql-client task-cinnamon-desktop cinnamon-l10n xrdp chromium yaru-theme-icon yaru-theme-gtk arc-theme libreoffice-l10n-de hunspell hunspell-de-de hyphen-de remmina keepassxc remmina-plugin-rdp remmina-plugin-vnc gimp inkscape flameshot gnome-calendar filezilla pdfarranger xournalpp gdebi -y
 wget https://github.com/Jean28518/linux-assistant/releases/latest/download/linux-assistant.deb
 sudo apt install ./linux-assistant.deb -y
 rm linux-assistant.deb
@@ -20,6 +20,7 @@ mkdir -p /root/desktop
 cp docker-compose.yml /root/desktop/docker-compose.yml
 
 sed -i "s/SED_GUACAMOLE_VERSION/$GUACAMOLE_VERSION/g" /root/desktop/docker-compose.yml
+sed -i "s/SED_IP/$IP/g" /root/desktop/docker-compose.yml
 
 CLIENT_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 CLIENT_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
@@ -43,6 +44,15 @@ docker-compose -f /root/desktop/docker-compose.yml up -d
 docker cp /root/desktop/initdb.sql desktop_mysql_1:/initdb.sql
 docker exec -it desktop_mysql_1 bash -c "mysql -u root -pFei1woo9 guacamole < /initdb.sql"
 
+# Add the lan.crt to the guacamole container that it can trust the self signed certificate
+if [ -d /var/www/cert ]; then
+    docker cp /var/www/cert/lan.crt desktop_guacamole_1:/usr/local/share/ca-certificates/lan.crt
+    # Also copy it to /opt/java/openjdk/jre/lib/security/cacerts inside the guacamole container
+    docker cp /var/www/cert/lan.crt desktop_guacamole_1:/tmp/lan.crt
+    docker exec -u 0 -it desktop_guacamole_1 update-ca-certificates
+    # Trust the certificate in the java keystore
+    docker exec -u 0 -it desktop_guacamole_1 bash -c "keytool -import -trustcacerts -keystore /opt/java/openjdk/jre/lib/security/cacerts -storepass changeit -noprompt -alias lan -file /tmp/lan.crt"
+fi
 
 
 echo "desktop.$DOMAIN" >> /etc/hosts
@@ -62,6 +72,7 @@ chmod 600 /usr/share/linux-arbeitsplatz/cfg
 chmod 700 /usr/share/linux-arbeitsplatz/unix
 
 ufw allow from 192.168.0.0/16 to any port 3389
+ufw allow from 172.18.0.0/16 to any port 3389
 
 # In the next step we have to configure this linux server unix logins and we have to set these passwords into the guacamole database that we generate a connection to this linux server automatically for every user logging in.
 
@@ -95,3 +106,6 @@ if [ -d "/home/systemv" ]; then
 autologin-user=systemv
 autologin-user-timeout=0" > /etc/lightdm/lightdm.conf
 fi
+
+# We need to enable mkhomedir for pam
+pam-auth-update --enable mkhomedir --force

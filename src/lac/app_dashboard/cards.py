@@ -87,8 +87,9 @@ def ensure_all_cards_exist_in_database():
 # Keywords are used to find the url in the caddyfile
 card_data = [
     {"order": 2,"title": "Nextcloud", "url": "", "icon_path": "/static/lac/icons/nextcloud.webp", "description": "Dateien, Kalender, ...", "keywords": ["cloud", "nextcloud"]},
-    {"order": 3,"title": "Element", "url": "", "icon_path": "/static/lac/icons/element.webp", "description": "Chat", "keywords": ["element"]},
-    {"order": 4,"title": "Jitsi", "url": "", "icon_path": "/static/lac/icons/jitsi.webp", "description": "Videokonferenzen", "keywords": ["jitsi", "meet"]},
-    {"order": 5,"title": "Zertifikate", "url": "", "icon_path": "/static/lac/icons/lock.webp", "description": "Für sicheren Zugriff", "keywords": ["certificate", "ssl", "cert"]},
-    {"order": 6,"title": "Verwaltung", "url": "/idm/dashboard", "icon_path": "/static/lac/icons/company.webp", "description": "Benutzer, Gruppen, ...", "keywords": ["central", "verwaltung", "ldap", "portal"]},
+    {"order": 3,"title": "Cloud Desktop", "url": "", "icon_path": "/static/lac/icons/desktop.webp", "description": "Linux-Desktop im Browser", "keywords": ["desktop", "guacamole"]},
+    {"order": 4,"title": "Element", "url": "", "icon_path": "/static/lac/icons/element.webp", "description": "Chat", "keywords": ["element"]},
+    {"order": 5,"title": "Jitsi", "url": "", "icon_path": "/static/lac/icons/jitsi.webp", "description": "Videokonferenzen", "keywords": ["jitsi", "meet"]},
+    {"order": 6,"title": "Zertifikate", "url": "", "icon_path": "/static/lac/icons/lock.webp", "description": "Für sicheren Zugriff", "keywords": ["certificate", "ssl", "cert"]},
+    {"order": 7,"title": "Verwaltung", "url": "/idm/dashboard", "icon_path": "/static/lac/icons/linux-arbeitsplatz.webp", "description": "Benutzer, Gruppen, ...", "keywords": ["central", "verwaltung", "ldap", "portal"]},
 ]
