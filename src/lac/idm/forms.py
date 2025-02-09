@@ -25,10 +25,6 @@ class AdministratorUserForm(forms.Form):
     last_name = forms.CharField(label="Nachname", max_length=100, required=False)
     mail = forms.EmailField(label="E-Mail-Adresse", max_length=100, required=False)
     admin = forms.BooleanField(label="Administrator (Wenn Nextcloud installiert, dauern dort diese Änderungen einige Minuten)", required=False, widget=forms.CheckboxInput)
-    create_linux_user = forms.BooleanField(label=mark_safe("""<b>Für Profis:</b> Zusätzlicher Linux-Benutzer<br>
-        <i>(Achtung: Dieser Benutzer wird nur auf dem Linux-Server erstellt. Gruppen werden nicht synchronisiert. Logins auf Linux-Clients sind davon nicht betroffen.)</i>
-        """), 
-        required=False, widget=forms.CheckboxInput)
 
 class AdministratorUserEditForm(forms.Form):
     guid = forms.CharField(label="objectGUID", max_length=100, disabled=True, required=False)
@@ -37,7 +33,7 @@ class AdministratorUserEditForm(forms.Form):
     last_name = forms.CharField(label="Nachname", max_length=100, required=False)
     displayName = forms.CharField(label="Anzeigename", max_length=100, required=False)
     mail = forms.EmailField(label="E-Mail-Adresse", max_length=100, required=False)
-    admin = forms.BooleanField(label="Administrator (Wenn Nextcloud installiert, dauern dort diese Änderungen einige Minuten)", required=False, widget=forms.CheckboxInput)
+    admin = forms.BooleanField(label="Administrator", required=False, widget=forms.CheckboxInput)
     enabled = forms.BooleanField(label="Aktiviert", required=False, widget=forms.CheckboxInput)
 
 class GroupCreateForm(forms.Form):

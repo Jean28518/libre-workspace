@@ -441,6 +441,11 @@ def is_onlyoffice_installed():
     return os.path.isdir("/root/onlyoffice/")
 
 
+def is_desktop_installed():
+    return True
+    return os.path.isdir("/root/desktop/")
+
+
 def get_software_modules():
     modules = []
     modules.append({ "id": "samba_dc", "name": "Samba DC (Zentrale Nutzerverwaltung)", "automaticUpdates": get_value("SAMBA_DC_AUTOMATIC_UPDATES", "False") == "True", "installed": is_samba_dc_installed() })
@@ -449,7 +454,7 @@ def get_software_modules():
     modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": is_jitsi_installed() })
     modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": is_collabora_installed() })
     modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_onlyoffice_installed() })
-    modules.append({ "id": "desktop", "name": "Cloud Desktop", "automaticUpdates": get_value("DESKTOP_AUTOMATIC_UPDATES", "False") == "True", "installed": os.path.isdir("/root/desktop/") })
+    modules.append({ "id": "desktop", "name": "Cloud Desktop", "automaticUpdates": get_value("DESKTOP_AUTOMATIC_UPDATES", "False") == "True", "installed": is_desktop_installed() })
     modules.append({ "id": "xfce", "name": "XFCE", "automaticUpdates": get_value("XFCE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_xfce_installed() })
     
     for module in modules:
@@ -465,6 +470,27 @@ def get_software_modules():
 
     return modules
 
+
+def desktop_add_user(username, password, admin_status):
+    """
+    Only works if the desktop module is installed.
+    Adds a user to the desktop module. If user exists, it updates the user configuration.
+    Password can be empty. In these cases a random password will be generated.
+    """
+    if not is_desktop_installed():
+        return
+    
+    subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/administration/add_user.sh", username, password, admin_status], cwd="desktop/", env=get_env_sh_variables())
+
+
+def desktop_remove_user(username):
+    """
+    Removes a user from the desktop module.
+    """
+    if not is_desktop_installed():
+        return
+    
+    subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/administration/remove_user.sh", username], cwd="desktop/", env=get_env_sh_variables())
 
 def update_module(module_id):
     """
@@ -1039,46 +1065,6 @@ def is_xfce_installed():
 
 def is_samba_dc_installed():
     return os.path.isdir("/root/samba_dc")
-
-
-# Creates a user at the current linux operating system
-def create_linux_user(username, display_name, password, admin):
-    # Check if group libre-workspace-users exists
-    if os.system("getent group libre-workspace-users") != 0:
-        os.system("groupadd libre-workspace-users")
-    
-    # Create the user in the linux operating system
-    return_code = os.system(f"adduser --gecos \"{display_name}\" --disabled-password {username}")
-    if return_code != 0:
-        message = subprocess.getoutput(f"adduser --gecos \"{display_name}\" --disabled-password {username}")
-        return "Error: User in linux: could not be created: " + message + "\n<br>\n(If you are in a development environment, this is okay for now.)"
-    # Get output for this command
-    
-    output = subprocess.getoutput(f"echo \"{username}:{password}\" | chpasswd")
-    if output.strip() != "":
-        return output
-    
-    # If the user should be an admin, add the user to the sudo group
-    if admin:
-        os.system(f"usermod -aG sudo {username}")
-
-    # Add the user to the libre-workspace-users group
-    os.system(f"usermod -aG libre-workspace-users {username}")
-
-
-def delete_linux_user(username):
-    """Deletes the user in the linux operating system, if the user is in the libre-workspace-users group and exists."""
-    
-    # check if the user exists and is in the libre-workspace-users group
-    if os.system(f"getent passwd {username}") != 0:
-        return
-    if os.system(f"groups {username} | grep -q libre-workspace-users") != 0:
-        return
-    # Delete the user in the linux operating system
-    return_code = os.system(f"userdel -r {username}")
-    if return_code != 0:
-        return "Error: User in linux: could not be deleted."
-    return
 
 
 def change_password_for_linux_user(username, new_password):

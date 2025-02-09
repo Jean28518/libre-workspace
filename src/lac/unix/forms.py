@@ -56,3 +56,7 @@ class AutomaticShutdownForm(forms.Form):
     type = forms.ChoiceField(label="Aktion", choices=[("Reboot", "Neustart"), ("Shutdown", "Herunterfahren")], widget=forms.Select(attrs={"class": "form-control"}))
     time = forms.CharField(label="Uhrzeit (Format: HH:MM)", max_length=100, widget=forms.TextInput())
     weekday = forms.ChoiceField(label="Wochentag", choices=[("daily", "Täglich"), ("0", "Montag"), ("1", "Dienstag"), ("2", "Mittwoch"), ("3", "Donnerstag"), ("4", "Freitag"), ("5", "Samstag"), ("6", "Sonntag")], widget=forms.Select(attrs={"class": "form-control"}))
+
+
+class DesktopSettingsForm(forms.Form):
+    set_desktop_password = forms.CharField(label="Desktop Passwort setzen", max_length=100, widget=forms.PasswordInput(attrs={"placeholder": "Passwort"}), required=False)

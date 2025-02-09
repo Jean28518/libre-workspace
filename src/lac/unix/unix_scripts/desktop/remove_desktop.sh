@@ -25,6 +25,13 @@ systemctl reload caddy
 
 ufw delete allow from 192.168.0.0/16 to any port 3389
 
+# Remove all the users beginning with lw.
+USERS=$(ls /home | grep lw.)
+for USER in $USERS; do
+    deluser $USER
+    rm -rf /home/$USER
+done
+
 
 # Remove the OIDC client
 # TODO

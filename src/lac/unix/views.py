@@ -674,3 +674,18 @@ def update_module_now(request, module):
     if m != None:
         return message(request, f"Das Modul konnte nicht aktualisiert werden: <code>{m}</code>", "unix_index")
     return message(request, "Das Modul wird nun im Hintergrund aktualisiert. Dies kann einige Minuten dauern.", "unix_index")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def desktop_settings(request):
+    form = forms.DesktopSettingsForm()
+    if request.method == "POST":
+        form = forms.DesktopSettingsForm(request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data["set_desktop_password"]
+            unix.desktop_add_user(request.user.username, new_password, request.user.is_superuser)
+            return message(request, "Einstellungen gespeichert.", "system_configuration")
+        return message(request, "Fehler: Eingaben ungültig.", "desktop_settings")
+    
+
+    return render(request, "lac/generic_form.html", {"form": form, "heading": "Cloud Desktop", "action": "Anwenden", "url": reverse("dashboard"), "hide_buttons_top": "True", "description": "Hinweis: Das Passwort wird im Klartext gespeichert. Das Passwort wird nur für die Passwortabfrage während der Nutzung wie beispielweise für administrative Aufgaben benötigt. Das Passwort wird für das Login nicht benötigt. Das Passwort kann in der Zukunft beim Ändern anderer Benutzerparameter wegen Sicherheitsgründen wieder deaktiviert werden."})

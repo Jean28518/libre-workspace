@@ -58,8 +58,12 @@ if [ $ADMIN_STATUS = "1" ] ; then
 fi
 
 # Disable ssh password authentication for the user
-sed -i "/Match User lw.$USERNAME/d" /etc/ssh/sshd_config
-sed -i "/    PasswordAuthentication no/d" /etc/ssh/sshd_config
+
+# Get the line number of the user in the sshd_config file
+LINE_NUMBER=$(grep -n "Match User lw.$USERNAME" /etc/ssh/sshd_config | cut -d: -f1)
+# Delete this line and the next line
+sed -i "$LINE_NUMBER,+1d" /etc/ssh/sshd_config
+
 echo "
 Match User lw.$USERNAME 
     PasswordAuthentication no
@@ -115,6 +119,14 @@ if [ $ADMIN_STATUS = "admin" ] ; then
         mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_system_permission (user_id, permission) VALUES ($USER_ID, 'ADMINISTER')"
         echo "User $USERNAME has been added as an admin to the guacamole database"
     fi
+else
+    # Remove the admin status from the user if the user is still an admin in the guacamole database
+    USER_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT user_id FROM guacamole_user WHERE username='$USERNAME'" | tail -n 1)
+    if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_system_permission WHERE user_id=$USER_ID AND permission='ADMINISTER'" | grep -q "ADMINISTER"; then
+        mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "DELETE FROM guacamole_system_permission WHERE user_id=$USER_ID AND permission='ADMINISTER'"
+        echo "User $USERNAME has been removed as an admin from the guacamole database"
+    else
+        echo "User $USERNAME is not an admin in the guacamole database"
 fi
 
 

@@ -39,10 +39,11 @@ django_auth_ldap.backend.ldap_error.connect(signal_handler)
 def dashboard(request):
     user_information = get_user_information(request.user)
     challenges = idm.challenges.get_all_libre_workspace_challenges(request.user)
+    desktop_module_active = unix.is_desktop_installed()
     # Only take the last three challenges because we don't want to overwhelm the user
     if len(challenges) > 3:
         challenges = challenges[-3:]
-    return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED, "challenges": challenges})
+    return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED, "challenges": challenges, "desktop_module_active": desktop_module_active})
 
 
 # We have to set login_page=True to prevent the base template from displaying the login button
@@ -314,13 +315,8 @@ def create_user(request):
             user_information = form.cleaned_data
             message = ldap_create_user(user_information)
             if message == None:
-                if user_information.get("create_linux_user", False):
-                    print(user_information)
-                    message = unix.create_linux_user(user_information["username"], str(user_information["first_name"]) + " " +  str(user_information["last_name"]), user_information["password"], user_information.get("admin", False))
-                    # Reset form even if an error occured on linux side because the ldap user was created successfully
-                    form = AdministratorUserForm()
-            if message == None:
                 username = user_information.get("username", "")
+                unix.desktop_add_user(username, "", user_information.get("admin", False))
                 message = f"Benutzer '{username}' erfolgreich erstellt!"
                 # Reset form
                 form = AdministratorUserForm()
@@ -364,7 +360,7 @@ def edit_user(request, cn):
 @staff_member_required(login_url=settings.LOGIN_URL)
 def delete_user(request, cn):
     print(ldap_delete_user(cn))
-    print(unix.delete_linux_user(cn))
+    unix.desktop_remove_user(cn)
     return redirect(user_overview)
 
 @staff_member_required(login_url=settings.LOGIN_URL)

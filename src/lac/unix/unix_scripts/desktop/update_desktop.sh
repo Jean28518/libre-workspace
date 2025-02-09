@@ -6,4 +6,7 @@
 # IP
 # ADMIN_PASSWORD
 
-echo "Not implemented yet, but guacamole is kind of timelessly working, so it is not that urgent."
+# Not implemented yet, but guacamole is kind of timelessly working, so it is not that urgent.
+
+sudo apt update 
+sudo apt upgrade -y

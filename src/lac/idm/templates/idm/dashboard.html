@@ -53,7 +53,7 @@
             <br> 
             Systemkonfiguration
         </article>
-    </a>    
+    </a>
 </div>
 
 <h3>Eigene Einstellungen</h3>
@@ -75,6 +75,15 @@
             Passwort ändern
         </article>
     </a>
+    {% if desktop_module_active and user_information.admin %}
+    <a class="secondary" href="{% url "desktop_settings" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-96" style="padding: 0.5rem;">desktop_windows</span> 
+            <br> 
+            Cloud Desktop Einstellungen
+        </article>
+    </a>
+    {% endif %}
 </div>
 
 

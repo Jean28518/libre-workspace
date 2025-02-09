@@ -64,3 +64,27 @@ chmod 700 /usr/share/linux-arbeitsplatz/unix
 ufw allow from 192.168.0.0/16 to any port 3389
 
 # In the next step we have to configure this linux server unix logins and we have to set these passwords into the guacamole database that we generate a connection to this linux server automatically for every user logging in.
+
+# We get all users through the samba-tool command
+USERS=$(samba-tool user list --full-dn)
+# We only need the usernames:
+for USER in $USERS; do
+    USERNAME=$(echo $USER | cut -d'=' -f2 | cut -d',' -f1)
+
+    # We ignore "Guest" and "krbtgt"
+    if [ "$USERNAME" == "Guest" ] || [ "$USERNAME" == "krbtgt" ]; then
+        continue
+    fi
+
+    # Check if the user has administrator rights
+    if samba-tool group listmembers "Domain Admins" | grep -q $USERNAME; then
+        ADMINISTRATOR="1"
+    else
+        ADMINISTRATOR="0"
+    fi
+
+    # The second argument is the password. We set it to an empty string because its then generated automatically.
+    bash /usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/add_user.sh "$USERNAME" "" "$ADMINISTRATOR"
+    echo "$USERNAME"   
+done
+
