@@ -112,11 +112,11 @@ crontab -u www-data -l > /tmp/crontab
 echo "*/5  *  *  *  * php -f /var/www/nextcloud/cron.php" >> /tmp/crontab
 crontab -u www-data /tmp/crontab
 
+# Install php-ldap for compatibility with samba-dc (sometimes we need this because of old libre workspace migratione, etc.)
+apt install php-ldap -y
+systemctl restart php*
 
-# # Add nextcloud to samba-dc active directory
-# apt install php-ldap -y
-# systemctl restart php*
-
+# Add nextcloud to samba-dc active directory
 # sudo -u www-data php /var/www/nextcloud/occ app:enable user_ldap
 # sudo -u www-data php /var/www/nextcloud/occ ldap:create-empty-config
 # sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapHost ldaps://la.$DOMAIN
