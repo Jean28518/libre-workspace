@@ -32,6 +32,12 @@ def create_addon(cleaned_form):
     # Copy the file content of DJANGO_ROOT/addon_creator/addon_template to /tmp/addon_id
     shutil.copytree(f"{DJANGO_ROOT}/addon_creator/addon_template", f"/tmp/{addon['id']}")
 
+    # For every file in the directory replace "addon" in the filename with the addon_id
+    for root, dirs, files in os.walk(f"/tmp/{addon['id']}"):
+        for file in files:
+            new_file = file.replace("addon", addon["id"])
+            os.rename(os.path.join(root, file), os.path.join(root, new_file))
+
     # Write the docker-compose.yml content to the file
     with open(f"/tmp/{addon['id']}/docker-compose.yml", "w") as f:
         f.write(addon["docker_compose"])
