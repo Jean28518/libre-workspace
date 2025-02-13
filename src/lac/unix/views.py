@@ -486,6 +486,7 @@ def test_mail(request):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def addons(request):
+    addon_creator_url = reverse("addon_creator")
     overview = process_overview_dict({
         "heading": "Addon Verwaltung",
         "element_name": "Addon",
@@ -495,6 +496,7 @@ def addons(request):
         "t_keys": ["name", "description", "author"],
         "add_url_name": "add_addon",
         "delete_url_name": "remove_addon",
+        "hint": f"<a href='{addon_creator_url}'>Add-On erstellen</a>"
     })
     return render(request, "lac/overview_x.html", {"overview": overview})
 
