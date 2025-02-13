@@ -3,8 +3,11 @@ from django.urls import reverse
 from .forms import AddonCreatorForm
 from .utils import create_addon
 from django.http import HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
 
 # Create your views here.
+@staff_member_required(login_url=settings.LOGIN_URL)
 def addon_creator(request):
     message = ""
     form = AddonCreatorForm()
