@@ -7,3 +7,4 @@ django-oidc-provider
 image
 django_otp
 qrcode
+Jinja2

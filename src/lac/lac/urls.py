@@ -24,6 +24,7 @@ urlpatterns = [
     path("idm/", include("idm.urls")),
     path("unix/", include("unix.urls")),
     path("welcome/", include("welcome.urls")),
+    path("addon_creator/", include("addon_creator.urls")),
     path("", include("app_dashboard.urls")),
     path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
     path(
