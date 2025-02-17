@@ -44,6 +44,9 @@ docker-compose -f /root/desktop/docker-compose.yml up -d
 docker cp /root/desktop/initdb.sql desktop_mysql_1:/initdb.sql
 docker exec -it desktop_mysql_1 bash -c "mysql -u root -pFei1woo9 guacamole < /initdb.sql"
 
+# Wait for the guacamole container and the mysql container to start
+sleep 30 
+
 # Add the lan.crt to the guacamole container that it can trust the self signed certificate
 if [ -d /var/www/cert ]; then
     docker cp /var/www/cert/lan.crt desktop_guacamole_1:/usr/local/share/ca-certificates/lan.crt
