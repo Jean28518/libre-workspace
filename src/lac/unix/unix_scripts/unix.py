@@ -585,20 +585,18 @@ def setup_module(module_name):
     if "addon" in module_path:
         # Add the entry to the /etc/hosts file
         addon = get_config_of_addon(module_name)
-        url = addon.get("url", "")
-        if url == "":
-            return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
-        
-        domain = get_env_sh_variables().get("DOMAIN", "")
-        ip = get_env_sh_variables().get("IP", "")   
-        os.system(f"echo \"{ip} {url}.{domain}\" >> /etc/hosts")
-        
-        
-        # Add the entry to the DNS server
-        if settings.AUTH_LDAP_ENABLED:
-            admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
-            # Run this command: samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
-            os.system(f"samba-tool dns add la.{domain} {domain} {url} A {ip} -U administrator%{admin_password}")
+        urls = addon.get("url", "").split(",")      
+        for url in urls:
+            domain = get_env_sh_variables().get("DOMAIN", "")
+            ip = get_env_sh_variables().get("IP", "")   
+            os.system(f"echo \"{ip} {url}.{domain}\" >> /etc/hosts")
+            
+            
+            # Add the entry to the DNS server
+            if settings.AUTH_LDAP_ENABLED:
+                admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+                # Run this command: samba-tool dns add la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
+                os.system(f"samba-tool dns add la.{domain} {domain} {url} A {ip} -U administrator%{admin_password}")
         
 
     # Check if path extists: module_path/setup_module_name.sh
@@ -617,20 +615,19 @@ def remove_module(module_name):
     if "addon" in module_path:
         # Remove the entry from the /etc/hosts file
         addon = get_config_of_addon(module_name)
-        url = addon.get("url", "")
-        if url == "":
-            return f"No URL found in the config file of the addon {module_name}. Please check the config file of the addon."
+        urls = addon.get("url", "").split(",")
         domain = get_env_sh_variables().get("DOMAIN", "")
         if domain == "":
             return "No domain found in the env.sh file. Please check the env.sh file."
-        ip = get_env_sh_variables().get("IP", "")   
-        os.system(f"sed -i '/{url}.{domain}/d' /etc/hosts")
+        for url in urls:
+            ip = get_env_sh_variables().get("IP", "")   
+            os.system(f"sed -i '/{url}.{domain}/d' /etc/hosts")
 
-        # Remove the entry from the DNS server
-        if settings.AUTH_LDAP_ENABLED:
-            admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
-            # Run this command: samba-tool dns delete la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
-            os.system(f"samba-tool dns delete la.{domain} {domain} {module_name} A {ip} -U administrator%{admin_password}")
+            # Remove the entry from the DNS server
+            if settings.AUTH_LDAP_ENABLED:
+                admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+                # Run this command: samba-tool dns delete la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
+                os.system(f"samba-tool dns delete la.{domain} {domain} {module_name} A {ip} -U administrator%{admin_password}")
     
     # Check if path extists: module_name/remove_module_name.sh
     if os.path.isfile(f"{module_path}/remove_{module_name}.sh"):

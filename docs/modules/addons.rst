@@ -72,8 +72,11 @@ An example of nocodb.conf would be:
     email="db@example.com"
     url="db"
 
-the url should be only the third level domain name, without the protocol or the path. 
+the url should be only the third level domain name, without the protocol or the path.
 The shorter the better. Make sure it doesn't conflict with any other addon you want to install.
+You are able to add multiple urls to the addon. Just separate them with a comma. For example: ``url="db,db2"``
+In special cases you can also keep the url empty. Set then the url to ``url=""``.
+
 
 setup_[NAME].sh
 ---------------
