@@ -7,6 +7,9 @@ if [ -f $HOME/.setup_desktop ]; then
     exit
 fi
 
+# Because otherwise the gsettings are not yet available
+sleep 10
+
 # We are in a cinnamon desktop environment
 
 # Set the background image
