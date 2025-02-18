@@ -442,7 +442,6 @@ def is_onlyoffice_installed():
 
 
 def is_desktop_installed():
-    return True
     return os.path.isdir("/root/desktop/")
 
 

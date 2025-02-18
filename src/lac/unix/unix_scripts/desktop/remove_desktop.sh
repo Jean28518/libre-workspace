@@ -8,8 +8,9 @@
 
 docker-compose -f /root/desktop/docker-compose.yml down --volumes
 
-apt purge task-cinnamon-desktop xrdp -y
-apt autoremove --purge -y
+
+DEBIAN_FRONTEND=noninteractive apt purge task-cinnamon-desktop xrdp -y
+DEBIAN_FRONTEND=noninteractive apt autoremove --purge -y
 
 rm -rf /root/desktop
 
