@@ -77,7 +77,7 @@ chmod 600 /usr/share/linux-arbeitsplatz/cfg
 chmod 700 /usr/share/linux-arbeitsplatz/unix
 
 ufw allow from 192.168.0.0/16 to any port 3389
-ufw allow from 172.18.0.0/16 to any port 3389
+ufw allow from 172.16.0.0/12 to any port 3389
 
 # In the next step we have to configure this linux server unix logins and we have to set these passwords into the guacamole database that we generate a connection to this linux server automatically for every user logging in.
 
