@@ -71,6 +71,11 @@ desktop.$DOMAIN {
 }
 " >> /etc/caddy/Caddyfile
 
+# if domain is int.de we need to enable tls internal
+if [ $DOMAIN = "int.de" ] ; then
+  sed -i "s/#tls internal/tls internal/g" /etc/caddy/Caddyfile
+fi
+
 systemctl reload caddy
 
 chmod 600 /usr/share/linux-arbeitsplatz/cfg
