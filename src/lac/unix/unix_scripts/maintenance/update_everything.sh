@@ -4,6 +4,15 @@ echo "Hint: This script runs every day wether some update procedure is enabled o
 
 . ../unix.conf
 
+# Update the libre workspace first, because it may contain updated update scripts for the other services
+if [ "$LIBRE_WORKSPACE_AUTOMATIC_UPDATES" == "True" ]; then
+    echo "Starting libre workspace update at $DATE" >> ../history/update-$DATE.log 2>&1
+    # Get the update log also to our log file
+    cd /usr/share/linux-arbeitsplatz/
+    bash ./update_libre_workspace.sh >> /usr/share/linux-arbeitsplatz/unix/unix_scripts/history/update-$DATE.log 2>&1
+    cd /usr/share/linux-arbeitsplatz/unix/unix_scripts/maintenance
+fi
+
 if [ "$SYSTEM_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting system update at $DATE" >> ../history/update-$DATE.log 2>&1
     bash do_update.sh >> ../history/update-$DATE.log 2>&1
@@ -57,11 +66,3 @@ done
 
 echo "Cleaning up system..." >> ../history/update-$DATE.log
 bash cleanup.sh >> ../history/update-$DATE.log
-
-if [ "$LIBRE_WORKSPACE_AUTOMATIC_UPDATES" == "True" ]; then
-    echo "Starting libre workspace update at $DATE" >> ../history/update-$DATE.log 2>&1
-    # Get the update log also to our log file
-    cd /usr/share/linux-arbeitsplatz/
-    bash ./update_libre_workspace.sh >> /usr/share/linux-arbeitsplatz/unix/unix_scripts/history/update-$DATE.log 2>&1
-    cd /usr/share/linux-arbeitsplatz/unix/unix_scripts/maintenance
-fi
