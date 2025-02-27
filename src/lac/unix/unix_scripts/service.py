@@ -336,11 +336,15 @@ while True:
                 if respose.status_code != 200:
                     if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                         last_message_sent[domain] = time.time()
-                        os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+                        with open(f"/tmp/{domain}_response.txt", "w") as f:
+                            f.write(respose.text)
+                        os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' localhost:11123/unix/send_mail")
             except:
                 if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                     last_message_sent[domain] = time.time()
-                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+                    with open(f"/tmp/{domain}_response.txt", "w") as f:
+                        f.write(respose.text)
+                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' localhost:11123/unix/send_mail")
     
     
     # Check nextcloud admin status for all users (if nextcloud is installed)
