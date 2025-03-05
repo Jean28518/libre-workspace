@@ -92,7 +92,7 @@ C=DE
 ST=BV
 O=Nbg
 localityName=Nuremberg
-commonName=$DOMAIN
+commonName=*.$DOMAIN
 organizationalUnitName=Libre Workspace
 emailAddress=webmaster@$DOMAIN
 "
@@ -117,6 +117,10 @@ echo "tls enabled  = yes" >> /etc/samba/smb.conf
 echo "tls keyfile  = /etc/samba/tls/myKey.pem" >> /etc/samba/smb.conf
 echo "tls certfile = /etc/samba/tls/myCert.pem" >> /etc/samba/smb.conf
 echo "tls cafile   =" >> /etc/samba/smb.conf
+
+# Add the certificate to the system
+cp /etc/samba/tls/myCert.pem /usr/local/share/ca-certificates/samba.crt
+update-ca-certificates
 
 # Restart samba
 systemctl restart samba-ad-dc

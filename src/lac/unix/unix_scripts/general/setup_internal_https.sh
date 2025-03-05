@@ -8,6 +8,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt install libnss3-tools
 caddy trust
+update-ca-certificates
 
 mkdir -p /var/www/cert/
 cp /etc/ssl/certs/Caddy_Local_Authority_* /var/www/cert/lan.crt
