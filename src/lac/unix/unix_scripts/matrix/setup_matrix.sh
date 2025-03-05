@@ -48,6 +48,7 @@ oidc_providers:
     client_secret: \"$CLIENT_SECRET\"
     scopes: [\"openid\", \"profile\", \"email\", \"groups\", \"guid\"]
     user_profile_method: \"userinfo_endpoint\"
+    allow_existing_users: true
     user_mapping_provider:
       config:
         localpart_template: \"{{ user.preferred_username }}\"
