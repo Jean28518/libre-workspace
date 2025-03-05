@@ -78,6 +78,16 @@ echo "database:
     cp_min: 5
     cp_max: 10" >> /root/matrix/synapse-data/homeserver.yaml
 
+
+# Add user directory to homeserver.yaml
+echo "
+user_directory:
+  enabled: true
+  search_all_users: true
+  prefer_local_users: true
+
+" >> /root/matrix/synapse-data/homeserver.yaml
+
 # Run docker-compose.yml
 # We mv this signing key because otherwise synapse will complain about the signing key. I don't know why.
 mv /root/matrix/synapse-data/matrix.$DOMAIN.signing.key /root/matrix/synapse-data/matrix.$DOMAIN.signing.key.old
