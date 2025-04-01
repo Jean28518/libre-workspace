@@ -1,6 +1,6 @@
 Package: linux-arbeitsplatz
 Version: 0.9.2
-Depends: libldap2-dev, python3-venv, libsasl2-dev, caddy, gcc, python3-dev, borgbackup, python-llfuse | python3-llfuse, rsync, zip, cron, unzip
+Depends: libldap2-dev, python3-venv, libsasl2-dev, caddy, gcc, python3-dev, borgbackup, python-llfuse | python3-llfuse, rsync, zip, cron, unzip, sudo
 Maintainer: Jean28518
 Architecture: all
 Homepage: https://libre-workspace.org
