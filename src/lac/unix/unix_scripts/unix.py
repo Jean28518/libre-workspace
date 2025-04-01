@@ -10,6 +10,10 @@ from app_dashboard.models import DashboardEntry
 from django.urls import reverse
 import requests
 import unix.unix_scripts.utils as utils
+import platform
+
+
+os_release = platfrom.freedesktop_os_release()
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -151,9 +155,7 @@ def get_borg_information_for_dashboard():
 
 # Returns true if we are running on a ubuntu system
 def is_system_ubuntu():
-    string = subprocess.getoutput("cat /etc/os-release")
-    return "ubuntu" in string.lower()
-
+    return 'ubuntu' == os_release.get('ID')
 
 def get_public_key():
     # Get the public key of the root user
@@ -225,7 +227,7 @@ def get_system_information():
     rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("months", "Monate").replace("years", "Jahre")
     rv["uptime"] = rv["uptime"].replace("min", "Min").replace("hour", "Stunde").replace("day", "Tag").replace("week", "Woche").replace("month", "Monat").replace("year", "Jahr")
     rv["uptime_in_seconds"] = int(subprocess.getoutput("cat /proc/uptime").split(" ")[0].split(".")[0])
-    rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
+    rv["os"] = os_release.get('NAME')
 
     rv["new_libre_workspace_version"] = is_libre_workspace_update_available()
 
