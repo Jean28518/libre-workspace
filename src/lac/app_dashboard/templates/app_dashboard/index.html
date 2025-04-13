@@ -1,4 +1,6 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
 {% for array in grid %}
@@ -10,8 +12,8 @@
 {% endfor %}
 
 {% if request.user.is_superuser %}
-    <center><a href="{% url 'app_dashboard_entries' %}">Dashboard-Einträge konfigurieren</a></center>
-    <center><a href="{% url 'app_dashboard_appearance' %}">Dashboard-Aussehen konfigurieren</a></center>
+    <center><a href="{% url 'app_dashboard_entries' %}">{% trans "Configure Dashboard entries" %}</a></center>
+    <center><a href="{% url 'app_dashboard_appearance' %}">{% trans "Configure Dashboard view" %}</a></center>
 {% endif %}
 
 {% endblock %}
