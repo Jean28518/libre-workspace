@@ -308,12 +308,12 @@ while True:
 
     ## CHECK IF CPU, MEMORY IS TOO HIGH #############################################################################
 
-    if utils.get_cpu_usage(five_min=True) >  unix_config.get_value("CPU_WARNING_THRESHOLD", 80):
+    if utils.get_cpu_usage(five_min=True) >  int(unix_config.get_value("CPU_WARNING_THRESHOLD", 80)):
         if not "cpu" in last_message_sent or time.time() - last_message_sent["cpu"] > 3600:
             last_message_sent["cpu"] = time.time()
             os.system("curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
 
-    if utils.get_ram_usage()["ram_percent"] > unix_config.get_value("RAM_WARNING_THRESHOLD", 80):
+    if utils.get_ram_usage()["ram_percent"] > int(unix_config.get_value("RAM_WARNING_THRESHOLD", 80)):
         if not "ram" in last_message_sent or time.time() - last_message_sent["ram"] > 3600:
             last_message_sent["ram"] = time.time()
         os.system("curl -X POST -F 'subject=💾📈 RAM-Auslastung hoch📈' -F 'message=Die RAM-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
@@ -363,7 +363,7 @@ while True:
     ## CHECK IF DISK SPACE IS LOW ####################################################################################
     disks = utils.get_disks_stats()
     for disk in disks:
-        if int(disk["used_percent"]) > unix_config.get_value("DISK_WARNING_THRESHOLD", 90):
+        if int(disk["used_percent"]) > int(unix_config.get_value("DISK_WARNING_THRESHOLD", 90)):
             os.system(f"curl -X POST -F 'subject=💿📈 Festplattenauslastung hoch📈' -F 'message=Die Festplattenauslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
 
     ## Get list of upgradable packages
