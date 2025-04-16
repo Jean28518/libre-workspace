@@ -50,6 +50,20 @@ def ensure_fingerprint_is_trusted():
         f.writelines(known_hosts)
 
 
+# Get lw admin token
+def get_lw_admin_token():
+    # Check if file exists: /usr/share/linux-arbeitsplatz/local-admin-token
+    if os.path.isfile("/usr/share/linux-arbeitsplatz/local-admin-token"):
+        # Read the token from the file
+        with open("/usr/share/linux-arbeitsplatz/local-admin-token", "r") as f:
+            token = f.read().strip()
+            token = token.split("=")[1]
+        return token
+    else:
+        # If the file does not exist, return empty string
+        return ""
+
+
 def update_nextcloud_admin_status_for_all_users():
         # Disable it because in the long run we go via sso which is much more reliable.
         return
@@ -149,6 +163,10 @@ while True:
 
     current_date = time.strftime("%Y-%m-%d")
 
+    lw_admin_token = get_lw_admin_token()
+    if lw_admin_token == "":
+        print("No local admin token. Cant send emails.")
+
     ## BACKUP ######################################################################################################
 
     # Get backup time from config file
@@ -170,7 +188,7 @@ while True:
             if read_errors.strip() != "":
                 # Full path of the log file:
                 log_file = os.path.abspath(f"history/borg_errors_{date}.log")
-                os.system(f"curl -X POST -F 'subject=💾❌ Backup mit Fehlern abgeschlossen❌' -F 'message=Das heutige Backup war nicht vollständig erfolgreich.\nIm Anhang finden Sie die Fehlermeldungen.' -F 'attachment_path={log_file}' localhost:11123/unix/send_mail")
+                os.system(f"curl -X POST -F 'subject=💾❌ Backup mit Fehlern abgeschlossen❌' -F 'message=Das heutige Backup war nicht vollständig erfolgreich.\nIm Anhang finden Sie die Fehlermeldungen.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## SYSTEM UPDATE ################################################################################################
 
@@ -311,12 +329,12 @@ while True:
     if utils.get_cpu_usage(five_min=True) >  int(unix_config.get_value("CPU_WARNING_THRESHOLD", 80)):
         if not "cpu" in last_message_sent or time.time() - last_message_sent["cpu"] > 3600:
             last_message_sent["cpu"] = time.time()
-            os.system("curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+            os.system(f"curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     if utils.get_ram_usage()["ram_percent"] > int(unix_config.get_value("RAM_WARNING_THRESHOLD", 80)):
         if not "ram" in last_message_sent or time.time() - last_message_sent["ram"] > 3600:
             last_message_sent["ram"] = time.time()
-        os.system("curl -X POST -F 'subject=💾📈 RAM-Auslastung hoch📈' -F 'message=Die RAM-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+        os.system(f"curl -X POST -F 'subject=💾📈 RAM-Auslastung hoch📈' -F 'message=Die RAM-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## CHECK EVERY DOMAIN IN CADDY CONFIG IF THE SPECIFIED SERVICE IS STILL WORKING ##################################
 
@@ -338,13 +356,13 @@ while True:
                         last_message_sent[domain] = time.time()
                         with open(f"/tmp/{domain}_response.txt", "w") as f:
                             f.write(respose.text)
-                        os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' localhost:11123/unix/send_mail")
+                        os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
             except:
                 if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                     last_message_sent[domain] = time.time()
                     with open(f"/tmp/{domain}_response.txt", "w") as f:
                         f.write(respose.text)
-                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' localhost:11123/unix/send_mail")
+                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
     
     
     # Check nextcloud admin status for all users (if nextcloud is installed)
@@ -364,7 +382,7 @@ while True:
     disks = utils.get_disks_stats()
     for disk in disks:
         if int(disk["used_percent"]) > int(unix_config.get_value("DISK_WARNING_THRESHOLD", 90)):
-            os.system(f"curl -X POST -F 'subject=💿📈 Festplattenauslastung hoch📈' -F 'message=Die Festplattenauslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' localhost:11123/unix/send_mail")
+            os.system(f"curl -X POST -F 'subject=💿📈 Festplattenauslastung hoch📈' -F 'message=Die Festplattenauslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## Get list of upgradable packages
     os.system("apt list --upgradable > upgradable_packages")
