@@ -3,6 +3,8 @@ cp -r src/lac/* deb/usr/share/linux-arbeitsplatz/
 
 # Disable DEBUG mode
 sed -i "s/DEBUG = True/DEBUG = False/g" deb/usr/share/linux-arbeitsplatz/lac/settings.py
+# Disable Admin site (ADMIN_ENABLED)
+sed -i "s/ADMIN_ENABLED = True/ADMIN_ENABLED = False/g" deb/usr/share/linux-arbeitsplatz/lac/settings.py
 
 cp install.sh deb/usr/share/linux-arbeitsplatz
 cp run.sh deb/usr/share/linux-arbeitsplatz
