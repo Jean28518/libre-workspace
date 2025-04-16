@@ -197,7 +197,12 @@ def create_totp_device(request):
 
 @login_required
 def delete_totp_device(request, id):
+    user = request.user
     device = TOTPDevice.objects.get(id=id)
+    # Check if the user is allowed to delete the device
+    devices_of_user = user.totpdevice_set.all()
+    if not device in devices_of_user:
+        return lac.templates.message(request, "Sie sind nicht berechtigt, dieses Gerät zu löschen!", "otp_settings")
     device.delete()
     # Also remove all totp_*.png files
     import os
