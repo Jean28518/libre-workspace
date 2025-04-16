@@ -1123,3 +1123,24 @@ def get_system_data_for_support():
     # Start a process which deletes the temporary directory and .zip file after 5 minutes
     subprocess.Popen(["/usr/bin/bash", "-c", "sleep 300; rm -r /tmp/support_data/"])
     subprocess.Popen(["/usr/bin/bash", "-c", "sleep 300; rm /var/www/linux-arbeitsplatz-static/support_data.zip"])
+
+
+def get_local_admin_token():
+    """Returns the local admin token from the env.sh file"""
+    local_token_file_content = os.popen("cat /usr/share/linux-arbeitsplatz/local-admin-token").read()
+    local_token_file_content = local_token_file_content.replace("LW_ADMIN_TOKEN=", "")
+    if local_token_file_content.strip() == "":
+        print("CAUTION: No local admin token found. If you are in a dev environment, this is okay. If you are in a production environment, please check your installation, your system is not secure.")
+        return None
+    return local_token_file_content.strip()
+
+
+def generate_local_admin_token():
+    """Generates a new local admin token and saves it to the env.sh file. This admin token is only valid to the next restart of libre workspace web."""
+    # Generate a random token
+    token = os.popen("openssl rand -hex 4096").read().strip()
+    # Save the token to /usr/share/linux-arbeitsplatz/local-admin-token
+    os.system(f"echo \"LW_ADMIN_TOKEN={token}\" > /usr/share/linux-arbeitsplatz/local-admin-token")
+    # Set the permissions for the file
+    os.system("chmod 600 /usr/share/linux-arbeitsplatz/local-admin-token")
+    os.system("chown $USER:$USER /usr/share/linux-arbeitsplatz/local-admin-token")

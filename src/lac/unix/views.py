@@ -263,9 +263,20 @@ def unix_send_mail(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Only POST requests are allowed")
 
-    # if ip address 127.0.0.1 return
+    # if ip address 127.0.0.1 return unauthorized
+    # (But because we are using caddy we are not using the ip address of the request)
     if request.META.get("REMOTE_ADDR", "") != "127.0.0.1":
-        return HttpResponse("Unauthorized")
+        return HttpResponse("Unauthorized. Request not local.")
+    
+    # So we need to check additional headers
+    # Check if the request is made not from caddy
+    # Check if the request has the header X-Forwarded-For
+    if request.META.get("HTTP_X_FORWARDED_FOR", "") != "":
+        return HttpResponse("Unauthorized. Request is seems not directly made.")
+    
+    # Also we need the header for the lw admin token
+    if request.POST.get("lw_admin_token", "") != unix.get_local_admin_token():
+        return HttpResponse("Unauthorized. Token is not valid.")
     
     # Get admin email address
     admin_user = get_admin_user()
