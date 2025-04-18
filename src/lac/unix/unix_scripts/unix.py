@@ -13,7 +13,7 @@ import unix.unix_scripts.utils as utils
 import platform
 
 
-os_release = platfrom.freedesktop_os_release()
+os_release = platform.freedesktop_os_release()
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
