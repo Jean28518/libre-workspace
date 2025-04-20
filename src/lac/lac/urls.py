@@ -20,7 +20,6 @@ from django.conf.urls.static import static
 from django.views.generic.base import TemplateView 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path("idm/", include("idm.urls")),
     path("unix/", include("unix.urls")),
     path("welcome/", include("welcome.urls")),
@@ -32,3 +31,8 @@ urlpatterns = [
         TemplateView.as_view(template_name="lac/robots.txt", content_type="text/plain"),
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.ADMIN_ENABLED:
+    urlpatterns += [
+        path("admin/", admin.site.urls),
+    ]

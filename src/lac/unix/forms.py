@@ -44,6 +44,9 @@ class ChangeIpAdressForm(forms.Form):
 class MiscellaneousSettingsForm(forms.Form):
     additional_mail_addresses_for_system_mails = forms.CharField(label="Zusätzliche E-Mail-Adressen für System-E-Mails (bei mehreren mit Komma trennen)", max_length=100, widget=forms.TextInput(), required=False)
     disable_nextcloud_user_administration = forms.BooleanField(label="Nextcloud Benutzerverwaltung deaktivieren", required=False, widget=forms.CheckboxInput(attrs={"role": "switch"}), help_text = "\n")
+    cpu_warning_threshold = forms.IntegerField(label="CPU Warnschwelle in %", min_value=0, max_value=100, widget=forms.NumberInput(attrs={"placeholder": "80"}))
+    ram_warning_threshold = forms.IntegerField(label="RAM Warnschwelle in %", min_value=0, max_value=100, widget=forms.NumberInput(attrs={"placeholder": "80"}))
+    disk_warning_threshold = forms.IntegerField(label="Festplatten Warnschwelle in %", min_value=0, max_value=100, widget=forms.NumberInput(attrs={"placeholder": "90"}))
 
 
 class AdditionalServicesForm(forms.Form):

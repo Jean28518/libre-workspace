@@ -168,6 +168,14 @@ def create_totp_device(request):
         device.confirmed = True
         device.save()
         
+        # Remove the QR code image
+        import os
+        random_appendix = user_totp_device_challenges.get(username+"_random_appendix", "")
+        if random_appendix != "":
+            for file in os.listdir(settings.MEDIA_ROOT):
+                if file.startswith("totp_" + str(random_appendix)):
+                    os.remove(settings.MEDIA_ROOT + "/" + file)
+            user_totp_device_challenges.pop(username+"_random_appendix")
         return lac.templates.message(request, "Erfolgreich. 2-Faktor Authentifizierung erfolgreich eingerichtet.", "otp_settings")
 
 
@@ -185,19 +193,27 @@ def create_totp_device(request):
     url = device.config_url
     url = url.replace(username, "Libre Workspace: " + baseurl_of_libre_workspace + " - " + username)
 
+    random_appendix = random.randint(100000, 999999)
+    user_totp_device_challenges[username+"_random_appendix"] = random_appendix
+
     # Generate QR code with qrcode module
     img = qrcode.make(url)
-    img.save(settings.MEDIA_ROOT + f"/totp_{device.id}.png")
+    img.save(settings.MEDIA_ROOT + f"/totp_{random_appendix}.png")
 
     base32_code = str(b32encode(device.bin_key))[2:-1]
 
-    return render(request, "idm/add_new_totp_device.html", {"base32_code": base32_code, "img": settings.MEDIA_URL + f"totp_{device.id}.png", "device_name": device.name})
+    return render(request, "idm/add_new_totp_device.html", {"base32_code": base32_code, "img": settings.MEDIA_URL + f"totp_{random_appendix}.png", "device_name": device.name})
 
     pass
 
 @login_required
 def delete_totp_device(request, id):
+    user = request.user
     device = TOTPDevice.objects.get(id=id)
+    # Check if the user is allowed to delete the device
+    devices_of_user = user.totpdevice_set.all()
+    if not device in devices_of_user:
+        return lac.templates.message(request, "Sie sind nicht berechtigt, dieses Gerät zu löschen!", "otp_settings")
     device.delete()
     # Also remove all totp_*.png files
     import os

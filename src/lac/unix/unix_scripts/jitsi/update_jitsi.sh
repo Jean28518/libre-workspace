@@ -7,6 +7,7 @@ sed -i "/JITSI_IMAGE_VERSION/d" .env
 echo "JITSI_IMAGE_VERSION=stable" >> .env
 
 # Update Jitsi
+docker-compose down # To avoid problems with the containers after the update
 docker-compose pull
 docker-compose up -d
 

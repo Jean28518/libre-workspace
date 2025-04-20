@@ -25,21 +25,39 @@ else
     CLIENT=$2
 fi
 
+# Make sure time is synchronized
+apt install chrony -y
+chronyc makestep
 
 apt-get update -y
 apt-get install -y sssd-ad sssd-tools realmd adcli
 echo "
 [libdefaults]
-default_domain = $REALM
-default_realm = $REALM
-rdns = false" > /etc/krb5.conf
+    default_realm = $REALM
+    dns_lookup_kdc = true  # Or false if KDCs are manually listed
+    dns_lookup_realm = false # Or true
+    rdns = false
+
+[realms]
+    $REALM = {
+        kdc = la.$DOMAIN   # Replace with your actual KDC hostname(s) or IP(s)
+        admin_server = la.$DOMAIN # Often the same as a KDC
+    }
+
+[domain_realm]
+    .$DOMAIN = $REALM
+    $DOMAIN = $REALM" > /etc/krb5.conf
 
 apt-get install -y krb5-user sssd-krb5
 
 hostnamectl set-hostname $CLIENT.$DOMAIN
 
+systemctl restart sssd
 echo "You need to enter the password of the realm administrator (libre workspace masterpassword):"
 kinit administrator
+
+# TODO: CHange IP to the IP of the client and adjust client name and also domain
+samba-tool dns add la.int.de int.de client1 A 192.168.1.192 -U administrator
 
 realm join -v -U administrator $DOMAIN
 

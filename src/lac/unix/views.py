@@ -263,9 +263,20 @@ def unix_send_mail(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Only POST requests are allowed")
 
-    # if ip address 127.0.0.1 return
+    # if ip address 127.0.0.1 return unauthorized
+    # (But because we are using caddy we are not using the ip address of the request)
     if request.META.get("REMOTE_ADDR", "") != "127.0.0.1":
-        return HttpResponse("Unauthorized")
+        return HttpResponse("Unauthorized. Request not local.")
+    
+    # So we need to check additional headers
+    # Check if the request is made not from caddy
+    # Check if the request has the header X-Forwarded-For
+    if request.META.get("HTTP_X_FORWARDED_FOR", "") != "":
+        return HttpResponse("Unauthorized. Request is seems not directly made.")
+    
+    # Also we need the header for the lw admin token
+    if request.POST.get("lw_admin_token", "") != unix.get_local_admin_token():
+        return HttpResponse("Unauthorized. Token is not valid.")
     
     # Get admin email address
     admin_user = get_admin_user()
@@ -603,9 +614,15 @@ def miscellaneous_settings(request):
             else:
                 unix.enable_nextcloud_user_administration()
             unix.set_value("ADDITIONAL_MAIL_ADDRESSES_FOR_SYSTEM_MAILS", form.cleaned_data["additional_mail_addresses_for_system_mails"])
+            unix.set_value("CPU_WARNING_THRESHOLD", form.cleaned_data["cpu_warning_threshold"])
+            unix.set_value("RAM_WARNING_THRESHOLD", form.cleaned_data["ram_warning_threshold"])
+            unix.set_value("DISK_WARNING_THRESHOLD", form.cleaned_data["disk_warning_threshold"])
             return message(request, "Einstellungen gespeichert.", "system_configuration")
     form.fields["disable_nextcloud_user_administration"].initial = not unix.is_nextcloud_user_administration_enabled()
     form.fields["additional_mail_addresses_for_system_mails"].initial = unix.get_value("ADDITIONAL_MAIL_ADDRESSES_FOR_SYSTEM_MAILS", "")
+    form.fields["cpu_warning_threshold"].initial = unix.get_value("CPU_WARNING_THRESHOLD", "80")
+    form.fields["ram_warning_threshold"].initial = unix.get_value("MEMORY_WARNING_THRESHOLD", "80")
+    form.fields["disk_warning_threshold"].initial = unix.get_value("DISK_WARNING_THRESHOLD", "90")
     return render(request, "lac/generic_form.html", {"form": form, "heading": "Verschiedene Einstellungen", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True"})
 
 
