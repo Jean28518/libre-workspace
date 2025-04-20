@@ -1,12 +1,13 @@
+{% load i18n %}
 <article>
-    <h3>System</h3>
+    <h3>{% trans "System" %}</h3>
     <table>
         <tr>
-            <th>Name</th>
-            <td>{{ system_information.lw_name }} (<a href="{% url "change_libre_workspace_name" %}">Ändern</a>)</td>
+            <th>{% trans "Name" %}</th>
+            <td>{{ system_information.lw_name }} (<a href="{% url "change_libre_workspace_name" %}">{% trans "Change" %}</a>)</td>
         </tr>
         <tr>
-            <th>Libre-Workspace Version</th>
+            <th>{% trans "Libre Workspace version" %}</th>
             <td>{{ system_information.lw_version }}
             {% if system_information.new_libre_workspace_version %}
                 - <a href="{% url "update_libre_workspace" %}" class="secondary">Auf Libre Workspace {{system_information.new_libre_workspace_version}} aktualisieren</a>
@@ -14,27 +15,27 @@
             </td>
         </tr>
         <tr>
-            <th>Hostname</th>
+            <th>{% trans "Host name" %}</th>
             <td>{{ system_information.hostname }}</td>
         </tr>
         <tr>
-            <th>Betriebssystem</th>
+            <th>{% trans "Operating system" %}</th>
             <td>{{ system_information.os }}</td>
         </tr>
         <tr>
-            <th>Prozessorlast (~ 1 min)</th>
+            <th>{% trans "Processor load" %} (~ 1 min)</th>
             <td><progress id="cpu_load" max="100"></progress><span id="cpu_load_desc"></span></td>
         </tr>
         <tr>
-            <th>Arbeitsspeicher</th>
+            <th>{% trans "RAM" %}</th>
             <td><progress id="ram_usage" value="{{system_information.ram_percent}}" max="100"></progress><span id="ram_usage_desc"></span></td>
         </tr>
         <tr>
-            <th>Betriebszeit</th>
+            <th>{% trans "Operating time" %}</th>
             <td>{{ system_information.uptime }}</td>
         </tr>
         <tr>
-            <th>Aktualisierungen</th>
+            <th>{% trans "Updates" %}</th>
             <td>{{ system_information.update_information }} 
                 {% if system_information.last_update_log %} 
                     <br>
@@ -43,7 +44,7 @@
                     data-target="modal-update_log"
                     onClick="toggleModal(event)"
                     title="System aktualisieren">
-                    Letzten Update Log anzeigen
+                    {% trans "Show last update log" %}
                     </a>
                     <!-- Modal -->
                     <dialog id="modal-update_log">
@@ -63,7 +64,7 @@
                             class="secondary"
                             data-target="modal-update_log"
                             onClick="toggleModal(event)">
-                            Schließen
+                            {% trans "Close" %}
                             </a>
                         </footer>
                         </article>
@@ -74,25 +75,25 @@
 
     
        
-    <h4>Festplatten</h4>
+    <h4>{% trans "Disks" %}</h4>
     <div class="grid">
         {% for disk in disks_stats %}
         <div>
             <strong>{{ disk.name }}: {{ disk.mountpoint }}</strong>
             <progress value="{{disk.used_percent}}" max="100"></progress>
-            <p>Gesamtgröße: {{ disk.size }} Belegt: {{ disk.used }}</p>
+            <p>{% trans "Total size" %}: {{ disk.size }} &bull; {% trans "Used" %}: {{ disk.used }}</p>
 
         </div>
         {% endfor %}
     </div>
-    <h4>Steuerung</h4>
+    <h4>{% trans "Control" %}</h4>
     {% comment %} Start / Stop all services {% endcomment %}
     <div class="grid">
         <div>
-            <a href="{% url "start_all_services" %}"role="button" class="secondary" style="display: block;">Alle Dienste starten</a>
+            <a href="{% url "start_all_services" %}"role="button" class="secondary" style="display: block;">{% trans "Start all services" %}</a>
         </div>
         <div>
-            <a href="{% url "stop_all_services" %}"role="button" class="secondary" style="display: block;">Alle Dienste stoppen</a>
+            <a href="{% url "stop_all_services" %}"role="button" class="secondary" style="display: block;">{% trans "Stop all services" %}</a>
         </div>
     </div>
 
@@ -117,7 +118,7 @@
                     data-target="modal-update"
                     onClick="toggleModal(event)">
                 </a>
-                <h3>System aktualisieren?</h3>
+                <h3>{% trans "Update system?" %}</h3>
                 <p>
                     Möchten Sie das System wirklich aktualisieren?
                     Dies wird alle verfügbaren Updates herunterladen und installieren.
@@ -128,12 +129,12 @@
                     class="secondary"
                     data-target="modal-update"
                     onClick="toggleModal(event)">
-                    Abbrechen
+                    {% trans "Cancel" %}
                     </a>
                     <a href="{%url 'update_system'%}"
                     role="button"
                     data-target="modal-update">
-                    Jetzt aktualisieren
+                    {% trans "Update now" %}
                     </a>
                 </footer>
                 </article>
@@ -157,7 +158,7 @@
                             data-target="modal-restart"
                             onClick="toggleModal(event)">
                         </a>
-                        <h3>System neustarten?</h3>
+                        <h3>{% trans "Reboot system?" %}</h3>
                         <p>
                             Möchten Sie das System wirklich neustarten?
                             Dies wird alle laufenden Prozesse beenden und das System neu starten.
@@ -168,12 +169,12 @@
                                 class="secondary"
                                 data-target="modal-restart"
                                 onClick="toggleModal(event)">
-                                Abbrechen
+                                {% trans "Cancel" %}
                             </a>
                             <a href="{%url 'reboot_system'%}"
                                 role="button"
                                 data-target="modal-restart">
-                                Jetzt neustarten
+                                {% trans "Reboot now" %}
                             </a>
                         </footer>
                     </article>
@@ -199,24 +200,24 @@
                     data-target="modal-shutdown"
                     onClick="toggleModal(event)">
                 </a>
-                <h3>Server herunterfahren?</h3>
+                <h3>{% trans "Shut down server?" %}</h3>
                 <p>
-                    Möchten Sie den Server wirklich herunterfahren?
+                    {% trans "Do you really want to shut down the server?" %}
                 </p>
-                <strong>DIES WIRD DEN SERVER AUSSCHALTEN. UM DEN SERVER WIEDER ZU STARTEN, MÜSSEN SIE IHN WIEDER MANUELL (VORT ORT) EINSCHALTEN.</strong>
+                <strong>{% trans "THIS WILL SHUT DOWN THE SERVER. TO START THE SERVER AGAIN, YOU MUST MANUALLY (LOCALLY) POWER IT ON AGAIN." %}</strong>
                 <footer>
                     <a href="#cancel"
                     role="button"
                     class="secondary"
                     data-target="modal-shutdown"
                     onClick="toggleModal(event)">
-                    Abbrechen
+                    {% trans "Cancel" %}
                     </a>
                     <a href="{%url 'shutdown_system'%}"
                     role="button"
                     class="danger"
                     data-target="modal-shutdown">
-                    JETZT HERUNTERFAHREN
+                    {% trans "SHUT DOWN NOW" %}
                     </a>
                 </footer>
                 </article>

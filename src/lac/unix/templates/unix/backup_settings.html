@@ -1,14 +1,16 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
 {% if message != "" %}
 <p><strong>{{ message }}</strong></p>
 {% endif %}
 
-<h2>Systemverwaltung</h2>
+<h2>{% trans "System management" %}</h2>
 
-<h3>Vollautomatisierte Backups</h3>
-<h4> Grundlegende Informationen </h4>
+<h3>{% trans "Fully automated backups" %}</h3>
+<h4>{% trans "Basic information" %}</h4>
 <p>
     Der komplette Server inklusive Daten wird mit allen Konfigurationen vollautomatisiert täglich über borg auf einen externen Ort gesichert.
     Das Wiederherstellen von Daten ist aktuell nur manuell durch einen Systemadministrator möglich.
@@ -16,7 +18,7 @@
     Die einzelnen Sicherungsstände werden inkrementell gespeichert und komprimiert und sind somit sehr platzsparend.
 </p>
 
-<h4> Anleitung </h4>
+<h4>{% trans "Instruction" %}</h4>
 <ul>
     <li>Stellen Sie sicher, dass auf dem anderen Server borg installiert ist. <code>sudo apt install borgbackup</code></li>
     <li>Es ist empfohlen, für die Backups einen eigenen Benutzer auf dem anderen Ort zu erstellen. Dieser Benutzer sollte nur die Rechte haben, die für die Backups notwendig sind.</li>
@@ -31,27 +33,27 @@
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "unix_index" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "unix_index" %}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
         </div>
-        <input type="submit" value="Änderungen speichern">
+        <input type="submit" value="{% trans 'Save changes' %}">
     </div>
     <div>
-        <a href="{% url "retry_backup" %}"role="button" class="secondary" style="display: block;">Backup manuell anstoßen</a>
+        <a href="{% url "retry_backup" %}"role="button" class="secondary" style="display: block;">{% trans "Start backup manually" %}</a>
     </div>
     <center>
-        Hinweis: Während des Backups werden alle Dienste vorübergehend abgeschaltet. 
+        {% trans "Note: All services will be shut down during the backup." %} 
     </center>
 </form>
 
 
-<h4> Aktueller öffentlicher Schlüssel </h4>
+<h4>{% trans "Current public key" %}</h4>
 <code style="max-width: 100%; overflow: auto;">{{ public_key }}</code>
 
-<p> Mit diesem Schlüssel kann sich der Server automatisch auf dem anderen Ort anmelden. </p>
+<p>{% trans "With this key the server can automatically sign in at the other location." %}</p>
 
-<h4> Wichtige Sicherheitshinweise </h4>
+<h4>{% trans "Important security notes" %}</h4>
 <ul>
-    <li>Sollte Ihr Backup verschlüsselt sein, muss bei einer Wiedeherstellung der Archive zusätzlich zur Passphrase auch der private Schlüssel eingegeben werden. Dieser ist nur auf dem Server gespeichert und kann nicht wiederhergestellt werden. Sollte der Server ausfallen, sind die Daten somit verloren, sollten Sie nicht den Borg-Wiedeherstellungsschlüssel besitzen. Weitere Informationen können hier nachgelesen werden: <a href="https://borgbackup.readthedocs.io/en/stable/quickstart.html#repository-encryption">https://borgbackup.readthedocs.io/en/stable/quickstart.html#repository-encryption</a></li>
+    <li>Sollte Ihr Backup verschlüsselt sein, muss bei einer Wiederherstellung der Archive zusätzlich zur Passphrase auch der private Schlüssel eingegeben werden. Dieser ist nur auf dem Server gespeichert und kann nicht wiederhergestellt werden. Sollte der Server ausfallen, sind die Daten somit verloren, sollten Sie nicht den Borg-Wiedeherstellungsschlüssel besitzen. Weitere Informationen können hier nachgelesen werden: <a href="https://borgbackup.readthedocs.io/en/stable/quickstart.html#repository-encryption">https://borgbackup.readthedocs.io/en/stable/quickstart.html#repository-encryption</a></li>
     <li>Verlassen Sie sich nie auf zu 100% auf das System. Testen Sie regelmäßg manuell, ob alle wichtigen Daten gesichert sind. Weitere Informationen dazu finden Sie hier: <a href="https://borgbackup.readthedocs.io/en/stable/quickstart.html#restoring-a-backup">https://borgbackup.readthedocs.io/en/stable/quickstart.html#restoring-a-backup</a></li>
 </ul>
 

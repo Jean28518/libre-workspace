@@ -2,12 +2,11 @@
 # Copyright (C) 2025 Libre Workspace
 # Diese Datei wird unter derselben Lizenz wie das Projekt verteilt.
 # Jean-Frédéric Vogelbacher <kontakt@linuxguides.de>, 2025.
-
 msgid ""
 msgstr ""
 "Project-Id-Version: lw 1.0\n"
-"Report-Msgid-Bugs-To: kontakt@linuxguides.de\n"
-"POT-Creation-Date: 2025-04-13 12:48+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-19 23:44+0200\n"
 "PO-Revision-Date: 2025-04-19 10:00+0200\n"
 "Last-Translator: Jean-Frédéric Vogelbacher <kontakt@linuxguides.de>\n"
 "Language-Team: Deutsch <kontakt@linuxguides.de>\n"
@@ -17,31 +16,376 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/app_dashboard/app_dashboard_entries.html:4
+#: --- Start app_dashboard ---
+
 msgid "Dashboard entries"
 msgstr "Dashboard-Einträge"
 
-#: templates/app_dashboard/app_dashboard_entries.html:6
 msgid "New Dashboard entry"
 msgstr "Neuer Dashboard-Eintrag"
 
-#: templates/app_dashboard/app_dashboard_entries.html:10
 msgid "Title"
 msgstr "Titel"
 
-#: templates/app_dashboard/app_dashboard_entries.html:11
-#: templates/app_dashboard/app_dashboard_entries.html:17
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/app_dashboard/app_dashboard_entries.html:16
 msgid "(Deactivated)"
 msgstr "(Deaktiviert)"
 
-#: templates/app_dashboard/index.html:13
 msgid "Configure Dashboard entries"
 msgstr "Dashboard-Einträge konfigurieren"
 
-#: templates/app_dashboard/index.html:14
 msgid "Configure Dashboard view"
 msgstr "Dashboard-Aussehen konfigurieren"
+
+#: --- End app_dashboard ---
+
+#: --- Start unix ---
+
+msgid "Fully automated backups"
+msgstr "Vollautomatisierte Backups"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Last backup successful"
+msgstr "Letzte Sicherung erfolgreich"
+
+msgid "Awaiting first backup"
+msgstr "Erwarte erstes Backup"
+
+msgid "Last backup completed with errors"
+msgstr "Letztes Backup mit Fehlern abgeschlossen"
+
+msgid "Retry"
+msgstr "Erneut versuchen"
+
+msgid "Backup in progress..."
+msgstr "Backup läuft..."
+
+msgid "All services are initially shut down."
+msgstr "Alle Dienste sind zu Beginn abgeschaltet."
+
+msgid "If needed, click here to start them."
+msgstr "Bei Bedarf hier klicken, um diese zu starten."
+
+msgid "Recovery in progress"
+msgstr "Wiederherstellung läuft"
+
+msgid "Backup deactivated"
+msgstr "Backup deaktiviert"
+
+msgid "Backup not configured"
+msgstr "Backup nicht konfiguriert"
+
+msgid "Used backup size"
+msgstr "Verwendete Backup-Größe"
+
+msgid "History"
+msgstr "Verlauf"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Backup successful"
+msgstr "Backup erfolgreich"
+
+msgid "Show error"
+msgstr "Fehler anzeigen"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Saved archives"
+msgstr "Gespeicherte Archive"
+
+msgid "Backup configuration"
+msgstr "Backup-Konfiguration"
+
+msgid "Mount backups"
+msgstr "Backups einbinden"
+
+msgid "Unmount backups"
+msgstr "Backups aushängen"
+
+msgid "View/Restore backup"
+msgstr "Backup ansehen/wiederherstellen"
+
+msgid "System management"
+msgstr "Systemverwaltung"
+
+msgid "Basic information"
+msgstr "Grundlegende Informationen"
+
+msgid "Instruction"
+msgstr "Anleitung"
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Save changes"
+msgstr "Änderungen speichern"
+
+msgid "Start backup manually"
+msgstr "Backup manuell anstoßen"
+
+msgid "Note: All services will be shut down during the backup."
+msgstr "Hinweis: Während des Backups werden alle Dienste vorübergehend abgeschaltet."
+
+msgid "Current public key"
+msgstr "Aktueller öffentlicher Schlüssel"
+
+msgid "With this key the server can automatically sign in at the other location."
+msgstr "Mit diesem Schlüssel kann sich der Server automatisch auf dem anderen Ort anmelden."
+
+msgid "Important security notes"
+msgstr "Wichtige Sicherheitshinweise"
+
+msgid "Critical system configuration"
+msgstr "Kritische Systemkonfiguration"
+
+msgid "Please note that these configurations should only be performed by experienced administrators and should NOT be performed carelessly. Incorrect settings can lead to serious problems."
+msgstr "Bitte beachten Sie, dass diese Konfigurationen nur von erfahrenen Administratoren und auf KEINEN FALL leichtfertig durchgeührt werden sollen. Falsche Einstellungen können zu schwerwiegenden Problemen führen."
+
+msgid "IP address change"
+msgstr "IP-Adressen-Änderung"
+
+msgid "Master password change"
+msgstr "Masterpasswort-Änderung"
+
+msgid "Data export"
+msgstr "Datenexport"
+
+msgid "View messages from the last export"
+msgstr "Nachrichten des letzten Exports ansehen"
+
+msgid "Messages from the last export"
+msgstr "Nachrichten des letzten Exports"
+
+msgid "The fewer messages you see, the more error-free the last export was."
+msgstr "Je weniger Nachrichten zu sehen sind, desto fehlerfreier ist der letzte Export verlaufen."
+
+msgid "Disk"
+msgstr "Festplatte"
+
+msgid "Choose a destination..."
+msgstr "Wähle ein Ziel..."
+
+msgid "Export"
+msgstr "Exportieren"
+
+msgid "Note: All services are temporarily disabled during the export process."
+msgstr "Hinweis: Es werden während des Export-Vorgangs alle Dienste vorrübergehend ausgeschaltet."
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Data import (Nextcloud)"
+msgstr "Datenimport (Nextcloud)"
+
+msgid "Choose the source disk"
+msgstr "Wähle die Quell-Festplatte aus..."
+
+msgid "Nextcloud user"
+msgstr "Nextcloud-Benutzer"
+
+msgid "Choose the Nextcloud user..."
+msgstr "Wähle den Nextcloud-Benutzer aus..."
+
+msgid "Import..."
+msgstr "Importieren..."
+
+msgid "In the next step, select the folder on the source hard drive that you want to import."
+msgstr "Im nächsten Schritt wird der Ordner auf der Quell-Festplatte ausgewählt, den Sie importieren möchten."
+
+msgid "Data import / export"
+msgstr "Datenimport/-export"
+
+msgid "Note: This page refreshes every 60 seconds."
+msgstr "Hinweis: Diese Seite aktualisiert sich alle 60 Sekunden."
+
+msgid "E-Mail configuration"
+msgstr "E-Mail Konfiguration"
+
+msgid "Send test E-Mail"
+msgstr "Test-Mail senden"
+
+msgid "Close file explorer"
+msgstr "Datei-Explorer schließen"
+
+msgid "Note: For security reasons, it is not possible to display the contents of files."
+msgstr "Hinweis: Aus Sicherheitsgründen, ist es nicht möglich, den Inhalt von Dateien anzuzeigen."
+
+msgid "Up"
+msgstr "Nach oben"
+
+msgid "Current folder"
+msgstr "Aktueller Ordner"
+
+msgid "Disks"
+msgstr "Festplatten"
+
+msgid "Partition"
+msgstr "Partition"
+
+msgid "Size"
+msgstr "Größe"
+
+msgid "Mounting point"
+msgstr "Einhängepunkt"
+
+msgid "Actions"
+msgstr "Aktionen"
+
+msgid "Unmount"
+msgstr "Aushängen"
+
+msgid "Mount"
+msgstr "Einhängen"
+
+msgid "Select folder"
+msgstr "Ordner auswählen"
+
+msgid "Select current folder"
+msgstr "Aktuellen Ordner auswählen"
+
+msgid "System configuration"
+msgstr "Systemkonfiguration"
+
+msgid "Libre Workspace modules"
+msgstr "Libre Workspace Module"
+
+msgid "Addon management"
+msgstr "Addon Verwaltung"
+
+msgid "Automatic reboot / shut down"
+msgstr "Automatischer Reboot / Shutdown"
+
+msgid "Additional services"
+msgstr "Zusätzliche Dienste"
+
+msgid "OpenID Connect (SSO)"
+msgstr "OpenID Connect (SSO)"
+
+msgid "Other settings"
+msgstr "Sonstige Einstellungen"
+
+msgid "Fully automated updates"
+msgstr "Vollautomatisierte Updates"
+
+msgid "Configuration"
+msgstr "Konfiguration"
+
+msgid "Module"
+msgstr "Modul"
+
+msgid "Update now"
+msgstr "Jetzt Aktualisieren"
+
+msgid "Run automatic updates at"
+msgstr "Automatische Updates ausführen um"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Log files"
+msgstr "Log-Dateien"
+
+msgid "Show report"
+msgstr "Bericht anzeigen"
+
+msgid "Update at"
+msgstr "Update am"
+
+msgid "Installed?"
+msgstr "Installiert?"
+
+msgid "Action"
+msgstr "Aktion"
+
+msgid "Uninstall"
+msgstr "Deinstallieren"
+
+msgid "Install"
+msgstr "Installieren"
+
+msgid "Are you sure you want to install the module? This may take some time."
+msgstr "Möchten Sie das Modul wirklich installieren? Das kann einige Zeit in Anspruch nehmen."
+
+msgid "Online Office modules"
+msgstr "Online Office Module"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+msgid "System"
+msgstr "System"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Change"
+msgstr "Ändern"
+
+msgid "Libre Workspace version"
+msgstr "Libre Workspace Version"
+
+msgid "Host name"
+msgstr "Hostname"
+
+msgid "Operating system"
+msgstr "Betriebssystem"
+
+msgid "Processor load"
+msgstr "Prozessorlast"
+
+msgid "RAM"
+msgstr "Arbeitsspeicher"
+
+msgid "Operating time"
+msgstr "Betriebszeit"
+
+msgid "Updates"
+msgstr "Aktualisierungen"
+
+msgid "Show last update log"
+msgstr "Letzten Update Log anzeigen"
+
+msgid "Total size"
+msgstr "Gesamtgröße"
+
+msgid "Used"
+msgstr "Belegt"
+
+msgid "Control"
+msgstr "Steuerung"
+
+msgid "Start all services"
+msgstr "Alle Dienste starten"
+
+msgid "Stop all services"
+msgstr "Alle Dienste stoppen"
+
+msgid "Update system?"
+msgstr "System aktualisieren?"
+
+msgid "Reboot system?"
+msgstr "System neustarten?"
+
+msgid "Reboot now"
+msgstr "Jetzt neustarten"
+
+msgid "Shut down server?"
+msgstr "Server herunterfahren?"
+
+msgid "Do you really want to shut down the server?"
+msgstr "Möchten Sie den Server wirklich herunterfahren?"
+
+msgid "THIS WILL SHUT DOWN THE SERVER. TO START THE SERVER AGAIN, YOU MUST MANUALLY (LOCALLY) POWER IT ON AGAIN."
+msgstr "DIES WIRD DEN SERVER AUSSCHALTEN. UM DEN SERVER WIEDER ZU STARTEN, MÜSSEN SIE IHN WIEDER MANUELL (VORT ORT) EINSCHALTEN."
+
+msgid "SHUT DOWN NOW"
+msgstr "JETZT HERUNTERFAHREN"
+
+#: --- End unix ---
