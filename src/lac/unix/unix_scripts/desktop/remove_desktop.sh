@@ -22,7 +22,7 @@ samba-tool dns delete la.$DOMAIN $DOMAIN desktop A $IP -Uadministrator%$ADMIN_PA
 
 # Remove the Caddy entry
 python3 ../remove_caddy_service.py desktop.$DOMAIN
-systemctl reload caddy
+systemctl restart caddy
 
 ufw delete allow from 192.168.0.0/16 to any port 3389
 ufw delete allow from 172.16.0.0/12 to any port 3389

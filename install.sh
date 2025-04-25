@@ -66,7 +66,7 @@ http://localhost {
 
 " >> /etc/caddy/Caddyfile
 
-# If something is running on port 80, then systemctl reload caddy will silently hang
+# If something is running on port 80, then systemctl restart caddy will silently hang
 systemctl restart caddy
 
 fi

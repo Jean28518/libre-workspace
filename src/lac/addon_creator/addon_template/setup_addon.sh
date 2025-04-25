@@ -25,4 +25,4 @@ if [ "$DOMAIN" = "int.de" ]; then
     sed -i 's/#tls internal/tls internal/g' /etc/caddy/Caddyfile
 fi
 
-systemctl reload caddy
+systemctl restart caddy

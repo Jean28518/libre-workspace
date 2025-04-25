@@ -37,7 +37,7 @@ sed -i "s/SED_DOMAIN/$DOMAIN/g" /etc/caddy/Caddyfile
 
 ufw allow http
 ufw allow https
-systemctl reload caddy
+systemctl restart caddy
 
 ADDITIONAL_INSTALL_OPTIONS=""
 # if /data exists, then add --data-dir="/data/nextcloud" to the installation options

@@ -28,4 +28,4 @@ echo "cert.int.de {
 
 " >> /etc/caddy/Caddyfile
 
-systemctl reload caddy
+systemctl restart caddy

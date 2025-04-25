@@ -917,7 +917,7 @@ def disable_nextcloud_user_administration():
 
     with open("/etc/caddy/Caddyfile", "w") as f:
         f.write("\n".join(caddyfile))
-    os.system("systemctl reload caddy")
+    os.system("systemctl restart caddy")
 
 
 def enable_nextcloud_user_administration():
@@ -934,7 +934,7 @@ def enable_nextcloud_user_administration():
 
     with open("/etc/caddy/Caddyfile", "w") as f:
         f.write("\n".join(caddyfile))
-    os.system("systemctl reload caddy")
+    os.system("systemctl restart caddy")
 
 
 def get_additional_services_control_files():

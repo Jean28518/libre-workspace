@@ -88,7 +88,7 @@ fi
 # END CADDYFILE
 
 
-systemctl reload caddy
+systemctl restart caddy
 
 # Set the cfg file of lac:
 # LINUX_ARBEITSPLATZ_CONFIGURED=False to LINUX_ARBEITSPLATZ_CONFIGURED=True
