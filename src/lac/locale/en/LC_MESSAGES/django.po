@@ -16,6 +16,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: --- Start lac ---
+
+msgid "Libre-Workspace Portal"
+msgstr "Libre-Workspace Portal"
+
+msgid "Administration"
+msgstr "Administration"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Documentation"
+msgstr "Documentation"
+
+msgid "Forum"
+msgstr "Forum"
+
+msgid "Paid support"
+msgstr "Paid support"
+
+msgid "Download system information"
+msgstr "Download system information"
+
+msgid "Change password"
+msgstr "Change password"
+
+msgid "2-Factor-Authentication"
+msgstr "2-Factor-Authentication"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgctxt "Heading: Create + Type"
+msgid "Create"
+msgstr "Create"
+
+msgctxt "Button value: Create"
+msgid "Create"
+msgstr "Create"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgctxt "Heading: Edit + Name"
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Do you really want to delete {{ name }}?"
+msgstr "Do you really want to delete {{ name }}?"
+
+msgid "This operation is irreversible!"
+msgstr "This operation is irreversible!"
+
+msgid "Continue"
+msgstr "Continue"
+
+msgid "Add {{ name }}"
+msgstr "Add {{ name }}"
+
+#: --- End lac ---
+
 #: --- Start app_dashboard ---
 
 msgid "Dashboard entries"

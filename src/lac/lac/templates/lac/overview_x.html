@@ -4,7 +4,11 @@
 <h2>{{ overview.heading }}</h2>
 
 {% if overview.add_url %}
-<a href="{{ overview.add_url }}" role="button" class="primary">{{ overview.element_name }} hinzufügen</a>
+<a href="{{ overview.add_url }}" role="button" class="primary">
+    {% blocktrans with name=overview.element_name %}
+        Add {{ name }}
+    {% endblocktrans %}
+</a>
 {% endif %}
 
 {% if overview.message and overview.message != "" %}
@@ -30,10 +34,10 @@
         <th scope="col"><center>{{t_heading}} </center></th>
         {% endfor %}
         {% if overview.edit_url_name %}
-            <th scope="col"><center>Bearbeiten</center></th>
+            <th scope="col"><center>{% trans "Edit" %}</center></th>
         {% endif %}
         {% if overview.delete_url_name %}
-            <th scope="col"><center>Löschen</center></th>
+            <th scope="col"><center>{% trans "Delete" %}</center></th>
         {% endif %}
       </tr>
     </thead>
@@ -47,7 +51,7 @@
             {% if t_row.edit_url %}
                 <td>
                     <center>
-                        <a href="{{t_row.edit_url}}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a>
+                        <a href="{{t_row.edit_url}}" title="{% trans 'Edit' %}" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a>
                     </center>
                 </td>
             {% endif %}
@@ -58,7 +62,7 @@
                         data-target="modal-{{t_row.delete_url}}"
                         onClick="toggleModal(event)"
                         style="width: 3.5rem; margin-bottom: 0;"
-                        title="Löschen">
+                        title="{% trans 'Delete' %}">
                         <span class="material-icons md-16">delete</span>
                     </button>
                 </center>
@@ -74,9 +78,13 @@
                 data-target="modal-{{t_row.delete_url}}"
                 onClick="toggleModal(event)">
                 </a>
-                <h3>{{t_row.first_field}} wirklich löschen?</h3>
+                <h3>
+                    {% blocktrans with name=t_row.first_field %}
+                        Do you really want to delete {{ name }}?
+                    {% endblocktrans %}
+                </h3>
                 <p>
-                Dieser Vorgang ist nicht mehr umkehrbar!
+                    {% trans "This operation is irreversible!" %}
                 </p>
                 <footer>
                 <a href="#cancel"
@@ -84,9 +92,9 @@
                     class="secondary"
                     data-target="modal-{{t_row.delete_url}}"
                     onClick="toggleModal(event)">
-                    Abbrechen
+                    {% trans "Cancel" %}
                 </a>
-                <a href="{{t_row.delete_url}}"role="button" class="contrast">LÖSCHEN</a>
+                <a href="{{t_row.delete_url}}"role="button" class="contrast">{% trans "Delete" | upper %}</a>
                 </footer>
             </article>
         </dialog>
