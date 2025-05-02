@@ -621,7 +621,7 @@ def miscellaneous_settings(request):
     form.fields["disable_nextcloud_user_administration"].initial = not unix.is_nextcloud_user_administration_enabled()
     form.fields["additional_mail_addresses_for_system_mails"].initial = unix.get_value("ADDITIONAL_MAIL_ADDRESSES_FOR_SYSTEM_MAILS", "")
     form.fields["cpu_warning_threshold"].initial = unix.get_value("CPU_WARNING_THRESHOLD", "80")
-    form.fields["ram_warning_threshold"].initial = unix.get_value("MEMORY_WARNING_THRESHOLD", "80")
+    form.fields["ram_warning_threshold"].initial = unix.get_value("RAM_WARNING_THRESHOLD", "80")
     form.fields["disk_warning_threshold"].initial = unix.get_value("DISK_WARNING_THRESHOLD", "90")
     return render(request, "lac/generic_form.html", {"form": form, "heading": "Verschiedene Einstellungen", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True"})
 
