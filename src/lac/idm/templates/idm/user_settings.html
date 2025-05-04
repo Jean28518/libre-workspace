@@ -1,14 +1,14 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2>Benutzereinstellungen</h2>
+<h2>{% trans "User settings" %}</h2>
 
 {% if message != "" %}
 <p><strong>{{ message | safe }}</strong></p>
 {% endif %}
 
-<a href="{% url "change_password" %}" role="button" class="secondary outline">Passwort ändern</a>
-<a href="{% url "otp_settings" %}" role="button" class="secondary outline">2-Faktor-Authentifizierung</a>
+<a href="{% url "change_password" %}" role="button" class="secondary outline">{% trans "Change password" %}</a>
+<a href="{% url "otp_settings" %}" role="button" class="secondary outline">{% trans "2-Factor-Authentication" %}</a>
 
 <hr>
 
@@ -16,9 +16,9 @@
     {{ form }}
     <div class="grid">
         <div>
-            <a href="{% url "dashboard" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "dashboard" %}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
         </div>
-        <input type="submit" value="Änderungen speichern">
+        <input type="submit" value="{% trans 'Save changes' %}">
     </div>
 </form>
 

@@ -1,7 +1,7 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2>Willkommen {{ user_information.displayName }}</h2>
+<h2>{% trans "Welcome" %} {{ user_information.displayName }}</h2>
 
 {% include "idm/libre_workspace_challenges.html" %}
 
@@ -13,14 +13,14 @@
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">manage_accounts</span> 
             <br> 
-            Benutzeradministration
+            {% trans "User administration" %}
         </article>
     </a>
     <a class="secondary" href="{% url "group_overview" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">groups</span> 
             <br> 
-            Gruppenadministration
+            {% trans "Group administration" %}
         </article>
     </a>
     {% endif %}
@@ -28,14 +28,14 @@
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">save</span> 
             <br> 
-            Datenimport/-export
+            {% trans "Data import / export" %}
         </article>
     </a>
     <a class="secondary" href="{% url "file_explorer" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">folder</span> 
             <br> 
-            Datei-Explorer
+            {% trans "File-Explorer" %}
         </article>
     </a>
 </div>
@@ -44,19 +44,19 @@
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">dns</span> 
             <br> 
-            Systemverwaltung
+            {% trans "System management" %}
         </article>
     </a>
     <a class="secondary" href="{% url "system_configuration" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">settings</span> 
             <br> 
-            Systemkonfiguration
+            {% trans "System configuration" %}
         </article>
     </a>
 </div>
 
-<h3>Eigene Einstellungen</h3>
+<h3>{% trans "Custom settings" %}</h3>
 {% endif %}
 
 
@@ -65,14 +65,14 @@
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">account_circle</span> 
             <br> 
-            Profileinstellungen
+            {% trans "Profile settings" %}
         </article>
     </a>
     <a class="secondary" href="{% url "change_password" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">password</span> 
             <br> 
-            Passwort ändern
+            {% trans "Change password" %}
         </article>
     </a>
     {% if desktop_module_active and user_information.admin %}
@@ -80,7 +80,7 @@
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">desktop_windows</span> 
             <br> 
-            Cloud Desktop Einstellungen
+            {% trans "Cloud Desktop settings" %}
         </article>
     </a>
     {% endif %}

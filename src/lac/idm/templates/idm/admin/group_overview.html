@@ -1,36 +1,36 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2>Gruppenadministration</h2>
+<h2>{% trans "Group administration" %}</h2>
 
-<a href="{% url "create_group" %}" role="button" class="primary">Gruppe hinzufügen</a>
+<a href="{% url "create_group" %}" role="button" class="primary">{% trans "Add group" %}</a>
 
 <hr>
 
 <table>
-    <thead>
+  <thead>
+    <tr>
+      <th scope="col">{% trans "Group name" %}</th>
+      <th scope="col">{% trans "Description" %}</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for group in groups %}
       <tr>
-        <th scope="col">Gruppenname </th>
-        <th scope="col">Beschreibung</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
+          <td>{{group.cn}}</td>
+          <td>{{group.description}}</td>
+          <td><a href="{% url "edit_group" group.cn %}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
+          <td><a href="{% url "assign_users_to_group" group.cn %}" title="Mitglieder verwalten" role="button" class="secondary outline"><span class="material-icons md-16">group</span></a></td>
       </tr>
-    </thead>
-    <tbody>
-    {% for group in groups %}
-        <tr>
-            <td>{{group.cn}}</td>
-            <td>{{group.description}}</td>
-            <td><a href="{% url "edit_group" group.cn %}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
-            <td><a href="{% url "assign_users_to_group" group.cn %}" title="Mitglieder verwalten" role="button" class="secondary outline"><span class="material-icons md-16">group</span></a></td>
-        </tr>
-            
-    
-    {% endfor %}
-    </tbody>
-  </table>
+          
+  
+  {% endfor %}
+  </tbody>
+</table>
 
-  Hinweis: Einige Systemgruppen sind ausgeblendet.
+{% trans "Note: Some system groups are hidden." %}
 
         
 {% endblock %}

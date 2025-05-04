@@ -1,7 +1,7 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2>Gruppe hinzufügen</h2>
+<h2>{% trans "Add group" %}</h2>
 
 {% if message != "" %}
 <p><strong>{{ message }}</strong></p>
@@ -12,9 +12,9 @@
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
         </div>
-        <input type="submit" value="Gruppe hinzufügen">
+        <input type="submit" value="{% trans 'Add group' %}">
     </div>
 </form>
 

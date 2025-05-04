@@ -1,7 +1,7 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2>Gruppen-Mitgliedschaften von {{ user_information.displayName }}</h2>
+<h2>{% trans "Group-Memberships of" %} {{ user_information.displayName }}</h2>
 
 {% if message != "" %}
 <p><strong>{{ message }}</strong></p>
@@ -19,14 +19,14 @@
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "edit_user" user_information.cn %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "edit_user" user_information.cn %}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
         </div>
-        <input type="submit" value="Mitgliedschaften aktualisieren">
+        <input type="submit" value="{% trans 'Update memberships' %}">
     </div>
 </form>
 
 
-Hinweis: Einige Systemgruppen sind ausgeblendet.
+{% trans "Note: Some system groups are hidden." %}
 
         
 {% endblock %}
