@@ -215,16 +215,16 @@ h1, h2, h3, h4, h5, h6 {
           {% if branding.portal_branding_title %}
             <a href="/" class="contrast"><strong>{{ branding.portal_branding_title }}</strong></a>
           {% else %}
-            <a href="/" class="contrast"><strong>Libre-Workspace Portal</strong></a>
+            <a href="/" class="contrast"><strong>{% trans "Libre-Workspace Portal" %}</strong></a>
           {% endif %}
         </li>
         {% if request.user.is_authenticated %}
-          <li><a href="/idm/dashboard">Verwaltung</a></li> 
+          <li><a href="/idm/dashboard">{% trans "Administration" %}</a></li> 
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
         <ul>
-          {% comment %} <li><a href="#">Link</a></li> {% endcomment %}
+          {% comment %} <li><a href="#">{% trans "Link" %}</a></li> {% endcomment %}
           {% if request.user.is_superuser %}
             <li>
               <details role="list" dir="rtl">
@@ -232,10 +232,10 @@ h1, h2, h3, h4, h5, h6 {
                   <span class="material-icons">help</span>
                 </summary>
                 <ul role="listbox">
-                  <li><a href="https://docs.libre-workspace.org/">Dokumentation</a></li>
-                  <li><a href="https://forum.libre-workspace.org/">Forum</a></li>
-                  <li><a href="https://www.linuxguides.de/linux-support/">Kostenpflichtiger Support</a></li>
-                  <li><a href="{% url "get_system_data_for_support" %}">Systeminformation herunterladen</a></li>
+                  <li><a href="https://docs.libre-workspace.org/">{% trans "Documentation" %}</a></li>
+                  <li><a href="https://forum.libre-workspace.org/">{% trans "Forum" %}</a></li>
+                  <li><a href="https://www.linuxguides.de/linux-support/">{% trans "Paid support" %}</a></li>
+                  <li><a href="{% url "get_system_data_for_support" %}">{% trans "Download system information" %}</a></li>
                 </ul>
               </details>
             </li>
@@ -246,9 +246,9 @@ h1, h2, h3, h4, h5, h6 {
                   {{ request.user.username }}
               </summary>
               <ul role="listbox">
-                <li><a href="{% url "change_password" %}">Passwort ändern</a></li>
-                <li><a href="{% url "otp_settings" %}"><bdi>2-Faktor-Authentifizierung</bdi></a></li>
-                <li><a href="{% url "user_logout" %}">Ausloggen</a></li>
+                <li><a href="{% url "change_password" %}">{% trans "Change password" %}</a></li>
+                <li><a href="{% url "otp_settings" %}"><bdi>{% trans "2-Factor-Authentication" %}</bdi></a></li>
+                <li><a href="{% url "user_logout" %}">{% trans "Logout" %}</a></li>
               </ul>
             </details>
           </li>
@@ -257,7 +257,7 @@ h1, h2, h3, h4, h5, h6 {
       
       {% else %}
         <ul>
-          <li title="Anmelden"><a href="{% url "user_login" %}" role="button">Anmelden</a></li>
+          <li title="{% trans 'Login' %}"><a href="{% url "user_login" %}" role="button">{% trans "Login" %}</a></li>
         </ul>
       {% endif %}
     </nav> 

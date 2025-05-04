@@ -1,7 +1,9 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
-<h2>Systemverwaltung</h2>
+<h2>{% trans "System management" %}</h2>
 
 {% include "unix/system_dashboard.html" %}
 
@@ -9,7 +11,7 @@
 
 {% include "unix/update_management.html" %}
 
-<div align="center">Hinweis: Diese Seite aktualisiert sich alle 60 Sekunden.</div>
+<div align="center">{% trans "Note: This page refreshes every 60 seconds." %}</div>
 
 <script>
     setTimeout(function(){

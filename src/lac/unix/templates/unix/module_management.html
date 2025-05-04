@@ -1,14 +1,16 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
-<h2>Libre Workspace Module</h2>
+<h2>{% trans "Libre Workspace modules" %}</h2>
 
 <table>
     <thead>
         <tr>
-            <th scope="col">Modul</th>
-            <th scope="col">Installiert?</th>
-            <th scope="col">Aktion</th>
+            <th scope="col">{% trans "Module" %}</th>
+            <th scope="col">{% trans "Installed?" %}</th>
+            <th scope="col">{% trans "Action" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -17,9 +19,9 @@
             <td>{{ module.name }}</td>
             <td>{% if module.installed %}<span class="material-icons md-24">check</span> {% endif %}</td>
             {% if module.installed %}
-                <td><button data-target="modal-uninstall-{{ module.name }}" onClick="toggleModal(event)" class="danger">Deinstallieren</button></td>
+                <td><button data-target="modal-uninstall-{{ module.name }}" onClick="toggleModal(event)" class="danger">{% trans "Uninstall" %}</button></td>
             {% else %}
-                <td><button data-target="modal-install-{{ module.name }}" onClick="toggleModal(event)">Installieren</button></td>
+                <td><button data-target="modal-install-{{ module.name }}" onClick="toggleModal(event)">{% trans "Install" %}</button></td>
             {% endif %}
         </tr>
 
@@ -46,13 +48,13 @@
             class="secondary"
             data-target="modal-uninstall-{{ module.name }}"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% trans "Cancel" %}
             </a>
             <a href="{% url 'uninstall_module' module.id %}"
             role="button"
             class="danger"
             data-target="modal-uninstall-{{ module.name }}">
-            Deinstallieren
+            {% trans "Uninstall" %}
             </a>
         </footer>
         </article>
@@ -69,7 +71,7 @@
         </a>
         <h3>{{ module.name }} installieren?</h3>
         <p>
-            Möchten Sie das Modul wirklich installieren? Das kann einige Zeit in Anspruch nehmen.
+            {% trans "Are you sure you want to install the module? This may take some time." %}
         </p>
         <footer>
             <a href="#cancel"
@@ -77,12 +79,12 @@
             class="secondary"
             data-target="modal-install-{{ module.name }}"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% trans "Cancel" %}
             </a>
             <a href="{% url 'install_module' module.id %}"
             role="button"
             data-target="modal-install-{{ module.name }}">
-            Installieren
+            {% trans "Install" %}
             </a>
         </footer>
         </article>
@@ -96,11 +98,11 @@
 <hr>
 
 {% if form != "" %}
-    <h3> Online Office Module </h3>
+    <h3>{% trans "Online Office modules" %}</h3>
 
     <form method="post">{% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="primary">Anwenden</button>
+        <button type="submit" class="primary">{% trans "Apply" %}</button>
     </form>
 {% endif %}
 

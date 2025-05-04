@@ -1,7 +1,7 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2> Bearbeite {{ name }} </h2>
+<h2>{% pgettext "Heading: Edit + Name" "Edit" %} {{ name }}</h2>
 
 {% if description %} {{ description | safe }} <br> <br> {% endif %}
 
@@ -23,24 +23,24 @@
 <button class="contrast outline"
 data-target="modal-deletion"
 onClick="toggleModal(event)">
-LÖSCHEN
+{% trans "Delete" | upper %}
 </button>
 {% endif %}
 
 <form method="post" enctype="multipart/form-data">{% csrf_token %}
     <div class="grid">
         <div>
-            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
         </div>
-        <input type="submit" value="Speichern">
+        <input type="submit" value="{% trans 'Save' %}">
     </div>
     {{ form }}
     <br><br>
     <div class="grid">
         <div>
-            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
         </div>
-        <input type="submit" value="Speichern">
+        <input type="submit" value="{% trans 'Save' %}">
     </div>
 </form>
 
@@ -54,9 +54,13 @@ LÖSCHEN
         data-target="modal-deletion"
         onClick="toggleModal(event)">
         </a>
-        <h3>{{name}} wirklich löschen?</h3>
+        <h3>
+            {% blocktrans with name=name %}
+                Do you really want to delete {{ name }}?
+            {% endblocktrans %}
+        </h3>
         <p>
-        Dieser Vorgang ist nicht mehr umkehrbar!
+        {% trans "This operation is irreversible!" %}
         </p>
         <footer>
         <a href="#cancel"
@@ -64,9 +68,9 @@ LÖSCHEN
             class="secondary"
             data-target="modal-deletion"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% trans "Cancel" %}
         </a>
-        <a href="{{delete_url}}"role="button" class="contrast" style="height: 50px">LÖSCHEN</a>
+        <a href="{{delete_url}}"role="button" class="contrast" style="height: 50px">{% trans "Delete" | upper %}</a>
         </footer>
     </article>
 </dialog>
