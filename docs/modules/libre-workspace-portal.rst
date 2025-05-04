@@ -95,7 +95,7 @@ If you as administrator locked yourself out you can disable 2FA by connecting vi
 
     sudo -i
     cd /usr/share/linux-arbeitsplatz/
-    ./django_reset_2fa_for_Administrator.sh
+    bash django_reset_2fa_for_Administrator.sh
 
 OIDC (OpenID Connect)
 ---------------------
