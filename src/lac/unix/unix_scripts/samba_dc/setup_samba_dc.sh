@@ -4,18 +4,13 @@
 # IP
 # ADMIN_PASSWORD
 # LDAP_DC
+# SHORTEND_DOMAIN
 
 # If samba-tool is installed, abort the setup because wo don't want to overwrite it at this state.
 if [ -f /usr/bin/samba-tool ]; then
     echo "Samba DC is already installed. Aborting setup. Remove all samba components first before running this script."
     exit 0
 fi
-
-# We need a shortend domain for the samba dc bnecause of the 15 character limit: len(la.$SHORTEND_DOMAIN) <= 15
-LVL1=$(echo $DOMAIN | cut -d'.' -f2)
-LVL2=$(echo $DOMAIN | cut -d'.' -f1)
-SHORTEND_LVL2=$(echo $LVL2 | cut -c1-$(expr 12 - ${#LVL1} - 1))
-SHORTEND_DOMAIN="$SHORTEND_LVL2.$LVL1"
 
 export DEBIAN_FRONTEND=noninteractive
 

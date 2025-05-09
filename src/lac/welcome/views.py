@@ -62,9 +62,11 @@ def welcome_dns_settings(request):
             request.session["domain"] = request.POST.get("domain", "")
             message = check_domain(request.session["domain"], True)
             request.session["domain"] = request.session["domain"].lower()
+            request.session["shortend_domain"] = get_shortend_domain(request.session["domain"])
             request.session["ldap_dc"] = get_ldap_dc(request.session["domain"])
         else:
             request.session["domain"] = "int.de"
+            request.session["shortend_domain"] = "int.de"
             request.session["ldap_dc"] = "dc=int,dc=de"
         if message == "" or message == None:
             return redirect("installation_running")
@@ -84,6 +86,7 @@ def libreworkspace_lite(request):
             if message == "" or message == None:
                 request.session["domain"] = request.POST.get("further_root_domain", "int.de")
                 request.session["ldap_dc"] = get_ldap_dc(request.session["domain"])
+                request.session["shortend_domain"] = get_shortend_domain(request.session["domain"])
                 return redirect("installation_running")
     return render(request, "welcome/libreworkspace_lite.html", {"message": message, "hide_login_button": True})
 
@@ -102,11 +105,27 @@ def check_domain(domain, subdomain=False):
 
 
 def get_ldap_dc(domain):
-    lvls = domain.split(".")
-    dc_string = ""
-    for i in range(len(lvls)):
-        dc_string += f"dc={lvls[i]},"
-    return dc_string[:-1]  # Remove last comma
+    lvl1 = domain.split(".")[-1]
+    if len(lvl1) > 12:
+        return "Bitte stellen Sie sicher, dass die lvl1 Domain nicht länger als 12 Zeichen ist."
+    other_parts = domain.replace(lvl1, "")
+    # remove the last dot
+    other_parts = other_parts[:-1]
+    # We have to shorten because of the NET BIOS name limitations.
+    shortend_other_parts = other_parts[:12-len(lvl1)-1]
+    return "dc=" + shortend_other_parts.replace(".", ",dc=") + ",dc=" + lvl1
+
+
+def get_shortend_domain(domain):
+    print("HELLO WORLD!")
+    lvl1 = domain.split(".")[-1]
+    other_parts = domain.replace(lvl1, "")
+    # remove the last dot
+    other_parts = other_parts[:-1]
+    # We have to shorten because of the NET BIOS name limitations.
+    shortend_other_parts = other_parts[:12-len(lvl1)-1]
+    print(shortend_other_parts + "." + lvl1)
+    return shortend_other_parts + "." + lvl1
 
 
 def installation_running(request):
@@ -114,6 +133,7 @@ def installation_running(request):
         return message_func(request, "Libre Workspace ist bereits konfiguriert. Bitte loggen Sie sich ein.")
     message = ""
     os.environ["DOMAIN"] = request.session["domain"]
+    os.environ["SHORTEND_DOMAIN"] = request.session["shortend_domain"]
     os.environ["ADMIN_PASSWORD"] = request.session["password"]
     # Get output of script: in lac/unix/unix_scripts/get_ip.sh
     os.environ["IP"] = os.popen("hostname -I").read().split(" ")[0]
@@ -128,6 +148,12 @@ def installation_running(request):
     os.environ["JITSI"] = request.session["jitsi"]
     os.environ["XFCE"] = request.session["xfce"]
     os.environ["CUSTOM_ACCESS"] = request.session.get("custom_access", "")
+
+    print("SAMBA_DC: ", os.environ["SAMBA_DC"])
+    print("DOMAIN: ", os.environ["DOMAIN"])
+    print("IP: ", os.environ["IP"])
+    print("LDAP_DC: ", os.environ["LDAP_DC"])
+    print("SHORTEND_DOMAIN: ", os.environ["SHORTEND_DOMAIN"])
 
     # Create env.sh file
     try:
