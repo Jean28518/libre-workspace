@@ -149,7 +149,6 @@ def installation_running(request):
     os.environ["XFCE"] = request.session["xfce"]
     os.environ["CUSTOM_ACCESS"] = request.session.get("custom_access", "")
 
-    print("SAMBA_DC: ", os.environ["SAMBA_DC"])
     print("DOMAIN: ", os.environ["DOMAIN"])
     print("IP: ", os.environ["IP"])
     print("LDAP_DC: ", os.environ["LDAP_DC"])
