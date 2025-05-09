@@ -60,7 +60,7 @@ def welcome_dns_settings(request):
             message = "Bitte geben Sie eine Domain an."
         if request.session["visibility"] == "public" and message == "":
             request.session["domain"] = request.POST.get("domain", "")
-            message = check_domain(request.session["domain"])
+            message = check_domain(request.session["domain"], True)
             request.session["domain"] = request.session["domain"].lower()
             request.session["ldap_dc"] = get_ldap_dc(request.session["domain"])
         else:
@@ -80,7 +80,7 @@ def libreworkspace_lite(request):
             request.session["custom_access"] = request.POST.get("portal_domain_field", "")
             message = check_domain(request.session["custom_access"], True)
         if message == "" or message == None:
-            message = check_domain(request.POST.get("further_root_domain", "int.de"))
+            message = check_domain(request.POST.get("further_root_domain", "int.de"), True)
             if message == "" or message == None:
                 request.session["domain"] = request.POST.get("further_root_domain", "int.de")
                 request.session["ldap_dc"] = get_ldap_dc(request.session["domain"])
@@ -102,11 +102,11 @@ def check_domain(domain, subdomain=False):
 
 
 def get_ldap_dc(domain):
-    lvl1 = domain.split(".")[1]
-    lvl2 = domain.split(".")[0]
-    # We need the -1 because of the dot
-    shortend_lvl2 = lvl2[:12-len(lvl1)-1]
-    return f"dc={shortend_lvl2},dc={lvl1}"
+    lvls = domain.split(".")
+    dc_string = ""
+    for i in range(len(lvls)):
+        dc_string += f"dc={lvls[i]},"
+    return dc_string[:-1]  # Remove last comma
 
 
 def installation_running(request):

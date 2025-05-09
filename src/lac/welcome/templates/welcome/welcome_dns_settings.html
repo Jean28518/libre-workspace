@@ -27,7 +27,7 @@
         <label for="domain">
             Domain
             <input type="text" id="domain" name="domain" placeholder="example.com">
-            Die oben angegebene Domain muss in Ihrer Kontrolle sein. Geben Sie hier nur den Domainnamen an, ohne Protokoll oder Subdomains.
+            Die oben angegebene Domain muss in Ihrer Kontrolle sein. Geben Sie hier nur den Domainnamen an, ohne Protokoll.
         </label>
 
         <br>
@@ -35,7 +35,7 @@
         Verwenden Sie entweder eine <strong>komplette Domain</strong> und stellen folgende DNS-Einträge sicher:
         <ul>
             <li>Typ: A | Name: * | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: @ | Ziel: IP-Adresses dieses Servers</li>
+            <li>Typ: A | Name: @ | Ziel: IP-Adresses dieses Servers (bei 2nd Level Domains)</li>
         </ul>
 
         <strong>oder</strong> verwenden Sie folgende <strong>Subdomains</strong> und stellen folgende DNS-Einträge sicher:
