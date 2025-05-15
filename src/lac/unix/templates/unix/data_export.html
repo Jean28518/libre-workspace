@@ -1,6 +1,7 @@
+{% load i18n %}
 <article>
 
-    <h2> Datenexport </h2>
+    <h2>{% trans "Data export" %}</h2>
 
     {% if data_export_status != "running" %}
 
@@ -11,7 +12,7 @@
         data-target="rsync-log"
         onClick="toggleModal(event)"
         href="#">
-        Nachrichten des letzten Exports ansehen
+        {% trans "View messages from the last export" %}
         </a>
         <!-- Modal -->
         <!-- Modal -->
@@ -23,8 +24,8 @@
                 data-target="rsync-log"
                 onClick="toggleModal(event)">
             </a>
-            <h3> Nachrichten des letzten Exports </h3>
-            <p> Je weniger Nachrichten zu sehen sind, desto fehlerfreier ist der letzte Export verlaufen.</p>
+            <h3>{% trans "Messages from the last export" %}</h3>
+            <p>{% trans "The fewer messages you see, the more error-free the last export was." %}</p>
             <code>
                 {{ rsync_history | safe }}
             </code>
@@ -34,7 +35,7 @@
                 class="secondary"
                 data-target="rsync-log"
                 onClick="toggleModal(event)">
-                Schließen
+                {% trans "Close" %}
                 </a>
             </footer>
             </article>
@@ -51,9 +52,9 @@
         </p>
 
         <form action="{% url "data_export" %}" method="post">{% csrf_token %}
-        <label for="partition-export">Festplatte</label>
+        <label for="partition-export">{% trans "Disk" %}</label>
         <select name="partition-export" id="partition-export" required>
-            <option value="" selected>Wähle ein Ziel...</option>
+            <option value="" selected>{% trans "Choose a destination..." %}</option>
             {% for partition in partitions %}
                 {% if partition.mountpoint %}
                     {% if partition.mountpoint != "/" %}
@@ -66,17 +67,17 @@
                 {% endif %}
             {% endfor %}
         </select>
-        <input type="submit" value="Exportieren">
+        <input type="submit" value="{% trans 'Export' %}">
         </form>
 
-        <p> Hinweis: Es werden während des Export-Vorgangs alle Dienste vorrübergehend ausgeschaltet.</p>
+        <p>{% trans "Note: All services are temporarily disabled during the export process." %}</p>
     {% else %}
     <p> 
         Der Daten-Export läuft gerade. Bitte warte, bis der Export abgeschlossen ist.
         Dieser Vorgang kann einige Stunden dauern.
         Alle weiteren Dienste werden gerade pausiert und sind aktuell nicht erreichbar.
     </p>
-        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
+        <a href="{% url "abort_current_data_export" %}">{% trans "Cancel" %}</a>
     {% endif %}
 
 

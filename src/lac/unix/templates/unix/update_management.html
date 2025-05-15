@@ -1,14 +1,15 @@
+{% load i18n %}
 <article>
-    <h3>Vollautomatisierte Updates</h3>
-    <h3>Konfiguration</h3>
+    <h3>{% trans "Fully automated updates" %}</h3>
+    <h3>{% trans "Configuration" %}</h3>
     <div>
         <fieldset>
             <form action="{% url "set_update_configuration" %}" method="POST">{% csrf_token %}
                 <table>
                     <thead>
                         <tr>
-                            <th scope="col">Modul</th>
-                            <th scope="col">Jetzt Aktualisieren</th>
+                            <th scope="col">{% trans "Module" %}</th>
+                            <th scope="col">{% trans "Update now" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -22,7 +23,7 @@
                                         </label>
                                     </td>
                                     <td>
-                                        <a href="{% url "update_module_now" module.id %}">Jetzt aktualisieren</a>
+                                        <a href="{% url "update_module_now" module.id %}">{% trans "Update now" %}</a>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -30,10 +31,10 @@
                     </tbody>
                 </table>
                     <!-- Time -->
-                    <label for="time">Automatische Updates ausführen um:
+                    <label for="time">{% trans "Run automatic updates at" %}:
                         <input type="time" id="time" name="time" value="{{update_information.update_time}}" required>
                     </label>
-                <input type="submit" value="Speichern">
+                <input type="submit" value="{% trans 'Save' %}">
             </form>
         </fieldset>
     </div>
@@ -44,8 +45,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Datum</th>
-                        <th>Log-Dateien</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Log files" %}</th>
                     </tr>
                 </thead>
                     <tbody>
@@ -58,7 +59,7 @@
                                 data-target="update_log{{ update_log.date }}"
                                 onClick="toggleModal(event)"
                                 href="#">
-                                Bericht anzeigen
+                                {% trans "Show report" %}
                                 </a>
                                 <!-- Modal -->
                                 <!-- Modal -->
@@ -70,7 +71,7 @@
                                         data-target="update_log{{ update_log.date }}"
                                         onClick="toggleModal(event)">
                                     </a>
-                                    <h3>Update am {{ update_log.date }}</h3>
+                                    <h3>{% trans "Update at" %} {{ update_log.date }}</h3>
                                     <code>
                                         {{ update_log.content | safe }}
                                     </code>
@@ -80,7 +81,7 @@
                                         class="secondary"
                                         data-target="update_log{{ update_log.date }}"
                                         onClick="toggleModal(event)">
-                                        Schließen
+                                        {% trans "Close" %}
                                         </a>
                                     </footer>
                                     </article>

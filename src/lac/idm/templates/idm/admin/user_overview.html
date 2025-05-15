@@ -1,36 +1,36 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2>Benutzeradministration</h2>
+<h2>{% trans "User administration" %}</h2>
 
-<a href="{% url "create_user" %}" role="button" class="primary">Benutzer hinzufügen</a>
+<a href="{% url "create_user" %}" role="button" class="primary">{% trans "Add user" %}</a>
 
 <hr>
 
 <table>
-    <thead>
+  <thead>
+    <tr>
+      <th scope="col">{% trans "Username" %}</th>
+      <th scope="col">{% trans "Display name" %}</th>
+      <th scope="col">{% trans "E-Mail" %}</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in users %}
       <tr>
-        <th scope="col">Benutzername </th>
-        <th scope="col">Anzeigename</th>
-        <th scope="col">E-Mail</th>
-        <th scope="col"></th>
+          <td>{{user.cn}} {% if user.enabled == False %}{% trans "(Deactivated)" %}{% endif %}</td>
+          <td>{{user.displayName}}</td>
+          <td><a href="mailto:{{user.mail}}">{{user.mail}}</a></td>
+          <td><a href="{% url "edit_user" user.cn %}" title="{% trans 'Edit' %}" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
       </tr>
-    </thead>
-    <tbody>
-    {% for user in users %}
-        <tr>
-            <td>{{user.cn}} {% if user.enabled == False %}(Deaktiviert){% endif %}</td>
-            <td>{{user.displayName}}</td>
-            <td><a href="mailto:{{user.mail}}">{{user.mail}}</a></td>
-            <td><a href="{% url "edit_user" user.cn %}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
-        </tr>
-            
-    
-    {% endfor %}
-    </tbody>
-  </table>
+          
+  
+  {% endfor %}
+  </tbody>
+</table>
 
-  Hinweis: Einige Systembenutzer sind ausgeblendet.
+{% trans "Note: Some system users are hidden." %}
 
         
 {% endblock %}

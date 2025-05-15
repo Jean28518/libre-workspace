@@ -1,20 +1,22 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
-<h1> Dashboard-Einträge </h1>
+<h1> {% trans "Dashboard entries" %} </h1>
 
-<a href="{% url 'new_app_dashboard_entry' %}" role=button> Neuer Dashboard-Eintrag </a>
+<a href="{% url 'new_app_dashboard_entry' %}" role=button> {% trans "New Dashboard entry" %} </a>
 
 <table>
 <tr>
-<th> Titel </th>
-<th> Bearbeiten </th>
+<th> {% trans "Title" %} </th>
+<th> {% trans "Edit" %} </th>
 </tr>
 
 {% for dashboard in dashboard_entries %}
 <tr>
-    <td> {{ dashboard.title }} {% if not dashboard.is_active %} (Deaktiviert) {% endif %}</td>
-    <td> <a href="{% url 'edit_app_dashboard_entry' dashboard.id %}"> Bearbeiten </a> </td>
+    <td> {{ dashboard.title }} {% if not dashboard.is_active %} {% trans "(Deactivated)" %} {% endif %}</td>
+    <td> <a href="{% url 'edit_app_dashboard_entry' dashboard.id %}"> {% trans "Edit" %} </a> </td>
 </tr>
 {% endfor %}
 </table>

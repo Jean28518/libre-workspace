@@ -28,7 +28,7 @@
     {% else %}
         <div class="grid">
             <div>
-                <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+                <a href="{{url}}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
             </div>
             <input type="submit" value="{{action}}" {% if danger %}class="danger"{% endif %}>
         </div>
@@ -37,7 +37,7 @@
     <br><br>
     <div class="grid">
         <div>
-            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
         </div>
         <input type="submit" value="{{action}}" {% if danger %}class="danger"{% endif %}>
     </div>

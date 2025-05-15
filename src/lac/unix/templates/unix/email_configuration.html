@@ -1,7 +1,9 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
-    <h2> E-Mail Konfiguration </h2>
+    <h2>{% trans "E-Mail configuration" %}</h2>
 
     <p>
         Um die volle Funktionalität auszuschöpfen, wird empfohlen, ein Mail-Konto anzugeben, über dies der Libre-Workspace selbständig Einladungen, 
@@ -12,7 +14,7 @@
     <p><strong>{{ message }}</strong></p>
     {% endif %}
 
-    <a href="{% url "test_mail" %}" role="button" class="secondary" style="display: block;">Test-Mail senden</a>
+    <a href="{% url "test_mail" %}" role="button" class="secondary" style="display: block;">{% trans "Send test E-Mail" %}</a>
 
     
     <form method="post">  {% csrf_token %}
@@ -20,9 +22,9 @@
 
         <div class="grid">
             <div>
-                <a href="{% url "system_configuration" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+                <a href="{% url "system_configuration" %}"role="button" class="secondary" style="display: block;">{% trans "Back" %}</a>
             </div>
-            <input type="submit" value="Änderungen speichern">
+            <input type="submit" value="{% trans 'Save changes' %}">
         </div>
     </form>
 

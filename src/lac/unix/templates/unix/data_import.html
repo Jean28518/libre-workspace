@@ -1,6 +1,7 @@
+{% load i18n %}
 <article>
 
-    <h2> Datenimport (Nextcloud) </h2>
+    <h2>{% trans "Data import (Nextcloud)" %}</h2>
 
     {% if nextcloud_import_process_running %}
 
@@ -9,7 +10,7 @@
         Dieser Vorgang kann einige Stunden dauern.
         Erst ganz am Ende des Vorgangs werden die Daten in der Nextcloud sichtbar.<br>
     </p>
-        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
+        <a href="{% url "abort_current_data_export" %}">{% trans "Cancel" %}</a>
     {% else %}
 
 
@@ -23,23 +24,23 @@
 
 
         <form action="{% url "data_import_1" %}" method="post">{% csrf_token %}
-        <label for="current_directory">Festplatte</label>
+        <label for="current_directory">{% trans "Disk" %}</label>
         <select name="current_directory" id="current_directory" required>
-            <option value="" selected>Wähle die Quell-Festplatte aus...</option>
+            <option value="" selected>{% trans "Choose the source disk" %}</option>
             {% for partition in partitions %}
             {% if partition.mountpoint %}<option value="{{ partition.mountpoint }}">{{ partition.name }} ({{partition.size}})</option>{% endif %}
             {% endfor %}
         </select>
-        <label for="user_import">Nextcloud-Benutzer</label>
+        <label for="user_import">{% trans "Nextcloud user" %}</label>
         <select name="user_import" id="user_import" required>
-            <option value="" selected>Wähle den Nextcloud-Benutzer aus...</option>
+            <option value="" selected>{% trans "Choose the Nextcloud user..." %}</option>
             {% for nc_user in nextcloud_user_directories %}
             <option value="{{nc_user.path}}">{{ nc_user.name }}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="Importieren...">
+        <input type="submit" value="{% trans 'Import...' %}">
         </form>
-        <p> Im nächsten Schritt wird der Ordner auf der Quell-Festplatte ausgewählt, den Sie importieren möchten. </p>
+        <p>{% trans "In the next step, select the folder on the source hard drive that you want to import." %}</p>
 
     {% endif %}
 
