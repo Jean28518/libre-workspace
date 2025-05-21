@@ -1,4 +1,8 @@
+# Get the current php version
+PHP_VERSION=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+
 systemctl start mariadb
+systemctl start php$PHP_VERSION-fpm
 systemctl start docker
 
 # Turn on maintenance mode of Nextcloud
