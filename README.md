@@ -55,20 +55,32 @@ Your default account is called "Administrator".
 
 ```bash
 sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev
-cd src/lac/
-python3 -m venv .env
-cd ../../
-cp cfg.example cfg
-vim cfg # Configure example
-
 sudo mkdir -p /var/www/linux-arbeitsplatz-static
 sudo chown -R $USER:$USER /var/www/linux-arbeitsplatz-static
+sudo mkdir -p /var/lib/libre-workspace/portal
+sudo chown -R $USER:$USER /var/lib/libre-workspace/portal
+sudo mkdir -p /etc/libre-workspace/portal
+sudo chown -R $USER:$USER /etc/libre-workspace/
+
+cd /var/lib/libre-workspace/portal
+python3 -m venv venv
+cd -
+cp src/etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
+vim /etc/libre-workspace/portal/portal.conf # Configure
+cp src/etc/libre-workspace/libre-workspace.env.example /etc/libre-workspace/libre-workspace.env
 
 
 # If you did the setup above once, you can start the django server with this command
 bash run_development.sh
 # Start unix service (in a second terminal session)
-bash unix_service.sh
+cd src/
+bash usr/bin/libre-workspace-service
+
+
+# To clean later your computer after ending the development:
+sudo rm -rf /var/lib/libre-workspace/portal
+sudo rm -rf /var/www/linux-arbeitsplatz-static
+sudo rm -rf /etc/libre-workspace
 ```
 
 ## Build documentation

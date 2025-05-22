@@ -9,19 +9,13 @@ import requests
 
 # If cron is not running as root, exit
 if os.geteuid() != 0:
-    print("Cron is not running as root. Exiting.")
+    print("Service is not running as root. Exiting.")
     exit()
 
-print("Running unix service...")
-
-# Change current directory to the directory of this script
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
-# Get current directory
-current_directory = os.getcwd()
-
+print("Running libre workspace service...")
 
 # Let us get the environment of env.sh
-env_file_path = "/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh"
+env_file_path = "/etc/libre-workspace/libre-workspace.env"
 env = {}
 lines = open(env_file_path).readlines()
 for line in lines:
@@ -62,75 +56,6 @@ def get_lw_admin_token():
     else:
         # If the file does not exist, return empty string
         return ""
-
-
-def update_nextcloud_admin_status_for_all_users():
-        # Disable it because in the long run we go via sso which is much more reliable.
-        return
-        # Check if nextcloud is installed (if /var/www/nextcloud/occ exists)
-        if not os.path.isfile("/var/www/nextcloud/occ"):
-            return
-        # Also check if in the config file the LDAP server is enabled
-        # If there is no LDAP server URI, then we don't need to do anything
-        if os.environ.get("AUTH_LDAP_SERVER_URI") == "":
-            return
-        
-        # If the environment variable IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS is set to "*", then we don't need to do anything
-        if os.environ.get("IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS", "") == "*":
-            return
-
-        # Example output of the command "sudo -u www-data php occ group:list":
-        # sudo -u www-data php occ group:list
-        #   - admin:
-        #     - 292AA37A-E99E-4379-8852-DAFAB82FD411
-        #     - systemv
-        #   - Domain Admins:
-        #     - 70D5EC5B-1B3B-46E8-9198-5F2463AB4BA2
-        #     - 292AA37A-E99E-4379-8852-DAFAB82FD411
-
-        # Make sure that all the users which are in "Domain Admins" in the LDAP server are also in the "admin" group in the nextcloud database
-        output = subprocess.getoutput("sudo -u www-data php /var/www/nextcloud/occ group:list")
-        lines = output.split("\n")
-        nextcloud_admins = []
-        domain_admins = []
-        in_admin_section = False
-        in_domain_admins_section = False
-        for line in lines:
-            if "admin:" in line:
-                in_admin_section = True
-                in_domain_admins_section = False
-                continue
-            if "Domain Admins:" in line:
-                in_admin_section = False
-                in_domain_admins_section = True
-                continue
-            if ":" in line and not "admin:" in line and not "Domain Admins:" in line:
-                in_admin_section = False
-                in_domain_admins_section = False
-            if in_admin_section:
-                nextcloud_admins.append(line.strip().split(" ")[1].lower())
-            if in_domain_admins_section:
-                domain_admins.append(line.strip().split(" ")[1].lower())
-
-
-        # Remove all users from the nextcloud admin group which are in the ignore_users list
-        ignore_users = os.environ.get("IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS", "").lower().split(",")
-        for ignore_user in ignore_users:
-            if ignore_user in domain_admins:
-                domain_admins.remove(ignore_user)
-            if ignore_user in nextcloud_admins:
-                nextcloud_admins.remove(ignore_user)
-
-        # Add all domain admins to the nextcloud admin group
-        for domain_admin in domain_admins:
-            if domain_admin not in nextcloud_admins:
-                os.system(f"sudo -u www-data php /var/www/nextcloud/occ group:adduser admin {domain_admin}")
-        
-        # Remove all users from the nextcloud admin group which are not in the domain admins group
-        # One exception: The User called "Administrator" should always be in the admin group
-        for nextcloud_admin in nextcloud_admins:
-            if nextcloud_admin not in domain_admins:
-                os.system(f"sudo -u www-data php /var/www/nextcloud/occ group:removeuser admin {nextcloud_admin}")
 
 
 # In here the time for a last message is stored in seconds
@@ -350,26 +275,21 @@ while True:
             # print(f"Checking domain {domain}")
             # Check if the domain is reachable and the code is not 200
             try:
-                respose = requests.get(f"https://{domain}", verify=False)
-                if respose.status_code != 200:
+                response = requests.get(f"https://{domain}", verify=False)
+                if response.status_code != 200:
                     if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                         last_message_sent[domain] = time.time()
                         with open(f"/tmp/{domain}_response.txt", "w") as f:
-                            f.write(respose.text)
+                            f.write(response.text)
                         os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
-            except:
+            except requests.exceptions.RequestException as e:
                 if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                     last_message_sent[domain] = time.time()
                     with open(f"/tmp/{domain}_response.txt", "w") as f:
-                        f.write(respose.text)
+                        f.write(str(e))
                     os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
     
     
-    # Check nextcloud admin status for all users (if nextcloud is installed)
-    update_nextcloud_admin_status_for_all_users()     
-
-    
-
     ##################################################################################################################
     ## RUN EVERY HOUR ################################################################################################
     ##################################################################################################################

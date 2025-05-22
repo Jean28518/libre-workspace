@@ -1,13 +1,21 @@
 #!/bin/bash
 
-# read cfg file:
-if [ -f "cfg" ]; then
-    source cfg
+# We need WORKDIR to be /
+
+# check if etc/libre-workspace/portal/portal.conf exists
+if [ -f "/etc/libre-workspace/portal/portal.conf" ]; then
+    source /etc/libre-workspace/portal/portal.conf
+else
+    echo "Configuration file not found!"
+    exit 1
 fi
 
-if [ -d "src/lac/" ]; then
-    cd src/lac/
+# Check if the service.py file exists
+if [ ! -f "usr/lib/libre-workspace/portal/unix/unix_scripts/service.py" ]; then
+    echo "Service file not found! Please make sure that you are running this script from / folder."
+    echo "If you are in development mode, please run the script from src/ folder."
+    exit 1
 fi
 
-cd unix/unix_scripts
+cd usr/lib/libre-workspace/portal/unix/unix_scripts
 sudo python3 service.py

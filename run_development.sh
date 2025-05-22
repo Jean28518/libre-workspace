@@ -1,22 +1,18 @@
 #!/bin/bash
 
 # read cfg file:
-if [ -f "cfg" ]; then
-    source cfg
+if [ -f "src/etc/libre-workspace/portal/portal.conf" ]; then
+    source src/etc/libre-workspace/portal/portal.conf
 fi
 
-CHANGED_DIR=false
-if [ -d "src/lac/" ]; then
-    cd src/lac/
-    CHANGED_DIR=true
-fi
 
-source .env/bin/activate
+source src/var/lib/libre-workspace/portal/venv/bin/activate
 
-if [ "$CHANGED_DIR" = true ]; then
-    pip install -r ../../requirements.txt
-else
-    pip install -r requirements.txt
+pip install -r src/usr/lib/libre-workspace/portal/requirements.txt
+
+
+if [ -d "src/usr/lib/libre-workspace/portal" ]; then
+    cd src/usr/lib/libre-workspace/portal
 fi
 
 python manage.py makemigrations
