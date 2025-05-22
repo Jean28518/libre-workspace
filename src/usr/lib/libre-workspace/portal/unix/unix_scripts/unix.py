@@ -675,7 +675,7 @@ def is_path_a_file(path):
 def get_all_addon_modules():
     # Get all folders in the addons directory
     addons = []
-    for folder in os.listdir("addons"):
+    for folder in os.listdir("/usr/lib/libre-workspace/modules/"):
         if os.path.isdir(f"addons/{folder}"):
             addons.append(get_config_of_addon(folder))
     return addons
@@ -1127,7 +1127,7 @@ def get_system_data_for_support():
 
 def get_local_admin_token():
     """Returns the local admin token from the env.sh file"""
-    local_token_file_content = os.popen("cat /usr/share/linux-arbeitsplatz/local-admin-token").read()
+    local_token_file_content = os.popen("cat /var/lib/libre-workspace/local-admin-token").read()
     local_token_file_content = local_token_file_content.replace("LW_ADMIN_TOKEN=", "")
     if local_token_file_content.strip() == "":
         print("CAUTION: No local admin token found. If you are in a dev environment, this is okay. If you are in a production environment, please check your installation, your system is not secure.")
@@ -1139,8 +1139,8 @@ def generate_local_admin_token():
     """Generates a new local admin token and saves it to the env.sh file. This admin token is only valid to the next restart of libre workspace web."""
     # Generate a random token
     token = os.popen("openssl rand -hex 4096").read().strip()
-    # Save the token to /usr/share/linux-arbeitsplatz/local-admin-token
-    os.system(f"echo \"LW_ADMIN_TOKEN={token}\" > /usr/share/linux-arbeitsplatz/local-admin-token")
+    # Save the token to /var/lib/libre-workspace/local-admin-token
+    os.system(f"echo \"LW_ADMIN_TOKEN={token}\" > /var/lib/libre-workspace/local-admin-token")
     # Set the permissions for the file
-    os.system("chmod 600 /usr/share/linux-arbeitsplatz/local-admin-token")
-    os.system("chown $USER:$USER /usr/share/linux-arbeitsplatz/local-admin-token")
+    os.system("chmod 600 /var/lib/libre-workspace/local-admin-token")
+    os.system("chown $USER:$USER /var/lib/libre-workspace/local-admin-token")

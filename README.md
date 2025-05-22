@@ -54,20 +54,21 @@ Your default account is called "Administrator".
 ## How to develop
 
 ```bash
+# Make sure on your dev machine no actual libre workspace component is installed.
+# Start from this directory
 sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev
 sudo mkdir -p /var/www/linux-arbeitsplatz-static
 sudo chown -R $USER:$USER /var/www/linux-arbeitsplatz-static
-sudo mkdir -p /var/lib/libre-workspace/portal
-sudo chown -R $USER:$USER /var/lib/libre-workspace/portal
-sudo mkdir -p /etc/libre-workspace/portal
-sudo chown -R $USER:$USER /etc/libre-workspace/
+sudo ln -s $PWD/src/etc/libre-workspace/ /etc/libre-workspace
+sudo ln -s $PWD/src/usr/lib/libre-workspace /usr/lib/libre-workspace
+sudo ln -s $PWD/src/var/lib/libre-workspace/ /var/lib/libre-workspace
 
 cd /var/lib/libre-workspace/portal
 python3 -m venv venv
 cd -
-cp src/etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
+cp /etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
 vim /etc/libre-workspace/portal/portal.conf # Configure
-cp src/etc/libre-workspace/libre-workspace.env.example /etc/libre-workspace/libre-workspace.env
+cp /etc/libre-workspace/libre-workspace.env.example /etc/libre-workspace/libre-workspace.env
 
 
 # If you did the setup above once, you can start the django server with this command
@@ -78,9 +79,10 @@ bash usr/bin/libre-workspace-service
 
 
 # To clean later your computer after ending the development:
-sudo rm -rf /var/lib/libre-workspace/portal
 sudo rm -rf /var/www/linux-arbeitsplatz-static
-sudo rm -rf /etc/libre-workspace
+sudo rm /etc/libre-workspace
+sudo rm /usr/lib/libre-workspace
+sudo rm /var/lib/libre-workspace
 ```
 
 ## Build documentation

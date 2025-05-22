@@ -171,7 +171,7 @@ WSGI_APPLICATION = 'lac.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/etc/libre-workspace/portal/db.sqlite3',
     }
 }
 
@@ -227,7 +227,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = '/var/www/linux-arbeitsplatz-static/'
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/var/lib/libre-workspace/portal/media/'
 # Make sure the media directory exists
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 
