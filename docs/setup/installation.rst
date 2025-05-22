@@ -8,6 +8,10 @@ or you can install it on a bare metal system using the provided ISO image (recom
 Installation using the ISO image (recommended)
 ==============================================
 
+.. tip::
+
+    Watch the youtube playlist (in german) for a complete installation guide: `Youtube Playlist <https://www.youtube.com/playlist?list=PL26JW41WknwissQLa5JSEnGui9rHppYXB>`_.
+
 .. note::
 
     The ISO image is based on debian netinstall and will install a minimal debian system with the libre workspace package.
