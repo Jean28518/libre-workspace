@@ -14,7 +14,7 @@ New folder structure for Libre Workspace
       - ``libre-workspace/portal``
 
         - (Django project)
-        - Folder: ``addons`` (inside are symlinks to the addon folders inside ``/usr/lib/libre-workspace/modules/<addon_name>``)
+        - Folder: ``modules`` (inside are symlinks to the addon folders inside ``/usr/lib/libre-workspace/modules/<addon_name>``)
 
     - ``bin``
 
@@ -22,7 +22,7 @@ New folder structure for Libre Workspace
       - ``libre-workspace-service`` (bash script to run the service.py``)
       - ``libre-workspace-generate-secret`` (with argument ``[length]``), it echoes a random string of the given length
       - ``libre-workspace-remove-webserver-entry`` (with argument of the subdomain)
-      - ``libre-workspace-register-oidc-client`` (with arguments of name, client_id, client_secret, redirect_uri(s) (separated by commas))
+      - ``libre-workspace-add-oidc-client`` (with arguments of name, client_id, client_secret, redirect_uri(s) (separated by commas))
       - ``libre-workspace-remove-oidc-client`` (with argument of the name)
       - ``libre-workspace-send-mail``
       - ``libre-workspace-set-local-admin-password`` (with argument of the password)

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+. cfg
+
+USERNAME="$1"
+if [ -z "$USERNAME" ]; then
+    echo "Usage: $0 <username>"
+    exit 1
+fi
+
+if [ -d src/lac ]; then
+    cd src/lac
+fi
+
+# Activate the virtual environment
+if [ -f .env/bin/activate ]; then
+    source .env/bin/activate
+fi
+
+python3 manage.py shell -c "from idm.idm import reset_2fa_for_username; reset_2fa_for_username('$USERNAME')"
+
+if [ $? -ne 0 ]; then
+    echo "Failed to reset 2FA for $USERNAME"
+    exit 1
+fi
+
+# Notify the user
+echo "2FA for $USERNAME has been reset"

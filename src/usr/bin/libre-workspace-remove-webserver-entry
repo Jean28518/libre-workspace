@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # Needs one argument: hostname of the service
 # Removes a service entry from the Caddyfile e.g. "cloud.example.com"
 
