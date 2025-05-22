@@ -21,7 +21,7 @@ Installation using the ISO image (recommended)
     If you want to test the ISO image in a virtual machine, you can use `VirtualBox <https://www.virtualbox.org/>`_.
     It is important to set the network adapter to "Bridged Adapter" in the settings of the virtual machine.
 
-3. Boot the installation media, the installer will start automatically.
+3. Boot the installation media (choose graphical install), the installer will start automatically.
 4. Almost all points are done automatically unless you are asked for the disk partitioning.
    If you are asked for the disk partitioning, you can select "Guided - use entire disk" and confirm the following questions with "Yes".
 
