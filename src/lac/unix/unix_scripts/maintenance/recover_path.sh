@@ -2,7 +2,7 @@
 # The backup has to be mounted before running this script
 
 # The path to recover is in the first argument
-RECOVER_PATH=$1
+RECOVER_PATH="$1"
 # Ensure that path ends not with a slash
 RECOVER_PATH=${RECOVER_PATH%/}
 
@@ -22,9 +22,9 @@ fi
 
 
 touch recovering_in_progress
-PARENT_DIR=$(dirname $DESTINATION_PATH)
-mkdir -p $PARENT_DIR
-cp -ra $RECOVER_PATH $DESTINATION_PATH
+PARENT_DIR=$(dirname "$DESTINATION_PATH")
+mkdir -p "$PARENT_DIR"
+cp -ra "$RECOVER_PATH" "$DESTINATION_PATH"
 
 if [ $? -ne 0 ]; then
     echo "Failed to recover $RECOVER_PATH to $DESTINATION_PATH"
@@ -32,7 +32,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "Recovered $RECOVER_PATH to $DESTINATION_PATH"
+echo "Recovered "$RECOVER_PATH" to "$DESTINATION_PATH""
 
 # If the path has "nextcloud" in it, then we have to rescan the files
 if [[ $RECOVER_PATH == *"nextcloud"* ]]; then
