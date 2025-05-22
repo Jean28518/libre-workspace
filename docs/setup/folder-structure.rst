@@ -14,7 +14,7 @@ New folder structure for Libre Workspace
       - ``libre-workspace-portal``
 
         - (Django project)
-        - Folder: ``addons`` (inside are symlinks to the addon folders inside ``/usr/lib/librw-workspace-addon-<addon_name>``)
+        - Folder: ``addons`` (inside are symlinks to the addon folders inside ``/usr/lib/librw-workspace-addons/<addon_name>``)
 
     - ``bin``
 
@@ -45,3 +45,4 @@ New folder structure for Libre Workspace
         - control files of ``libre-workspace-portal``
         - media folder
         - app dashboard settings
+        - python venv
