@@ -11,14 +11,15 @@ New folder structure for Libre Workspace
 
     - ``lib``
 
-      - ``libre-workspace-portal``
+      - ``libre-workspace/portal``
 
         - (Django project)
-        - Folder: ``addons`` (inside are symlinks to the addon folders inside ``/usr/lib/librw-workspace-addons/<addon_name>``)
+        - Folder: ``addons`` (inside are symlinks to the addon folders inside ``/usr/lib/libre-workspace/modules/<addon_name>``)
 
     - ``bin``
 
-      - ``libre-workspace-portal`` (bash script to run the django project, .env is in ``/var/lib/libre-workspace-portal``)
+      - ``libre-workspace-portal`` (bash script to run the django project, .env is in ``/var/lib/libre-workspace/portal/venv``)
+      - ``libre-workspace-service`` (bash script to run the service.py``)
       - ``libre-workspace-generate-secret`` (with argument ``[length]``), it echoes a random string of the given length
       - ``libre-workspace-remove-webserver-entry`` (with argument of the subdomain)
       - ``libre-workspace-register-oidc-client`` (with arguments of name, client_id, client_secret, redirect_uri(s) (separated by commas))
@@ -29,17 +30,23 @@ New folder structure for Libre Workspace
 
   - ``etc``
 
-    - ``libre-workspace-portal``
+    - ``libre-workspace``
+
+      - ``portal``
+        
+        - ``portal.conf`` (new file for cfg)
 
       - ``libre-workspace.conf`` (new file for unix.conf)
       - ``libre-workspace.env`` (new file for env.sh)
-      - ``libre-workspace-portal.conf`` (new file for cfg)
+      - ``modules``
+      
+        - (later for module configuration, not yet used)
 
   - ``var``
 
     - ``lib``
 
-      - ``libre-workspace-portal``
+      - ``libre-workspace/portal``
 
         - history folder
         - control files of ``libre-workspace-portal``
