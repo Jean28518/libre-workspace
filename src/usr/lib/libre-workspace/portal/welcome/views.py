@@ -156,7 +156,7 @@ def installation_running(request):
 
     # Create env.sh file
     try:
-        with open("/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "w") as f:
+        with open("/etc/libre-workspace/libre-workspace.env", "w") as f:
             f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
             f.write(f"export IP={os.environ['IP']}\n")
             f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
@@ -165,10 +165,10 @@ def installation_running(request):
         message = f"Error while creating env.sh file: {str(e)} (If you are in a development environment, this is okay. If you are in a production environment, please check your installation.)"
 
     # Run installation script
-    # if file /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running exists
-    if not os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running"):
-        if os.path.isfile("/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"):
-            subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/install.sh"], cwd="/usr/share/linux-arbeitsplatz/unix/unix_scripts/general/" )
+    # if file /var/lib/libre-workspace/portal/installation_running exists
+    if not os.path.isfile("/var/lib/libre-workspace/portal/installation_running"):
+        if os.path.isfile("/usr/lib/libre-workspace/portal/unix/unix_scripts/general/install.sh"):
+            subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/portal/unix/unix_scripts/general/install.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/general/" )
         else:
             print("WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation.")
             message = "WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."

@@ -57,8 +57,8 @@ Your default account is called "Administrator".
 # Make sure on your dev machine no actual libre workspace component is installed.
 # Start from this directory
 sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev
-sudo mkdir -p /var/www/linux-arbeitsplatz-static
-sudo chown -R $USER:$USER /var/www/linux-arbeitsplatz-static
+sudo mkdir -p /var/www/libre-workspace-static
+sudo chown -R $USER:$USER /var/www/libre-workspace-static
 sudo ln -s $PWD/src/etc/libre-workspace/ /etc/libre-workspace
 sudo ln -s $PWD/src/usr/lib/libre-workspace /usr/lib/libre-workspace
 sudo ln -s $PWD/src/var/lib/libre-workspace/ /var/lib/libre-workspace
@@ -79,7 +79,7 @@ bash usr/bin/libre-workspace-service
 
 
 # To clean later your computer after ending the development:
-sudo rm -rf /var/www/linux-arbeitsplatz-static
+sudo rm -rf /var/www/libre-workspace-static
 sudo rm /etc/libre-workspace
 sudo rm /usr/lib/libre-workspace
 sudo rm /var/lib/libre-workspace

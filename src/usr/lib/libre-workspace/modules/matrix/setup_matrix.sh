@@ -59,9 +59,7 @@ oidc_providers:
   # fi
 
   # Add the oidc client to the oidc provider
-  cd /usr/share/linux-arbeitsplatz/
-  bash django_add_oidc_provider_client.sh "Matrix" "$CLIENT_ID" "$CLIENT_SECRET" "https://matrix.$DOMAIN/_synapse/client/oidc/callback"
-  cd -
+  libre-workspace-add-oidc-client "Matrix" "$CLIENT_ID" "$CLIENT_SECRET" "https://matrix.$DOMAIN/_synapse/client/oidc/callback"
 fi
 
 

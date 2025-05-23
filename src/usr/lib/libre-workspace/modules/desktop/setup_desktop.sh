@@ -25,9 +25,8 @@ sed -i "s/SED_IP/$IP/g" /root/desktop/docker-compose.yml
 CLIENT_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 CLIENT_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 # Add the oidc client to the oidc provider
-cd /usr/share/linux-arbeitsplatz/
-bash django_add_oidc_provider_client.sh "Guacamole" "$CLIENT_ID" "$CLIENT_SECRET" "https://desktop.$DOMAIN/guacamole"
-cd -
+libre-workspace-add-oidc-client "Guacamole" "$CLIENT_ID" "$CLIENT_SECRET" "https://desktop.$DOMAIN/guacamole"
+
 
 # OpenID Connect:
 sed -i "s/SED_OPENID_AUTHORIZATION_ENDPOINT/https:\/\/portal.$DOMAIN\/openid\/authorize/g" /root/desktop/docker-compose.yml
@@ -78,8 +77,7 @@ fi
 
 systemctl restart caddy
 
-chmod 600 /usr/share/linux-arbeitsplatz/cfg
-chmod 700 /usr/share/linux-arbeitsplatz/unix
+chmod 700 /etc/libre-workspace/
 
 ufw allow from 192.168.0.0/16 to any port 3389
 ufw allow from 172.16.0.0/12 to any port 3389
@@ -105,7 +103,7 @@ for USER in $USERS; do
     fi
 
     # The second argument is the password. We set it to an empty string because its then generated automatically.
-    bash /usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/administration/add_user.sh "$USERNAME" "" "$ADMINISTRATOR"
+    bash /usr/lib/libre-workspace/modules/desktop/administration/add_user.sh "$USERNAME" "" "$ADMINISTRATOR"
     echo "$USERNAME"   
 done
 

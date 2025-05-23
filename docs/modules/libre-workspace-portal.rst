@@ -20,14 +20,14 @@ Libre Workspace Portal installs all necessary dependencies as django and gunicor
 It also requires borgbackup and depends on caddy as a webserver and reverse proxy (for the automated install, which is optional).
 
 Optional it can connect to a LDAP server to administrate users and groups. It also provides a self service portal for users to change their password or their name and mail.
-This can be configured in the cfg file which is located in ``/usr/share/linux-arbeitsplatz-central/cfg``.
+This can be configured in the cfg file which is located in ``/etc/libre-workspace/portal/portal.conf``.
 
 Hosting
 -------
 
 Gunicorn (the python webserver) is configured to listen on port 11123 via http. Normally you would use a reverse proxy like caddy to provide https and forward the requests to gunicorn.
 It is also important to deploy the static files which should be accessed via the url ``/static/``. 
-The generated static files are located in ``/var/www/linux-arbeitsplatz-static`` and are generated automatically at the first start of Libre Workspace Portal.
+The generated static files are located in ``/var/www/libre-workspace-static`` and are generated automatically at the first start of Libre Workspace Portal.
 
 A caddy file entry would look like this:
 
@@ -35,12 +35,12 @@ A caddy file entry would look like this:
 
     portal.int.de {
         handle_path /static* {
-            root * /var/www/linux-arbeitsplatz-static
+            root * /var/www/libre-workspace-static
             file_server
             encode zstd gzip
         }
         handle_path /media* {
-            root * /usr/share/linux-arbeitsplatz/media
+            root * /var/lib/libre-workspace/portal/media
             file_server
             encode zstd gzip
         }
@@ -51,10 +51,10 @@ Services
 --------
 
 Libre Workspace Portal provides two systemd services. One for the webserver and one for the background tasks.
-You can start them by ``systemd start linux-arbeitsplatz-web`` and ``systemd start linux-arbeitsplatz-unix``.
+You can start them by ``systemctl start libre-workspace-portal`` and ``systemctl start libre-workspace-service``.
 
-linux-arbeitsplatz-web starts the gunicorn webserver with django and linux-arbeitsplatz-unix starts the unix/unix_scripts/service.py script which is responsible for the background tasks 
-and listens to simple control files /usr/share/linux-arbeitsplatz-central/unix/unix_scripts.
+libre-workspace-portal starts the gunicorn webserver with django and libre-workspace-service starts the unix/unix_scripts/service.py script which is responsible for the background tasks 
+and listens to simple control files /usr/lib/libre-workspace/portal/unix/unix_scripts.
 
 The background tasks are:
 
@@ -94,8 +94,7 @@ If you as administrator locked yourself out you can disable 2FA by connecting vi
 .. code-block:: bash
 
     sudo -i
-    cd /usr/share/linux-arbeitsplatz/
-    bash django_reset_2fa_for_Administrator.sh
+    libre-workspace-reset-2fa Administrator
 
 OIDC (OpenID Connect)
 ---------------------
@@ -126,15 +125,15 @@ unix
 The unix module provides the management of the server itself and handles the automated backups, updates, ssh key deployment, data import and export, etc.
 The configuration and the control of the services is available via the web interface in the menu entries "Systemverwaltung" and "Datenimport/-export".
 
-All taks are handled by the background service ``linux-arbeitsplatz-unix``. It listens to simple control files in ``/usr/share/linux-arbeitsplatz-central/unix/unix_scripts``.
+All taks are handled by the background service ``libre-workspace-service``. It listens to simple control files in ``/usr/lib/libre-workspace/portal/unix/unix_scripts``.
 All actions are configured and done via simple bash scripts with environment variables. So these files can be adjusted easily and are easy to understand and to run manually.
 
 If you want to run a script manually make sure you source the env.sh and unix.conf file in the unix_scripts directory before:
 
 .. code-block:: bash
 
-    . /usr/share/linux-arbeitsplatz-central/unix/unix_scripts/env.sh
-    . /usr/share/linux-arbeitsplatz-central/unix/unix_scripts/unix.conf
+    . /usr/lib/libre-workspace/portal/unix/unix_scripts/env.sh
+    . /usr/lib/libre-workspace/portal/unix/unix_scripts/unix.conf
     
 
 welcome
@@ -143,9 +142,9 @@ welcome
 The welcome module provides a simple first start assistent new instances and handles the automated installation of the whole libre workspace.
 It is available if in the cfg file the option ``LINUX_ARBEITSPLATZ_CONFIGURED`` is set to ``False``.
 
-The installation is done via simple bash scripts which are located in ``/usr/share/linux-arbeitsplatz-central/unix/unix_scripts``.
+The installation is done via simple bash scripts which are located in ``/usr/lib/libre-workspace/portal/unix/unix_scripts``.
 For every module of the whole libre workspace a script is available which can be executed manually.
-The whole installation is done and controlled by the ``/usr/share/linux-arbeitsplatz-central/unix/unix_scripts`` script.
+The whole installation is done and controlled by the ``/usr/lib/libre-workspace/portal/unix/unix_scripts`` script.
 
 app_dashboard
 -------------
@@ -168,12 +167,12 @@ For that you have to connect via SSH to the server and execute the following com
 
 .. code-block:: bash
 
-    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/linux-arbeitsplatz.deb
-    apt-get install ./linux-arbeitsplatz.deb -y
-    rm linux-arbeitsplatz.deb
-    systemctl enable linux-arbeitsplatz-unix
-    systemctl enable linux-arbeitsplatz-web
-    systemctl restart linux-arbeitsplatz-*
+    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/libre-workspace.deb
+    apt-get install ./libre-workspace.deb -y
+    rm libre-workspace.deb
+    systemctl enable libre-workspace-service
+    systemctl enable libre-workspace-portal
+    systemctl restart libre-workspace-*
 
 
 Troubleshooting
@@ -185,13 +184,13 @@ Then you have to edit the settings.py file of the django application:
 
 .. code-block:: bash
 
-    sudo nano /usr/share/linux-arbeitsplatz/lac/settings.py
+    sudo nano /usr/lib/libre-workspace/portal/lac/settings.py
 
 Then set the ``DEBUG variable`` to ``True`` and restart the webserver:
 
 .. code-block:: bash
 
-    sudo systemctl restart linux-arbeitsplatz-web
+    sudo systemctl restart libre-workspace-portal
 
 .. warning::
 

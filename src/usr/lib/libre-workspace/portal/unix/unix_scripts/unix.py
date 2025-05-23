@@ -484,7 +484,7 @@ def desktop_add_user(username, password, admin_status):
     else:
         admin_status = "0"
     
-    subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/administration/add_user.sh", username, password, admin_status], cwd="desktop/", env=get_env_sh_variables())
+    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/modules/desktop/administration/add_user.sh", username, password, admin_status], cwd="desktop/", env=get_env_sh_variables())
 
 
 def desktop_remove_user(username):
@@ -494,7 +494,7 @@ def desktop_remove_user(username):
     if not is_desktop_installed():
         return
     
-    subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/administration/remove_user.sh", username], cwd="desktop/", env=get_env_sh_variables())
+    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/modules/desktop/administration/remove_user.sh", username], cwd="desktop/", env=get_env_sh_variables())
 
 def update_module(module_id):
     """
@@ -717,10 +717,10 @@ def install_addon(path_to_zip_file):
     for file in os.listdir(f"addons/{addon_id}"):
         if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
             os.system(f"cp addons/{addon_id}/{file} ../../lac/static/lac/icons/{file}")
-            # Also copy to /var/www/linux-arbeitsplatz-static/lac/icons/ (that is the folder where the static files are served from)
-            os.system(f"cp addons/{addon_id}/{file} /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
-            os.system(f"chown www-data:www-data /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
-            os.system(f"chmod 644 /var/www/linux-arbeitsplatz-static/lac/icons/{file}")
+            # Also copy to /var/www/libre-workspace-static/lac/icons/ (that is the folder where the static files are served from)
+            os.system(f"cp addons/{addon_id}/{file} /var/www/libre-workspace-static/lac/icons/{file}")
+            os.system(f"chown www-data:www-data /var/www/libre-workspace-static/lac/icons/{file}")
+            os.system(f"chmod 644 /var/www/libre-workspace-static/lac/icons/{file}")
     
     # Ensure that the addon cache is cleared
     addon_config_cache.clear()
@@ -733,7 +733,7 @@ def uninstall_addon(addon_id):
     addon_information = get_config_of_addon(addon_id)
     os.system(f"rm -r addons/{addon_id}")
     os.system(f"rm ../../lac/static/lac/icons/{addon_id}.*")
-    os.system(f"rm /var/www/linux-arbeitsplatz-static/lac/icons/{addon_id}.*")
+    os.system(f"rm /var/www/libre-workspace-static/lac/icons/{addon_id}.*")
     # Remove the entry from the AppDashboardEntry table in the database
     DashboardEntry.objects.filter(title=addon_information["name"], is_system=True).delete()
 
@@ -753,7 +753,7 @@ def get_all_installed_nextcloud_addons():
 
 def restart_linux_arbeitsplatz_web():
     # Only run this command one second after the function was called to ensure that the response is sent to the client before the server restarts
-    subprocess.Popen("sleep 1; systemctl restart linux-arbeitsplatz-web",shell=True)
+    subprocess.Popen("sleep 1; systemctl restart libre-workspace-portal",shell=True)
 
 
 def get_libre_workspace_name():
@@ -766,8 +766,8 @@ def set_libre_workspace_name(name):
 
 
 def get_libre_workspace_version():
-    # Get the version of installed linux-arbeitsplatz.deb:
-    output = subprocess.getoutput("dpkg -s linux-arbeitsplatz | grep Version")
+    # Get the version of installed libre-workspace.deb:
+    output = subprocess.getoutput("dpkg -s libre-workspace | grep Version")
     if "Version" in output:
         return output.split(":")[1].strip()
     else:
@@ -789,8 +789,8 @@ def change_master_password(password):
     # Update the password in the env.sh file
     os.system(f"sed -i 's/ADMIN_PASSWORD=.*/ADMIN_PASSWORD=\"{password}\"/g' env.sh")
 
-    # Change the configured bind password in /usr/share/linux-arbeitsplatz/cfg
-    os.system(f"sed -i 's/AUTH_LDAP_BIND_PASSWORD=.*/AUTH_LDAP_BIND_PASSWORD=\"{password}\"/g' /usr/share/linux-arbeitsplatz/cfg")
+    # Change the configured bind password in /etc/libre-workspace/portal/portal.conf
+    os.system(f"sed -i 's/AUTH_LDAP_BIND_PASSWORD=.*/AUTH_LDAP_BIND_PASSWORD=\"{password}\"/g' /etc/libre-workspace/portal/portal.conf")
 
     # Update the password in apps like nextcloud, matrix.
     # We are doing this by running the update_env.sh scripts in the specific folders.
@@ -839,8 +839,8 @@ def change_ip(ip):
     # Change all old ips with the new ip in /etc/caddy/Caddyfile
     os.system(f"sed -i 's/{old_ip}/{ip}/g' /etc/caddy/Caddyfile")
 
-    # Change all old ips with the new ip in /usr/share/linux-arbeitsplatz/welcome/templates/welcome/access_rendered.html
-    os.system(f"sed -i 's/{old_ip}/{ip}/g' /usr/share/linux-arbeitsplatz/welcome/templates/welcome/access_rendered.html")
+    # Change all old ips with the new ip in /usr/lib/libre-workspace/portal/welcome/templates/welcome/access_rendered.html
+    os.system(f"sed -i 's/{old_ip}/{ip}/g' /usr/lib/libre-workspace/portal/welcome/templates/welcome/access_rendered.html")
 
     # Restart the whole server to ensure that the new IP is used everywhere.
     reboot_system()
@@ -961,8 +961,8 @@ def is_systemd_service_running(service):
 
 
 def is_unix_service_running():
-    """Checks if linux-arbeitsplatz-unix.service is running"""
-    return is_systemd_service_running("linux-arbeitsplatz-unix")
+    """Checks if libre-workspace-service.service is running"""
+    return is_systemd_service_running("libre-workspace-service")
 
 
 def is_samba_ad_dc_running():
@@ -971,10 +971,10 @@ def is_samba_ad_dc_running():
 
 def update_libre_workspace():
     """Updates the Libre Workspace to the latest version"""
-    # If /usr/share/linux-arbeitsplatz/update_libre_workspace.sh exists
-    if not os.path.isfile("/usr/share/linux-arbeitsplatz/update_libre_workspace.sh"):
+    # If /usr/lib/libre-workspace/portal/update_libre_workspace.sh exists
+    if not os.path.isfile("/usr/lib/libre-workspace/portal/update_libre_workspace.sh"):
         return "Error: update_libre_workspace.sh not found."
-    subprocess.Popen(["/usr/bin/bash", "/usr/share/linux-arbeitsplatz/update_libre_workspace.sh"], cwd="/usr/share/linux-arbeitsplatz")
+    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/portal/update_libre_workspace.sh"], cwd="/usr/lib/libre-workspace/portal/")
 
 
 # Cache the version of the new Libre Workspace version for 1 hour
@@ -1091,7 +1091,7 @@ def get_system_data_for_support():
     os.system("mkdir /tmp/support_data/")
 
     # Copy the files to the temporary directory
-    files_to_copy = ["/etc/caddy/Caddyfile", "/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/etc/krb5.conf", "/etc/ssh/sshd_config", "/etc/fstab", "/usr/share/linux-arbeitsplatz/cfg", "/var/log/syslog", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh", "/usr/share/linux-arbeitsplatz/unix/unix_scripts/unix.conf", "/etc/os-release"]
+    files_to_copy = ["/etc/caddy/Caddyfile", "/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/etc/krb5.conf", "/etc/ssh/sshd_config", "/etc/fstab", "/etc/libre-workspace/portal/portal.conf", "/var/log/syslog", "/etc/libre-workspace/libre-workspace.env", "/etc/libre-workspace/libre-workspace.conf", "/etc/os-release"]
     for file in files_to_copy:
         os.system(f"cp {file} /tmp/support_data/")
         # For every line which contains the word password or passphrase, replace the line with "PASSWORD REMOVED"
@@ -1118,11 +1118,11 @@ def get_system_data_for_support():
     os.system("cd /tmp/; zip -r support_data.zip support_data/")
 
     # Mv the zip file to static folder
-    os.system("mv /tmp/support_data.zip /var/www/linux-arbeitsplatz-static/support_data.zip")
+    os.system("mv /tmp/support_data.zip /var/www/libre-workspace-static/support_data.zip")
 
     # Start a process which deletes the temporary directory and .zip file after 5 minutes
     subprocess.Popen(["/usr/bin/bash", "-c", "sleep 300; rm -r /tmp/support_data/"])
-    subprocess.Popen(["/usr/bin/bash", "-c", "sleep 300; rm /var/www/linux-arbeitsplatz-static/support_data.zip"])
+    subprocess.Popen(["/usr/bin/bash", "-c", "sleep 300; rm /var/www/libre-workspace-static/support_data.zip"])
 
 
 def get_local_admin_token():

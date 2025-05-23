@@ -11,17 +11,17 @@ if [ $(( ($(date +%s) - $(date -d $DATE +%s)) / 86400 )) -gt 365 ]; then
 fi
 
 # Check if we need to apply the patch
-# Check if "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS" is in /usr/share/linux-arbeitsplatz/cfg
+# Check if "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS" is in /etc/libre-workspace/portal/portal.conf
 # If this is set then exit the patch
-if grep -q "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS" /usr/share/linux-arbeitsplatz/cfg; then
-  echo "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS is set in /usr/share/linux-arbeitsplatz/cfg. Exiting patch."
+if grep -q "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS" /etc/libre-workspace/portal/portal.conf; then
+  echo "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS is set in /etc/libre-workspace/portal/portal.conf. Exiting patch."
   exit 0
 fi
 
-# Add "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS" to /usr/share/linux-arbeitsplatz/cfg
+# Add "IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS" to /etc/libre-workspace/portal/portal.conf
 echo "
 # Don't change the admin status for these nextcloud users automatically also if they are not in group "Domain Admin". Separate them with ,
 export IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS=""
-" >> /usr/share/linux-arbeitsplatz/cfg
+" >> /etc/libre-workspace/portal/portal.conf
 
-systemctl restart linux-arbeitsplatz-unix.service
+systemctl restart libre-workspace-service.service

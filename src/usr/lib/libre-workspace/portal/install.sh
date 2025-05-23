@@ -1,24 +1,18 @@
 # This script is called directly after the installation of the .deb package
 # It is used to setup the django application and the caddy server
 
-sudo mkdir -p /var/www/linux-arbeitsplatz-static/
-sudo chmod -R 777 /var/www/linux-arbeitsplatz-static/
+sudo mkdir -p /var/www/libre-workspace-static/
+sudo chmod -R 777 /var/www/libre-workspace-static/
 
-if [ ! -d "/usr/share/linux-arbeitsplatz" ]; then
-    cd src/lac/
-else 
-    cd /usr/share/linux-arbeitsplatz/
-fi
+cp /etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
 
-if [ ! -f "cfg" ]; then
-    cp cfg.example cfg
-fi
-
-python3 -m venv .env
+cd /var/lib/libre-workspace/portal/
+python3 -m venv venv
+cd -
 
 ln -s /usr/bin/python3 /usr/bin/python
 
-source .env/bin/activate
+source /var/lib/libre-workspace/portal/venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt 
 # Make sure that the database is up to date (sometimes e.g. oidc_provider needs to be updated)
@@ -33,7 +27,7 @@ IP=`hostname -I | cut -d' ' -f1`
 if ! grep -q "# PORTAL-ENTRY" /etc/caddy/Caddyfile; then
 
 # Remove :80 entry from caddy file, because we don't want to use it
-python3 /usr/share/linux-arbeitsplatz/unix/unix_scripts/remove_caddy_service.py :80
+libre-workspace-remove-webserver-entry :80
 
 echo "# PORTAL-ENTRY
 :443 {
@@ -41,12 +35,12 @@ echo "# PORTAL-ENTRY
         on_demand
     }
     handle_path /static* {
-        root * /var/www/linux-arbeitsplatz-static
+        root * /var/www/libre-workspace-static
         file_server
         encode zstd gzip
     }
     handle_path /media* {
-        root * /usr/share/linux-arbeitsplatz/media
+        root * /var/lib/libre-workspace/portal/media
         file_server
         encode zstd gzip
     }

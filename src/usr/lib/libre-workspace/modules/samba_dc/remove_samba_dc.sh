@@ -18,13 +18,13 @@ systemctl restart dnsmasq
 
 # Update cfg file:
 # Remove the lines with "AUTH_LDAP" in it
-sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
-sed -i "/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
+sed -i "/AUTH_LDAP/d" /etc/libre-workspace/portal/portal.conf
+sed -i "/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP/d" /etc/libre-workspace/portal/portal.conf
 # Add the Samba AD disabled flag to the cfg file
 # Ensure that we put in a new line
-echo "" >> /usr/share/linux-arbeitsplatz/cfg
+echo "" >> /etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_SERVER_URI=\"\"
-export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=\"$ADMIN_PASSWORD\"" >>/usr/share/linux-arbeitsplatz/cfg
+export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=\"$ADMIN_PASSWORD\"" >>/etc/libre-workspace/portal/portal.conf
 
 
 # Remove the /root/samba_dc symbolic link
@@ -33,10 +33,9 @@ rm /root/samba_dc
 rm -rf /etc/samba
 
 # Reset the local Administrator by setting the password to $ADMIN_PASSWORD
-cd /usr/share/linux-arbeitsplatz
-bash ./django_set_local_Administrator_password.sh "$ADMIN_PASSWORD"
-bash ./django_reset_2fa_for_Administrator.sh
+libre-workspace-set-local-admin-password "$ADMIN_PASSWORD"
+libre-workspace-reset-2fa
 
 # Restart Libre Worksapce Services
-systemctl restart linux-arbeitsplatz-unix.service
-systemctl restart linux-arbeitsplatz-web.service
+systemctl restart libre-workspace-service.service
+systemctl restart libre-workspace-portal.service

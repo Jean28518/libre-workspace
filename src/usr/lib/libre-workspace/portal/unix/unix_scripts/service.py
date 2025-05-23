@@ -46,10 +46,10 @@ def ensure_fingerprint_is_trusted():
 
 # Get lw admin token
 def get_lw_admin_token():
-    # Check if file exists: /usr/share/linux-arbeitsplatz/local-admin-token
-    if os.path.isfile("/usr/share/linux-arbeitsplatz/local-admin-token"):
+    # Check if file exists: /var/lib/libre-workspace/local-admin-token
+    if os.path.isfile("/var/lib/libre-workspace/local-admin-token"):
         # Read the token from the file
-        with open("/usr/share/linux-arbeitsplatz/local-admin-token", "r") as f:
+        with open("/var/lib/libre-workspace/local-admin-token", "r") as f:
             token = f.read().strip()
             token = token.split("=")[1]
         return token
@@ -140,20 +140,20 @@ while True:
     if time.strftime("%H:%M") > patch_time and not os.path.isfile(patch_log_path):
         print("Running patches")
 
-        # Get all folders in /usr/share/linux-arbeitsplatz/unix/unix_scripts/
-        possible_modules = os.listdir("/usr/share/linux-arbeitsplatz/unix/unix_scripts/")
+        # Get all folders in /usr/lib/libre-workspace/modules/
+        possible_modules = os.listdir("/usr/lib/libre-workspace/modules/")
         # Filter all folders which don't have a path like /root/[folder]
         # (Because we only want to run patches for installed modules or addons)
         possible_modules = [folder for folder in possible_modules if os.path.isdir(f"/root/{folder}") or folder == "nextcloud" or folder == "general" or folder == "samba_dc" ]
         # Make the paths absolute
         for i in range(len(possible_modules)):
-            possible_modules[i] = f"/usr/share/linux-arbeitsplatz/unix/unix_scripts/{possible_modules[i]}"
+            possible_modules[i] = f"/usr/lib/libre-workspace/modules/{possible_modules[i]}"
                 
         # Now do everything again for the addons folder:
-        possible_addons = os.listdir("/usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/")
+        possible_addons = os.listdir("/var/lib/libre-workspace/modules/")
         possible_addons = [folder for folder in possible_addons if os.path.isdir(f"/root/{folder}")]
         for i in range(len(possible_addons)):
-            possible_addons[i] = f"/usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/{possible_addons[i]}"
+            possible_addons[i] = f"/var/lib/libre-workspace/modules/{possible_addons[i]}"
 
         possible_module_or_addon_folders = possible_modules + possible_addons
 

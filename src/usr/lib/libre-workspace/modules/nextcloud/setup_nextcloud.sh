@@ -173,9 +173,7 @@ if [ $DOMAIN = "int.de" ]; then
 fi
 
 # Add the oidc client to the oidc provider
-cd /usr/share/linux-arbeitsplatz/
-bash django_add_oidc_provider_client.sh "Nextcloud" "$CLIENT_ID" "$CLIENT_SECRET" "https://cloud.$DOMAIN/index.php/apps/oidc_login/oidc\nhttps://cloud.$DOMAIN/apps/oidc_login/oidc"
-cd -
+libre-workspace-add-oidc-client "Nextcloud" "$CLIENT_ID" "$CLIENT_SECRET" "https://cloud.$DOMAIN/index.php/apps/oidc_login/oidc\nhttps://cloud.$DOMAIN/apps/oidc_login/oidc"
 
 
 # Remove index.php from the URL:

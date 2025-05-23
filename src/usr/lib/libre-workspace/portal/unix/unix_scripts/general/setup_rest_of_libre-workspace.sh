@@ -21,13 +21,13 @@ if [ -n "$CUSTOM_ACCESS" ] ; then
     sed -i "s/:443/https:\/\/$IP:23816/g" /etc/caddy/Caddyfile
     # Insert the line with tls internal after the line with :23816
     sed -i "/https:\/\/$IP:23816/a \    tls internal" /etc/caddy/Caddyfile
-    echo "export ALLOWED_HOSTS=\"$IP:23816\"" >> /usr/share/linux-arbeitsplatz/cfg
+    echo "export ALLOWED_HOSTS=\"$IP:23816\"" >> /etc/libre-workspace/portal/portal.conf
   else
     sed -i "s/:443/$CUSTOM_ACCESS/g" /etc/caddy/Caddyfile
 
     # Get the CUSTOM_ACCESS without : extension if it is e.g. my.domain.com:23816
     CUSTOM_ACCESS_DOMAIN=$(echo $CUSTOM_ACCESS | cut -d ":" -f 1)
-    echo "export ALLOWED_HOSTS=\"$CUSTOM_ACCESS_DOMAIN\"" >> /usr/share/linux-arbeitsplatz/cfg
+    echo "export ALLOWED_HOSTS=\"$CUSTOM_ACCESS_DOMAIN\"" >> /etc/libre-workspace/portal/portal.conf
   fi
 
   # Remove the line from tls internal { and the two lines after it if $CUSTOM_ACCESS is not :23816
@@ -43,12 +43,10 @@ if [ -n "$CUSTOM_ACCESS" ] ; then
   fi
 
   # Set the password for the local admin user (django)
-  # Set INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP in /usr/share/linux-arbeitsplatz/cfg
-  sed -i "s/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=.*/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=$ADMIN_PASSWORD/g" /usr/share/linux-arbeitsplatz/cfg
+  # Set INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP in /etc/libre-workspace/portal/portal.conf
+  sed -i "s/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=.*/INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP=$ADMIN_PASSWORD/g" /etc/libre-workspace/portal/portal.conf
   # Set the Password for the admin user via script
-  cd /usr/share/linux-arbeitsplatz
-  bash django_set_local_Administrator_password.sh "$ADMIN_PASSWORD"
-  cd -
+  libre-workspace-set-local-admin-password "$ADMIN_PASSWORD"
 
 else
   # Otherwise we need to:
@@ -56,7 +54,7 @@ else
   echo "$IP http://localhost {
       #tls internal
       handle_path /static* {
-          root * /var/www/linux-arbeitsplatz-static
+          root * /var/www/libre-workspace-static
           file_server
           encode zstd gzip
       } 
@@ -92,15 +90,15 @@ systemctl restart caddy
 
 # Set the cfg file of lac:
 # LINUX_ARBEITSPLATZ_CONFIGURED=False to LINUX_ARBEITSPLATZ_CONFIGURED=True
-sed -i "s/LINUX_ARBEITSPLATZ_CONFIGURED=False/LINUX_ARBEITSPLATZ_CONFIGURED=True/g" /usr/share/linux-arbeitsplatz/cfg
+sed -i "s/LINUX_ARBEITSPLATZ_CONFIGURED=False/LINUX_ARBEITSPLATZ_CONFIGURED=True/g" /etc/libre-workspace/portal/portal.conf
 
 # Remove the lines with "EMAIL" in it
-sed -i "/EMAIL/d" /usr/share/linux-arbeitsplatz/cfg
+sed -i "/EMAIL/d" /etc/libre-workspace/portal/portal.conf
 
 # Enable the unix service
-/usr/bin/systemctl enable linux-arbeitsplatz-unix.service
+/usr/bin/systemctl enable libre-workspace-service.service
 
-rm installation_running
+rm /var/lib/libre-workspace/portal/installation_running
 
 # After everything is configured, we need to restart the whole server
 reboot

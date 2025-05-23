@@ -197,7 +197,7 @@ Comment=Created by the Libre Workspace
 }
 
 mkdir -p /home/lw.$USERNAME/.scripts
-cp /usr/share/linux-arbeitsplatz/unix/unix_scripts/desktop/scripts/* /home/lw.$USERNAME/.scripts/
+cp /usr/lib/libre-workspace/modules/desktop/scripts/* /home/lw.$USERNAME/.scripts/
 chmod +x /home/lw.$USERNAME/.scripts/*
 for SCRIPT in /home/lw.$USERNAME/.scripts/*; do
     SCRIPT_NAME=$(basename $SCRIPT)

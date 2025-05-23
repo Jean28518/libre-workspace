@@ -1,12 +1,10 @@
 # This will be removed in the setup_rest_of_linux_arbeitsplatz.sh script.
 
-LW_SCRIPTS=$(pwd)
-
-touch installation_running
+touch /var/lib/libre-workspace/portal/installation_running
 echo "Starting installation..."
 
-# This script installs the whole linux-arbeitsplatz how defined in the environment variables.
-cd $LW_SCRIPTS/../general
+# This script installs the whole libre-workspace how defined in the environment variables.
+cd /usr/lib/libre-workspace/portal/unix/unix-scripts/general
 echo "Doing installations basics..."
 . basics.sh
 
@@ -14,14 +12,14 @@ echo "Doing installations basics..."
 if [ ! -z "$SAMBA_DC" ]; then
     echo "Doing samba dc installation..."
     # Install SAMBA DC
-    cd $LW_SCRIPTS/../samba_dc
+    cd /usr/lib/libre-workspace/modules/samba_dc
     . setup_samba_dc.sh
 fi
 
 # Distribute the certificates for local installations
 if [ $DOMAIN = "int.de" ] ; then
     echo "Setting up internal https..."
-    cd $LW_SCRIPTS/../general
+    cd /usr/lib/libre-workspace/portal/unix/unix-scripts/general
     . setup_internal_https.sh
 fi
 
@@ -29,7 +27,7 @@ fi
 if [ ! -z "$NEXTCLOUD" ]; then
     echo "Nextcloud installation..."
     # Install Nextcloud
-    cd $LW_SCRIPTS/../nextcloud
+    cd /usr/lib/libre-workspace/modules/nextcloud
     . setup_nextcloud.sh
 fi
 
@@ -37,7 +35,7 @@ fi
 if [ ! -z "$COLLABORA" ]; then
     echo "Collabora installation..."
     # Install Collabora
-    cd $LW_SCRIPTS/../collabora
+    cd /usr/lib/libre-workspace/modules/collabora
     . setup_collabora.sh
 fi
 
@@ -45,7 +43,7 @@ fi
 if [ ! -z "$ONLYOFFICE" ]; then
     echo "Onlyoffice installation..."
     # Install Onlyoffice
-    cd $LW_SCRIPTS/../onlyoffice
+    cd /usr/lib/libre-workspace/modules/onlyoffice
     . setup_onlyoffice.sh
 fi
 
@@ -53,7 +51,7 @@ fi
 if [ ! -z "$DESKTOP" ]; then
     echo "Desktop installation..."
     # Install Desktop
-    cd $LW_SCRIPTS/../desktop
+    cd /usr/lib/libre-workspace/modules/desktop
     . setup_desktop.sh
 fi
 
@@ -61,7 +59,7 @@ fi
 if [ ! -z "$MATRIX" ]; then
     echo "Matrix installation..."
     # Install Matrix
-    cd $LW_SCRIPTS/../matrix
+    cd /usr/lib/libre-workspace/modules/matrix
     . setup_matrix.sh
 fi
 
@@ -69,7 +67,7 @@ fi
 if [ ! -z "$JITSI" ]; then
     echo "Jitsi installation..."
     # Install Jitsi
-    cd $LW_SCRIPTS/../jitsi
+    cd /usr/lib/libre-workspace/modules/jitsi
     . setup_jitsi.sh
 fi
 
@@ -77,11 +75,11 @@ fi
 if [ ! -z "$XFCE" ]; then
     echo "XFCE installation..."
     # Install XFCE
-    cd $LW_SCRIPTS/../xfce
+    cd /usr/lib/libre-workspace/modules/xfce
     . setup_xfce.sh
 fi
 
-# Install the rest of the linux-arbeitsplatz
-echo "Setting up the rest of the linux-arbeitsplatz..."
+# Install the rest of the libre-workspace
+echo "Setting up the rest of the libre-workspace..."
 cd $LW_SCRIPTS/../general
-. setup_rest_of_linux_arbeitsplatz.sh
+. /usr/lib/libre-workspace/portal/unix/unix-scripts/general

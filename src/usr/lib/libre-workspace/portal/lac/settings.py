@@ -224,7 +224,7 @@ STATICFILES_DIRS = [
 ]
 
 # Needed for gunicon
-STATIC_ROOT = '/var/www/linux-arbeitsplatz-static/'
+STATIC_ROOT = '/var/www/libre-workspace-static/'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = '/var/lib/libre-workspace/portal/media/'

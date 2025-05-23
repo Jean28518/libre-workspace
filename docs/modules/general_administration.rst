@@ -113,9 +113,9 @@ There is no automatic way to do this, but you can do it manually.
 
 .. note:: Sadly there is no option to change the matrix domain. So if you have a user with the ID ``@user:int.de`` then it will stay like this.
 
-Make also sure for the next automated processes that the domain is set correctly in the Libre Workspace env.sh file:
+Make also sure for the next automated processes that the domain is set correctly in the Libre Workspace env file:
 
-``sudo nano /usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh``
+``sudo nano /etc/libre-workspace/libre-workspace.env``
 
 ``export DOMAIN=my-libre-workspace.com``
 

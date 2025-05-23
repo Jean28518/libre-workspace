@@ -20,5 +20,5 @@ jobs:
       - name: Upload deb
         uses: actions/upload-artifact@v4
         with:
-          name: linux-arbeitsplatz-deb
-          path: linux-arbeitsplatz.deb
+          name: libre-workspace-deb
+          path: libre-workspace.deb

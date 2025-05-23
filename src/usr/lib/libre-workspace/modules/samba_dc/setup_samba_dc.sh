@@ -156,7 +156,7 @@ fi
 if ! grep -q "cloud.$DOMAIN" /etc/hosts; then
     echo "$IP cloud.$DOMAIN" >> /etc/hosts # Nextcloud
     echo "$IP office.$DOMAIN" >> /etc/hosts # Online Office
-    echo "$IP portal.$DOMAIN" >> /etc/hosts # Linux-Arbeitsplatz Central
+    echo "$IP portal.$DOMAIN" >> /etc/hosts # Libre Workspace Portal
     echo "$IP meet.$DOMAIN" >> /etc/hosts # Jitsi Meet
     echo "$IP element.$DOMAIN" >> /etc/hosts # Element
     echo "$IP matrix.$DOMAIN" >> /etc/hosts # Matrix
@@ -166,18 +166,18 @@ fi
 
 # Update cfg file:
 # Remove the lines with "AUTH_LDAP" in it
-sed -i "/AUTH_LDAP/d" /usr/share/linux-arbeitsplatz/cfg
+sed -i "/AUTH_LDAP/d" /etc/libre-workspace/portal/portal.conf
 
 # Add the Samba AD settings to the cfg file
 # Ensure that we put in a new line
-echo "" >> /usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_BIND_PASSWORD=\"$ADMIN_PASSWORD\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
-echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,$LDAP_DC\"" >>/usr/share/linux-arbeitsplatz/cfg
+echo "" >> /etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_BIND_PASSWORD=\"$ADMIN_PASSWORD\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
 
 # Mark samba_dc installed
 ln -s /etc/samba /root/samba_dc
@@ -185,7 +185,7 @@ ln -s /etc/samba /root/samba_dc
 systemctl enable --now samba-ad-dc
 systemctl restart samba-ad-dc
 # Restart Libre Worksapce Services if the installation_running file is not present, so we are not in the middle of another installation
-if [ ! -f /usr/share/linux-arbeitsplatz/unix/unix_scripts/general/installation_running ]; then
-    systemctl restart linux-arbeitsplatz-unix.service
-    systemctl restart linux-arbeitsplatz-web.service
+if [ ! -f /var/lib/libre-workspace/portal/installation_running ]; then
+    systemctl restart libre-workspace-service.service
+    systemctl restart libre-workspace-portal.service
 fi

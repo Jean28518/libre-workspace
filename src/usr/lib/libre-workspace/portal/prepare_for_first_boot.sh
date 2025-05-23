@@ -6,4 +6,4 @@ sed -i "s/^#autologin-user-timeout=.*/autologin-user-timeout=0/" "/etc/lightdm/l
 
 
 # Add autostart file for the openbox desktop environment
-cp /usr/share/linux-arbeitsplatz/openbox-autostart /etc/xdg/openbox/autostart
+cp /usr/lib/libre-workspace/portal/openbox-autostart /etc/xdg/openbox/autostart

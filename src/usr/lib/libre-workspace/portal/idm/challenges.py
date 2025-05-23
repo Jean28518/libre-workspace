@@ -54,9 +54,9 @@ def get_all_libre_workspace_challenges(user):
             challenges.append({"text": "Die E-Mail Einstellungen sind noch nicht konfiguriert oder funktionieren nicht.", "link": reverse("email_configuration")})
 
 
-        # Challenge 9: Is linux-arbeitsplatz-unix.service running?
+        # Challenge 9: Is libre-workspace-service.service running?
         if not unix.is_unix_service_running():
-            challenges.append({"text": "linux-arbeitsplatz-unix.service läuft aktuell nicht. Automatische Aufgaben wie Backups oder Updates werden somit nicht ausgeführt.", "link": reverse("unix_index")})
+            challenges.append({"text": "libre-workspace-service.service läuft aktuell nicht. Automatische Aufgaben wie Backups oder Updates werden somit nicht ausgeführt.", "link": reverse("unix_index")})
 
         # Challenge 10: The system is running longer than 31 days
         system_information = unix.get_system_information()

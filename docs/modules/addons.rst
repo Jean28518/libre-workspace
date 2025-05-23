@@ -93,7 +93,7 @@ It is a good practice to store the config of the service in the ``/root/[NAME]``
 **The addon detection is based on the existence of this folder.** For example even patches are not run, if this folder ``/root/[NAME]`` does not exist. And it will be easier for system administrators to find the config of the service in the future.
 Also you have to mind adding an entry to the ``/etc/caddy/Caddyfile`` to make the service accessible.
 
-The current working directory is the root directory of the addon. It may be at /usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/[NAME].
+The current working directory is the root directory of the addon. It may be at /var/lib/libre-workspace/modules/[NAME].
 Please do not use cd in all your scripts, because it could lead to unexpected behavior. At least if you are using them, make sure to run ``cd -`` at the end.
 
 An example of setup_nocodb.sh would be:
@@ -182,7 +182,7 @@ It is automatically executed as root. It is a good practice to remove the comple
 It is also good practice to remove all correponding data. 
 For example, if you have a database, you should remove the database and the database user.
 
-The current working directory is the root directory of the addon. It may be at /usr/share/linux-arbeitsplatz/unix/unix_scripts/addons/[NAME].
+The current working directory is the root directory of the addon. It may be at /var/lib/libre-workspace/modules/[NAME].
 Please do not use cd in all your scripts, because it could lead to unexpected behavior. At least if you are using them, make sure to run ``cd -`` at the end.
 
 An example of remove_nocodb.sh would be:
@@ -198,7 +198,7 @@ An example of remove_nocodb.sh would be:
     # Remove the entry from the Caddyfile
     sed -i "/db.$DOMAIN {/,/}/d" /etc/caddy/Caddyfile
     # On more complicated entries you can also use:
-    # python3 /usr/share/linux-arbeitsplatz/unix/unix_scripts/remove_caddy_service.py db.$DOMAIN
+    # libre-workspace-remove-webserver-entry db.$DOMAIN
     
     systemctl restart caddy
 

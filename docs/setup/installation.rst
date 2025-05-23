@@ -74,13 +74,13 @@ You can download and install the .deb file with the following commands:
 
 .. code-block:: bash
 
-    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/linux-arbeitsplatz.deb
-    sudo apt install ./linux-arbeitsplatz.deb
+    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/libre-workspace.deb
+    sudo apt install ./libre-workspace.deb
     # This message can be ignored:
-    # N: Download is performed unsandboxed as root as file '/root/linux-arbeitsplatz.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
-    sudo systemctl start linux-arbeitsplatz-web
+    # N: Download is performed unsandboxed as root as file '/root/libre-workspace.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
+    sudo systemctl start libre-workspace-portal
     # If you don't run the welcome assistant:
-    sudo systemctl enable linux-arbeitsplatz-unix --now
+    sudo systemctl enable libre-workspace-service --now
 
 This will install the the webserver caddy and the management portal which listens on port 443.
 
@@ -99,7 +99,7 @@ A detailed explanation of the installation script can be found upper in the sect
 
 .. tip::
 
-    If you want to follow the installation output you can run ``journalctl -u linux-arbeitsplatz-web.service -f``.
+    If you want to follow the installation output you can run ``journalctl -u libre-workspace-portal.service -f``.
 
 
 Manual configuration
@@ -114,12 +114,12 @@ If you are using caddy, replace the two last caddy blocks in the caddyfile e.g. 
 
     portal.int.de {
         handle_path /static* {
-            root * /var/www/linux-arbeitsplatz-static
+            root * /var/www/libre-workspace-static
             file_server
             encode zstd gzip
         }
         handle_path /media* {
-            root * /usr/share/linux-arbeitsplatz/media
+            root * /var/lib/libre-workspace/portal/media
             file_server
             encode zstd gzip
         }
@@ -128,11 +128,11 @@ If you are using caddy, replace the two last caddy blocks in the caddyfile e.g. 
 
 If you are using another webserver/reverse proxy you have to configure it yourself. The management portal listens via http on port 11123.
 
-It is mandatory to configure the cfg file at /usr/share/linux-arbeitsplatz/cfg. If you want to use the active directory functionality you have to care about yourself about the installation of this. The LDAP configuration is done in the cfg file.
+It is mandatory to configure the cfg file at /etc/libre-workspace/portal/portal.conf. If you want to use the active directory functionality you have to care about yourself about the installation of this. The LDAP configuration is done in the cfg file.
 By default, ldap is disabled. Your default login at the web interface is "Administrator" with the password "LibreWorkspace". More details can be found in the cfg file.
 
 
-You also have to ensure /usr/share/linux-arbeitsplatz/unix/unix_scripts/env.sh which is used for the addon and module handling.
+You also have to ensure /etc/libre-workspace/libre-workspace.env which is used for the addon and module handling.
 The following variables are mandatory to be set. An example would be:
 
 .. code-block:: bash

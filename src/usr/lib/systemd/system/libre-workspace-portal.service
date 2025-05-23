@@ -1,11 +1,11 @@
 [Unit]
-Description=Linux-Arbeitsplatz web service
+Description=Libre Workspace Portal Service 
 
 [Service]
 Type=simple
 RemainAfterExit=yes
-WorkingDirectory=/usr/share/linux-arbeitsplatz/
-ExecStart=/usr/share/linux-arbeitsplatz/run.sh
+WorkingDirectory=/
+ExecStart=libre-workspace-portal
 Restart=on-failure
 RestartSec=5
 User=root

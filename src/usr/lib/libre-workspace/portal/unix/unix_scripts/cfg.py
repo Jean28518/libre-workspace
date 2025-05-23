@@ -9,8 +9,8 @@ def get_config_path():
     # Check if the "cfg" file is in the parent/pareent/parent/parent directory (for development)
     elif os.path.isfile("../../../../cfg"):
         return os.getcwd() + "/../../../../cfg"
-    elif os.path.isfile("/usr/share/linux-arbeitsplatz/cfg"):
-        return "/usr/share/linux-arbeitsplatz/cfg"
+    elif os.path.isfile("/etc/libre-workspace/portal/portal.conf"):
+        return "/etc/libre-workspace/portal/portal.conf"
     else:
         return "!ERROR: cfg file not found!"
 

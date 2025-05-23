@@ -2,9 +2,9 @@
 # export ALLOWED_HOSTS="custom.domain.com,custom2.domain.com"
 
 
-# Set this to True, if Linux-Arbeitsplatz should not run the welcome assistant.
+# Set this to True, if Libre Workspace should not run the welcome assistant.
 # For that especially Active Directory Server should be configured.
-# Enable the unix service if you skip the automated install: /usr/bin/systemctl enable linux-arbeitsplatz-unix.service
+# Enable the unix service if you skip the automated install: /usr/bin/systemctl enable libre-workspace-service.service
 export LINUX_ARBEITSPLATZ_CONFIGURED=False
 
 # Mail Settings

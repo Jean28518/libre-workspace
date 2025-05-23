@@ -10,4 +10,4 @@ sed -i "s/^#greeter-hide-users=.*/greeter-hide-users=false/" "/etc/lightdm/light
 
 # Set desktop background
 rm /usr/share/images/desktop-base/default
-ln -s /usr/share/linux-arbeitsplatz/lac/static/lac/images/desktop.jpg /usr/share/images/desktop-base/default
+ln -s /usr/lib/libre-workspace/portal/lac/static/lac/images/desktop.jpg /usr/share/images/desktop-base/default
