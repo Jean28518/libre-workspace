@@ -751,7 +751,7 @@ def get_all_installed_nextcloud_addons():
     return addons
 
 
-def restart_linux_arbeitsplatz_web():
+def restart_libre_workspace_portal():
     # Only run this command one second after the function was called to ensure that the response is sent to the client before the server restarts
     subprocess.Popen("sleep 1; systemctl restart libre-workspace-portal",shell=True)
 
