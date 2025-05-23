@@ -13,6 +13,6 @@ systemctl stop php$PHP_VERSION-fpm
 systemctl stop mariadb
 
 # If file stop_additional_services.sh exists, run it
-if [ -f ./stop_additional_services.sh ]; then
-    bash ./stop_additional_services.sh
+if [ -f /var/lib/libre-workspace/portal/stop_additional_services.sh ]; then
+    bash /var/lib/libre-workspace/portal/stop_additional_services.sh
 fi

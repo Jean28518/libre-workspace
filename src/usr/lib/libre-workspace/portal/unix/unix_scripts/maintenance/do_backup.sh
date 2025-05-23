@@ -1,5 +1,5 @@
 #!/bin/bash
-source ../unix.conf
+source /etc/libre-workspace/libre-workspace.conf
 
 # Dump all databases
 # --default-character-set=utf8mb4: For emojis and similar, otherwise its broken 
@@ -11,9 +11,9 @@ mysqldump -u root --all-databases --default-character-set=utf8mb4 --lock-all-tab
 # MariaDB [nextcloud]> source mysql_export.sql
 
 # Get apt selection of packages:
-/usr/bin/dpkg --get-selections | /usr/bin/awk '!/deinstall|purge|hold/'|/usr/bin/cut -f1 |/usr/bin/tr '\n' ' '  > /installed-packages.txt  2>&1
+/usr/bin/dpkg --get-selections | /usr/bin/awk '!/deinstall|purge|hold/'|/usr/bin/cut -f1 |/usr/bin/tr '\n' ' '  > /var/lib/libre-workspace/portal/installed-packages.txt  2>&1
 # To restore apt packages:
-# sudo apt update && sudo xargs apt install </root/installed-packages.txt
+# sudo apt update && sudo xargs apt install </var/lib/libre-workspace/portal/installed-packages.txt
 
 # Stop all services
 bash ./stop_services.sh
@@ -30,9 +30,9 @@ fi
 
 # If $REMOTEPATH is set, then use this command:
 if [ -z "$REMOTEPATH" ] ; then
-  borg create --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> ../history/borg_errors_$DATE.log
+  borg create --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
 else
-  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> ../history/borg_errors_$DATE.log
+  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
 fi
 
 # Start all services
@@ -50,9 +50,9 @@ borg prune -v --glob-archives '*-system' $BORG_REPOSITORY \
 # Also there are no databases in /data, so it is not a problem to backup it after the critical services
 if [ -d /data ]; then
   if [ -z "$REMOTEPATH" ] ; then
-    borg create --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> ../history/borg_errors_$DATE.log
+    borg create --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
   else
-    borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> ../history/borg_errors_$DATE.log
+    borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
   fi
   # BORG_KEEP_DAILY=$((2*$BORG_KEEP_DAILY))
   # BORG_KEEP_WEEKLY=$((2*$BORG_KEEP_WEEKLY))
@@ -69,10 +69,10 @@ MAXIMUM_AGE_IN_DAYS=$((31*$BORG_KEEP_MONTHLY))d
 borg prune -v --keep-within=$MAXIMUM_AGE_IN_DAYS $BORG_REPOSITORY
 
 
-borg list --short $BORG_REPOSITORY > ../history/borg_list
+borg list --short $BORG_REPOSITORY > /var/lib/libre-workspace/portal/history/borg_list
 
 if [ -z "$REMOTEPATH" ] ; then
-  borg info $BORG_REPOSITORY > ../history/borg_info
+  borg info $BORG_REPOSITORY > /var/lib/libre-workspace/portal/history/borg_info
 else
-  borg info --remote-path $REMOTEPATH $BORG_REPOSITORY > ../history/borg_info
+  borg info --remote-path $REMOTEPATH $BORG_REPOSITORY > /var/lib/libre-workspace/portal/history/borg_info
 fi

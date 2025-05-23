@@ -3,13 +3,7 @@ import os
 # Config service which edits and gets the config in the cfg file
 
 def get_config_path():
-    # Check if the "cfg" file is in the parent/parent directory
-    if os.path.isfile("../../cfg"):
-        return os.getcwd() + "/../../cfg"
-    # Check if the "cfg" file is in the parent/pareent/parent/parent directory (for development)
-    elif os.path.isfile("../../../../cfg"):
-        return os.getcwd() + "/../../../../cfg"
-    elif os.path.isfile("/etc/libre-workspace/portal/portal.conf"):
+    if os.path.isfile("/etc/libre-workspace/portal/portal.conf"):
         return "/etc/libre-workspace/portal/portal.conf"
     else:
         return "!ERROR: cfg file not found!"

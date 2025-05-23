@@ -12,7 +12,7 @@ bash ./stop_services.sh
 echo "Starting export to $DESTINATION..."
 
 # Copy all files with rsync
-rsync -a --delete / $DESTINATION --exclude /dev --exclude /proc --exclude /sys --exclude /tmp --exclude /run --exclude /media --exclude /mnt --exclude /var/log > ./history/rsync.log
+rsync -a --delete / $DESTINATION --exclude /dev --exclude /proc --exclude /sys --exclude /tmp --exclude /run --exclude /media --exclude /mnt --exclude /var/log > /var/lib/libre-workspace/portal/history/rsync.log
 
 # Enable all services
 bash ./start_services.sh

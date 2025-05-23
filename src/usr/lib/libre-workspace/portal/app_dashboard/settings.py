@@ -2,7 +2,7 @@ import os
 import json
 
 cfg = {}
-file_path = "app_dashboard_settings.json"
+file_path = "/var/lib/libre-workspace/portal/app_dashboard_settings.json"
 
 
 # Save the configuration to the file as json

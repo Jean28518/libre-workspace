@@ -154,7 +154,7 @@ def installation_running(request):
     print("LDAP_DC: ", os.environ["LDAP_DC"])
     print("SHORTEND_DOMAIN: ", os.environ["SHORTEND_DOMAIN"])
 
-    # Create env.sh file
+    # Create /etc/libre-workspace/libre-workspace.env file
     try:
         with open("/etc/libre-workspace/libre-workspace.env", "w") as f:
             f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
@@ -162,7 +162,7 @@ def installation_running(request):
             f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
             f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
     except Exception as e:
-        message = f"Error while creating env.sh file: {str(e)} (If you are in a development environment, this is okay. If you are in a production environment, please check your installation.)"
+        message = f"Error while creating /etc/libre-workspace/libre-workspace.env file: {str(e)} (If you are in a development environment, this is okay. If you are in a production environment, please check your installation.)"
 
     # Run installation script
     # if file /var/lib/libre-workspace/portal/installation_running exists

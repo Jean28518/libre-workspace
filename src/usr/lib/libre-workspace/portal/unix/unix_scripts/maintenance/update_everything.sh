@@ -2,7 +2,7 @@ DATE=`date +"%Y-%m-%d"`
 echo "Starting update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log
 echo "Hint: This script runs every day wether some update procedure is enabled or not. If you see 'Cleaning up the system' in the next line, then nothing was updated." >> /var/lib/libre-workspace/portal/history/update-$DATE.log
 
-. ../unix.conf
+. /etc/libre-workspace/libre-workspace.conf
 
 # Update the libre workspace first, because it may contain updated update scripts for the other services
 if [ "$LIBRE_WORKSPACE_AUTOMATIC_UPDATES" == "True" ]; then
@@ -17,7 +17,7 @@ if [ "$SYSTEM_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting system update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
     bash do_update.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
     # Because do_update.sh has its own log file, we append it to our log file
-    cat ../history/update.log >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+    cat /var/lib/libre-workspace/portal/history/update.log >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
 fi
 
 if [ "$NEXTCLOUD_AUTOMATIC_UPDATES" == "True" ]; then
@@ -55,7 +55,7 @@ for ADDON in /var/lib/libre-workspace/modules/*; do
     if [ -d "$ADDON" ]; then
         # Get folder name from path.
         ADDON_NAME=$(basename $ADDON)
-        # Capitalize the addon name and replace "-" with "_" (because of the variable names in unix.conf)
+        # Capitalize the addon name and replace "-" with "_" (because of the variable names in /etc/libre-workspace/libre-workspace.conf)
         ADDON_VAR_NAME=$(echo $ADDON_NAME | sed -e 's/\(.*\)/\U\1/' -e 's/-/_/g')
         if [ "$(eval "echo \$${ADDON_VAR_NAME}_AUTOMATIC_UPDATES")" == "True" ]; then
             echo "Starting update of $ADDON_NAME at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1

@@ -171,7 +171,7 @@ WSGI_APPLICATION = 'lac.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/etc/libre-workspace/portal/db.sqlite3',
+        'NAME': '/var/lib/libre-workspace/portal/db.sqlite3',
     }
 }
 

@@ -11,6 +11,6 @@ if [ -f /var/www/nextcloud/occ ]; then
 fi
 
 # If file start_additional_services.sh exists, run it
-if [ -f ./start_additional_services.sh ]; then
-    bash ./start_additional_services.sh
+if [ -f /var/lib/libre-workspace/portal/start_additional_services.sh ]; then
+    bash /var/lib/libre-workspace/portal/start_additional_services.sh
 fi

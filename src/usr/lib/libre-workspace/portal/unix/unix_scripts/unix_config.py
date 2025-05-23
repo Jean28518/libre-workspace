@@ -7,15 +7,15 @@ import os
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 # If the config file does not exist, create it
-if not os.path.isfile("unix.conf"):
-    os.system("touch unix.conf")  
+if not os.path.isfile("/etc/libre-workspace/libre-workspace.conf"):
+    os.system("touch /etc/libre-workspace/libre-workspace.conf")  
     
 
 config = {}
 
 def read_config_file():
     # Read the config file
-    for line in open("unix.conf"):
+    for line in open("/etc/libre-workspace/libre-workspace.conf"):
         if line.strip().startswith("#"):
             continue
         if "=" not in line:
@@ -26,7 +26,7 @@ def read_config_file():
 
 def write_config_file():
     # Write the config file
-    with open("unix.conf", "w") as f:
+    with open("/etc/libre-workspace/libre-workspace.conf", "w") as f:
         for key, value in config.items():
             if value == "true" or value == "false" or value.isnumeric():
                 f.write(f"{key}={value}\n")

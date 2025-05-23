@@ -119,7 +119,7 @@ Make also sure for the next automated processes that the domain is set correctly
 
 ``export DOMAIN=my-libre-workspace.com``
 
-.. warning:: Do not change the LDAP_DC variable in the env.sh file. This can't be changed after the installation. But it shouldn't bother you anyway.
+.. warning:: Do not change the LDAP_DC variable in the libre-workspace.env file. This can't be changed after the installation. But it shouldn't bother you anyway.
 
 Also you need to add the new cloud.my-libre-workspace.com to nextcloud as a trusted domain and set the overwrite.cli.url to the new domain:
 

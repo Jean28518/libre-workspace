@@ -20,10 +20,10 @@ def get_all_libre_workspace_challenges(user):
         if settings.AUTH_LDAP_ENABLED and len(ldap.ldap_get_all_users()) <= 1:
             challenges.append({"text": "Noch bist Du ganz alleine hier. Lasst uns neue Nutzer erstellen!", "link": reverse("create_user")})
 
-        # Challenge 2: Do all variables exist in env.sh?
+        # Challenge 2: Do all variables exist in /etc/libre-workspace/libre-workspace.env?
         if len(unix.get_env_sh_variables().keys()) != 4:
             current_keys = list(unix.get_env_sh_variables().keys())
-            challenges.append({"text": f"Es fehlen noch Variablen in der env.sh Datei. Dies muss manuell angepasst werden.<br>Gefundene Variablen: {current_keys}", "link": "https://docs.libre-workspace.org/setup/installation.html#manual-configuration"})
+            challenges.append({"text": f"Es fehlen noch Variablen in der /etc/libre-workspace/libre-workspace.env Datei. Dies muss manuell angepasst werden.<br>Gefundene Variablen: {current_keys}", "link": "https://docs.libre-workspace.org/setup/installation.html#manual-configuration"})
 
         # Challenge 3: Has the user "administrator" an email?
         if idm.idm.get_admin_user()["mail"].strip() == "":

@@ -15,15 +15,15 @@ import unix.unix_scripts.utils as utils
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 # If the config file does not exist, create it
-if not os.path.isfile("unix.conf"):
-    os.system("touch unix.conf")  
+if not os.path.isfile("/etc/libre-workspace/libre-workspace.conf"):
+    os.system("touch /etc/libre-workspace/libre-workspace.conf")  
     
 
 config = {}
 
 def read_config_file():
     # Read the config file
-    for line in open("unix.conf"):
+    for line in open("/etc/libre-workspace/libre-workspace.conf"):
         if line.strip().startswith("#"):
             continue
         if "=" not in line:
@@ -34,7 +34,7 @@ def read_config_file():
 
 def write_config_file():
     # Write the config file
-    with open("unix.conf", "w") as f:
+    with open("/etc/libre-workspace/libre-workspace.conf", "w") as f:
         for key, value in config.items():
             if value == "true" or value == "false" or value.isnumeric():
                 f.write(f"{key}={value}\n")
@@ -73,8 +73,8 @@ def get_borg_information_for_dashboard():
     rv["compressed_size_of_all_backups"] = 0
 
     # Get the compressed size of all backups
-    if os.path.isfile("history/borg_info"):
-        lines = open("history/borg_info").readlines()
+    if os.path.isfile("/var/lib/libre-workspace/portal/history/borg_info"):
+        lines = open("/var/lib/libre-workspace/portal/history/borg_info").readlines()
         for line in lines:
             if line.startswith("All archives:"):
                 size = line[-15:-1].strip()
@@ -86,8 +86,8 @@ def get_borg_information_for_dashboard():
 
     # Get all archives
     rv["archives"] = []
-    if os.path.isfile("history/borg_list"):
-        lines = open("history/borg_list").readlines()
+    if os.path.isfile("/var/lib/libre-workspace/portal/history/borg_list"):
+        lines = open("/var/lib/libre-workspace/portal/history/borg_list").readlines()
         for line in lines:
             rv["archives"].append(line.strip())
     # Sort archives by date
@@ -102,13 +102,13 @@ def get_borg_information_for_dashboard():
     backup_history = []
     date_max = "1970-01-01"
     # Get all files in the history directory
-    for file in os.listdir("history"):
+    for file in os.listdir("/var/lib/libre-workspace/portal/history/"):
         if file.startswith("borg_errors_"):
             entry = {}
             # Get the date from the filename
             date = file[12:-4]
             # Get the error message from the file
-            error = open(f"history/{file}").read()
+            error = open(f"/var/lib/libre-workspace/portal/history/{file}").read()
             if error.strip() == "":
                 entry["success"] = True
             else:
@@ -131,7 +131,7 @@ def get_borg_information_for_dashboard():
     if utils.is_backup_running():
         rv["backup_status"] = "running"
     
-    if os.path.isfile("maintenance/recovery_running"):
+    if os.path.isfile("/var/lib/libre-workspace/portal/recovery_running"):
         rv["backup_status"] = "recovery_running"
 
     # If file "deactivated" exists, set backup status to "deactivated"
@@ -157,8 +157,8 @@ def is_system_ubuntu():
 
 def get_public_key():
     # Get the public key of the root user
-    if os.path.isfile("id_rsa.pub"):
-        return open("id_rsa.pub").read()
+    if os.path.isfile("/var/lib/libre-workspace/portal/id_rsa.pub"):
+        return open("/var/lib/libre-workspace/portal/id_rsa.pub").read()
     else:
         return "Error: Public key of root user not found."
     
@@ -180,29 +180,29 @@ def retry_backup():
     if utils.is_backup_running():
         return
     # If the backup is deactivated, exit
-    if os.path.isfile("maintenance/backup_disabled"):
+    if os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"):
         return
     # If the repository is not configured, exit
     if config["BORG_REPOSITORY"] == "":
         return
     # Remove the history file of today
     date = time.strftime("%Y-%m-%d")
-    if os.path.isfile(f"history/borg_errors_{date}.log"):
-        os.remove(f"history/borg_errors_{date}.log")
+    if os.path.isfile(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log"):
+        os.remove(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log")
     trigger_cron_service()
 
 def is_backup_enabled():
     # Return True if backup is enabled, False if backup is disabled
-    return not os.path.isfile("maintenance/backup_disabled")
+    return not os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled")
 
 def set_backup_enabled(enabled):
     # Enable or disable the backup
     if enabled:
-        if os.path.isfile("maintenance/backup_disabled"):
-            os.remove("maintenance/backup_disabled")
+        if os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"):
+            os.remove("/var/lib/libre-workspace/portal/backup_disabled")
     else:
-        if not os.path.isfile("maintenance/backup_disabled"):
-            os.system("touch maintenance/backup_disabled")
+        if not os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"):
+            os.system("touch /var/lib/libre-workspace/portal/backup_disabled")
 
 
 def get_disks_stats():
@@ -231,32 +231,32 @@ def get_system_information():
 
 
     rv["update_information"] = f"{get_upgradable_packages()} Pakete können aktualisiert werden." if get_upgradable_packages() > 0 else "Das System ist auf dem neuesten Stand."
-    if os.path.exists("history/update.log") and not is_update_currently_running():
-        rv["last_update_log"] = open("history/update.log").read().replace("\n", " <br> ")
+    if os.path.exists("/var/lib/libre-workspace/portal/history/update.log") and not is_update_currently_running():
+        rv["last_update_log"] = open("/var/lib/libre-workspace/portal/history/update.log").read().replace("\n", " <br> ")
     if is_update_currently_running():
         rv["update_information"] = "Das System wird gerade aktualisiert..."
     return rv
 
 
 def get_upgradable_packages():
-    if not os.path.isfile("maintenance/upgradable_packages"):
+    if not os.path.isfile("/var/lib/libre-workspace/portal/upgradable_packages"):
         return 0
-    return int(subprocess.getoutput("cat maintenance/upgradable_packages | wc -l")) -1
+    return int(subprocess.getoutput("cat /var/lib/libre-workspace/portal/upgradable_packages | wc -l")) -1
 
 
 def is_update_currently_running():
-    return os.path.isfile("maintenance/update_running")
+    return os.path.isfile("/var/lib/libre-workspace/portal/update_running")
 
 
 def trigger_cron_service():
     # If the run_service file exists, remove it and run service immediately
-    os.system("touch run_service")
+    os.system("touch /var/lib/libre-workspace/portal/run_service")
 
 def update_system():
     # If the update is currently running, exit
-    if os.path.isfile("maintenance/update_system"):
+    if os.path.isfile("/var/lib/libre-workspace/portal/update_system"):
         return
-    os.system("touch maintenance/update_system")
+    os.system("touch /var/lib/libre-workspace/portal/update_system")
     trigger_cron_service()
     
 
@@ -270,11 +270,11 @@ def shutdown_system():
 
 
 def start_all_services():
-    subprocess.Popen(["/usr/bin/bash", "start_services.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+    subprocess.Popen(["/usr/bin/bash", "start_services.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
 
 
 def stop_all_services():
-    subprocess.Popen(["/usr/bin/bash", "stop_services.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+    subprocess.Popen(["/usr/bin/bash", "stop_services.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
 
 
 def escape_bash_characters(string, also_escape_paths=True):
@@ -347,9 +347,9 @@ def abort_current_data_export():
 
 
 def get_rsync_history():
-    if not os.path.isfile("history/rsync.log"):
+    if not os.path.isfile("/var/lib/libre-workspace/portal/history/rsync.log"):
         return ""
-    rsync_history = open("history/rsync.log").read().replace("\n", "<br>")
+    rsync_history = open("/var/lib/libre-workspace/portal/history/rsync.log").read().replace("\n", "<br>")
     return rsync_history
 
 def is_nextcloud_installed():
@@ -464,7 +464,7 @@ def get_software_modules():
     for addon in addons:
         addon["installed"] = is_module_installed(addon["id"])
         addon["automaticUpdates"] = get_value(f"{addon['id'].upper().replace('-', '_')}_AUTOMATIC_UPDATES", "False") == "True"
-        addon["scriptsFolder"] = f"addons/{addon['id']}"
+        addon["scriptsFolder"] = f"/usr/lib/libre-workspace/modules/{addon['id']}"
         modules.append(addon)
 
     return modules
@@ -533,11 +533,11 @@ def is_module_installed(module_or_addon: str):
 
 def get_update_history():
     history = []
-    for file in os.listdir("history"):
+    for file in os.listdir("/var/lib/libre-workspace/portal/history/"):
         if file.startswith("update-"):
             entry = {}
             entry["date"] = file[7:-4]
-            entry["content"] = open(f"history/{file}").read().replace("\n", "<br>")
+            entry["content"] = open(f"/var/lib/libre-workspace/portal/history/{file}").read().replace("\n", "<br>")
             history.append(entry)
     history = sorted(history, key=lambda k: k['date'], reverse=True)
     return history
@@ -555,9 +555,9 @@ def get_update_information():
 
 def get_env_sh_variables():
     return_value = {}
-    if not os.path.isfile("env.sh"):
+    if not os.path.isfile("/etc/libre-workspace/libre-workspace.env"):
         return return_value
-    for line in open("env.sh").readlines():
+    for line in open("/etc/libre-workspace/libre-workspace.env").readlines():
         if line.strip() != "":
             if line.strip().startswith("#"):
                 continue
@@ -573,8 +573,8 @@ def get_env_from_unix_conf():
 
 
 def get_module_path(module_name):
-    if os.path.isdir(f"addons/{module_name}"):
-        return f"addons/{module_name}"
+    if os.path.isdir(f"/usr/lib/libre-workspace/modules/{module_name}"):
+        return f"/usr/lib/libre-workspace/modules/{module_name}"
     return module_name
 
 
@@ -618,7 +618,7 @@ def remove_module(module_name):
         urls = addon.get("url", "").split(",")
         domain = get_env_sh_variables().get("DOMAIN", "")
         if domain == "":
-            return "No domain found in the env.sh file. Please check the env.sh file."
+            return "No domain found in the libre-workspace.env file. Please check the /etc/libre-workspace/libre-workspace.env file."
         for url in urls:
             ip = get_env_sh_variables().get("IP", "")   
             os.system(f"sed -i '/{url}.{domain}/d' /etc/hosts")
@@ -645,14 +645,14 @@ def get_online_office_module():
 
 
 def mount_backups():
-    process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+    process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
     time.sleep(5)
     if process.returncode != None and process.returncode != 0:
         return "Error: Mounting backups failed: " + str(process.stdout) + " " + str(process.stderr)
 
 
 def umount_backups():
-    process = subprocess.Popen(["/usr/bin/bash", "umount_backups.sh"], cwd="maintenance/", env=get_env_from_unix_conf())
+    process = subprocess.Popen(["/usr/bin/bash", "umount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
     time.sleep(1)
     if process.returncode != None and process.returncode != 0:
         return "Error: Umounting backups failed: " + str(process.stdout) + " " + str(process.stderr)
@@ -661,7 +661,7 @@ def umount_backups():
 # This function needs the location in the backup to recover and the location to recover to
 # Example: full_path_to_backup = "/backup/2021-01-01_12-00-00", full_path_to_recover_to = "/mnt/restore"
 def recover_file_or_dir(full_path_to_backup):
-    process = subprocess.Popen(["/usr/bin/bash", "recover_path.sh", full_path_to_backup], cwd="maintenance/", env=get_env_from_unix_conf(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(["/usr/bin/bash", "recover_path.sh", full_path_to_backup], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     time.sleep(1)
     if process.returncode != None and process.returncode != 0:
         return "Error: Recovering file or directory failed: " + str(process.stdout.read()) + " " + str(process.stderr.read())
@@ -676,7 +676,7 @@ def get_all_addon_modules():
     # Get all folders in the addons directory
     addons = []
     for folder in os.listdir("/usr/lib/libre-workspace/modules/"):
-        if os.path.isdir(f"addons/{folder}"):
+        if os.path.isdir(f"/usr/lib/libre-workspace/modules/{folder}") and os.path.isfile(f"/usr/lib/libre-workspace/modules/{folder}/{folder}.conf"):
             addons.append(get_config_of_addon(folder))
     return addons
 
@@ -686,7 +686,7 @@ def get_config_of_addon(addon):
         return addon_config_cache[addon]
     # Read the config file of the addon
     config = {}
-    for line in open(f"addons/{addon}/{addon}.conf"):
+    for line in open(f"/usr/lib/libre-workspace/modules/{addon}/{addon}.conf"):
         if line.strip().startswith("#"):
             continue
         if "=" not in line:
@@ -695,7 +695,7 @@ def get_config_of_addon(addon):
         # remove the " and ' characters from the outer ends of the string
         config[key.strip()] = value.strip("'\"\n ")
         # Get icon file format
-    for file in os.listdir(f"addons/{addon}"):
+    for file in os.listdir(f"/usr/lib/libre-workspace/modules/{addon}"):
         if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
             config["icon_file_format"] = file.split(".")[-1]
     addon_config_cache[addon] = config
@@ -709,16 +709,16 @@ def install_addon(path_to_zip_file):
     os.system("mkdir -p /tmp/lw-addons/")
     os.system(f"unzip {path_to_zip_file} -d /tmp/lw-addons/")
     addon_id = os.listdir("/tmp/lw-addons/")[0]
-    os.system(f"rm -r addons/{addon_id}")
-    os.system(f"mv /tmp/lw-addons/{addon_id} addons/")
+    os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
+    os.system(f"mv /tmp/lw-addons/{addon_id} /usr/lib/libre-workspace/modules/")
     os.system(f"rm {path_to_zip_file}")
     os.system(f"rm -r /tmp/lw-addons/")
     # Copy the image file which could have the ending .png .svg .jpg .webp to the static folder
-    for file in os.listdir(f"addons/{addon_id}"):
+    for file in os.listdir(f"/usr/lib/libre-workspace/modules/{addon_id}"):
         if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
-            os.system(f"cp addons/{addon_id}/{file} ../../lac/static/lac/icons/{file}")
+            os.system(f"cp /usr/lib/libre-workspace/modules/{addon_id}/{file} ../../lac/static/lac/icons/{file}")
             # Also copy to /var/www/libre-workspace-static/lac/icons/ (that is the folder where the static files are served from)
-            os.system(f"cp addons/{addon_id}/{file} /var/www/libre-workspace-static/lac/icons/{file}")
+            os.system(f"cp /usr/lib/libre-workspace/modules/{addon_id}/{file} /var/www/libre-workspace-static/lac/icons/{file}")
             os.system(f"chown www-data:www-data /var/www/libre-workspace-static/lac/icons/{file}")
             os.system(f"chmod 644 /var/www/libre-workspace-static/lac/icons/{file}")
     
@@ -731,7 +731,7 @@ def uninstall_addon(addon_id):
     Removes the folder of the addon. Don't uninstall the addon if it is currently installed into the server.
     """
     addon_information = get_config_of_addon(addon_id)
-    os.system(f"rm -r addons/{addon_id}")
+    os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
     os.system(f"rm ../../lac/static/lac/icons/{addon_id}.*")
     os.system(f"rm /var/www/libre-workspace-static/lac/icons/{addon_id}.*")
     # Remove the entry from the AppDashboardEntry table in the database
@@ -786,8 +786,8 @@ def change_master_password(password):
     os.system(f"echo \"systemv:{password}\" | chpasswd")
     os.system("pam-auth-update --force --enable krb5")
 
-    # Update the password in the env.sh file
-    os.system(f"sed -i 's/ADMIN_PASSWORD=.*/ADMIN_PASSWORD=\"{password}\"/g' env.sh")
+    # Update the password in the /etc/libre-workspace/libre-workspace.env file
+    os.system(f"sed -i 's/ADMIN_PASSWORD=.*/ADMIN_PASSWORD=\"{password}\"/g' /etc/libre-workspace/libre-workspace.env")
 
     # Change the configured bind password in /etc/libre-workspace/portal/portal.conf
     os.system(f"sed -i 's/AUTH_LDAP_BIND_PASSWORD=.*/AUTH_LDAP_BIND_PASSWORD=\"{password}\"/g' /etc/libre-workspace/portal/portal.conf")
@@ -807,8 +807,8 @@ def change_ip(ip):
     # Get old ip
     old_ip = get_env_sh_variables().get("IP", "")
 
-    # Change the IP in the env.sh file
-    os.system(f"sed -i 's/IP=.*/IP=\"{ip}\"/g' env.sh")
+    # Change the IP in the /etc/libre-workspace/libre-workspace.env file
+    os.system(f"sed -i 's/IP=.*/IP=\"{ip}\"/g' /etc/libre-workspace/libre-workspace.env")
 
     # Change the IP in the /etc/hosts file
     os.system(f"sed -i 's/{old_ip}/{ip}/g' /etc/hosts")
@@ -941,18 +941,18 @@ def get_additional_services_control_files():
     """Returns a tuple with the content of (1) start_additional_services.sh and (2) stop_additional_services.sh"""
     start_additional_services = ""
     stop_additional_services = ""
-    if os.path.isfile("maintenance/start_additional_services.sh"):
-        start_additional_services = open("maintenance/start_additional_services.sh").read()
-    if os.path.isfile("maintenance/stop_additional_services.sh"):
-        stop_additional_services = open("maintenance/stop_additional_services.sh").read()
+    if os.path.isfile("/var/lib/libre-workspace/portal/start_additional_services.sh"):
+        start_additional_services = open("/var/lib/libre-workspace/portal/start_additional_services.sh").read()
+    if os.path.isfile("/var/lib/libre-workspace/portal/stop_additional_services.sh"):
+        stop_additional_services = open("/var/lib/libre-workspace/portal/stop_additional_services.sh").read()
     return (start_additional_services, stop_additional_services)
 
 
 def set_additional_services_control_files(start_additional_services, stop_additional_services):
     """Sets the content of (1) start_additional_services.sh and (2) stop_additional_services.sh"""
-    with open("maintenance/start_additional_services.sh", "w") as f:
+    with open("/var/lib/libre-workspace/portal/start_additional_services.sh", "w") as f:
         f.write(start_additional_services)
-    with open("maintenance/stop_additional_services.sh", "w") as f:
+    with open("/var/lib/libre-workspace/portal/stop_additional_services.sh", "w") as f:
         f.write(stop_additional_services)
 
 
@@ -1126,7 +1126,7 @@ def get_system_data_for_support():
 
 
 def get_local_admin_token():
-    """Returns the local admin token from the env.sh file"""
+    """Returns the local admin token"""
     local_token_file_content = os.popen("cat /var/lib/libre-workspace/local-admin-token").read()
     local_token_file_content = local_token_file_content.replace("LW_ADMIN_TOKEN=", "")
     if local_token_file_content.strip() == "":
@@ -1136,7 +1136,7 @@ def get_local_admin_token():
 
 
 def generate_local_admin_token():
-    """Generates a new local admin token and saves it to the env.sh file. This admin token is only valid to the next restart of libre workspace web."""
+    """Generates a new local admin token. This admin token is only valid to the next restart of libre workspace web."""
     # Generate a random token
     token = os.popen("openssl rand -hex 4096").read().strip()
     # Save the token to /var/lib/libre-workspace/local-admin-token

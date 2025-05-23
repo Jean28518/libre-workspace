@@ -1,4 +1,4 @@
-source ../unix.conf
+source /etc/libre-workspace/libre-workspace.conf
 
 mkdir -p /backups
 

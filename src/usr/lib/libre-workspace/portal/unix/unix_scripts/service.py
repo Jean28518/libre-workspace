@@ -14,7 +14,7 @@ if os.geteuid() != 0:
 
 print("Running libre workspace service...")
 
-# Let us get the environment of env.sh
+# Let us get the environment of /etc/libre-workspace/libre-workspace.env
 env_file_path = "/etc/libre-workspace/libre-workspace.env"
 env = {}
 lines = open(env_file_path).readlines()
@@ -71,8 +71,8 @@ while True:
     counter += 1
     hourly_counter += 1
     five_minute_counter += 1
-    if os.path.isfile("run_service"):
-        os.remove("run_service")
+    if os.path.isfile("/var/lib/libre-workspace/portal/run_service"):
+        os.remove("/var/lib/libre-workspace/portal/run_service")
         counter = 60
         hourly_counter = 3600
     if counter < 60:
@@ -95,39 +95,39 @@ while True:
     ## BACKUP ######################################################################################################
 
     # Get backup time from config file
-    if unix_config.get_value("BORG_REPOSITORY") != "" and not os.path.exists("maintenance/backup_disabled"):
+    if unix_config.get_value("BORG_REPOSITORY") != "" and not os.path.exists("/var/lib/libre-workspace/portal/backup_disabled"):
         ensure_fingerprint_is_trusted()
         backup_time = unix_config.get_value("BORG_BACKUP_TIME")
         date = time.strftime("%Y-%m-%d")
 
         # If current time is higher than backup time, run backup
-        if time.strftime("%H:%M") > backup_time and not utils.is_backup_running() and not os.path.isfile(f"history/borg_errors_{date}.log"):
+        if time.strftime("%H:%M") > backup_time and not utils.is_backup_running() and not os.path.isfile(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log"):
             print("Running backup")
             # Run do_backup.sh script with cwd in the maintenance directory
-            p = subprocess.Popen(["bash", "do_backup.sh"], cwd="maintenance")
+            p = subprocess.Popen(["bash", "do_backup.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/")
             p.wait()
 
 
             # Send email to admin if backup failed
-            read_errors = open(f"history/borg_errors_{date}.log").read()
+            read_errors = open(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log").read()
             if read_errors.strip() != "":
                 # Full path of the log file:
-                log_file = os.path.abspath(f"history/borg_errors_{date}.log")
+                log_file = os.path.abspath(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log")
                 os.system(f"curl -X POST -F 'subject=💾❌ Backup mit Fehlern abgeschlossen❌' -F 'message=Das heutige Backup war nicht vollständig erfolgreich.\nIm Anhang finden Sie die Fehlermeldungen.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## SYSTEM UPDATE ################################################################################################
 
     # If a user manually requested an update, run update
-    if os.path.isfile("maintenance/update_system"):
-        os.remove("maintenance/update_system")
+    if os.path.isfile("/var/lib/libre-workspace/portal/update_system"):
+        os.remove("/var/lib/libre-workspace/portal/update_system")
         print("Updating system")
-        p = subprocess.Popen(["bash", "do_update.sh"], cwd="maintenance")
+        p = subprocess.Popen(["bash", "do_update.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/")
 
     # All other updates:
     update_time = unix_config.get_value("UPDATE_TIME")
-    if time.strftime("%H:%M") > update_time and not os.path.isfile("maintenance/update_running") and not os.path.isfile(f"history/update-{current_date}.log"):
+    if time.strftime("%H:%M") > update_time and not os.path.isfile("/var/lib/libre-workspace/portal/update_running") and not os.path.isfile(f"/var/lib/libre-workspace/portal/history/update-{current_date}.log"):
         print("Starting automatic updates")
-        p = subprocess.Popen(["bash", "update_everything.sh"], cwd="maintenance")
+        p = subprocess.Popen(["bash", "update_everything.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/")
         p.wait()
 
     
@@ -136,7 +136,7 @@ while True:
     # We run patches at the defined backup time (after the backups of course). It this is not defined, then we take 02:00 as default
     # We check if we had run the patches today already by checking the history folder (DATE-patch.log)
     patch_time = unix_config.get_value("BORG_BACKUP_TIME", "02:00")
-    patch_log_path = f"history/patch-{current_date}.log"
+    patch_log_path = f"/var/lib/libre-workspace/portal/history/patch-{current_date}.log"
     if time.strftime("%H:%M") > patch_time and not os.path.isfile(patch_log_path):
         print("Running patches")
 
@@ -213,8 +213,8 @@ while True:
 
             # Check if we already did this action today
             last_date = ""
-            if os.path.isfile("history/last_shutdown"):
-                last_date = open("history/last_shutdown").read()
+            if os.path.isfile("/var/lib/libre-workspace/portal/history/last_shutdown"):
+                last_date = open("/var/lib/libre-workspace/portal/history/last_shutdown").read()
             current_date = datetime.now().strftime("%Y-%m-%d")
             if current_date != last_date.strip():
 
@@ -227,7 +227,7 @@ while True:
 
                 # If we are in the timeslot between shutdown_time and shutdown_time_limit, then shutdown:
                 if datetime.now().strftime("%H:%M") >= shutdown_time and datetime.now().strftime("%H:%M") < shutdown_time_limit:
-                    with open("history/last_shutdown", "w") as file:
+                    with open("/var/lib/libre-workspace/portal/history/last_shutdown", "w") as file:
                         file.write(current_date)
                         file.close()
                     if shutdown_type_is_reboot:
@@ -305,13 +305,13 @@ while True:
             os.system(f"curl -X POST -F 'subject=💿📈 Festplattenauslastung hoch📈' -F 'message=Die Festplattenauslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## Get list of upgradable packages
-    os.system("apt list --upgradable > upgradable_packages")
+    os.system("apt list --upgradable > /var/lib/libre-workspace/portal/upgradable_packages")
 
 
     ## Ensure public key of root user is available 
     # If public key of root user is not available, create it
     if not os.path.isfile("/root/.ssh/id_rsa.pub"):
         os.system("ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N ''")
-    os.system("cp /root/.ssh/id_rsa.pub .")
-    os.system("chmod 444 id_rsa.pub")
+    os.system("cp /root/.ssh/id_rsa.pub /var/lib/libre-workspace/portal/")
+    os.system("chmod 440 /var/lib/libre-workspace/portal/id_rsa.pub")
     
