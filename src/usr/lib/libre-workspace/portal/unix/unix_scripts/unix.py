@@ -1143,4 +1143,4 @@ def generate_local_admin_token():
     os.system(f"echo \"LW_ADMIN_TOKEN={token}\" > /var/lib/libre-workspace/local-admin-token")
     # Set the permissions for the file
     os.system("chmod 600 /var/lib/libre-workspace/local-admin-token")
-    os.system("chown $USER:$USER /var/lib/libre-workspace/local-admin-token")
+    os.system("chown root:root /var/lib/libre-workspace/local-admin-token")

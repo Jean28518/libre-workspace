@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# We need WORKDIR to be /
+# Check if the script is run as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
 
 # check if etc/libre-workspace/portal/portal.conf exists
 if [ -f "/etc/libre-workspace/portal/portal.conf" ]; then
@@ -11,11 +15,10 @@ else
 fi
 
 # Check if the service.py file exists
-if [ ! -f "usr/lib/libre-workspace/portal/unix/unix_scripts/service.py" ]; then
-    echo "Service file not found! Please make sure that you are running this script from / folder."
-    echo "If you are in development mode, please run the script from src/ folder."
+if [ ! -f "/usr/lib/libre-workspace/portal/unix/unix_scripts/service.py" ]; then
+    echo "Service file not found!"
     exit 1
 fi
 
-cd usr/lib/libre-workspace/portal/unix/unix_scripts
+cd /usr/lib/libre-workspace/portal/unix/unix_scripts
 sudo python3 service.py

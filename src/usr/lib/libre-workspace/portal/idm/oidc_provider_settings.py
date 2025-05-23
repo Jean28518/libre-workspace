@@ -123,3 +123,14 @@ def add_oidc_provider_client(cleaned_data):
         client.reuse_consent = cleaned_data["reuse_consent"]
         client.save()
         client.response_types.set(cleaned_data["response_types"])
+
+
+def remove_oidc_provider_client(name):
+    try:
+        client = Client.objects.get(name=name)
+        client.delete()
+    except Client.DoesNotExist:
+        print(f"Client with name {name} does not exist.")
+        return False
+    print(f"Client with name {name} removed.")
+    return True
