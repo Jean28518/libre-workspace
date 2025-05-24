@@ -81,5 +81,5 @@ fi
 
 # Install the rest of the libre-workspace
 echo "Setting up the rest of the libre-workspace..."
-cd $LW_SCRIPTS/../general
-. /usr/lib/libre-workspace/portal/unix/unix-scripts/general
+cd /usr/lib/libre-workspace/portal/unix/unix-scripts/general
+. /usr/lib/libre-workspace/portal/unix/unix-scripts/general/setup_rest_of_libre-workspace.sh
