@@ -25,6 +25,9 @@ if [ -f "$FULL_PATH" ]; then
 fi
 cd -
 
+# Make sure etc is only readable by owner:
+chmod 700 /etc/libre-workspace/
+
 # read cfg file:
 if [ -f "/etc/libre-workspace/portal/portal.conf" ]; then
     source /etc/libre-workspace/portal/portal.conf
