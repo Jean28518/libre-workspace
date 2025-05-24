@@ -6,6 +6,7 @@ sudo chmod -R 777 /var/www/libre-workspace-static/
 
 cp /etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
 
+mkdir -p /var/lib/libre-workspace/portal/
 cd /var/lib/libre-workspace/portal/
 python3 -m venv venv
 cd -
