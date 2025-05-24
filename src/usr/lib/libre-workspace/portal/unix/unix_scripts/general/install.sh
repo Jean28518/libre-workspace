@@ -4,7 +4,7 @@ touch /var/lib/libre-workspace/portal/installation_running
 echo "Starting installation..."
 
 # This script installs the whole libre-workspace how defined in the environment variables.
-cd /usr/lib/libre-workspace/portal/unix/unix-scripts/general
+cd /usr/lib/libre-workspace/portal/unix/unix_scripts/general
 echo "Doing installations basics..."
 . basics.sh
 
@@ -19,7 +19,7 @@ fi
 # Distribute the certificates for local installations
 if [ $DOMAIN = "int.de" ] ; then
     echo "Setting up internal https..."
-    cd /usr/lib/libre-workspace/portal/unix/unix-scripts/general
+    cd /usr/lib/libre-workspace/portal/unix/unix_scripts/general
     . setup_internal_https.sh
 fi
 
