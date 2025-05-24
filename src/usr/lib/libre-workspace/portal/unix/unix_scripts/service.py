@@ -150,10 +150,10 @@ while True:
             possible_modules[i] = f"/usr/lib/libre-workspace/modules/{possible_modules[i]}"
                 
         # Now do everything again for the addons folder:
-        possible_addons = os.listdir("/var/lib/libre-workspace/modules/")
+        possible_addons = os.listdir("/usr/lib/libre-workspace/modules/")
         possible_addons = [folder for folder in possible_addons if os.path.isdir(f"/root/{folder}")]
         for i in range(len(possible_addons)):
-            possible_addons[i] = f"/var/lib/libre-workspace/modules/{possible_addons[i]}"
+            possible_addons[i] = f"/usr/lib/libre-workspace/modules/{possible_addons[i]}"
 
         possible_module_or_addon_folders = possible_modules + possible_addons
 

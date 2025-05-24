@@ -13,6 +13,8 @@ cd -
 
 ln -s /usr/bin/python3 /usr/bin/python
 
+mkdir -p /var/lib/libre-workspace/modules/
+
 source /var/lib/libre-workspace/portal/venv/bin/activate
 pip install --upgrade pip
 pip install -r /usr/lib/libre-workspace/portal/requirements.txt 
