@@ -13,14 +13,14 @@ They are currently implemented as a way to add new service-components to the sys
 Addon Structure
 ===============
 
-Addons are stored in a single .zip file.
-
-The .zip file should contain the following structure:
-The .zip file should be named [NAME].zip, where [NAME] is the name of the addon in only lowercase letters.
+Addons could be stored in a single .zip file. However for more complexity and functionality they are now packaged and shipped in a .deb file.
+A good starting point is to use the addon creator inside the Libre Workspace Portal (Systemkonfiguration -> Addons -> Create Addon). It will generate the basic structure for you, even if you are not using any docker containers.
+The addon control files are stored in the directory ``/var/lib/libre-workspace/modules/[NAME]``.
+It should contain the following structure:
 
 .. code-block:: bash
 
-    - [NAME]/
+    - /var/lib/libre-workspace/modules/[NAME]/
         - [NAME].conf
         - setup_[NAME].sh
         - update_[NAME].sh
@@ -28,6 +28,8 @@ The .zip file should be named [NAME].zip, where [NAME] is the name of the addon 
         - update_env.sh (optional)
         - [NAME].png / [NAME].svg / [NAME].jpg / [NAME].webp
         - LICENSE 
+        - patches/ (optional)
+            - 1970-01-01_my_first_patch.sh (optional)
         - any other files needed for the installation of the addon (optional)
 
 If you want to distribute your config add a LICENSE file. Apache 2.0 is highly recommended: https://www.apache.org/licenses/LICENSE-2.0.html#apply )
@@ -36,7 +38,7 @@ An example of the structure of the addon nocodb would be:
 
 .. code-block:: bash
 
-    - nocodb/
+    - /var/lib/libre-workspace/modules/nocodb/
         - patches/ (optional)
             - 1970-01-01_my_first_patch.sh (optional)
         - nocodb.conf
@@ -263,7 +265,5 @@ Here you can see an example of a redis patch for nextloud:
 General Tips
 ============
 
-- Make sure to use the correct shebang in your shell scripts. It should be ``#!/bin/bash``.
 - Never experiment on production systems. Always test your scripts on a test system first.
 - It is a good practice by running the commands line by line manually on a test system to see if everything works as expected.
-- The addon installation in Libre Workspace Portal simply extracts and copies the files to the correct location. It does no checks of the .zip itself You can simply install a new version by installing the addon again. The old files will be overwritten.
