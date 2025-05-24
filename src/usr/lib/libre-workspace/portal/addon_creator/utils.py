@@ -27,7 +27,7 @@ def create_addon(cleaned_form):
     addon["url"] = cleaned_form["addon_url"]
     addon["docker_compose"] = cleaned_form["addon_docker_compose"]
     addon["internal_port"] = cleaned_form["addon_internal_port"]
-    addon["project_homepage"] = cleaned_form["addon_project_homepage"]
+    addon["project_homepage"] = cleaned_form["project_homepage"]
     addon["year"] = datetime.datetime.now().year
 
     # Copy the file content of DJANGO_ROOT/addon_creator/addon_template to /tmp/addon_id
@@ -79,7 +79,7 @@ def create_addon(cleaned_form):
     # Logo:
     os.system(f"mv /tmp/{addon['id']}/{addon['id']}* /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}/")
     # Create the deb package
-    os.system(f"dpkg-deb --build /tmp/{addon['id']}/deb /tmp/libre-workspace-module-{addon['id']}.deb")
+    os.system(f"dpkg-deb --build /tmp/{addon['id']}/deb /tmp/{addon['id']}/libre-workspace-module-{addon['id']}.deb")
 
     readme = f"""# Addon: {addon['name']}
 Author: {addon['author']} ({addon['mail']})
@@ -96,11 +96,15 @@ If you want to rebuild the addon, you can use the following command:
 
 ```bash
 # Start inside this directory
-dpkg-deb --build deb {addon['id']}.deb
+dpkg-deb --build deb libre-workspace-module-{addon['id']}.deb
 ```
 
 (You can then ignore the other files inside this directory. Then the important files are inside the deb directory.)
     """
+
+    # Write the README.md file
+    with open(f"/tmp/{addon['id']}/README.md", "w") as f:
+        f.write(readme)
 
     # Create a .zip file from the directory (working directory is /tmp)
     # subprocess.run(["zip", "-r", f"{addon['id']}.zip", f"{addon['id']}"], env={"PWD": "/tmp"})

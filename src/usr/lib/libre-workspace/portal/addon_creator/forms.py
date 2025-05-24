@@ -21,6 +21,12 @@ class AddonCreatorForm(forms.Form):
         required=True, 
         widget=forms.TextInput(attrs={"placeholder": "Datenbank-Verwaltung"})
     )
+    project_homepage = forms.CharField(
+        label="Projekt Webseite (optional)", 
+        max_length=200, 
+        required=False, 
+        widget=forms.TextInput(attrs={"placeholder": "https://www.nocodb.com"})
+    )
     addon_author = forms.CharField(
         label="Addon Autor", 
         max_length=100, 
