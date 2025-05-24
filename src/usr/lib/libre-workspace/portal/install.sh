@@ -15,7 +15,9 @@ cd /var/lib/libre-workspace/portal/
 python3 -m venv venv
 cd -
 
-ln -s /usr/bin/python3 /usr/bin/python
+if [ ! -f /usr/bin/python ]; then
+    sudo ln -s /usr/bin/python3 /usr/bin/python
+fi
 
 mkdir -p /var/lib/libre-workspace/modules/
 
