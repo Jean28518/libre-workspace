@@ -27,6 +27,7 @@ def create_addon(cleaned_form):
     addon["url"] = cleaned_form["addon_url"]
     addon["docker_compose"] = cleaned_form["addon_docker_compose"]
     addon["internal_port"] = cleaned_form["addon_internal_port"]
+    addon["project_homepage"] = cleaned_form["addon_project_homepage"]
     addon["year"] = datetime.datetime.now().year
 
     # Copy the file content of DJANGO_ROOT/addon_creator/addon_template to /tmp/addon_id
@@ -61,6 +62,45 @@ def create_addon(cleaned_form):
                         f.write(content)
                 except:
                     pass
+
+    # Create the deb package:
+    os.system(f"mkdir -p /tmp/{addon['id']}/deb/DEBIAN")
+    os.system(f"mv /tmp/{addon['id']}/control /tmp/{addon['id']}/deb/DEBIAN/control")
+    os.system(f"mv /tmp/{addon['id']}/postinst /tmp/{addon['id']}/deb/DEBIAN/postinst")
+    os.system(f"mv /tmp/{addon['id']}/install /tmp/{addon['id']}/deb/DEBIAN/install")
+    os.system(f"chmod 755 /tmp/{addon['id']}/deb/DEBIAN/postinst")
+    os.system(f"chmod 755 /tmp/{addon['id']}/deb/DEBIAN/install")
+    os.system(f"mkdir -p /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}")
+    os.system(f"mv /tmp/{addon['id']}/*.sh /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}/")
+    os.system(f"mv /tmp/{addon['id']}/addon.conf /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}/")
+    os.system(f"mv /tmp/{addon['id']}/LICENSE /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}/")
+    os.system(f"mv /tmp/{addon['id']}/docker-compose.yml /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}/")
+    os.system(f"mv /tmp/{addon['id']}/README.md /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}/")
+    # Logo:
+    os.system(f"mv /tmp/{addon['id']}/{addon['id']}* /tmp/{addon['id']}/deb/usr/lib/libre-workspace/modules/{addon['id']}/")
+    # Create the deb package
+    os.system(f"dpkg-deb --build /tmp/{addon['id']}/deb /tmp/libre-workspace-module-{addon['id']}.deb")
+
+    readme = f"""# Addon: {addon['name']}
+Author: {addon['author']} ({addon['mail']})
+Homepage {addon['project_homepage']}
+
+{addon['description']}
+
+## How to install
+Upload this .zip file OR the .deb file to your Libre-Workspace instance via the Addon Manager inside the portal. 
+Alternatively install the .deb package via apt.
+
+## How to rebuild the .deb package
+If you want to rebuild the addon, you can use the following command:
+
+```bash
+# Start inside this directory
+dpkg-deb --build deb {addon['id']}.deb
+```
+
+(You can then ignore the other files inside this directory. Then the important files are inside the deb directory.)
+    """
 
     # Create a .zip file from the directory (working directory is /tmp)
     # subprocess.run(["zip", "-r", f"{addon['id']}.zip", f"{addon['id']}"], env={"PWD": "/tmp"})
