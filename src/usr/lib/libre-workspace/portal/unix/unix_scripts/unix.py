@@ -710,10 +710,10 @@ def install_addon(path_to_file):
 
     # if the file is a .zip file, unzip it to /tmp/lw-addons/
     if path_to_file.endswith(".zip"):
-        os.system(f"unzip {path_to_file} -d /tmp/lw-addons/")
+        os.system(f"unzip '{path_to_file}' -d /tmp/lw-addons/")
     # Otherwise copy the file to /tmp/lw-addons/
     elif path_to_file.endswith(".deb"):
-        os.system(f"cp {path_to_file} /tmp/lw-addons/")
+        os.system(f"cp '{path_to_file}' /tmp/lw-addons/")
     else:
         # If the file is not a .zip, .tar.gz, .tar.xz or .deb file, return an error
         return "Error: File format not supported. Please use a .zip or .deb file."
@@ -723,13 +723,13 @@ def install_addon(path_to_file):
     if len(deb_files) > 0:
         # Install the .deb file(s)
         for deb_file in deb_files:
-            os.system(f"apt install {deb_file} -y")
+            os.system(f"apt install '{deb_file}' -y")
             # Remove the .deb file after installation
-            os.system(f"rm {deb_file}")
+            os.system(f"rm '{deb_file}'")
     else: 
         # Otherwise the old method (deprecated):
         addon_id = os.listdir("/tmp/lw-addons/")[0]
-        os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
+        os.system(f"rm -r '/usr/lib/libre-workspace/modules/{addon_id}'")
         os.system(f"mv /tmp/lw-addons/{addon_id} /usr/lib/libre-workspace/modules/")
     
     os.system(f"rm {path_to_file}")
