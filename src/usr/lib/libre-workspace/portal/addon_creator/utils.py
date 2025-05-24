@@ -98,8 +98,6 @@ If you want to rebuild the addon, you can use the following command:
 # Start inside this directory
 dpkg-deb --build deb libre-workspace-module-{addon['id']}.deb
 ```
-
-(You can then ignore the other files inside this directory. Then the important files are inside the deb directory.)
     """
 
     # Write the README.md file
