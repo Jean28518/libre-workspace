@@ -723,9 +723,8 @@ def install_addon(path_to_file):
     if len(deb_files) > 0:
         # Install the .deb file(s)
         for deb_file in deb_files:
-            os.system(f"apt install '{deb_file}' -y")
-            # Remove the .deb file after installation
-            os.system(f"rm '{deb_file}'")
+            subprocess.Popen(["apt", "install", deb_file, "-y"])
+            time.sleep(3)  # Wait to ensure the installation is progressed to postinstallation scripts
     else: 
         # Otherwise the old method (deprecated):
         addon_id = os.listdir("/tmp/lw-addons/")[0]
