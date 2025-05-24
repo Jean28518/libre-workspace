@@ -1,7 +1,6 @@
 # Copy the files to the debian package structure
 cp -r src/usr deb/
 cp -r src/etc deb/
-cp -r src/var deb/
 
 # Disable DEBUG mode
 sed -i "s/DEBUG = True/DEBUG = False/g" deb/usr/lib/libre-workspace/portal/lac/settings.py
