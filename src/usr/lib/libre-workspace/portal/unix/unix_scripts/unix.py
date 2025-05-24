@@ -767,7 +767,7 @@ def set_libre_workspace_name(name):
 
 def get_libre_workspace_version():
     # Get the version of installed libre-workspace.deb:
-    output = subprocess.getoutput("dpkg -s libre-workspace | grep Version")
+    output = subprocess.getoutput("dpkg -s libre-workspace-portal | grep Version")
     if "Version" in output:
         return output.split(":")[1].strip()
     else:
