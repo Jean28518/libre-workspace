@@ -101,6 +101,9 @@ sed -i "/EMAIL/d" /etc/libre-workspace/portal/portal.conf
 # Create history folder:
 mkdir -p /var/lib/libre-workspace/portal/history
 
+# Make /etc/libre-workspace/ only readable for owner
+chmod 700 /etc/libre-workspace/
+
 rm /var/lib/libre-workspace/portal/installation_running
 
 # After everything is configured, we need to restart the whole server
