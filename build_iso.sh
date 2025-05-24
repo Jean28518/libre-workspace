@@ -30,8 +30,8 @@ rm -rf ./NEWISO/install.$arch/gtk/tmp
 gzip ./NEWISO/install.$arch/gtk/initrd
 chmod -w -R ./NEWISO/install.$arch
 
-# Copy the custom package (which does the installation of linux-arbeitsplatz in the end) to the new iso
-cp linux-arbeitsplatz.deb ./NEWISO/
+# Copy the custom package (which does the installation of libre-workspace in the end) to the new iso
+cp libre-workspace.deb ./NEWISO/
 
 # Change the boot menu to automatically start the installation
 sed -i "s/timeout 300/timeout 1/g" ./NEWISO/isolinux/spkgtk.cfg

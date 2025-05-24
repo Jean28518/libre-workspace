@@ -1,0 +1,278 @@
+{% load static %}
+{% load i18n %}
+<!doctype html>
+<html lang="de" {% if branding.force_dark_mode %}data-theme="dark"{% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if branding.portal_branding_title %}
+      <title>{{branding.portal_branding_title}} </title>
+    {% else %}
+      <title>{% trans "Libre-Workspace Portal" %} </title>
+    {% endif %}
+    {% if branding.portal_branding_logo %}
+    <link rel="icon" type="image/x-icon" href="/media/{{branding.portal_branding_logo}}">
+    {% else %}
+    <link rel="icon" type="image/x-icon" href="/static/lac/icons/libre-workspace.webp">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'lac/css/pico.min.css' %}">
+    <script src="{% static 'lac/js/modal.js' %}"></script>
+    <script src="{% static 'lac/js/jquery-3.7.1.min.js' %}"></script>
+    <style>
+      .table > tbody > tr > td {
+        vertical-align: middle;
+      }
+      .table > tbody > tr > th {
+        vertical-align: middle;
+      }
+
+      {% comment %} Material Icons {% endcomment %}
+      @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url(/static/lac/icons/MaterialIcons-Regular.eot); /* For IE6-8 */
+        src: local('Material Icons'),
+          local('MaterialIcons-Regular'),
+          {% comment %} url(/static/lac/icons/MaterialIcons-Regular.woff2) format('woff2'),
+          url(/static/lac/icons/MaterialIcons-Regular.woff) format('woff'), {% endcomment %}
+          url(/static/lac/icons/MaterialIcons-Regular.ttf) format('truetype');
+      }
+
+      .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;  /* Preferred icon size */
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+      
+        /* Support for all WebKit browsers. */
+        -webkit-font-smoothing: antialiased;
+        /* Support for Safari and Chrome. */
+        text-rendering: optimizeLegibility;
+      
+        /* Support for Firefox. */
+        -moz-osx-font-smoothing: grayscale;
+      
+        /* Support for IE. */
+        font-feature-settings: 'liga';
+      }
+
+      /* Rules for sizing the icon. */
+      .material-icons.md-18 { font-size: 18px; }
+      .material-icons.md-24 { font-size: 24px; }
+      .material-icons.md-36 { font-size: 36px; }
+      .material-icons.md-48 { font-size: 48px; }
+      .material-icons.md-64 { font-size: 64px; }
+      .material-icons.md-96 { font-size: 96px; }
+      .material-icons.md-128 { font-size: 128px; }
+      .material-icons.md-256 { font-size: 256px; }
+
+      /* Rules for using icons as black on a light background. */
+      .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+      .material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+      /* Rules for using icons as white on a dark background. */
+      .material-icons.md-light { color: rgba(255, 255, 255, 1); }
+      .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+    /* body {
+      background-image: url('/static/lac/images/background-2.webp');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      min-height: 100%;
+    }
+    html {
+      height: 100%;
+    } */
+    .container {
+      padding: 32px;
+      border-radius: 8px;
+    } 
+
+/* Color settings for PicoCSS */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  {% if branding.primary_color %}
+  --primary: {{ branding.primary_color }};  
+  {% else %}
+  --primary: #09928b;
+  {% endif %}
+
+  {% if branding.secondary_color %}
+  --primary-hover: {{ branding.secondary_color }};
+  {% else %}
+  --primary-hover: #07746d;
+  {% endif %} 
+  --primary-focus: rgba(0, 172, 193, 0.125);
+  --primary-inverse: #FFF;
+}
+
+/* Cyan Dark scheme (Auto) */
+/* Automatically enabled if user has Dark mode enabled */
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    {% if branding.primary_color %}
+    --primary: {{ branding.primary_color }};  
+    {% else %}
+    --primary: #09928b;
+    {% endif %}
+  
+    {% if branding.secondary_color %}
+    --primary-hover: {{ branding.secondary_color }};
+    {% else %}
+    --primary-hover: #07746d;
+    {% endif %} 
+    --primary-focus: rgba(0, 172, 193, 0.25);
+    --primary-inverse: #FFF;
+  }
+}
+
+/* Cyan Dark scheme (Forced) */
+/* Enabled if forced with data-theme="dark" */
+[data-theme="dark"] {
+  {% if branding.primary_color %}
+  --primary: {{ branding.primary_color }};  
+  {% else %}
+  --primary: #09928b;
+  {% endif %}
+
+  {% if branding.secondary_color %}
+  --primary-hover: {{ branding.secondary_color }};
+  {% else %}
+  --primary-hover: #07746d;
+  {% endif %} 
+  --primary-focus: rgba(0, 172, 193, 0.25);
+  --primary-inverse: #FFF;
+}
+
+/* Cyan (Common styles) */
+:root {
+  --form-element-active-border-color: var(--primary);
+  --form-element-focus-color: var(--primary-focus);
+  --switch-color: var(--primary-inverse);
+  --switch-checked-background-color: var(--primary);
+}
+
+:root {
+  --font-size: 1rem;
+  --block-spacing-vertical: 1rem;
+
+  {% if branding.primary_color %}
+  --primary: {{ branding.primary_color }};  
+  {% else %}
+  --primary: #09928b;
+  {% endif %}
+
+  {% if branding.secondary_color %}
+  --primary-hover: {{ branding.secondary_color }};
+  {% else %}
+  --primary-hover: #07746d;
+  {% endif %} 
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+}
+
+.danger {
+  background-color: #dc0000;
+  border-color: #dc0000;
+  color: white;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 0.75rem;
+  --primary: #dc0000;
+  --primary-hover: #c50000;
+}
+
+[role=button], button, input[type=button], input[type=reset], input[type=submit] {
+  padding: 0.75rem 0.75rem;
+}
+
+    </style>
+  </head>
+  <body>
+    <nav class="container-fluid">
+      <ul>
+        <li style="padding: 0px;">
+          <a href="/" class="contrast">
+            {% if branding.portal_branding_logo %}
+            <img src="/media/{{branding.portal_branding_logo}}" alt="Logo" style="height: 64px;padding: 8px;">
+            {% else %}
+            <img src="/static/lac/icons/libre-workspace.webp" alt="Logo" style="height: 64px;padding: 8px;">
+            {% endif %}
+            <!-- <span style="margin-top: 5px" class="material-icons md-32">apps</span>  -->
+          </a>
+        </li>
+        <li>
+          {% if branding.portal_branding_title %}
+            <a href="/" class="contrast"><strong>{{ branding.portal_branding_title }}</strong></a>
+          {% else %}
+            <a href="/" class="contrast"><strong>Libre-Workspace Portal</strong></a>
+          {% endif %}
+        </li>
+        {% if request.user.is_authenticated %}
+          <li><a href="/idm/dashboard">Verwaltung</a></li> 
+        {% endif %}
+      </ul>
+      {% if request.user.is_authenticated %}
+        <ul>
+          {% comment %} <li><a href="#">Link</a></li> {% endcomment %}
+          {% if request.user.is_superuser %}
+            <li>
+              <details role="list" dir="rtl">
+                <summary aria-haspopup="listbox" role="link" class="secondary">
+                  <span class="material-icons">help</span>
+                </summary>
+                <ul role="listbox">
+                  <li><a href="https://docs.libre-workspace.org/">Dokumentation</a></li>
+                  <li><a href="https://forum.libre-workspace.org/">Forum</a></li>
+                  <li><a href="https://www.linuxguides.de/linux-support/">Kostenpflichtiger Support</a></li>
+                  <li><a href="{% url "get_system_data_for_support" %}">Systeminformation herunterladen</a></li>
+                </ul>
+              </details>
+            </li>
+          {% endif %}
+          <li>
+            <details role="list" dir="rtl">
+              <summary aria-haspopup="listbox" role="link" class="secondary">
+                  {{ request.user.username }}
+              </summary>
+              <ul role="listbox">
+                <li><a href="{% url "change_password" %}">Passwort ändern</a></li>
+                <li><a href="{% url "otp_settings" %}"><bdi>2-Faktor-Authentifizierung</bdi></a></li>
+                <li><a href="{% url "user_logout" %}">Ausloggen</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      {% elif hide_login_button %}
+      
+      {% else %}
+        <ul>
+          <li title="Anmelden"><a href="{% url "user_login" %}" role="button">Anmelden</a></li>
+        </ul>
+      {% endif %}
+    </nav> 
+
+    <br/>
+    <br/>
+
+    <div class="container">
+  
+        {% block content %}
+        {% endblock %}
+
+        <br>
+        <br>
+  
+    </div>
+  </body>
+</html>

@@ -2,7 +2,7 @@ if [ "$CLEAN_CADDYFILE" = "True" ]; then
     /usr/bin/echo "" > /etc/caddy/Caddyfile
 fi
 
-/bin/bash /usr/share/linux-arbeitsplatz/install.sh 
+/bin/bash /usr/lib/libre-workspace/portal/install.sh 
 
 /usr/bin/systemctl daemon-reload 
-/usr/bin/systemctl enable linux-arbeitsplatz-web.service
+/usr/bin/systemctl enable libre-workspace-portal.service --now

@@ -1,0 +1,44 @@
+# Here you can configure additional allowed hosts. Seperate the domains with a comma
+# export ALLOWED_HOSTS="custom.domain.com,custom2.domain.com"
+
+
+# Set this to True, if Libre Workspace should not run the welcome assistant.
+# For that especially Active Directory Server should be configured.
+# Enable the unix service if you skip the automated install: /usr/bin/systemctl enable libre-workspace-service.service
+export LINUX_ARBEITSPLATZ_CONFIGURED=False
+
+# Mail Settings
+# (This is only for the management interface, not for other services like nextcloud)
+export EMAIL_HOST=""                         
+export EMAIL_PORT=""                                   
+export EMAIL_HOST_USER=""
+export EMAIL_HOST_EMAIL=""              
+export EMAIL_HOST_PASSWORD=""   
+
+# only activate (uncomment) one of these:
+export EMAIL_USE_TLS=True
+#export EMAIL_USE_SSL=True
+
+# This is ignored, if AUTH_LDAP_SERVER_URI is not blank
+# This is the initial "Administrator" password, if your instance uses no LDAP.
+export INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP="LibreWorkspace"
+
+# Samba AD Settings
+# Change all instances of int and de to the real domain components
+# Example for AUTH_LDAP_SERVER_URI would be: "ldaps://la.int.de"
+# If you want to deactivate Samba AD integration, set AUTH_LDAP_SERVER_URI to ""
+export AUTH_LDAP_SERVER_URI=""
+export AUTH_LDAP_DC="dc=int,dc=de"
+export AUTH_LDAP_BIND_DN="cn=Administrator,cn=users,dc=int,dc=de"
+export AUTH_LDAP_BIND_PASSWORD="#####"
+export AUTH_LDAP_USER_DN_TEMPLATE="cn=%(user)s,cn=users,dc=int,dc=de"
+export AUTH_LDAP_GROUP_SEARCH_BASE="cn=Groups,dc=int,dc=de"
+export AUTH_LDAP_GROUP_ADMIN_DN="CN=Administrators,CN=Builtin,DC=int,DC=de"
+
+# Separate them with a ,
+export HIDDEN_LDAP_USERS="dns-hostname"
+# Don't change the admin status for these nextcloud users automatically also if they are not in group "Domain Admin". Separate them with ,
+# If set this value to "*" then the whole admin sync operation will be disabled.
+export IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS=""
+
+export NEXTCLOUD_INSTALLATION_DIRECTORY="/var/www/nextcloud/"

@@ -54,21 +54,35 @@ Your default account is called "Administrator".
 ## How to develop
 
 ```bash
+# Make sure on your dev machine no actual libre workspace component is installed.
+# Start from this directory
 sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev
-cd src/lac/
-python3 -m venv .env
-cd ../../
-cp cfg.example cfg
-vim cfg # Configure example
+sudo mkdir -p /var/www/libre-workspace-static
+sudo chown -R $USER:$USER /var/www/libre-workspace-static
+sudo ln -s $PWD/src/etc/libre-workspace/ /etc/libre-workspace
+sudo ln -s $PWD/src/usr/lib/libre-workspace /usr/lib/libre-workspace
+sudo ln -s $PWD/src/var/lib/libre-workspace/ /var/lib/libre-workspace
 
-sudo mkdir -p /var/www/linux-arbeitsplatz-static
-sudo chown -R $USER:$USER /var/www/linux-arbeitsplatz-static
+cd /var/lib/libre-workspace/portal
+python3 -m venv venv
+cd -
+cp /etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
+vim /etc/libre-workspace/portal/portal.conf # Configure
+cp /etc/libre-workspace/libre-workspace.env.example /etc/libre-workspace/libre-workspace.env
 
 
 # If you did the setup above once, you can start the django server with this command
 bash run_development.sh
 # Start unix service (in a second terminal session)
-bash unix_service.sh
+cd src/
+bash usr/bin/libre-workspace-service
+
+
+# To clean later your computer after ending the development:
+sudo rm -rf /var/www/libre-workspace-static
+sudo rm /etc/libre-workspace
+sudo rm /usr/lib/libre-workspace
+sudo rm /var/lib/libre-workspace
 ```
 
 ## Build documentation

@@ -1,0 +1,15 @@
+[Unit]
+Description=Libre Workspace Portal Service 
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+WorkingDirectory=/
+ExecStart=libre-workspace-portal
+Restart=on-failure
+RestartSec=5
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Check if the script is run as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
+SUBJECT=$1
+MESSAGE=$2
+# Optional attachment:
+ATTACHEMENT_PATH=$3
+
+# Check if the first or second argument is empty
+if [ -z "$SUBJECT" ] || [ -z "$MESSAGE" ]; then
+    echo "Usage: $0 <subject> <message> [attachment_path]"
+    exit 1
+fi
+# Check if the attachment path exists
+if [ -n "$ATTACHEMENT_PATH" ] && [ ! -f "$ATTACHEMENT_PATH" ]; then
+    echo "WARNING: Attachment path does not exist: $ATTACHEMENT_PATH"
+fi
+
+. /var/lib/libre-workspace/local-admin-token
+
+# Check if ATTACHEMENT_PATH is set
+if [ -n "$ATTACHEMENT_PATH" ]; then
+    # Send the email with the attachment
+    curl -X POST -F "subject=$SUBJECT" -F "message=$MESSAGE" -F "attachment_path=$ATTACHEMENT_PATH" -F "lw_admin_token=$LW_ADMIN_TOKEN" localhost:11123/unix/send_mail
+else
+    # Send the email without the attachment
+    curl -X POST -F "subject=$SUBJECT" -F "message=$MESSAGE" -F "lw_admin_token=$LW_ADMIN_TOKEN" localhost:11123/unix/send_mail
+fi
+

@@ -1,0 +1,15 @@
+[Unit]
+Description=Libre Workspace Service. Runs commands which are issued from web and automatic actions.
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+WorkingDirectory=/
+ExecStart=/usr/bin/libre-workspace-service
+Restart=on-failure
+RestartSec=5
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

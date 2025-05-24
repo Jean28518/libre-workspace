@@ -1,0 +1,10 @@
+Package: libre-workspace-module-{{addon.id}}
+Version: 0.1.0
+Depends: libre-workspace-portal
+Maintainer: {{addon.author}}
+Architecture: all
+Homepage: {{addon.project_homepage}}
+Section: admin
+Installed-Size: 0
+Description: Libre Workspace Module {{addon.id}}
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Check if module already is installed (is /root/addon.id directory present?)
+if [ -d "/root/{{addon.id}}" ]; then
+    echo "Module {{addon.id}} is already installed."
+    exit 0
+fi
+
+echo "Installing module {{addon.id}}..."
+
+mkdir -p /root/{{addon.id}}
+
+. /etc/libre-workspace/libre-workspace.env
+
+cd /usr/lib/libre-workspace/modules/{{addon.id}}
+
+. setup_{{addon.id}}.sh

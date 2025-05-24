@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Check if the script is run as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
+. /etc/libre-workspace/portal/portal.conf
+
+# Activate the virtual environment
+if [ -f /var/lib/libre-workspace/portal/venv//bin/activate ]; then
+    source /var/lib/libre-workspace/portal/venv//bin/activate
+fi
+
+# If the number of arguments is not equal to 4, then exit
+if [ "$#" -ne 4 ]; then
+    echo "Illegal number of parameters"
+    echo "Usage: $0 <name> <client_id> <client_secret> <redirect_uri>"
+    exit 1
+fi
+
+# The response_types is set to ['1'] because the response type is 'code'
+CLEANED_DATA="""{
+    'name': '$1',
+    'client_type': 'confidential',
+    'client_id': '$2',
+    'client_secret': '$3',
+    'response_types': ['1', '2', '3'],
+    'jwt_alg': 'RS256',
+    'redirect_uris': '$4',
+    'require_consent': False,
+    'reuse_consent': False,
+}"""
+
+echo $CLEANED_DATA
+
+python3 /usr/lib/libre-workspace/portal/manage.py shell -c "from idm.oidc_provider_settings import add_oidc_provider_client; add_oidc_provider_client($CLEANED_DATA);"
+
+if [ $? -eq 0 ]; then
+    echo "OIDC provider client has been added"
+else
+    echo "Failed to add OIDC provider client"
+    exit 1
+fi
