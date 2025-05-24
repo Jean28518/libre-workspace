@@ -32,6 +32,8 @@ fi
 
 source /var/lib/libre-workspace/portal/venv/bin/activate
 
+cd /usr/lib/libre-workspace/portal/
+
 python3 manage.py migrate --no-input
 python3 manage.py collectstatic --no-input
 python manage.py creatersakey
