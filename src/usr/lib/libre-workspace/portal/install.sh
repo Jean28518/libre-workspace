@@ -15,7 +15,7 @@ ln -s /usr/bin/python3 /usr/bin/python
 
 source /var/lib/libre-workspace/portal/venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt 
+pip install -r /usr/lib/libre-workspace/portal/requirements.txt 
 # Make sure that the database is up to date (sometimes e.g. oidc_provider needs to be updated)
 python3 manage.py makemigrations --no-input
 python manage.py migrate --no-input
