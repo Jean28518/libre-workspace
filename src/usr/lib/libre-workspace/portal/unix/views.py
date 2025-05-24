@@ -528,7 +528,10 @@ def add_addon(request):
         response = unix.install_addon("/tmp/" + file.name)
         if response != None:
             return message(request, f"Das Addon konnte nicht hochgeladen werden: {response}", "addons")
-        return message(request, "Das Addon wurde hochgeladen.", "module_management")
+        appendix = ""
+        if file.name.endswith(".deb"):
+            appendix = " Das Setup des Addons läuft gerade im Hintergrund und kann einige Minuten dauern."
+        return message(request, "Das Addon wurde hochgeladen." + appendix, "module_management")
     form = AddonForm()
     return render(request, "lac/generic_form.html", {"form": form, "heading": "Add-On hinzufügen", "hide_buttons_top": "True", "action": "Hochladen", "url": reverse("addons")})
 
