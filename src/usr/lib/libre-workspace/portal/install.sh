@@ -6,7 +6,6 @@ sudo chmod -R 777 /var/www/libre-workspace-static/
 
 # If the /etc/libre-workspace/portal/portal.conf file does not exist, then copy the example file
 if [ ! -f /etc/libre-workspace/portal/portal.conf ]; then
-    sudo mkdir -p /etc/libre-workspace/portal/
     sudo cp /etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
 fi
 
