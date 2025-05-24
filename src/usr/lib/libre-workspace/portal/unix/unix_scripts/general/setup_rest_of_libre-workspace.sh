@@ -98,6 +98,9 @@ sed -i "/EMAIL/d" /etc/libre-workspace/portal/portal.conf
 # Enable the unix service
 /usr/bin/systemctl enable libre-workspace-service.service
 
+# Create history folder:
+mkdir -p /var/lib/libre-workspace/portal/history
+
 rm /var/lib/libre-workspace/portal/installation_running
 
 # After everything is configured, we need to restart the whole server
