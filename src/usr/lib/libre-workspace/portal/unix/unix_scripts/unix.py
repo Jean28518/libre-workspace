@@ -736,6 +736,7 @@ def install_addon(path_to_file):
     # Ensure that the addon cache is cleared
     addon_config_cache.clear()
     update_static_module_icons()
+    time.sleep(0.5)  # Wait to ensure the icons are updated before returning
 
 
 def update_static_module_icons():
