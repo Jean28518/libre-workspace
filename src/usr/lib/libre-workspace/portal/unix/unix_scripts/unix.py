@@ -708,22 +708,40 @@ def install_addon(path_to_zip_file):
         os.system("rm -r /tmp/lw-addons/")
     os.system("mkdir -p /tmp/lw-addons/")
     os.system(f"unzip {path_to_zip_file} -d /tmp/lw-addons/")
-    addon_id = os.listdir("/tmp/lw-addons/")[0]
-    os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
-    os.system(f"mv /tmp/lw-addons/{addon_id} /usr/lib/libre-workspace/modules/")
-    os.system(f"rm {path_to_zip_file}")
-    os.system(f"rm -r /tmp/lw-addons/")
-    # Copy the image file which could have the ending .png .svg .jpg .webp to the static folder
-    for file in os.listdir(f"/usr/lib/libre-workspace/modules/{addon_id}"):
-        if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
-            os.system(f"cp /usr/lib/libre-workspace/modules/{addon_id}/{file} ../../lac/static/lac/icons/{file}")
-            # Also copy to /var/www/libre-workspace-static/lac/icons/ (that is the folder where the static files are served from)
-            os.system(f"cp /usr/lib/libre-workspace/modules/{addon_id}/{file} /var/www/libre-workspace-static/lac/icons/{file}")
-            os.system(f"chown www-data:www-data /var/www/libre-workspace-static/lac/icons/{file}")
-            os.system(f"chmod 644 /var/www/libre-workspace-static/lac/icons/{file}")
-    
+
+    # Check if a .deb file is inside the addon folder (recursive) we can do this with "find"
+    deb_files = os.popen(f"find /tmp/lw-addons/ -name '*.deb'").read().strip().split("\n")
+    if len(deb_files) > 0:
+        # Install the .deb file(s)
+        for deb_file in deb_files:
+            os.system(f"apt install {deb_file} -y")
+            # Remove the .deb file after installation
+            os.system(f"rm {deb_file}")
+    else: 
+        # Otherwise the old method (deprecated):
+        addon_id = os.listdir("/tmp/lw-addons/")[0]
+        os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
+        os.system(f"mv /tmp/lw-addons/{addon_id} /usr/lib/libre-workspace/modules/")
+        os.system(f"rm {path_to_zip_file}")
+        os.system(f"rm -r /tmp/lw-addons/")
+
     # Ensure that the addon cache is cleared
     addon_config_cache.clear()
+    update_static_module_icons()
+
+def update_static_module_icons():
+    """Updates the static icons of all addons in the static folder."""
+    addons = get_all_addon_modules()
+    for addon in addons:
+        addon_id = addon["id"]
+        for file in os.listdir(f"/usr/lib/libre-workspace/modules/{addon_id}"):
+            if file.endswith(".png") or file.endswith(".svg") or file.endswith(".jpg") or file.endswith(".webp"):
+                # Copy the image file to the static folder
+                os.system(f"cp /usr/lib/libre-workspace/modules/{addon_id}/{file} /usr/lib/libre-workspace/portal/lac/static/lac/icons/{addon_id}.{file.split('.')[-1]}")
+                # Also copy to /var/www/libre-workspace-static/lac/icons/ (that is the folder where the static files are served from)
+                os.system(f"cp /usr/lib/libre-workspace/modules/{addon_id}/{file} /var/www/libre-workspace-static/lac/icons/{addon_id}.{file.split('.')[-1]}")
+                os.system(f"chown www-data:www-data /var/www/libre-workspace-static/lac/icons/{addon_id}.{file.split('.')[-1]}")
+                os.system(f"chmod 644 /var/www/libre-workspace-static/lac/icons/{addon_id}.{file.split('.')[-1]}")
 
 
 def uninstall_addon(addon_id):
