@@ -702,14 +702,23 @@ def get_config_of_addon(addon):
     return config
 
 
-def install_addon(path_to_zip_file):
+def install_addon(path_to_file):
     # Remove the old folder of the addon if it exists
     if os.path.exists("/tmp/lw-addons/"):
         os.system("rm -r /tmp/lw-addons/")
     os.system("mkdir -p /tmp/lw-addons/")
-    os.system(f"unzip {path_to_zip_file} -d /tmp/lw-addons/")
 
-    # Check if a .deb file is inside the addon folder (recursive) we can do this with "find"
+    # if the file is a .zip file, unzip it to /tmp/lw-addons/
+    if path_to_file.endswith(".zip"):
+        os.system(f"unzip {path_to_file} -d /tmp/lw-addons/")
+    # Otherwise copy the file to /tmp/lw-addons/
+    elif path_to_file.endswith(".deb"):
+        os.system(f"cp {path_to_file} /tmp/lw-addons/")
+    else:
+        # If the file is not a .zip, .tar.gz, .tar.xz or .deb file, return an error
+        return "Error: File format not supported. Please use a .zip or .deb file."
+
+    # Check if .deb files are inside the addon folder (recursive) we can do this with "find"
     deb_files = os.popen(f"find /tmp/lw-addons/ -name '*.deb'").read().strip().split("\n")
     if len(deb_files) > 0:
         # Install the .deb file(s)
@@ -722,12 +731,13 @@ def install_addon(path_to_zip_file):
         addon_id = os.listdir("/tmp/lw-addons/")[0]
         os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
         os.system(f"mv /tmp/lw-addons/{addon_id} /usr/lib/libre-workspace/modules/")
-        os.system(f"rm {path_to_zip_file}")
-        os.system(f"rm -r /tmp/lw-addons/")
-
+    
+    os.system(f"rm {path_to_file}")
+    os.system(f"rm -r /tmp/lw-addons/")
     # Ensure that the addon cache is cleared
     addon_config_cache.clear()
     update_static_module_icons()
+
 
 def update_static_module_icons():
     """Updates the static icons of all addons in the static folder."""
@@ -749,8 +759,16 @@ def uninstall_addon(addon_id):
     Removes the folder of the addon. Don't uninstall the addon if it is currently installed into the server.
     """
     addon_information = get_config_of_addon(addon_id)
-    os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
-    os.system(f"rm ../../lac/static/lac/icons/{addon_id}.*")
+
+    # Check if the addon is installed as a .deb package via dpkg. It has to be named like "libre-workspace-module-<addon_id>"
+    if os.system(f"dpkg -l | grep libre-workspace-module-{addon_id}") == 0:
+        # If it is installed, remove it via apt
+        os.system(f"apt remove libre-workspace-module-{addon_id} -y")
+    else:
+        # Remove it the old way (deprecated):
+        os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
+        
+    os.system(f"rm /usr/lib/libre-workspace/portal/lac/static/lac/icons/{addon_id}.*")
     os.system(f"rm /var/www/libre-workspace-static/lac/icons/{addon_id}.*")
     # Remove the entry from the AppDashboardEntry table in the database
     DashboardEntry.objects.filter(title=addon_information["name"], is_system=True).delete()
