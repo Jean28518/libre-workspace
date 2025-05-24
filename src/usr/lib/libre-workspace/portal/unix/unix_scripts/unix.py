@@ -767,7 +767,7 @@ def uninstall_addon(addon_id):
     else:
         # Remove it the old way (deprecated):
         os.system(f"rm -r /usr/lib/libre-workspace/modules/{addon_id}")
-        
+
     os.system(f"rm /usr/lib/libre-workspace/portal/lac/static/lac/icons/{addon_id}.*")
     os.system(f"rm /var/www/libre-workspace-static/lac/icons/{addon_id}.*")
     # Remove the entry from the AppDashboardEntry table in the database

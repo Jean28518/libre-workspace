@@ -518,8 +518,8 @@ def add_addon(request):
         file = request.FILES["file"]
         # Move the file to /tmp folder
         # Check if the file is a zip file
-        if not file.name.endswith(".zip"):
-            return message(request, "Die Datei muss eine Zip-Datei sein.", "add_addon")
+        if not file.name.endswith(".zip") or not file.name.endswith(".deb"):
+            return message(request, "Die Datei muss eine .zip oder .deb Datei sein.", "add_addon")
         # Move the file to /tmp
         with open("/tmp/" + file.name, "wb+") as destination:
             for chunk in file.chunks():
