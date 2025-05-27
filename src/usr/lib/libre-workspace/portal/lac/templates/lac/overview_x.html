@@ -29,6 +29,9 @@
         {% for t_heading in overview.t_headings %}
         <th scope="col"><center>{{t_heading}} </center></th>
         {% endfor %}
+        {% if overview.info_url_name %}
+            <th scope="col"><center>Informationen</center></th>
+        {% endif %}
         {% if overview.edit_url_name %}
             <th scope="col"><center>Bearbeiten</center></th>
         {% endif %}
@@ -44,6 +47,13 @@
             {% for field in t_row.content %}
                     <td><center>{{field | safe}}</center></td>
             {% endfor %}
+            {% if t_row.info_url %}
+                <td>
+                    <center>
+                        <a href="{{t_row.info_url}}" title="Informationen" role="button" class="secondary outline"><span class="material-icons md-16">info</span></a>
+                    </center>
+                </td>
+            {% endif %}
             {% if t_row.edit_url %}
                 <td>
                     <center>

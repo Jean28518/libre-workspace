@@ -21,6 +21,8 @@ def process_overview_dict(overview : dict) -> dict:
             key = overview["t_keys"][j]
             row_content.append(_get_attr(element, key))
         row["content"] = row_content
+        if overview.get("info_url_name", None) is not None:
+            row["info_url"] = reverse(overview["info_url_name"], args=[_get_attr(element, overview["element_url_key"])])
         if overview.get("edit_url_name", None) is not None:
             row["edit_url"] = reverse(overview["edit_url_name"], args=[_get_attr(element, overview["element_url_key"])])
         if overview.get("delete_url_name", None) is not None:

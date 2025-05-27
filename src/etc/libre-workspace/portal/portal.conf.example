@@ -42,3 +42,5 @@ export HIDDEN_LDAP_USERS="dns-hostname"
 export IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS=""
 
 export NEXTCLOUD_INSTALLATION_DIRECTORY="/var/www/nextcloud/"
+
+export M23_API_KEY=""
