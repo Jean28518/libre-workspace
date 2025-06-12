@@ -112,7 +112,7 @@ fi
 #   The value of the user_id column of the entry associated with the user owning this permission.
 # - permission
 #   The permission being granted. This column can have one of three possible values: ADMINISTER, which grants the ability to administer the entire system (essentially a wildcard permission), CREATE_CONNECTION, which grants the ability to create connections, CREATE_CONNECTION_GROUP, which grants the ability to create connections groups, or CREATE_USER, which grants the ability to create users.
-if [ $ADMIN_STATUS = "admin" ] ; then
+if [ $ADMIN_STATUS = "1" ] ; then
     ENTITY_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT entity_id FROM guacamole_entity WHERE name='$USERNAME'" | tail -n 1)
     if mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT * FROM guacamole_system_permission WHERE entity_id=$ENTITY_ID AND permission='ADMINISTER'" | grep -q "ADMINISTER"; then
         echo "User $USERNAME is already an admin in the guacamole database"
@@ -163,6 +163,8 @@ else
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'password', '$PASSWORD')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'security', 'any')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'ignore-cert', 'true')"
+    # Set keyboard layout to de
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'server-layout', 'de-de-qwertz')"
     echo "Connection Cloud Desktop $USERNAME has been added to the guacamole database"
 fi
 
