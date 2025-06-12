@@ -17,6 +17,7 @@ Libre Workspace Documentation (for Administrators)
    modules/general_administration
    modules/libre-workspace-portal
    modules/nextcloud
+   modules/desktop
    modules/addons
 
 
