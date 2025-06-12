@@ -42,6 +42,9 @@ gsettings set org.cinnamon.desktop.notifications bottom-notifications true
 gsettings set org.cinnamon desktop-effects false
 gsettings set org.cinnamon desktop-effects-workspace false
 
+# Disable automatic lock
+gsettings set org.cinnamon.desktop.screensaver lock-enabled false
+
 # Disable Shadows under windows
 if ! grep -q "export MUFFIN_NO_SHADOWS=1;" $HOME/.profile; then
     echo "export MUFFIN_NO_SHADOWS=1;" >> $HOME/.profile
