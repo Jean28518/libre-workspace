@@ -6,5 +6,5 @@ Architecture: all
 Homepage: {{addon.project_homepage}}
 Section: admin
 Installed-Size: 0
-Description: Libre Workspace Module {{addon.id}}
+Description: Libre Workspace Module {{addon.name}}
 

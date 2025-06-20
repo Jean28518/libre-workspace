@@ -612,22 +612,21 @@ def remove_module(module_name):
     """
     module_path = get_module_path(module_name)
 
-    if "addon" in module_path:
-        # Remove the entry from the /etc/hosts file
-        addon = get_config_of_addon(module_name)
-        urls = addon.get("url", "").split(",")
-        domain = get_env_sh_variables().get("DOMAIN", "")
-        if domain == "":
-            return "No domain found in the libre-workspace.env file. Please check the /etc/libre-workspace/libre-workspace.env file."
-        for url in urls:
-            ip = get_env_sh_variables().get("IP", "")   
-            os.system(f"sed -i '/{url}.{domain}/d' /etc/hosts")
+    # Remove the entry from the /etc/hosts file
+    addon = get_config_of_addon(module_name)
+    urls = addon.get("url", "").split(",")
+    domain = get_env_sh_variables().get("DOMAIN", "")
+    if domain == "":
+        return "No domain found in the libre-workspace.env file. Please check the /etc/libre-workspace/libre-workspace.env file."
+    for url in urls:
+        ip = get_env_sh_variables().get("IP", "")   
+        os.system(f"sed -i '/{url}.{domain}/d' /etc/hosts")
 
-            # Remove the entry from the DNS server
-            if settings.AUTH_LDAP_ENABLED:
-                admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
-                # Run this command: samba-tool dns delete la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
-                os.system(f"samba-tool dns delete la.{domain} {domain} {module_name} A {ip} -U administrator%{admin_password}")
+        # Remove the entry from the DNS server
+        if settings.AUTH_LDAP_ENABLED:
+            admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+            # Run this command: samba-tool dns delete la.$DOMAIN $DOMAIN matrix A $IP -U administrator%$ADMIN_PASSWORD
+            os.system(f"samba-tool dns delete la.{domain} {domain} {module_name} A {ip} -U administrator%{admin_password}")
     
     # Check if path extists: module_name/remove_module_name.sh
     if os.path.isfile(f"{module_path}/remove_{module_name}.sh"):

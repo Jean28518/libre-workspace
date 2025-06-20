@@ -108,6 +108,7 @@ TEMPLATES = [
             BASE_DIR / "lac/templates",
             BASE_DIR / "welcome/templates",
             BASE_DIR / "app_dashboard/templates",
+            BASE_DIR / "addon_center/templates",
         ],
         'APP_DIRS': True,
         'OPTIONS': {

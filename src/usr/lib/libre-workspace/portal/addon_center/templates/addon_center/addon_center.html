@@ -1,0 +1,131 @@
+{% extends "lac/base.html" %}
+{% block content %}
+
+<h2>Addon Center</h2>
+
+<p>
+    Hier können Sie Addons für Libre Workspace installieren, die Ihnen zusätzliche Module bieten.
+    <br>
+    <strong>Bitte beachten Sie, dass diese Addons von der Community bereitgestellt werden und daher nicht allgemein offiziell unterstützt werden.</strong>
+    <br>
+    <p>Benötigen Sie offizielle Unterstützung, wenden Sie sich gerne an den <a href="https://www.linuxguides.de/linux-support/" target="_blank" rel="noopener noreferrer">Support</a>.</p>
+</p>
+
+
+
+{% if message and message != "" %}
+<div class="grid">
+    <div style="padding-bottom: 1rem;">
+        <a role="button" class="contrast" style="display: block; opacity: 1;
+            {% if "Error" in message or "Fehler" in message %}
+             background-color: orange; border-color: orange;
+            {% endif %}
+        
+        "><strong>{{ message | safe }}</strong></a>
+    </div>
+</div>
+{% endif %}
+
+<hr>
+
+<table>
+    <thead>
+        <tr>
+        <th scope="col">Modul</th>
+        <th scope="col"><center>Beschreibung</center></th>
+        <th scope="col"><center>Maintainer</center></th>
+        <th scope="col"><center>Webseite</center></th>
+        <th scope="col"><center>Installieren</center></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for addon in addons %}
+        <tr>
+            <td>
+                {% if addon.icon_url %}
+                {% comment %} <img src="{{ addon.homepage }}/favicon.ico" alt="{{ addon.name }} Bild" style="height: 0.2rem;"> {% endcomment %}
+                <img src="{{ addon.icon_url }}" alt="{{ addon.name }}" style="height: 1.5rem; width: 1.5rem; margin-right: 0.5rem;">                
+                {% endif %}
+                <span>{{ addon.name }}</span>
+            </td>
+            <td><center>{{ addon.description }}</center></td>
+            <td><center>{{ addon.maintainer }}</center></td>
+            <td><center>
+                {% if addon.homepage %}
+                    <a href="{{ addon.homepage }}" target="_blank" rel="noopener noreferrer">{{ addon.homepage }}</a>
+                {% else %}
+                    Keine Webseite
+                {% endif %}
+            </center></td>
+            {% if addon.installed %}
+            <td>
+                <center>
+                    {% comment %} <a href="{% url 'addon_center:uninstall_addon' addon_id=addon.id %}" title="Deinstallieren" role="button" class="secondary outline">Deinstallieren</a> {% endcomment %}
+         
+                    <button data-target="uninstall-{{addon.id}}" onClick="toggleModal(event)" class="danger">Deinstallieren</button>
+                </center>
+
+                <dialog id="uninstall-{{addon.id}}">
+                    <article>
+                        <a href="#close"
+                        aria-label="Close"
+                        class="close"
+                        data-target="uninstall-{{addon.id}}"
+                        onClick="toggleModal(event)">
+                        </a>
+                        <h3>{{ addon.name }} wirklich deinstallieren?</h3>
+                        <strong>DIES LÖSCHT EBENFALLS ALLE (BENUTZER) DATEN UND EINSTELLUNGEN DIESES ADDONS!</strong>
+                        <p>
+                            Dieser Vorgang ist nicht mehr umkehrbar!
+                        </p>
+                        <footer>
+                        <a href="#cancel"
+                            role="button"
+                            class="secondary"
+                            data-target="uninstall-{{addon.id}}"
+                            onClick="toggleModal(event)">
+                            Abbrechen
+                        </a>
+                        <a href="{% url 'addon_center_uninstall_addon' addon_id=addon.id %}" role="button" class="contrast">DEINSTALLIEREN</a>
+                        </footer>
+                    </article>
+                </dialog>
+            </td>
+            {% else %}
+            <td>
+                <center>
+                    <a href="{% url 'addon_center_install_addon' addon_id=addon.id %}" title="Installieren" role="button" class="primary">Installieren</a>
+                </center>
+            </td>
+            {% endif %}
+
+
+        </tr>
+
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% if overview.hint %}
+      <center>{{ overview.hint | safe }}</center>
+  {% endif %}
+
+
+<div class="grid">
+    <a class="secondary" href="{% url "addons" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-48">archive</span> 
+            <br> 
+            Lokale Addon Verwaltung
+        </article>
+    </a>
+    <a class="secondary" href="{% url "addon_creator" %}">
+        <article style="text-align: center;">
+            <span class="material-icons md-48">create</span> 
+            <br> 
+            Addon Erstellen
+        </article>
+    </a>
+</div>
+
+{% endblock %}

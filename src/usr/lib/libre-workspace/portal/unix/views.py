@@ -499,7 +499,7 @@ def test_mail(request):
 def addons(request):
     addon_creator_url = reverse("addon_creator")
     overview = process_overview_dict({
-        "heading": "Addon Verwaltung",
+        "heading": "Lokale Addon Verwaltung",
         "element_name": "Addon",
         "element_url_key": "id",
         "elements": unix.get_all_addon_modules(),

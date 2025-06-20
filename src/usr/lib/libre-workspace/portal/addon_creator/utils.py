@@ -42,6 +42,14 @@ def create_addon(cleaned_form):
     # Write the docker-compose.yml content to the file
     with open(f"/tmp/{addon['id']}/docker-compose.yml", "w") as f:
         f.write(addon["docker_compose"])
+
+    # Write the Description into the control file
+    description_lines = addon["description"].split("\n")
+    # Replace Description: 
+    os.system(f"sed -i 's/Description: .*/Description: {description_lines[0]}/' /tmp/{addon['id']}/control")
+    # Add the rest of the description
+    for line in description_lines[1:]:
+        os.system(f"echo ' {line}' >> /tmp/{addon['id']}/control")
     
     # Handle the logo
     if cleaned_form['addon_logo'] is not None:
