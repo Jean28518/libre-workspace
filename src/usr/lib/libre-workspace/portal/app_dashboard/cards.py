@@ -50,6 +50,15 @@ def ensure_all_cards_exist_in_database():
             card_dat["url"] = reverse("dashboard")
             # Set the icon path to the default icon for the management card
             card_dat["icon_path"] = "/static/lac/icons/libre-workspace.webp"
+            # Make sure to save the "Verwaltung" card in the database and its changes
+            card = DashboardEntry.objects.filter(link=card_dat["url"], is_system=True).first()
+            if card:
+                # If the card already exists, we update it
+                card.title = card_dat["title"]
+                card.description = card_dat["description"]
+                card.icon_url = card_dat["icon_path"]
+                card.order = card_dat["order"]
+                card.save()
             found_in_caddyfile = True
         else:
             for line in caddyfile_lines:
