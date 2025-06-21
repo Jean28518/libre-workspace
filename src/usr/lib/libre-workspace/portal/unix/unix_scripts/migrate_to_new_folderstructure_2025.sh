@@ -58,6 +58,8 @@ destination_array=(
     "/var/www/libre-workspace-static/"
 )
 
+mkdir -p /usr/lib/libre-workspace/modules/
+
 # Loop through the arrays and copy files/directories even if they already exist (because e.g. db.sqlite3 is created by the portal directly after the installation because of some migrations)
 for i in "${!source_array[@]}"; do
     source="${source_array[$i]}"
@@ -67,7 +69,7 @@ for i in "${!source_array[@]}"; do
     mkdir -p "$(dirname "$destination")"
 
     # Handle globbing for sources with wildcards
-    cp -ra "$source" "$destination"
+    cp -ra $source $destination
 done
 
 # Change the "root * /var/www/linux-arbeitsplatz-static" to "root * /var/www/libre-workspace-static" in the Caddyfile
@@ -81,7 +83,5 @@ echo "Migration to new folder structure completed successfully."
 systemctl start libre-workspace-portal.service
 systemctl start libre-workspace-service.service
 systemctl restart caddy.service
-
-apt remove linux-arbeitsplatz -y
 
 # We don't start the old services anymore, they are deprecated :)

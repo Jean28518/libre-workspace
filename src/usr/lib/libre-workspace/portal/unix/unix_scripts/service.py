@@ -56,6 +56,15 @@ def get_lw_admin_token():
     else:
         # If the file does not exist, return empty string
         return ""
+    
+
+def ensure_linux_arbeitsplatz_package_is_removed():
+    # Check if the linux-arbeitsplatz package is installed
+    if os.system("dpkg -l | grep linux-arbeitsplatz") == 0:
+        # If it is installed, remove it
+        os.system("apt remove -y linux-arbeitsplatz")
+        # Remove the package from the list of installed packages
+        os.system("apt autoremove -y")
 
 
 # In here the time for a last message is stored in seconds
@@ -82,6 +91,10 @@ while True:
     ##################################################################################################################
     ## RUN EVERY MINUTE ##############################################################################################
     ##################################################################################################################
+
+    ## CHECK IF LINUX ARBEITSPLATZ PACKAGE IS INSTALLED ###############################################################
+    ## TODO: REMOVE IT IN 2026
+    ensure_linux_arbeitsplatz_package_is_removed()
 
     # Read config file
     unix_config.read_config_file()
