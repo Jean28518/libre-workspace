@@ -74,10 +74,10 @@ You can download and install the .deb file with the following commands:
 
 .. code-block:: bash
 
-    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/libre-workspace.deb
-    sudo apt install ./libre-workspace.deb
+    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/libre-workspace-portal.deb
+    sudo apt install ./libre-workspace-portal.deb
     # This message can be ignored:
-    # N: Download is performed unsandboxed as root as file '/root/libre-workspace.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
+    # N: Download is performed unsandboxed as root as file '/root/libre-workspace-portal.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
     sudo systemctl start libre-workspace-portal
     # If you don't run the welcome assistant:
     sudo systemctl enable libre-workspace-service --now

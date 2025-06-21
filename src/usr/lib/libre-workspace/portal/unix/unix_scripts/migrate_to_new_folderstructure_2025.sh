@@ -55,7 +55,7 @@ destination_array=(
     "/var/lib/libre-workspace/portal/app_dashboard_settings.json"
 )
 
-# Loop through the arrays and copy files/directories if they don't already exist at the destination
+# Loop through the arrays and copy files/directories even if they already exist (because e.g. db.sqlite3 is created by the portal directly after the installation because of some migrations)
 for i in "${!source_array[@]}"; do
     source="${source_array[$i]}"
     destination="${destination_array[$i]}"
@@ -63,22 +63,23 @@ for i in "${!source_array[@]}"; do
     # Create destination directory if it doesn't exist
     mkdir -p "$(dirname "$destination")"
 
-    # Check if the source exists
-    if [ -e $source ] || [ -L $source ]; then
-        # Copy the source to the destination if it doesn't already exist
-        if [ ! -e "$destination" ]; then
-            # Use cp -r for directories, cp for files
-            if [ -d $source ]; then
-                cp -ra "$source" "$destination"
+    # Handle globbing for sources with wildcards
+    if [[ "$source" == *"*"* ]]; then
+        for file in $source; do
+            if [ -e "$file" ] || [ -L "$file" ]; then
+                cp -a "$file" "$destination"
+                echo "Copied $file to $destination"
             else
-                cp -a "$source" "$destination"
+                echo "Source $file does not exist, skipping"
             fi
+        done
+    else
+        if [ -e "$source" ] || [ -L "$source" ]; then
+            cp -a "$source" "$destination"
             echo "Copied $source to $destination"
         else
-            echo "Destination $destination already exists, skipping $source"
+            echo "Source $source does not exist, skipping"
         fi
-    else
-        echo "Source $source does not exist, skipping"
     fi
 done
 

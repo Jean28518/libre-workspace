@@ -14,6 +14,6 @@ chmod 755 deb/DEBIAN
 chmod 755 deb/DEBIAN/postinst
 
 dpkg-deb --build -Zxz --root-owner-group deb 
-mv deb.deb libre-workspace.deb
+mv deb.deb libre-workspace-portal.deb
 
 echo "!!!Ensure that you build the deb package from a fresh cloned repository! (Otherwise some control files might disturb linux-arbeitplatz later)!!!"
