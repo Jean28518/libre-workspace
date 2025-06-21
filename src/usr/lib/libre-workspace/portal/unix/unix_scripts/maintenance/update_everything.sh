@@ -4,15 +4,6 @@ echo "Hint: This script runs every day wether some update procedure is enabled o
 
 . /etc/libre-workspace/libre-workspace.conf
 
-# Update the libre workspace first, because it may contain updated update scripts for the other services
-if [ "$LIBRE_WORKSPACE_AUTOMATIC_UPDATES" == "True" ]; then
-    echo "Starting libre workspace update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    # Get the update log also to our log file
-    cd /usr/lib/libre-workspace/portal
-    bash ./update_libre_workspace.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    cd /usr/lib/libre-workspace/modules/unix/unix_scripts/maintenance
-fi
-
 if [ "$SYSTEM_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting system update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
     bash do_update.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1

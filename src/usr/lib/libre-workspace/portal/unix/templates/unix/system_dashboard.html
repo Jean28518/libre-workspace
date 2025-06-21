@@ -7,10 +7,8 @@
         </tr>
         <tr>
             <th>Libre-Workspace Version</th>
-            <td>{{ system_information.lw_version }}
-            {% if system_information.new_libre_workspace_version %}
-                - <a href="{% url "update_libre_workspace" %}" class="secondary">Auf Libre Workspace {{system_information.new_libre_workspace_version}} aktualisieren</a>
-            {% endif %}
+            {% comment %} TODO: Remove the Managed by version in 2026 {% endcomment %}
+            <td>{{ system_information.lw_version }} (Managed by apt repository since 0.10.0)
             </td>
         </tr>
         <tr>

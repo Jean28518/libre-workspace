@@ -227,9 +227,6 @@ def get_system_information():
     rv["uptime_in_seconds"] = int(subprocess.getoutput("cat /proc/uptime").split(" ")[0].split(".")[0])
     rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
 
-    rv["new_libre_workspace_version"] = is_libre_workspace_update_available()
-
-
     rv["update_information"] = f"{get_upgradable_packages()} Pakete können aktualisiert werden." if get_upgradable_packages() > 0 else "Das System ist auf dem neuesten Stand."
     if os.path.exists("/var/lib/libre-workspace/portal/history/update.log") and not is_update_currently_running():
         rv["last_update_log"] = open("/var/lib/libre-workspace/portal/history/update.log").read().replace("\n", " <br> ")
@@ -502,14 +499,10 @@ def update_module(module_id):
     """
     software_modules = get_software_modules()
 
-    if module_id in ["system", "xfce"]:
+    if module_id in ["system", "xfce", "samba_dc"]:
         update_system()
         return
     
-    if module_id == "libre_workspace":
-        update_libre_workspace()
-        return
-
     for module in software_modules:
         if module["id"] == module_id:
             if module["installed"]:
@@ -547,7 +540,10 @@ def get_update_information():
     update_information = {}
     update_information["software_modules"] = get_software_modules()
     update_information["software_modules"].insert(0, {"id": "system", "name": "System", "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "False") == "True"})
-    update_information["software_modules"].insert(0, {"id": "libre_workspace", "name": "Libre Workspace", "installed": True, "automaticUpdates": get_value("LIBRE_WORKSPACE_AUTOMATIC_UPDATES", "False") == "True"})
+
+    # Delete the software_modules xfce and samba_dc, because they are handled by system
+    update_information["software_modules"] = [module for module in update_information["software_modules"] if module["id"] not in ["xfce", "samba_dc"]]
+
     update_information["update_time"] = get_value("UPDATE_TIME", "02:00")
     update_information["update_history"] = get_update_history()
     print(update_information)
@@ -1002,55 +998,6 @@ def is_unix_service_running():
 
 def is_samba_ad_dc_running():
     return is_systemd_service_running("samba-ad-dc")
-
-
-def update_libre_workspace():
-    """Updates the Libre Workspace to the latest version"""
-    # If /usr/lib/libre-workspace/portal/update_libre_workspace.sh exists
-    if not os.path.isfile("/usr/lib/libre-workspace/portal/update_libre_workspace.sh"):
-        return "Error: update_libre_workspace.sh not found."
-    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/portal/update_libre_workspace.sh"], cwd="/usr/lib/libre-workspace/portal/")
-
-
-# Cache the version of the new Libre Workspace version for 1 hour
-cached_libre_workspace_update_available = None
-cached_libre_workspace_update_available_time = None
-def is_libre_workspace_update_available():
-    """Returns null or the version of the new Libre Workspace version"""
-
-    global cached_libre_workspace_update_available
-    global cached_libre_workspace_update_available_time
-
-    if cached_libre_workspace_update_available_time and cached_libre_workspace_update_available_time + 3600 > time.time():
-        return cached_libre_workspace_update_available
-
-    # Get github releases
-    response = requests.get("https://api.github.com/repos/jean28518/libre-workspace/releases")
-
-    # If we can't reach the github api, return None
-    if response.status_code != 200:
-        cached_libre_workspace_update_available = None
-        cached_libre_workspace_update_available_time = time.time()
-        return None
-    
-    releases = response.json()
-    # Get the latest release
-    print(releases)
-    latest_release = releases[0]
-    # Get the version string
-    latest_version = latest_release["tag_name"]
-    # Remove the v from the version string
-    if latest_version[0] == "v":
-        latest_version = latest_version[1:]
-    # Get the current version
-    current_version = get_libre_workspace_version()
-    # Compare the versions
-    if latest_version != current_version:
-        cached_libre_workspace_update_available = latest_version
-    else:
-        cached_libre_workspace_update_available = None
-    cached_libre_workspace_update_available_time = time.time()
-    return cached_libre_workspace_update_available
 
 
 # We implement no automatic delete function for the groupfolders,

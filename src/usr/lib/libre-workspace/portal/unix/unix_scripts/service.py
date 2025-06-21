@@ -58,6 +58,7 @@ def get_lw_admin_token():
         return ""
     
 
+## TODO: REMOVE IT IN 2026
 def ensure_linux_arbeitsplatz_package_is_removed():
     # Check if the linux-arbeitsplatz package is installed
     if os.system("dpkg -l | grep linux-arbeitsplatz") == 0:
