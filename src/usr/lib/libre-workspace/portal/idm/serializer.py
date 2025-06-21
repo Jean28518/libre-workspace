@@ -9,7 +9,7 @@ class UserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=100, required=False, read_only=True)
     first_name = serializers.CharField(max_length=100, required=False, allow_blank=True)
     last_name = serializers.CharField(max_length=100, required=False, allow_blank=True)
-    displayName = serializers.CharField( max_length=100, required=False, allow_blank=True)
+    display_name = serializers.CharField( max_length=100, required=False, allow_blank=True)
     mail = serializers.EmailField(max_length=100, required=False, allow_blank=True)
     admin = serializers.BooleanField(required=False, default=False)
     enabled = serializers.BooleanField(required=False, default=True)
@@ -19,7 +19,7 @@ class UserSerializer(serializers.Serializer):
         print(instance)
         representation = super().to_representation(instance)
         representation['username'] = instance.get('cn', '')
-        representation['displayName'] = instance.get('displayName', '')
+        representation['display_name'] = instance.get('displayName', '')
         return representation
     
 
@@ -28,12 +28,14 @@ class GroupSerializer(serializers.Serializer):
     """
     Serializer for group data.
     """
-    cn = serializers.CharField(max_length=100, required=True)
+    name = serializers.CharField(max_length=100, required=False, allow_blank=True)
     description = serializers.CharField(max_length=100, required=False, allow_blank=True)
-    defaultGroup = serializers.BooleanField(required=False, default=False)
-    nextcloud_groupfolder = serializers.BooleanField(required=False, default=False)
+    default = serializers.BooleanField(required=False, default=False)
+   
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        print(instance)
+        representation['name'] = instance.get('cn', '')
+        representation['default'] = instance.get('defaultGroup', False)
+        return representation
 
-    def validate_cn(self, value):
-        if not value.isalnum():
-            raise serializers.ValidationError("Group name must be alphanumeric.")
-        return value

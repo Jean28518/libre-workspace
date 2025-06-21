@@ -664,38 +664,6 @@ def api_key_details(request, id):
 
 
 
-
-# class AddonViewSet(viewsets.ViewSet):
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def list(self, request):
-#         all_available_addons = get_all_available_addons()
-#         serializer = AddonSerializer(all_available_addons, many=True)
-#         return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
-
-#     def retrieve(self, request, pk=None):
-#         all_available_addons = get_all_available_addons()
-#         addon = next((addon for addon in all_available_addons if addon["id"] == pk), None)
-#         if not addon:
-#             return HttpResponse(status=404)
-#         serializer = AddonSerializer(addon)
-#         return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
-    
-#     @action(detail=True, methods=['post'], url_name='install')
-#     def install(self, request, pk=None):
-#         msg = install_addon(pk)
-#         if msg:
-#             return HttpResponse(msg, status=400)
-#         return HttpResponse(f"Addon {pk} is installing. This process takes multiple minutes...", status=202)
-    
-#     @action(detail=True, methods=['post'], url_name='uninstall')
-#     def uninstall(self, request, pk=None):
-#         msg = uninstall_addon(pk)
-#         if msg:
-#             return HttpResponse(msg, status=400)
-#         return HttpResponse(f"Addon {pk} uninstalled successfully.", status=200)
-
-
 class UserViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -709,18 +677,18 @@ class UserViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         """
-        Returns the user information for a specific user identified by `pk`.
+        Returns the user information for a specific user identified by `user`.
         """
-        user = get_user_information_of_cn(pk)
-        if not user:
+        user_info = get_user_information_of_cn(pk)
+        if not user_info:
             return HttpResponse(status=404)
-        serializer = UserSerializer(user)
+        serializer = UserSerializer(user_info)
         return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
     
     @action(detail=True, methods=['post'], url_name='enable')
     def enable(self, request, pk=None):
         """
-        Enables a user identified by `pk`.
+        Enables a user identified by `user`.
         """
         msg = ldap_enable_user(pk)
         if msg:
@@ -768,8 +736,7 @@ class UserViewSet(viewsets.ViewSet):
         else:
             return HttpResponse("Password too short.", status=400)
         
-    @action(detail=True, methods=['delete'], url_name='delete')
-    def delete(self, request, pk=None):
+    def destroy(self, request, pk=None):
         """
         Deletes a user identified by its username.
         """
@@ -782,7 +749,7 @@ class UserViewSet(viewsets.ViewSet):
     
     def update(self, request, pk=None):
         """
-        Updates the user information for a specific user identified by `pk`.
+        Updates the user information for a specific user identified by `user`.
 
         ---
         Data fields:
@@ -796,7 +763,7 @@ class UserViewSet(viewsets.ViewSet):
         """
         
         user_information = request.data
-        user_information["username"] = pk  # Ensure the username is set to the pk
+        user_information["username"] = pk  # Ensure the username is set to the user
         user_information["displayName"] = user_information.get("display_name", "")
            
         msg = ldap_update_user(pk, user_information)
@@ -826,3 +793,74 @@ class UserViewSet(viewsets.ViewSet):
         unix.desktop_add_user(username, "", user_information.get("admin", False))
         return HttpResponse(f"User {username} has been successfully created.", status=201)
         
+
+
+class GroupViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        """
+        Returns a list of all groups.
+        """
+        groups = ldap_get_all_groups()
+        serializer = GroupSerializer(groups, many=True)
+        return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+
+    def retrieve(self, request, pk=None):
+        """
+        Returns the group information for a specific group identified by `group`.
+        """
+        group_info = ldap_get_group_information_of_cn(pk)
+        if not group_info:
+            return HttpResponse(status=404)
+        serializer = GroupSerializer(group_info)
+        return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+    
+    def create(self, request):
+        """
+        Creates a new group with the information provided in the request body.
+        ---
+        Data fields:
+        - name: The common name for the new group.
+        - description: A description of the group.
+        - default: Boolean indicating if this group should be a default group.
+        """
+        group_information = request.data
+
+        group_information["cn"] = group_information.get("name", "")
+        group_information["defaultGroup"] = group_information.get("default", False)
+
+        msg = ldap_create_group(group_information)
+        if msg:
+            return HttpResponse(msg, status=400)
+
+        return HttpResponse(f"Group {group_information['cn']} has been successfully created.", status=201)
+    
+
+    def update(self, request, pk=None):
+        """
+        Updates the group information for a specific group identified by `group`.
+
+        ---
+        Data fields:
+        - name: The common name for the group.
+        - description: A description of the group.
+        - default: Boolean indicating if this group should be a default group.
+        """
+        group_information = request.data
+        group_information["cn"] = pk
+        group_information["defaultGroup"] = group_information.get("default", False)
+        msg = ldap_update_group(pk, group_information)
+        if msg:
+            return HttpResponse(msg, status=400)
+       
+        return HttpResponse(f"Group {pk} has been successfully updated.", status=200)
+    
+    def destroy(self, request, pk=None):
+        """
+        Deletes a group identified by its common name `group`.
+        """
+        msg = ldap_delete_group(pk)
+        if msg:
+            return HttpResponse("Failed to delete group. " + msg, status=500)
+        return HttpResponse(f"Group {pk} has been successfully deleted.", status=200)
