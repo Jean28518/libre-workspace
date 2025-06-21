@@ -4,6 +4,9 @@
 sudo mkdir -p /var/www/libre-workspace-static/
 sudo chmod -R 777 /var/www/libre-workspace-static/
 
+# Execute the migration script to migrate the old folder structure to the new one
+sudo bash /usr/lib/libre-workspace/portal/unix/unix_scripts/migrate_to_new_folderstructure_2025.sh
+
 # If the /etc/libre-workspace/portal/portal.conf file does not exist, then copy the example file
 if [ ! -f /etc/libre-workspace/portal/portal.conf ]; then
     sudo cp /etc/libre-workspace/portal/portal.conf.example /etc/libre-workspace/portal/portal.conf
