@@ -74,6 +74,10 @@ done
 
 # Change the "root * /var/www/linux-arbeitsplatz-static" to "root * /var/www/libre-workspace-static" in the Caddyfile
 sed -i 's|root \* /var/www/linux-arbeitsplatz-static|root \* /var/www/libre-workspace-static|g' /etc/caddy/Caddyfile
+chown -R www-data:www-data /var/www/libre-workspace-static/
+# Change the "root * /usr/share/linux-arbeitsplatz/media/" to "root * /var/lib/libre-workspace/portal/media" in the Caddyfile
+sed -i 's|root \* /usr/share/linux-arbeitsplatz/media/|root \* /var/lib/libre-workspace/portal/media|g' /etc/caddy/Caddyfile
+chown -R www-data:www-data /var/lib/libre-workspace/portal/media/
 
 # Create a file to indicate that the migration has been performed
 touch /var/lib/libre-workspace/.migrated_to_new_folderstructure_2025
