@@ -70,6 +70,9 @@ for i in "${!source_array[@]}"; do
     cp -ra "$source" "$destination"
 done
 
+# Change the "root * /var/www/linux-arbeitsplatz-static" to "root * /var/www/libre-workspace-static" in the Caddyfile
+sed -i 's|root \* /var/www/linux-arbeitsplatz-static|root \* /var/www/libre-workspace-static|g' /etc/caddy/Caddyfile
+
 # Create a file to indicate that the migration has been performed
 touch /var/lib/libre-workspace/.migrated_to_new_folderstructure_2025
 echo "Migration to new folder structure completed successfully."
@@ -77,4 +80,8 @@ echo "Migration to new folder structure completed successfully."
 # Start libre-workspace services
 systemctl start libre-workspace-portal.service
 systemctl start libre-workspace-service.service
+systemctl restart caddy.service
+
+apt remove linux-arbeitsplatz -y
+
 # We don't start the old services anymore, they are deprecated :)

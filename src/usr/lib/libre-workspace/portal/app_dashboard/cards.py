@@ -48,6 +48,8 @@ def ensure_all_cards_exist_in_database():
         found_in_caddyfile = False
         if card_dat["title"] == "Verwaltung":
             card_dat["url"] = reverse("dashboard")
+            # Set the icon path to the default icon for the management card
+            card_dat["icon_path"] = "/static/lac/icons/libre-workspace.webp"
             found_in_caddyfile = True
         else:
             for line in caddyfile_lines:
