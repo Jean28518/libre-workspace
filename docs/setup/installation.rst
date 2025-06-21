@@ -73,9 +73,15 @@ Installation on an existing Debian or Ubuntu system
 You can download and install the .deb file with the following commands:
 
 .. code-block:: bash
+    
+    # Setup Repository
+    sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+    curl -1sLf 'https://repo.libre-workspace.org/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/libre-workspace-archive-keyring.gpg
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/libre-workspace-archive-keyring.gpg] https://repo.libre-workspace.org stable main" | sudo tee /etc/apt/sources.list.d/libre-workspace-stable.list > /dev/null
+    sudo apt update
 
-    wget https://github.com/Jean28518/libre-workspace/releases/latest/download/libre-workspace-portal.deb
-    sudo apt install ./libre-workspace-portal.deb
+    # Install Libre Workspace Portal
+    sudo apt install libre-workspace-portal
     # This message can be ignored:
     # N: Download is performed unsandboxed as root as file '/root/libre-workspace-portal.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
     sudo systemctl start libre-workspace-portal

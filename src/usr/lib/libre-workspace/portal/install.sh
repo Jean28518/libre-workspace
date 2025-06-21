@@ -76,3 +76,9 @@ http://localhost {
 systemctl restart caddy
 
 fi
+
+
+# Setup apt repository if not already done
+curl -1sLf 'https://repo.libre-workspace.org/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/libre-workspace-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/libre-workspace-archive-keyring.gpg] https://repo.libre-workspace.org stable main" | sudo tee /etc/apt/sources.list.d/libre-workspace-stable.list > /dev/null
+sudo apt update
