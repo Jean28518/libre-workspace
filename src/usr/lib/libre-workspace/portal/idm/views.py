@@ -6,10 +6,9 @@ from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
 
-import idm.idm
-from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm, TOTPChallengeForm
+from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm, TOTPChallengeForm, ApiKeyForm
 from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
-from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct
+from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct, generate_random_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
@@ -26,6 +25,7 @@ import lac.templates
 import random
 import datetime
 from .oidc_provider_settings import add_oidc_provider_client
+from .models import ApiKey
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -577,3 +577,78 @@ def delete_oidc_client(request, id):
     client = Client.objects.get(id=id)
     client.delete()
     return redirect(oidc_client_overview)
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def api_key_overview(request):
+    api_keys = ApiKey.objects.filter(user=request.user).order_by("-created_at")
+    overview_dict = templates.process_overview_dict({
+        "heading": "API Keys",
+        "element_name": "API Key",
+        "element_url_key": "id",
+        "elements": api_keys,
+        "t_headings": ["Name", "Created At", "Last Used At", "Expiration Date"],
+        "t_keys": ["name", "created_at", "last_used_at", "expiration_date"],
+        "add_url_name": "create_api_key",
+        "edit_url_name": "edit_api_key",
+        "delete_url_name": "delete_api_key",
+        "info_url_name": "api_key_details",
+        "hint": "You can view all api endpoints <a href='/api/schema/swagger-ui/' target='_blank'>here</a>.",
+    })
+    return render(request, "lac/overview_x.html", {"overview": overview_dict})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def create_api_key(request):
+    form = ApiKeyForm()
+    if request.method == 'POST':
+        form = ApiKeyForm(request.POST)
+        if form.is_valid():
+            api_key = ApiKey()
+            api_key.user = request.user
+            api_key.name = form.cleaned_data["name"]
+            api_key.key = generate_random_password(length=64, alphanumeric_only=True)  # Generate a random key
+            api_key.expiration_date = form.cleaned_data["expiration_date"]
+            api_key.save()
+            return redirect(api_key_overview)
+    form.fields["expiration_date"].initial = datetime.datetime.now() + datetime.timedelta(days=365)  # Default to 1 year
+    return render(request, "lac/create_x.html", {"form": form, "url": reverse("api_key_overview"), "hide_buttons_top": True})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def edit_api_key(request, id):
+    # Check if the user is the owner of the API key
+    if not ApiKey.objects.filter(id=id, user=request.user).exists():
+        return lac.templates.message(request, "Sie sind nicht berechtigt, diesen API-Schlüssel zu bearbeiten!", "api_key_overview")
+    api_key = ApiKey.objects.get(id=id)
+    form = ApiKeyForm(initial={
+        "name": api_key.name,
+        "expiration_date": api_key.expiration_date,
+    })
+    if request.method == 'POST':
+        form = ApiKeyForm(request.POST)
+        if form.is_valid():
+            api_key.name = form.cleaned_data["name"]
+            api_key.expiration_date = form.cleaned_data["expiration_date"]
+            api_key.save()
+            return redirect(api_key_overview)
+    return render(request, "lac/edit_x.html", {"form": form, "id": id, "url": reverse("api_key_overview")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def delete_api_key(request, id):
+    # Check if the user is the owner of the API key
+    if not ApiKey.objects.filter(id=id, user=request.user).exists():
+        return lac.templates.message(request, "Sie sind nicht berechtigt, diesen API-Schlüssel zu löschen!", "api_key_overview")
+    api_key = ApiKey.objects.get(id=id)
+    api_key.delete()
+    return redirect(api_key_overview)
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def api_key_details(request, id):
+    # Check if the user is the owner of the API key
+    if not ApiKey.objects.filter(id=id, user=request.user).exists():
+        return lac.templates.message(request, "Sie sind nicht berechtigt, diese API-Schlüssel-Details anzuzeigen!", "api_key_overview")
+    api_key = ApiKey.objects.get(id=id)
+    return lac.templates.message(request, f"API Key Details:<br>Name: {api_key.name}<br>Key: {api_key.key}<br>Created At: {api_key.created_at}<br>Last Used At: {api_key.last_used_at}<br>Expiration Date: {api_key.expiration_date}", "api_key_overview")

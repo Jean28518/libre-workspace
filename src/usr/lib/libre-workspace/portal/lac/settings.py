@@ -77,12 +77,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'oidc_provider',
+    'rest_framework',
+    'drf_spectacular',
 
     'django_otp',
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_hotp',
     'django_otp.plugins.otp_static',
 
+    'idm',
     'app_dashboard',
 ]
 
@@ -257,3 +260,31 @@ OIDC_IDTOKEN_INCLUDE_CLAIMS = True
 
 # To be disabled in production
 ADMIN_ENABLED = True
+
+
+# REST API Settings
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'idm.api_authentication.ApiKeyAuthentication'
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Libre Workspace API',
+    'DESCRIPTION': 'Ignore the Authorize button and curl code snippets.<br>Documentation available at <a href="https://docs.libre-workspace.org/modules/libre-workspace-portal.html#api" target="_blank">Libre Workspace Portal API Documentation</a>.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+    },
+}

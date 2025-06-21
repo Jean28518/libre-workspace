@@ -40,7 +40,7 @@ def reset_password_for_email(email):
     user = ldap.get_user_dn_by_email(email)
     if user == None:
         return
-    random_password = _generate_random_password()
+    random_password = generate_random_password()
     ldap.set_ldap_user_new_password(user, random_password)
     unix.change_password_for_linux_user(user, random_password)
     print(random_password)
@@ -48,11 +48,13 @@ def reset_password_for_email(email):
     pass
 
 
-def _generate_random_password():
-    characters = list(string.ascii_letters + string.digits + "!@#$%^&*()")
+def generate_random_password(length=20, alphanumeric_only=False):
+    characters = list(string.ascii_letters + string.digits)
+    if not alphanumeric_only:
+        characters += list("!@#$%^&*()")
         
     password = []
-    for i in range(20):
+    for i in range(length):
         password.append(random.choice(characters))
 
     random.shuffle(password)

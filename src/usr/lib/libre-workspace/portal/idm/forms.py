@@ -66,3 +66,8 @@ class TOTPChallengeForm(forms.Form):
     totp_device = forms.ChoiceField(label="TOTP Gerät", choices=[], required=False)
     # Input Field for the TOTP token
     totp_code = forms.CharField(label="TOTP-Code (Sechsstellig)", required=True)
+
+
+class ApiKeyForm(forms.Form):
+    name = forms.CharField(label="Name", max_length=100)
+    expiration_date = forms.DateField(label="Ablaufdatum", required=False, help_text="Optional. Wenn nicht gesetzt, läuft der Schlüssel nie ab.")

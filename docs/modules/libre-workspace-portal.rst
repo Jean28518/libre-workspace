@@ -119,6 +119,26 @@ You can get the following scopes:
 * admin
 
 
+API
+---
+
+The api module provides a REST api to access the data of the portal.
+An overview over all api endpoints can be viewed at your libre workspace e.g. in ``https://portal.int.de/api/schema/swagger-ui/``.
+You have to be logged in before you can access the api Documentation.
+Please ignore the curl examples and the authorize button as they are not functional at the moment.
+
+To issue a request to your api you have to be administrator and have to configured an API-Token in ``http://portal.int.de/idm/api_key_overview``.
+Then you have to put the api token in the header of your request like this: ``Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS``.
+
+A complete curl example would look like this:
+.. code-block:: bash
+
+    # Simple Get Request to get all addons
+    curl -X 'GET' -H 'Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS' 'https://portal.int.de/api/addons/'
+    # Simple Post Request to install the addon "nocodb"
+    curl -X 'POST' -H 'Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS' 'https://portal.int.de/api/addons/nocodb/install/'
+
+
 unix
 ----
 

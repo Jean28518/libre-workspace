@@ -18,8 +18,27 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView 
+from rest_framework import routers
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+
+
+from addon_center.views import AddonViewSet
+
+api_router = routers.DefaultRouter()
+
+# API Endpoints:
+api_router.register(r'addons', AddonViewSet, basename='addons')
+
 
 urlpatterns = [
+    path('api/', include(api_router.urls)),
+    path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # YOUR API DOCS
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
     path("idm/", include("idm.urls")),
     path("unix/", include("unix.urls")),
     path("welcome/", include("welcome.urls")),

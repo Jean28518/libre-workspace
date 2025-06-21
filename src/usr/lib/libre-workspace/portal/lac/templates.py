@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import datetime as DateTime
 
 def process_overview_dict(overview : dict) -> dict:
     """
@@ -42,6 +43,8 @@ def _get_attr(obj, attr):
         value = "✅"
     elif str(value) == "False":
         value = "-"
+    elif isinstance(value, DateTime):
+        value = value.strftime("%Y-%m-%d %H:%M:%S")
     elif value is None:
         value = "-"
     return value

@@ -8,3 +8,7 @@ image
 django_otp
 qrcode
 Jinja2
+djangorestframework
+drf-spectacular
+# For not be dependend on cdn:
+drf-spectacular-sidecar 

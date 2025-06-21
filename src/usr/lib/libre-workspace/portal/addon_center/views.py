@@ -6,6 +6,11 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 from unix.unix_scripts import unix
 from lac.templates import process_overview_dict, message
+from rest_framework import permissions, viewsets
+from .serializers import AddonSerializer
+from rest_framework.decorators import action
+from rest_framework.renderers import JSONRenderer
+
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -52,3 +57,34 @@ def addon_center_uninstall_addon(request, addon_id):
         return message(request, msg, "addon_center")
 
     return message(request, f"Addon {addon_id} uninstalled successfully.", "addon_center")
+
+
+class AddonViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        all_available_addons = get_all_available_addons()
+        serializer = AddonSerializer(all_available_addons, many=True)
+        return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+
+    def retrieve(self, request, pk=None):
+        all_available_addons = get_all_available_addons()
+        addon = next((addon for addon in all_available_addons if addon["id"] == pk), None)
+        if not addon:
+            return HttpResponse(status=404)
+        serializer = AddonSerializer(addon)
+        return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+    
+    @action(detail=True, methods=['post'], url_name='install')
+    def install(self, request, pk=None):
+        msg = install_addon(pk)
+        if msg:
+            return HttpResponse(msg, status=400)
+        return HttpResponse(f"Addon {pk} is installing. This process takes multiple minutes...", status=202)
+    
+    @action(detail=True, methods=['post'], url_name='uninstall')
+    def uninstall(self, request, pk=None):
+        msg = uninstall_addon(pk)
+        if msg:
+            return HttpResponse(msg, status=400)
+        return HttpResponse(f"Addon {pk} uninstalled successfully.", status=200)
