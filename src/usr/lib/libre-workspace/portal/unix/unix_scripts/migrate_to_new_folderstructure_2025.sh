@@ -8,6 +8,7 @@
 # /usr/share/linux-arbeitsplatz/db.sqlite3 -> /var/lib/libre-workspace/portal/
 # /usr/share/linux-arbeitsplatz/media/ -> /var/lib/libre-workspace/portal/
 # /usr/share/linux-arbeitsplatz/unix/unix_scripts/app_dashboard_settings.json -> /var/lib/libre-workspace/portal/app_dashboard_settings.json
+# /var/www/linux-arbeitsplatz-static/ -> /var/www/libre-workspace-static/
 
 # Check if the script is run as root
 if [ "$(id -u)" -ne 0 ]; then
@@ -42,6 +43,7 @@ source_array=(
     "/usr/share/linux-arbeitsplatz/db.sqlite3"
     "/usr/share/linux-arbeitsplatz/media/"
     "/usr/share/linux-arbeitsplatz/unix/unix_scripts/app_dashboard_settings.json"
+    "/var/www/linux-arbeitsplatz-static/"
 )
 
 destination_array=(
@@ -53,6 +55,7 @@ destination_array=(
     "/var/lib/libre-workspace/portal/db.sqlite3"
     "/var/lib/libre-workspace/portal/media/"
     "/var/lib/libre-workspace/portal/app_dashboard_settings.json"
+    "/var/www/libre-workspace-static/"
 )
 
 # Loop through the arrays and copy files/directories even if they already exist (because e.g. db.sqlite3 is created by the portal directly after the installation because of some migrations)
@@ -64,23 +67,7 @@ for i in "${!source_array[@]}"; do
     mkdir -p "$(dirname "$destination")"
 
     # Handle globbing for sources with wildcards
-    if [[ "$source" == *"*"* ]]; then
-        for file in $source; do
-            if [ -e "$file" ] || [ -L "$file" ]; then
-                cp -a "$file" "$destination"
-                echo "Copied $file to $destination"
-            else
-                echo "Source $file does not exist, skipping"
-            fi
-        done
-    else
-        if [ -e "$source" ] || [ -L "$source" ]; then
-            cp -a "$source" "$destination"
-            echo "Copied $source to $destination"
-        else
-            echo "Source $source does not exist, skipping"
-        fi
-    fi
+    cp -ra "$source" "$destination"
 done
 
 # Create a file to indicate that the migration has been performed
