@@ -131,6 +131,7 @@ To issue a request to your api you have to be administrator and have to configur
 Then you have to put the api token in the header of your request like this: ``Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS``.
 
 A complete curl example would look like this:
+
 .. code-block:: bash
 
     # Simple Get Request to get all addons
@@ -138,6 +139,14 @@ A complete curl example would look like this:
     # Simple Post Request to install the addon "nocodb"
     curl -X 'POST' -H 'Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS' 'https://portal.int.de/api/addons/nocodb/install/'
 
+    # Set a password for the user max
+    curl -X 'POST' -H 'Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS' -H 'Content-Type: application/json' -d '{"new_password": "mypassword"}' 'https://portal.int.de/api/users/max/set_password/'
+
+    # Update a user
+    curl -X 'PUT' -H 'Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS' -H 'Content-Type: application/json' -d '{"display_name": "Admin2", "mail": "test@int.de", "admin": true, "enabled": true}' 'https://portal.int.de/api/users/administrator/'
+
+    # Create a new user max
+    curl -X 'POST' -H 'Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS' -H 'Content-Type: application/json' -d '{"username": "max", "first_name": "Max", "last_name": "Doe", "mail": "test@int.de", "admin": false, "enabled": true}' 'https://portal.int.de/api/users/'
 
 unix
 ----

@@ -5,6 +5,7 @@ from django.conf import settings
 import base64
 import idm.idm as idm
 import uuid
+from idm.api_authentication import remove_all_api_keys_for_user
 
 
 def is_ldap_fine_and_working():
@@ -195,6 +196,8 @@ def ldap_ensure_admin_status_of_user(cn : str, admin : bool):
         ldap_add_user_to_group(dn, f"cn=Administrators,cn=Builtin,{settings.AUTH_LDAP_DC}")
         ldap_add_user_to_group(dn, f"cn=Domain Admins,cn=Users,{settings.AUTH_LDAP_DC}")
     elif not admin and current_admin_status:
+        # Revoke admin rights
+        remove_all_api_keys_for_user(cn)
         ldap_remove_user_from_group(dn, f"cn=Administrators,cn=Builtin,{settings.AUTH_LDAP_DC}")
         ldap_remove_user_from_group(dn, f"cn=Domain Admins,cn=Users,{settings.AUTH_LDAP_DC}")
 
@@ -216,6 +219,8 @@ def ldap_get_all_users():
         if b'person' in user.get("objectClass", []):
             dn = user.get("distinguishedName", [b''])[0].decode('utf-8')
             displayName = user.get("displayName", [b''])[0].decode('utf-8')
+            first_name = user.get("givenName", [b''])[0].decode('utf-8')
+            last_name = user.get("sn", [b''])[0].decode('utf-8')
             mail = user.get("mail", [b''])[0].decode('utf-8')
             cn = user.get("cn", [b''])[0].decode('utf-8')
             groups = user.get("memberOf", [])
@@ -227,7 +232,7 @@ def ldap_get_all_users():
             if ldap_is_system_user(cn):
                 continue
 
-            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "guid": guid, "enabled": enabled, "admin": is_user_in_group({"groups": groups}, "Administrators")})
+            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "guid": guid, "enabled": enabled, "admin": is_user_in_group({"groups": groups}, "Administrators"), "first_name": first_name, "last_name": last_name})
     return users
 
 def ldap_is_system_user(cn):
@@ -496,11 +501,13 @@ def ldap_add_user_to_group(user_dn, group_dn):
 
 
 def ldap_disable_user(user_dn):
+    """Can be also issued with cn instead of dn."""
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
     mod_attrs = [(ldap.MOD_REPLACE, 'userAccountControl', [b'514'])]
     # Don't allow disabling of system user or administrator
     cn = ldap_get_cn_of_dn(user_dn)
+    user_dn = ldap_get_dn_of_cn(cn)
     if ldap_is_system_user(cn) or cn.lower() == "administrator":
         return "Fehler: Benutzer ist ein Systembenutzer und kann nicht deaktiviert werden."
     try:
@@ -511,9 +518,12 @@ def ldap_disable_user(user_dn):
 
 
 def ldap_enable_user(user_dn):
+    """Can be also issued with cn instead of dn."""
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
     mod_attrs = [(ldap.MOD_REPLACE, 'userAccountControl', [b'512'])]
+    cn = ldap_get_cn_of_dn(user_dn)
+    user_dn = ldap_get_dn_of_cn(cn)
     try:
         conn.modify_s(user_dn, mod_attrs)
     except LDAPError as e:

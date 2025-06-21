@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,8 +7,10 @@ from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
 
+import idm.idm
+
 from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm, TOTPChallengeForm, ApiKeyForm
-from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn
+from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn, ldap_enable_user, ldap_disable_user
 from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct, generate_random_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -26,6 +29,14 @@ import random
 import datetime
 from .oidc_provider_settings import add_oidc_provider_client
 from .models import ApiKey
+from .serializer import UserSerializer, GroupSerializer
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
+from rest_framework import permissions
+from rest_framework.decorators import action
+
+
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -169,7 +180,6 @@ def create_totp_device(request):
         device.save()
         
         # Remove the QR code image
-        import os
         random_appendix = user_totp_device_challenges.get(username+"_random_appendix", "")
         if random_appendix != "":
             for file in os.listdir(settings.MEDIA_ROOT):
@@ -216,7 +226,6 @@ def delete_totp_device(request, id):
         return lac.templates.message(request, "Sie sind nicht berechtigt, dieses Gerät zu löschen!", "otp_settings")
     device.delete()
     # Also remove all totp_*.png files
-    import os
     for file in os.listdir(settings.MEDIA_ROOT):
         if file.startswith("totp_" + str(id)):
             os.remove(settings.MEDIA_ROOT + "/" + file)
@@ -652,3 +661,168 @@ def api_key_details(request, id):
         return lac.templates.message(request, "Sie sind nicht berechtigt, diese API-Schlüssel-Details anzuzeigen!", "api_key_overview")
     api_key = ApiKey.objects.get(id=id)
     return lac.templates.message(request, f"API Key Details:<br>Name: {api_key.name}<br>Key: {api_key.key}<br>Created At: {api_key.created_at}<br>Last Used At: {api_key.last_used_at}<br>Expiration Date: {api_key.expiration_date}", "api_key_overview")
+
+
+
+
+# class AddonViewSet(viewsets.ViewSet):
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def list(self, request):
+#         all_available_addons = get_all_available_addons()
+#         serializer = AddonSerializer(all_available_addons, many=True)
+#         return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+
+#     def retrieve(self, request, pk=None):
+#         all_available_addons = get_all_available_addons()
+#         addon = next((addon for addon in all_available_addons if addon["id"] == pk), None)
+#         if not addon:
+#             return HttpResponse(status=404)
+#         serializer = AddonSerializer(addon)
+#         return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+    
+#     @action(detail=True, methods=['post'], url_name='install')
+#     def install(self, request, pk=None):
+#         msg = install_addon(pk)
+#         if msg:
+#             return HttpResponse(msg, status=400)
+#         return HttpResponse(f"Addon {pk} is installing. This process takes multiple minutes...", status=202)
+    
+#     @action(detail=True, methods=['post'], url_name='uninstall')
+#     def uninstall(self, request, pk=None):
+#         msg = uninstall_addon(pk)
+#         if msg:
+#             return HttpResponse(msg, status=400)
+#         return HttpResponse(f"Addon {pk} uninstalled successfully.", status=200)
+
+
+class UserViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request):
+        """
+        Returns a list of all users.
+        """
+        users = ldap_get_all_users()
+        serializer = UserSerializer(users, many=True)
+        return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+
+    def retrieve(self, request, pk=None):
+        """
+        Returns the user information for a specific user identified by `pk`.
+        """
+        user = get_user_information_of_cn(pk)
+        if not user:
+            return HttpResponse(status=404)
+        serializer = UserSerializer(user)
+        return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+    
+    @action(detail=True, methods=['post'], url_name='enable')
+    def enable(self, request, pk=None):
+        """
+        Enables a user identified by `pk`.
+        """
+        msg = ldap_enable_user(pk)
+        if msg:
+            return HttpResponse("Failed to enable user." + msg, status=500)
+        return HttpResponse(f"User {pk} has been successfully enabled.", status=200)
+    
+    @action(detail=True, methods=['post'], url_name='disable')
+    def disable(self, request, pk=None):
+        """
+        Disables a user identified by its username.
+        """
+        msg = ldap_disable_user(pk)
+        if msg:
+            return HttpResponse("Failed to disable user." + msg, status=500)
+        return HttpResponse(f"User {pk} has been successfully disabled.", status=200)
+
+    
+    @action(detail=True, methods=['post'], url_name='reset_2fa')
+    def reset_2fa(self, request, pk=None):
+        """
+        Resets all 2FA for a user identified by its username.
+        """
+        msg = idm.idm.reset_2fa_for_username(pk)
+        if msg:
+            return HttpResponse("Failed to reset 2FA for user. " + msg, status=500)
+        return HttpResponse(f"2FA for user {pk} has been successfully reset.", status=200)
+    
+    @action(detail=True, methods=['post'], url_name='set_password')
+    def set_password(self, request, pk=None):
+        """
+        Set the password for a user identified by its username.
+        
+        ---
+        Data fields:
+        - new_password: The new password to set for the user. Must be at least 8 characters long.
+        """
+        new_password = request.data.get("new_password", "")
+        print(f"Setting new password for user {pk}: {new_password}")
+        if len(new_password) > 7:
+            msg = set_user_new_password(pk, new_password)
+            if msg:
+                return HttpResponse(msg, status=400)
+            return HttpResponse(f"Password for user {pk} has been successfully changed.", status=200)
+
+        else:
+            return HttpResponse("Password too short.", status=400)
+        
+    @action(detail=True, methods=['delete'], url_name='delete')
+    def delete(self, request, pk=None):
+        """
+        Deletes a user identified by its username.
+        """
+        msg = ldap_delete_user(pk)
+        if msg:
+            print(f"Failed to delete user {pk}: {msg}")
+            return HttpResponse("Failed to delete user. " + msg, status=500)
+        unix.desktop_remove_user(pk)
+        return HttpResponse(f"User {pk} has been successfully deleted.", status=200)
+    
+    def update(self, request, pk=None):
+        """
+        Updates the user information for a specific user identified by `pk`.
+
+        ---
+        Data fields:
+        - display_name: The display name of the user.
+        - first_name: The first name of the user
+        - last_name: The last name of the user
+        - mail: The email address of the user.
+        - admin: Boolean indicating if the user is an administrator.
+        - enabled: Boolean indicating if the user is enabled.
+        - password: The new password for the user (optional, if not provided, the password will not be changed).
+        """
+        
+        user_information = request.data
+        user_information["username"] = pk  # Ensure the username is set to the pk
+        user_information["displayName"] = user_information.get("display_name", "")
+           
+        msg = ldap_update_user(pk, user_information)
+        if msg:
+            return HttpResponse(msg, status=400)
+        return HttpResponse(f"User {pk} has been successfully updated.", status=200)
+
+        
+    def create(self, request):
+        """
+        Creates a new user with the information provided in the request body.
+        ---
+        Data fields:
+        - username: The username for the new user.
+        - first_name: The first name of the user.
+        - last_name: The last name of the user.
+        - mail: The email address of the user.
+        - admin: Boolean indicating if the user is an administrator.
+        - password: The password for the new user.
+        """
+        user_information = request.data
+
+        msg = ldap_create_user(user_information)
+        if msg:
+            return HttpResponse(msg, status=400)
+        username = user_information.get("username", "")
+        unix.desktop_add_user(username, "", user_information.get("admin", False))
+        return HttpResponse(f"User {username} has been successfully created.", status=201)
+        

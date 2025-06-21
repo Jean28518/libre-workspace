@@ -21,3 +21,13 @@ def check_api_key_expirations():
         key.delete()
         print(f"Deleted expired API key: {key.key}")
     
+
+def remove_all_api_keys_for_user(user_name):
+    """
+    Remove all API keys for a given user.
+    """
+    api_keys_to_remove = ApiKey.objects.filter(user__username=user_name)
+    for api_key in api_keys_to_remove:
+        api_key.delete()
+        print(f"Removed API key: {api_key.key} for user: {user_name}")
+    print(f"Removed all API keys for user: {user_name}")

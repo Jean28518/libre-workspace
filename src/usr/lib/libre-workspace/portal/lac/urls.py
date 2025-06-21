@@ -23,11 +23,13 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 
 from addon_center.views import AddonViewSet
+from idm.views import UserViewSet
 
 api_router = routers.DefaultRouter()
 
 # API Endpoints:
 api_router.register(r'addons', AddonViewSet, basename='addons')
+api_router.register(r'users', UserViewSet, basename='users')
 
 
 urlpatterns = [
