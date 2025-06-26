@@ -4,7 +4,7 @@
 ### [Documentation](https://docs.libre-workspace.org/)
 ### [Download](https://github.com/Jean28518/libre-workspace/releases/latest)
 
-![Libre Workspace](https://www.libre-workspace.org/wp-content/uploads/2024/01/Design-ohne-Titel.jpg)
+![Libre Workspace](/readme_header.png)
 
 - **Your data stays with you**
 - **Cloud for files, calendars, Office, chats, conferences ...**
