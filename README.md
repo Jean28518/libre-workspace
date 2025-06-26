@@ -90,7 +90,7 @@ sudo rm /var/lib/libre-workspace
 The documentation is also accessible at <https://docs.libre-workspace.org/>
 
 ```bash
-sudo apt install python3-sphinx python3-sphinx-press-theme
+sudo apt install python3-sphinx python3-sphinx-rtd-theme
 bash build_docs.sh
 ```
 
