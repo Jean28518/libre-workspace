@@ -18,6 +18,11 @@ extensions = []
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+html_file_suffix = ".html"
+
+html_baseurl = "/"
+
+
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -25,3 +30,4 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'press'
 html_static_path = ['_static']
+
