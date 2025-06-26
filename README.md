@@ -94,4 +94,4 @@ sudo apt install python3-sphinx python3-sphinx-rtd-theme
 bash build_docs.sh
 ```
 
-You find the generated html files in docs/_build
+You find the generated html files in docs/build
