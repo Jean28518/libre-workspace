@@ -12,6 +12,7 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 
 # user: ldap user, user object or username
 def get_user_information(user):
+    """Takes a user object, username or LDAP user and returns a dict with user information."""
     user_information = {}
     if type(user) == str:
         if settings.AUTH_LDAP_ENABLED and user.lower() == "administrator":
