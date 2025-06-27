@@ -58,9 +58,9 @@ def create_wordpress_instance_view(request):
             return message(request, msg, "wordpress_sites")
         return message(request, "WordPress instance created successfully!", "wordpress_sites")
     
-    # Get the admin user email from the request
-    if request.user.is_authenticated:
-        form.fields["admin_email"].initial = get_user_information(request.user.username).get("mail", "")
+    # # Get the admin user email from the request
+    # if request.user.is_authenticated:
+    #     form.fields["admin_email"].initial = get_user_information(request.user.username).get("mail", "")
     return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "WordPress Instance", "url": reverse("wordpress_sites")})
 
 
