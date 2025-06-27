@@ -899,9 +899,9 @@ def ensure_dns_entry_in_samba(ip, full_domain):
     subdomain = full_domain.replace(f".{domain}", "")
     try:
         # Remove the existing DNS entry (if any), then add it again
-        old_ip = os.popen(f"samba-tool dns query {domain} {domain} {subdomain} A -U administrator%{admin_password}").read().strip()
-        os.system(f"samba-tool dns delete {domain} {domain} {subdomain} A {old_ip} -U administrator%{admin_password}")
-        result = os.system(f"samba-tool dns add {domain} {domain} {subdomain} A {ip} -U administrator%{admin_password}")
+        old_ip = os.popen(f"samba-tool dns query {domain} {domain} {subdomain} A -U administrator%{admin_password}").read().strip() # Unverified
+        os.system(f"samba-tool dns delete {domain} {domain} {subdomain} A {old_ip} -U administrator%{admin_password}") # Unverified
+        result = os.system(f"samba-tool dns add {domain} {domain} {subdomain} A {ip} -U administrator%{admin_password}") # Verified
         print(f"Result of adding DNS entry: {result}")
     except Exception as e:
         print(f"Error while adding DNS entry: {str(e)}")
