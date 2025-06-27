@@ -39,7 +39,7 @@ def delete_wordpress_instance(entry_id):
     
     # Remove the caddy reverse proxy entry
     domain = site.get("domain")
-    subprocess.Popen(f'bash -c "sleep 2; libre-workspace-remove-webserver-entry {domain}"', shell=True)
+    subprocess.Popen(f'bash -c "sleep 4; libre-workspace-remove-webserver-entry {domain}"', shell=True)
 
     instance_dir = f"/var/www/libreworkspace-wordpress/{entry_id}"
     if not os.path.exists(instance_dir):
@@ -54,7 +54,8 @@ def delete_wordpress_instance(entry_id):
     print(f"Deleting WordPress instance with ID: {entry_id}")
 
 
-def create_wordpress_instance(name, domain, admin_password, admin_email, locale):
+# def create_wordpress_instance(name, domain, admin_password, admin_email, locale):
+def create_wordpress_instance(name, domain):
     """Creates or updates a WordPress instance."""
     random_port = subprocess.getoutput("shuf -i 1000-65000 -n 1")
     # Check if the port is already in use:
@@ -101,12 +102,12 @@ def create_wordpress_instance(name, domain, admin_password, admin_email, locale)
             "bash", 
             "/usr/lib/libre-workspace/portal/wordpress_manager/wordpress_template/install_wordpress_instance.sh",
             instance_dir,
-            admin_password,
-            admin_email,
-            domain,
-            name,
-            locale,
-            random_db_password,
+            # admin_password,
+            # admin_email,
+            # domain,
+            # name,
+            # locale,
+            # random_db_password,
         ],
     )
 

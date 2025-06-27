@@ -49,10 +49,11 @@ def create_wordpress_instance_view(request):
     if request.method == "POST" and form.is_valid():
         name = form.cleaned_data["name"]
         domain = form.cleaned_data["domain"]
-        admin_password = form.cleaned_data["admin_password"]
-        admin_email = form.cleaned_data["admin_email"]
-        locale = form.cleaned_data["locale"]
-        msg = create_wordpress_instance(name, domain, admin_password, admin_email, locale)
+        # admin_password = form.cleaned_data["admin_password"]
+        # admin_email = form.cleaned_data["admin_email"]
+        # locale = form.cleaned_data["locale"]
+        # msg = create_wordpress_instance(name, domain, admin_password, admin_email, locale)
+        msg = create_wordpress_instance(name, domain)
         if msg:
             return message(request, msg, "wordpress_sites")
         return message(request, "WordPress instance created successfully!", "wordpress_sites")
@@ -74,5 +75,5 @@ def delete_wordpress_instance_view(request, entry_id):
         return message(request, "WordPress instance not found.", "wordpress_sites")
 
     delete_wordpress_instance(entry_id)
-    time.sleep(1)
+    time.sleep(3)
     return message(request, "WordPress instance deleted successfully!", "wordpress_sites")
