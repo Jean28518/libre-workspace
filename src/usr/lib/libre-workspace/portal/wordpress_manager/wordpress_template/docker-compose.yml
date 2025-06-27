@@ -1,0 +1,27 @@
+services:
+  db:
+    image: mariadb:latest
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - ./db_data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=SED_ROOT_DB_PASSWORD
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=SED_DB_PASSWORD
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - ./html:/var/www/html
+    ports:
+      - SED_PORT:80
+    restart: unless-stopped
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=SED_DB_PASSWORD
+      - WORDPRESS_DB_NAME=wordpress
+    dns:
+      - 208.67.222.222
+      - 1.1.1.1

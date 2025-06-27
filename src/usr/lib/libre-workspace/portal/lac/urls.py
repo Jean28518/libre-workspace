@@ -59,6 +59,7 @@ urlpatterns = [
     path("m23software/", include("m23software.urls")),
     path("unix/", include("unix.urls")),
     path("welcome/", include("welcome.urls")),
+    path("wordpress_manager/", include("wordpress_manager.urls")),
    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

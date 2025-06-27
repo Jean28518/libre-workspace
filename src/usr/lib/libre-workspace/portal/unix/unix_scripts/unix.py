@@ -603,7 +603,18 @@ def setup_module(module_name):
 
 
 def get_server_ip():
-    return os.popen("hostname -I").read().strip().split(" ")[0] 
+    """
+    Returns an ipv4 address of the server.
+    """
+    all_ips = os.popen("hostname -I").read().strip().split(" ")
+    for ip in all_ips:
+        if not ":" in ip:
+            # Check if the ip is a valid ipv4 address
+            parts = ip.split(".")
+            if len(parts) == 4 and all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
+                return ip
+    print("No valid IPv4 address found.")
+    return None
 
 
 def remove_module(module_name):
@@ -882,6 +893,9 @@ def change_ip(ip):
 
 
 def ensure_dns_entry_in_samba(ip, full_domain):
+    """
+    Expecting a ipv4 address and a full domain name (e.g. subdomain.domain.tld).
+    """
     print(f"Ensuring DNS entry for {full_domain} with IP {ip} in Samba DNS server...")
     # Check if the domain is a subdomain of our domain in the libre-workspace.env file
     domain = get_env_sh_variables().get("DOMAIN", "")

@@ -167,6 +167,7 @@ def clean_newlines():
 
 def add_caddy_entry(name, block):
     """Adds a new Caddy entry.
+    Also adds a DNS entry in Samba for the domain, if domain is a int.de one.
     """
     urls = block.splitlines()[0].strip()
     first_url = urls.split()[0].replace("http://", "").replace("https://", "").strip()  # Get the first URL and remove http:// or https://
@@ -191,6 +192,7 @@ def restart_caddy():
 
 def create_reverse_proxy(name, domain, port=None, internal_https=False, target_url="http://localhost:8000"):
     """Creates a reverse proxy entry in the Caddyfile.
+    Also adds a DNS entry in Samba for the domain, if domain is a int.de one.
     
     Args:
         name (str): The name of the reverse proxy.

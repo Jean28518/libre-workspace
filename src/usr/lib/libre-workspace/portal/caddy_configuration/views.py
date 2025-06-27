@@ -24,8 +24,6 @@ def caddy_configuration(request):
         "delete_url_name": "caddy_configuration_delete_entry",
         "hint": f"Please note that wrong entries can break the Caddy server. Be careful when editing or deleting entries. If a breakage of Caddy is detected, the old configuration will tried to be restored after 60 seconds.<br>Here you can add a manual entry: <a href='{manual_add_url}'>Add Manual Entry</a>.",
         "overview_url_name": "caddy_configuration",
-        "overview_url_args": [],
-        "overview_url_kwargs": {},
     }
     overview = process_overview_dict(overview_dict)
     return render(request, "lac/overview_x.html", {"overview": overview})
