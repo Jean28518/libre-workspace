@@ -34,26 +34,32 @@ api_router.register(r'groups', GroupViewSet, basename='groups')
 
 
 urlpatterns = [
+    # API
     path('api/', include(api_router.urls)),
     path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # YOUR API DOCS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    # Optional UI:
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
-    path("idm/", include("idm.urls")),
-    path("unix/", include("unix.urls")),
-    path("welcome/", include("welcome.urls")),
-    path("addon_creator/", include("addon_creator.urls")),
-    path("addon_center/", include("addon_center.urls")),
-    path("m23software/", include("m23software.urls")),
-    path("", include("app_dashboard.urls")),
+    # OpenID Connect Provider
     path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
+
+    # Robots.txt
     path(
         "robots.txt",
         TemplateView.as_view(template_name="lac/robots.txt", content_type="text/plain"),
     ),
+
+    # All django apps:
+    path("", include("app_dashboard.urls")),
+    path("addon_center/", include("addon_center.urls")),
+    path("addon_creator/", include("addon_creator.urls")),
+    path("caddy_configuration/", include("caddy_configuration.urls")),
+    path("idm/", include("idm.urls")),
+    path("m23software/", include("m23software.urls")),
+    path("unix/", include("unix.urls")),
+    path("welcome/", include("welcome.urls")),
+   
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.ADMIN_ENABLED:

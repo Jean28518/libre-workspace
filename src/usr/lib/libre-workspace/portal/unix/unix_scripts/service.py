@@ -68,6 +68,24 @@ def ensure_linux_arbeitsplatz_package_is_removed():
         os.system("apt autoremove -y")
 
 
+def check_caddy_running_and_rescue():
+    # Check if caddy is running. If caddy is not running, try to load the backup if a backup exists and the backup is not older than 3 hours.
+    if not utils.is_caddy_running():
+        print("Caddy is not running. Trying to load backup...")
+        # Check if the backup file exists
+        backup_file = "/etc/caddy/Caddyfile.backup.libreworkspace"
+        if os.path.isfile(backup_file):
+            # Check if the backup file is older than 3 hours
+            backup_mtime = os.path.getmtime(backup_file)
+            current_time = time.time()
+            if current_time - backup_mtime < 10800:
+                # If the backup file is not older than 3 hours, copy it to the Caddyfile
+                print("Backup file found and is not older than 3 hours. Restoring backup...")
+                os.system(f"cp {backup_file} /etc/caddy/Caddyfile")
+                # Restart caddy
+                os.system("systemctl restart caddy")
+
+
 # In here the time for a last message is stored in seconds
 last_message_sent = {}
 
@@ -105,6 +123,9 @@ while True:
     lw_admin_token = get_lw_admin_token()
     if lw_admin_token == "":
         print("No local admin token. Cant send emails.")
+
+    # Check if caddy is running. If not try to get the backup of the caddyfile entry.
+    check_caddy_running_and_rescue()
 
     ## BACKUP ######################################################################################################
 

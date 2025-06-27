@@ -602,6 +602,10 @@ def setup_module(module_name):
         return "WARNING: Setup script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
 
 
+def get_server_ip():
+    return os.popen("hostname -I").read().strip().split(" ")[0] 
+
+
 def remove_module(module_name):
     """
     Uninstalls the module from the server.)
@@ -875,6 +879,35 @@ def change_ip(ip):
 
     # Restart the whole server to ensure that the new IP is used everywhere.
     reboot_system()
+
+
+def ensure_dns_entry_in_samba(ip, full_domain):
+    # Check if the domain is a subdomain of our domain in the libre-workspace.env file
+    domain = get_env_sh_variables().get("DOMAIN", "")
+    if not full_domain.endswith(domain):
+        return "Error: The domain is not a subdomain of the configured domain in the libre-workspace.env file."
+    # Check if the IP is valid
+    if not is_valid_ip(ip):
+        return "Error: The IP is not valid. Please use a valid IPv4 address."
+    
+    # Check if the domain is already in the DNS server
+    admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+    domain_parts = full_domain.split(".")
+    if len(domain_parts) < 2:
+        return "Error: The domain is not valid. Please use a valid domain name."
+    subdomain = full_domain.replace(f".{domain}", "")
+    try:
+        output = subprocess.getoutput(f"samba-tool dns query {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
+        if "No such record" in output:
+            # If the record does not exist, add it
+            os.system(f"samba-tool dns add {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
+            return "DNS entry added successfully."
+        else:
+            # If the record exists, update it
+            os.system(f"samba-tool dns update {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
+            return "DNS entry updated successfully."
+    except Exception as e:
+        return f"Error: {str(e)}. Please check the Samba DNS server configuration and the domain name."
 
 
 def is_valid_ip(ip):

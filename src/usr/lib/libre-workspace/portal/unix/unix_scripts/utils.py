@@ -63,3 +63,12 @@ def get_disks_stats():
         except:
             continue
     return disks
+
+
+def is_caddy_running():
+# Check if caddy is running
+    try:
+        output = subprocess.check_output(["systemctl", "is-active", "caddy"], stderr=subprocess.STDOUT)
+        return output.decode().strip() == "active"
+    except subprocess.CalledProcessError:
+        return False
