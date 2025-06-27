@@ -2,8 +2,7 @@ import os
 import unix.unix_scripts.unix
 import subprocess
 
-# caddyfile_path = os.path.join(os.getenv("CADDY_CONFIG_DIR", "/etc/caddy"), "Caddyfile")
-caddyfile_path = os.path.join(os.getenv("CADDY_CONFIG_DIR", "/tmp"), "Caddyfile.example") # TODO REMOVE ME!!
+caddyfile_path = os.path.join(os.getenv("CADDY_CONFIG_DIR", "/etc/caddy"), "Caddyfile")
 
 
 def get_all_caddy_entries():
