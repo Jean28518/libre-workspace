@@ -31,7 +31,7 @@ gzip ./NEWISO/install.$arch/gtk/initrd
 chmod -w -R ./NEWISO/install.$arch
 
 # Copy the custom package (which does the installation of libre-workspace in the end) to the new iso
-cp libre-workspace.deb ./NEWISO/
+cp build/libre-workspace-portal.deb ./NEWISO/
 
 # Change the boot menu to automatically start the installation
 sed -i "s/timeout 300/timeout 1/g" ./NEWISO/isolinux/spkgtk.cfg

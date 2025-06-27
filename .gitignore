@@ -167,3 +167,5 @@ debian-original.iso
 .vscode
 
 src/lac/media
+
+build/

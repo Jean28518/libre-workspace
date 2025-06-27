@@ -1,22 +1,26 @@
 # Copy the files to the debian package structure
-cp -r src/usr deb/
-cp -r src/etc deb/
+mkdir -p build/
+cp -r deb/ build/deb
+
+cp -r src/usr build/deb/
+cp -r src/etc build/deb/
 
 # Disable DEBUG mode
-sed -i "s/DEBUG = True/DEBUG = False/g" deb/usr/lib/libre-workspace/portal/lac/settings.py
+sed -i "s/DEBUG = True/DEBUG = False/g" build/deb/usr/lib/libre-workspace/portal/lac/settings.py
 # Disable Admin site (ADMIN_ENABLED)
-sed -i "s/ADMIN_ENABLED = True/ADMIN_ENABLED = False/g" deb//usr/lib/libre-workspace/portal/lac/settings.py
+sed -i "s/ADMIN_ENABLED = True/ADMIN_ENABLED = False/g" build/deb//usr/lib/libre-workspace/portal/lac/settings.py
 
 # Remove all .gitignore and .gitkeep files
-find deb/ -name ".gitignore" -type f -delete
-find deb/ -name ".gitkeep" -type f -delete
+find build/deb/ -name ".gitignore" -type f -delete
+find build/deb/ -name ".gitkeep" -type f -delete
 
-chmod +x deb/usr/lib/libre-workspace/portal/install.sh
-chmod +x deb/usr/bin/*
+chmod +x build/deb/usr/lib/libre-workspace/portal/install.sh
+chmod +x build/deb/usr/bin/*
 
-chmod 755 deb/DEBIAN
-chmod 755 deb/DEBIAN/postinst
+chmod 755 build/deb/DEBIAN
+chmod 755 build/deb/DEBIAN/postinst
 
+cd build/
 dpkg-deb --build -Zxz --root-owner-group deb 
 mv deb.deb libre-workspace-portal.deb
 
