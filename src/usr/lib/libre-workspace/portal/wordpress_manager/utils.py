@@ -31,6 +31,16 @@ def get_all_wordpress_sites():
 
 def delete_wordpress_instance(entry_id):
     """Deletes a WordPress instance by its ID."""
+    all_sites = get_all_wordpress_sites()
+    site = next((s for s in all_sites if s.get("id") == entry_id), None)
+    if not site:
+        print(f"WordPress instance with ID {entry_id} not found.")
+        return "WordPress instance not found."
+    
+    # Remove the caddy reverse proxy entry
+    domain = site.get("domain")
+    subprocess.Popen(f'bash -c "sleep 0.5; libre-workspace-remove-webserver-entry {domain}"', shell=True)
+
     instance_dir = f"/var/www/libreworkspace-wordpress/{entry_id}"
     if not os.path.exists(instance_dir):
         print(f"Instance directory {instance_dir} does not exist. Cannot delete.")
@@ -93,9 +103,10 @@ def create_wordpress_instance(name, domain, admin_password, admin_email, locale)
             instance_dir,
             admin_password,
             admin_email,
-            f"https://{domain}",
+            domain,
             name,
-            locale
+            locale,
+            random_db_password,
         ],
     )
 
