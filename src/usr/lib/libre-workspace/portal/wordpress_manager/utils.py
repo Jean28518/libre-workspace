@@ -100,6 +100,7 @@ def create_wordpress_instance(name, domain):
         port=None, # Take the default port for the outside
         internal_https= "int.de" in domain,  # Use internal HTTPS for .int.de domains
         target_url=f"http://localhost:{random_port}",
+        wordpress_logo=True,  # Use the WordPress logo for the dashboard entry
     )
 
     # Run the docker-compose command to start the WordPress instance
