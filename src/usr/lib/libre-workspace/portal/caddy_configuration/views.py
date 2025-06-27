@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 
 from lac.templates import process_overview_dict, message
-from .utils import get_all_caddy_entries, delete_caddy_entry, create_reverse_proxy, add_caddy_entry
+from .utils import get_all_caddy_entries, delete_caddy_entry, create_reverse_proxy, add_caddy_entry, create_backup_of_caddyfile
 from .forms import CaddyConfigurationEntryForm, CaddyReverseProxyForm
 
 # Create your views here.
@@ -37,8 +37,8 @@ def caddy_configuration_add_entry(request):
     if request.method == "POST" and form.is_valid():
         name = form.cleaned_data["name"]
         block = form.cleaned_data["block"]
-        # Here you would typically save the entry to the database or a file
-        # For now, we just display a success message
+        create_backup_of_caddyfile()  # Create a backup of the Caddyfile before making changes
+        add_caddy_entry(name, block)  # Add the new entry
         return message(request, "Caddy entry added successfully!", "caddy_configuration")
     # If the form is not valid or it's a GET request, render the form
     return render(request, "lac/create_x.html", {"form": form, "title": "Add Caddy Entry", "action": "Add", "url": reverse("caddy_configuration")})
@@ -58,6 +58,7 @@ def caddy_configuration_edit_entry(request, entry_id):
     if request.method == "POST" and form.is_valid():
         name = form.cleaned_data["name"]
         block = form.cleaned_data["block"]
+        create_backup_of_caddyfile()  # Create a backup of the Caddyfile before making changes
         delete_caddy_entry(entry_id)  # Delete
         add_caddy_entry(name, block)  # Add the new entry
         return message(request, "Caddy entry updated successfully!", "caddy_configuration")
@@ -92,6 +93,7 @@ def caddy_create_reverse_proxy(request):
         port = form.cleaned_data["port"]
         internal_https = form.cleaned_data["internal_https"]
         target_url = form.cleaned_data["target_url"]
+        create_backup_of_caddyfile()  # Create a backup of the Caddyfile before making changes
         msg = create_reverse_proxy(name, domain, port, internal_https, target_url)
         if msg:
             return message(request, msg, "caddy_configuration")
