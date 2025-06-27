@@ -60,9 +60,9 @@ def create_wordpress_instance(name, domain, admin_password, admin_email, locale)
 
     # Preapare all the files:
     os.system(f"cp /usr/lib/libre-workspace/portal/wordpress_manager/wordpress_template/docker-compose.yml {instance_dir}/docker-compose.yml")
-    os.system("sed s/SED_PORT/" + random_port + "/g", f"{instance_dir}/docker-compose.yml")
-    os.system("sed s/SED_DB_PASSWORD/" + random_db_password + "/g", f"{instance_dir}/docker-compose.yml")
-    os.system("sed s/SED_ROOT_DB_PASSWORD/" + random_db_root_password + "/g", f"{instance_dir}/docker-compose.yml")
+    os.system("sed s/SED_PORT/" + random_port + "/g " + f"{instance_dir}/docker-compose.yml")
+    os.system("sed s/SED_DB_PASSWORD/" + random_db_password + "/g " + f"{instance_dir}/docker-compose.yml")
+    os.system("sed s/SED_ROOT_DB_PASSWORD/" + random_db_root_password + "/g " + f"{instance_dir}/docker-compose.yml")
 
     # Create the lw_config.json file
     config_data = {
