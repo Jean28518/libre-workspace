@@ -21,4 +21,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: libre-workspace-deb
-          path: libre-workspace.deb
+          path: build/libre-workspace-portal.deb

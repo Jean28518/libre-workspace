@@ -182,7 +182,7 @@ The app_dashboard module is the new startpage and provides a simple dashboard to
 You can also add your own links to the dashboard. This can be done if you are logged in as a superuser. 
 Then a link in the end of the app_dashboard appears to manage the tiles.
 
-How to update
+How to update (deprecated)
 =============
 
 There are two methods: The first one is the update inside the web interface and the second one is the manual update via the command line.
