@@ -87,3 +87,6 @@ else
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/libre-workspace-archive-keyring.gpg] https://repo.libre-workspace.org stable main" | sudo tee /etc/apt/sources.list.d/libre-workspace-stable.list > /dev/null
     sudo apt update
 fi
+
+systemctl daemon-reload
+systemctl restart libre-workspace-portal
