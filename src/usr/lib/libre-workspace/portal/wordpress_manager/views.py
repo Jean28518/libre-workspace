@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
-from lac.templates import process_overview_dict, message
-from .utils import get_all_wordpress_sites, delete_wordpress_instance, create_wordpress_instance
 
+from lac.templates import process_overview_dict, message
+from idm.idm import get_user_information
+from .utils import get_all_wordpress_sites, delete_wordpress_instance, create_wordpress_instance
 from .forms import WordpressInstanceForm
 
 # Create your views here.
@@ -38,7 +39,7 @@ def wordpress_sites(request):
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def create_wordpress_instance(request):
+def create_wordpress_instance_view(request):
     """
     Create a new WordPress instance.
     """
@@ -56,12 +57,12 @@ def create_wordpress_instance(request):
     
     # Get the admin user email from the request
     if request.user.is_authenticated:
-        form.fields["admin_email"].initial = request.user.email
+        form.fields["admin_email"].initial = get_user_information(request.user.username).get("mail", "")
     return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "WordPress Instance", "url": reverse("wordpress_sites")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def delete_wordpress_instance(request, entry_id):
+def delete_wordpress_instance_view(request, entry_id):
     """
     Delete a WordPress instance.
     """
