@@ -7,6 +7,10 @@ sed -i "s/DEBUG = True/DEBUG = False/g" deb/usr/lib/libre-workspace/portal/lac/s
 # Disable Admin site (ADMIN_ENABLED)
 sed -i "s/ADMIN_ENABLED = True/ADMIN_ENABLED = False/g" deb//usr/lib/libre-workspace/portal/lac/settings.py
 
+# Remove all .gitignore and .gitkeep files
+find deb/ -name ".gitignore" -type f -delete
+find deb/ -name ".gitkeep" -type f -delete
+
 chmod +x deb/usr/lib/libre-workspace/portal/install.sh
 chmod +x deb/usr/bin/*
 
