@@ -39,7 +39,7 @@ def delete_wordpress_instance(entry_id):
     
     # Remove the caddy reverse proxy entry
     domain = site.get("domain")
-    subprocess.Popen(f'bash -c "sleep 0.5; libre-workspace-remove-webserver-entry {domain}"', shell=True)
+    subprocess.Popen(f'bash -c "sleep 2; libre-workspace-remove-webserver-entry {domain}"', shell=True)
 
     instance_dir = f"/var/www/libreworkspace-wordpress/{entry_id}"
     if not os.path.exists(instance_dir):

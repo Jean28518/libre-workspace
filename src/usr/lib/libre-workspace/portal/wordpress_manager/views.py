@@ -1,3 +1,5 @@
+import time
+
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
@@ -72,4 +74,5 @@ def delete_wordpress_instance_view(request, entry_id):
         return message(request, "WordPress instance not found.", "wordpress_sites")
 
     delete_wordpress_instance(entry_id)
+    time.sleep(1)
     return message(request, "WordPress instance deleted successfully!", "wordpress_sites")
