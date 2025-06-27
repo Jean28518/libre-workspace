@@ -882,6 +882,7 @@ def change_ip(ip):
 
 
 def ensure_dns_entry_in_samba(ip, full_domain):
+    print(f"Ensuring DNS entry for {full_domain} with IP {ip} in Samba DNS server...")
     # Check if the domain is a subdomain of our domain in the libre-workspace.env file
     domain = get_env_sh_variables().get("DOMAIN", "")
     if not full_domain.endswith(domain):
@@ -897,16 +898,13 @@ def ensure_dns_entry_in_samba(ip, full_domain):
         return "Error: The domain is not valid. Please use a valid domain name."
     subdomain = full_domain.replace(f".{domain}", "")
     try:
-        output = subprocess.getoutput(f"samba-tool dns query {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
-        if "No such record" in output:
-            # If the record does not exist, add it
-            os.system(f"samba-tool dns add {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
-            return "DNS entry added successfully."
-        else:
-            # If the record exists, update it
-            os.system(f"samba-tool dns update {subdomain}.{domain} {domain} {ip} A -U administrator%{admin_password}")
-            return "DNS entry updated successfully."
+        # Remove the existing DNS entry (if any), then add it again
+        old_ip = os.popen(f"samba-tool dns query {domain} {domain} {subdomain} A -U administrator%{admin_password}").read().strip()
+        os.system(f"samba-tool dns delete {domain} {domain} {subdomain} A {old_ip} -U administrator%{admin_password}")
+        result = os.system(f"samba-tool dns add {domain} {domain} {subdomain} A {ip} -U administrator%{admin_password}")
+        print(f"Result of adding DNS entry: {result}")
     except Exception as e:
+        print(f"Error while adding DNS entry: {str(e)}")
         return f"Error: {str(e)}. Please check the Samba DNS server configuration and the domain name."
 
 
