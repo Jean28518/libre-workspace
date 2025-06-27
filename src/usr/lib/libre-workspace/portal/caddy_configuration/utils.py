@@ -69,8 +69,7 @@ def get_all_caddy_entries():
     for entry in entries:
         entry["block"] = "".join(entry["block"]).strip()
 
-    # Mark the essntial entries:
-
+    # Mark the essential entries:
     for entry in entries:
         # Mark the PORTAL-ENTRY as essential (access to this django app here)
         if entry["name"] in ["PORTAL-ENTRY"]:
@@ -82,6 +81,9 @@ def get_all_caddy_entries():
         if "rewrite*/welcome/accessreverse_proxylocalhost:11123" in entry["block"].replace("\n", "").replace("\r", "").replace(" ", ""):
             entry["essential"] = True
             entry["name"] = "How to access page"
+        if "root*/var/www/cert/" in entry["block"].replace("\n", "").replace("\r", "").replace(" ", ""):
+            entry["essential"] = True
+            entry["name"] = "Certificates"
     return entries
 
 
