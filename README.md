@@ -85,6 +85,14 @@ sudo rm /usr/lib/libre-workspace
 sudo rm /var/lib/libre-workspace
 ```
 
+### Start a new django app
+
+```bash
+cd /usr/lib/libre-workspace/portal
+. /var/lib/libre-workspace/portal/venv/bin/activate
+python3 manage.py startapp my_new_app
+```
+
 ## Build documentation
 
 The documentation is also accessible at <https://docs.libre-workspace.org/>
