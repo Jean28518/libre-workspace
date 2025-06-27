@@ -1,5 +1,6 @@
 import os
 import unix.unix_scripts.unix
+import subprocess
 
 # caddyfile_path = os.path.join(os.getenv("CADDY_CONFIG_DIR", "/etc/caddy"), "Caddyfile")
 caddyfile_path = os.path.join(os.getenv("CADDY_CONFIG_DIR", "/tmp"), "Caddyfile.example") # TODO REMOVE ME!!
@@ -114,6 +115,8 @@ def delete_caddy_entry(entry_id):
 
     clean_newlines()  # Clean up the file after deletion
 
+    restart_caddy()
+
 
 def remove_orphaned_comment_lines(comment):
     """Removes orphaned comment lines from the Caddyfile.
@@ -172,9 +175,13 @@ def add_caddy_entry(name, block):
     # Ensure the DNS name of the first url is valid
     ip = unix.unix_scripts.unix.get_server_ip()  # Get the server IP address
     unix.unix_scripts.unix.ensure_dns_entry_in_samba(ip, first_url)  # Ensure the DNS entry is in the Samba DNS
-    
+
+    restart_caddy()
     return True  # Indicate success
 
+
+def restart_caddy():
+    subprocess.Popen(["bash", "-c", "sleep 0.5; systemctl restart caddy"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 def create_reverse_proxy(name, domain, port=None, internal_https=False, target_url="http://localhost:8000"):
