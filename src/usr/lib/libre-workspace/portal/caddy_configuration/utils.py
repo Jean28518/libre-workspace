@@ -134,8 +134,12 @@ def remove_orphaned_comment_lines(comment):
                 if line.strip() == comment_line and caddyfile_lines[i+1].strip() == "":
                     found_line = i
                     break
-            else:
+            elif i < len(caddyfile_lines) - 1:
                 if line.strip() == comment_line and caddyfile_lines[i-1].strip() == "" and caddyfile_lines[i+1].strip() == "":
+                    found_line = i
+                    break
+            elif i == len(caddyfile_lines) - 1:
+                if line.strip() == comment_line and caddyfile_lines[i-1].strip() == "":
                     found_line = i
                     break
 
