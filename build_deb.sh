@@ -5,8 +5,6 @@ cp -r deb/ build/deb
 cp -r src/usr build/deb/
 cp -r src/etc build/deb/
 
-# Disable DEBUG mode
-sed -i "s/DEBUG = True/DEBUG = False/g" build/deb/usr/lib/libre-workspace/portal/lac/settings.py
 # Disable Admin site (ADMIN_ENABLED)
 sed -i "s/ADMIN_ENABLED = True/ADMIN_ENABLED = False/g" build/deb//usr/lib/libre-workspace/portal/lac/settings.py
 
