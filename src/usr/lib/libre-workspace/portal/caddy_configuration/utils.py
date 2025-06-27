@@ -1,6 +1,7 @@
 import os
 import unix.unix_scripts.unix
 import subprocess
+from app_dashboard.models import DashboardEntry
 
 caddyfile_path = os.path.join(os.getenv("CADDY_CONFIG_DIR", "/etc/caddy"), "Caddyfile")
 
@@ -190,7 +191,7 @@ def restart_caddy():
     subprocess.Popen(["bash", "-c", "sleep 0.5; systemctl restart caddy"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def create_reverse_proxy(name, domain, port=None, internal_https=False, target_url="http://localhost:8000"):
+def create_reverse_proxy(name, domain, port=None, internal_https=False, target_url="http://localhost:8000", wordpress_logo=False):
     """Creates a reverse proxy entry in the Caddyfile.
     Also adds a DNS entry in Samba for the domain, if domain is a int.de one.
     
@@ -237,6 +238,18 @@ def create_reverse_proxy(name, domain, port=None, internal_https=False, target_u
 
 
     caddy_block += "}\n"
+
+    new_dashboard_entry = DashboardEntry(
+        title=name,
+        description=f"",
+        link=f"https://{domain}",
+        icon_url="",
+        is_system=True,
+        order=8,  # Default order, can be adjusted later
+    )
+    if wordpress_logo:
+        new_dashboard_entry.icon_url = "/static/lac/icons/wordpress.webp"
+    new_dashboard_entry.save()  # Save the dashboard entry to the database
 
 
     # Add the entry to the Caddyfile

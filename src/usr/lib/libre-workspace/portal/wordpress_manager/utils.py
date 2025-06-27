@@ -2,6 +2,7 @@ import os
 import subprocess
 import json
 
+from app_dashboard.models import DashboardEntry
 import unix.unix_scripts.unix
 import caddy_configuration.utils
 
@@ -50,6 +51,11 @@ def delete_wordpress_instance(entry_id):
         'bash -c "docker-compose -f {}/docker-compose.yml down --volumes; sleep 1; rm -rf {}"'.format(instance_dir, instance_dir),
         shell=True,
     )
+
+    # Remove the app card entry from the dashboard
+    if not domain:
+        DashboardEntry.objects.filter(link=f"https://{domain}").delete()  # Remove the dashboard entry
+
 
     print(f"Deleting WordPress instance with ID: {entry_id}")
 
