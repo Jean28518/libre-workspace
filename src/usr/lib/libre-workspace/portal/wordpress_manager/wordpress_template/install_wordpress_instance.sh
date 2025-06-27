@@ -13,41 +13,41 @@ if [ -z "$INSTANCE_PATH" ]; then
     exit 1
 fi
 
-ADMIN_PASSWORD="$2"
-if [ -z "$ADMIN_PASSWORD" ]; then
-    echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
-    exit 1
-fi
+# ADMIN_PASSWORD="$2"
+# if [ -z "$ADMIN_PASSWORD" ]; then
+#     echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
+#     exit 1
+# fi
 
-ADMIN_EMAIL_ADDRESS="$3"
-if [ -z "$ADMIN_EMAIL_ADDRESS" ]; then
-    echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
-    exit 1
-fi
+# ADMIN_EMAIL_ADDRESS="$3"
+# if [ -z "$ADMIN_EMAIL_ADDRESS" ]; then
+#     echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
+#     exit 1
+# fi
 
-DOMAIN="$4"
-if [ -z "$DOMAIN" ]; then
-    echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
-    exit 1
-fi
+# DOMAIN="$4"
+# if [ -z "$DOMAIN" ]; then
+#     echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
+#     exit 1
+# fi
 
-TITLE="$5"
-if [ -z "$TITLE" ]; then
-    echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
-    exit 1
-fi
+# TITLE="$5"
+# if [ -z "$TITLE" ]; then
+#     echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
+#     exit 1
+# fi
 
-LOCALE="$6"
-if [ -z "$LOCALE" ]; then
-    echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
-    exit 1
-fi
+# LOCALE="$6"
+# if [ -z "$LOCALE" ]; then
+#     echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
+#     exit 1
+# fi
 
-DB_PASSWORD="$7"
-if [ -z "$DB_PASSWORD" ]; then
-    echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
-    exit 1
-fi
+# DB_PASSWORD="$7"
+# if [ -z "$DB_PASSWORD" ]; then
+#     echo "Usage: $0 <instance_path> <admin_password> <admin_email_address> <domain> <title> <locale> <db_password>"
+#     exit 1
+# fi
 
 docker-compose -f "$INSTANCE_PATH/docker-compose.yml" up -d
 
