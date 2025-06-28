@@ -191,7 +191,7 @@ def restart_caddy():
     subprocess.Popen(["bash", "-c", "sleep 0.5; systemctl restart caddy"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def create_reverse_proxy(name, domain, port=None, internal_https=False, target_url="http://localhost:8000", wordpress_logo=False):
+def create_reverse_proxy(name, domain, port=None, internal_https=False, target_url="http://localhost:8000", wordpress_instance=False):
     """Creates a reverse proxy entry in the Caddyfile.
     Also adds a DNS entry in Samba for the domain, if domain is a int.de one.
     
@@ -247,7 +247,8 @@ def create_reverse_proxy(name, domain, port=None, internal_https=False, target_u
         is_system=False,
         order=8,  # Default order, can be adjusted later
     )
-    if wordpress_logo:
+    if wordpress_instance:
+        new_dashboard_entry.title = name.replace("Wordpress:", "").strip()  # Remove "Wordpress:" from the title
         new_dashboard_entry.icon_url = "/static/lac/icons/wordpress.webp"
     new_dashboard_entry.save()  # Save the dashboard entry to the database
 
