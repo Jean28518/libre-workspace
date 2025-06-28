@@ -221,8 +221,21 @@ h1, h2, h3, h4, h5, h6 {
           <li><a href="/idm/dashboard">{% translate "Administration" %}</a></li> 
         {% endif %}
       </ul>
+      <ul>
+        <li>
+            <details role="list" dir="rtl">
+              <summary aria-haspopup="listbox" role="link" class="secondary">
+                <span class="material-icons">language</span>
+              </summary>
+              <ul role="listbox">
+                {% with request.get_full_path as next %}
+                <li><a href="{% url "change_language" "en" %}?next={{ next }}">{% translate "language.en" %}</a></li>
+                <li><a href="{% url "change_language" "de" %}?next={{ next }}">{% translate "language.de" %}</a></li>
+                {% endwith %}
+              </ul>
+            </details>
+          </li>
       {% if request.user.is_authenticated %}
-        <ul>
           {% comment %} <li><a href="#">Link</a></li> {% endcomment %}
           {% if request.user.is_superuser %}
             <li>
@@ -239,19 +252,7 @@ h1, h2, h3, h4, h5, h6 {
               </details>
             </li>
           {% endif %}
-          <li>
-            <details role="list" dir="rtl">
-              <summary aria-haspopup="listbox" role="link" class="secondary">
-                <span class="material-icons">language</span>
-              </summary>
-              <ul role="listbox">
-                {% with request.get_full_path as next %}
-                <li><a href="{% url "change_language" "en" %}?next={{ next }}">{% translate "language.en" %}</a></li>
-                <li><a href="{% url "change_language" "de" %}?next={{ next }}">{% translate "language.de" %}</a></li>
-                {% endwith %}
-              </ul>
-            </details>
-          </li>
+
           <li>
             <details role="list" dir="rtl">
               <summary aria-haspopup="listbox" role="link" class="secondary">
@@ -265,14 +266,15 @@ h1, h2, h3, h4, h5, h6 {
               </ul>
             </details>
           </li>
-        </ul>
-      {% elif hide_login_button %}
-      
-      {% else %}
-        <ul>
-          <li title="{% translate "Login" %}"><a href="{% url "user_login" %}" role="button">{% translate "Login" %}</a></li>
-        </ul>
-      {% endif %}
+        
+        {% elif hide_login_button %}
+        
+        {% else %}
+        
+        <li title="{% translate "Login" %}"><a href="{% url "user_login" %}" role="button">{% translate "Login" %}</a></li>
+        {% endif %}
+        
+      </ul>
     </nav> 
 
     <br/>

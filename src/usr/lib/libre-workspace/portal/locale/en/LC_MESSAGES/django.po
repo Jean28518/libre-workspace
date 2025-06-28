@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 16:56+0100\n"
+"POT-Creation-Date: 2025-06-28 17:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -992,7 +992,7 @@ msgstr ""
 #: idm/templates/idm/change_password.html:5
 #: idm/templates/idm/change_password.html:16
 #: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
-#: lac/templates/lac/base.html:264
+#: lac/templates/lac/base.html:265
 msgid "Change Password"
 msgstr ""
 
@@ -1033,7 +1033,7 @@ msgid "Cloud Desktop Settings"
 msgstr ""
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:139 lac/templates/lac/base.html:276
+#: idm/views.py:139 lac/templates/lac/base.html:277
 msgid "Login"
 msgstr ""
 
@@ -1055,7 +1055,7 @@ msgid "User Settings"
 msgstr ""
 
 #: idm/templates/idm/user_settings.html:12 idm/views.py:139 idm/views.py:148
-#: lac/templates/lac/base.html:266
+#: lac/templates/lac/base.html:267
 msgid "2-Factor Authentication"
 msgstr ""
 
@@ -1274,7 +1274,7 @@ msgid ""
 "a>"
 msgstr ""
 
-#: idm/views.py:619 lac/templates/lac/base.html:265
+#: idm/views.py:619 lac/templates/lac/base.html:266
 msgid "API Keys"
 msgstr ""
 
@@ -1409,11 +1409,11 @@ msgstr ""
 msgid "Group %(pk)s has been successfully deleted."
 msgstr ""
 
-#: lac/settings.py:226 lac/templates/lac/base.html:252
+#: lac/settings.py:226 lac/templates/lac/base.html:234
 msgid "language.en"
 msgstr "English"
 
-#: lac/settings.py:227 lac/templates/lac/base.html:253
+#: lac/settings.py:227 lac/templates/lac/base.html:235
 msgid "language.de"
 msgstr "German"
 
@@ -1429,23 +1429,23 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
-#: lac/templates/lac/base.html:237
+#: lac/templates/lac/base.html:250
 msgid "Documentation"
 msgstr ""
 
-#: lac/templates/lac/base.html:238
+#: lac/templates/lac/base.html:251
 msgid "Forum"
 msgstr ""
 
-#: lac/templates/lac/base.html:239
+#: lac/templates/lac/base.html:252
 msgid "Paid Support"
 msgstr ""
 
-#: lac/templates/lac/base.html:240
+#: lac/templates/lac/base.html:253
 msgid "Download System Information"
 msgstr ""
 
-#: lac/templates/lac/base.html:267
+#: lac/templates/lac/base.html:268
 msgid "Log Out"
 msgstr ""
 

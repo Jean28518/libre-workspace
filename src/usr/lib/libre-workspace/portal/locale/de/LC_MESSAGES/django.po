@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 16:56+0100\n"
+"POT-Creation-Date: 2025-06-28 17:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1075,7 +1075,7 @@ msgstr "Deaktiviert"
 #: idm/templates/idm/change_password.html:5
 #: idm/templates/idm/change_password.html:16
 #: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
-#: lac/templates/lac/base.html:264
+#: lac/templates/lac/base.html:265
 msgid "Change Password"
 msgstr "Passwort ändern"
 
@@ -1116,7 +1116,7 @@ msgid "Cloud Desktop Settings"
 msgstr "Cloud Desktop Einstellungen"
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:139 lac/templates/lac/base.html:276
+#: idm/views.py:139 lac/templates/lac/base.html:277
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1138,7 +1138,7 @@ msgid "User Settings"
 msgstr "Benutzereinstellungen"
 
 #: idm/templates/idm/user_settings.html:12 idm/views.py:139 idm/views.py:148
-#: lac/templates/lac/base.html:266
+#: lac/templates/lac/base.html:267
 msgid "2-Factor Authentication"
 msgstr "2-Faktor-Authentifizierung"
 
@@ -1372,7 +1372,7 @@ msgstr ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
 "a>"
 
-#: idm/views.py:619 lac/templates/lac/base.html:265
+#: idm/views.py:619 lac/templates/lac/base.html:266
 msgid "API Keys"
 msgstr "API-Schlüssel"
 
@@ -1520,11 +1520,11 @@ msgstr "Gruppe konnte nicht gelöscht werden. %(msg)s"
 msgid "Group %(pk)s has been successfully deleted."
 msgstr "Gruppe %(pk)s wurde erfolgreich gelöscht."
 
-#: lac/settings.py:226 lac/templates/lac/base.html:252
+#: lac/settings.py:226 lac/templates/lac/base.html:234
 msgid "language.en"
 msgstr "Englisch"
 
-#: lac/settings.py:227 lac/templates/lac/base.html:253
+#: lac/settings.py:227 lac/templates/lac/base.html:235
 msgid "language.de"
 msgstr "Deutsch"
 
@@ -1540,25 +1540,25 @@ msgstr "Logo"
 msgid "Administration"
 msgstr "Administration"
 
-#: lac/templates/lac/base.html:237
+#: lac/templates/lac/base.html:250
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: lac/templates/lac/base.html:238
+#: lac/templates/lac/base.html:251
 msgid "Forum"
 msgstr "Forum"
 
-#: lac/templates/lac/base.html:239
+#: lac/templates/lac/base.html:252
 #, fuzzy
 #| msgid "Support"
 msgid "Paid Support"
 msgstr "Kostenpflichtiger Support"
 
-#: lac/templates/lac/base.html:240
+#: lac/templates/lac/base.html:253
 msgid "Download System Information"
 msgstr "Systeminformationen herunterladen"
 
-#: lac/templates/lac/base.html:267
+#: lac/templates/lac/base.html:268
 msgid "Log Out"
 msgstr "Abmelden"
 
