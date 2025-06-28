@@ -38,7 +38,7 @@ def get_user_information_of_cn(cn):
     dn = ldap_get_dn_of_cn(cn)
 
     # Get user with dn
-    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf", "objectGUID", "userAccountControl", "preferredLanguage"])
+    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf", "objectGUID", "userAccountControl", "preferredLanguage", "uidNumber"])
 
     
     conn.unbind_s()
@@ -65,6 +65,7 @@ def get_user_information_of_cn(cn):
     user_information["dn"] = dn
     user_information["cn"] = cn
     user_information["language_code"] = ldap_reply[0][1].get("preferredLanguage", [b"en"])[0].decode('utf-8')
+    user_information["uidNumber"] = ldap_reply[0][1].get("uidNumber", [b""])[0].decode('utf-8')
 
     user_information["groups"] = ldap_reply[0][1].get("memberOf", [])
     for i in range(len(user_information["groups"])):
@@ -164,7 +165,8 @@ def ldap_create_user(user_information):
         attrs['mail'] = [user_information["mail"].encode('utf-8')]
     ldif = modlist.addModlist(attrs)
 
-    # Add user
+
+
     try:
         conn.add_s(dn, ldif)
     except LDAPError as e:
@@ -184,6 +186,49 @@ def ldap_create_user(user_information):
 
     # If user should be admin:
     ldap_ensure_admin_status_of_user(user_information["username"], user_information["admin"])
+
+    # Ensure that the user has a uidNumber set
+    ensure_uidNumber_for_user(user_information["username"])
+
+
+
+def ensure_uidNumber_for_user(cn):
+    """Ensures that the user has a uidNumber set. If not, it generates a new one."""
+    user_information = get_user_information_of_cn(cn)
+    if user_information is None:
+        return _("User '%(cn)s' was not found.") % {"cn": cn}
+    
+    if user_information.get("uidNumber", "") != "":
+        # User already has a uidNumber, so we don't need to set it again
+        return
+
+    # Generate a uidNumber for the user
+    # Get the current highest uidNumber
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    result = conn.search_s(f"cn=users,{settings.AUTH_LDAP_DC}", ldap.SCOPE_SUBTREE, "(objectClass=*)", ["uidNumber"])
+    max_uid_number = 10000  # Start at 10000 to avoid conflicts with system users
+    for entry in result:
+        if b'uidNumber' in entry[1]:
+            uid_number = int(entry[1]['uidNumber'][0].decode('utf-8'))
+            if uid_number > max_uid_number:
+                max_uid_number = uid_number
+
+    new_number = max_uid_number + 1
+    if cn.lower() == "administrator":
+        # The administrator user should not have a uidNumber, so we set it to 0
+        new_number = 10000
+
+    attrs = {
+        'uidNumber': [str(new_number).encode('utf-8')]
+    }
+    ldif = modlist.modifyModlist({}, attrs)
+    
+    dn = ldap_get_dn_of_cn(cn)
+    try:
+        conn.modify_s(dn, ldif)
+    except LDAPError as e:
+        return _("Error: %(error)s") % {"error": str(e)}
 
 
 # Revokes or grants admin rights to a user. If nothing changes, nothing happens.
@@ -268,6 +313,7 @@ def ldap_update_user(cn, user_information):
     attrs['sn'] = [user_information.get("last_name", "").encode('utf-8')]
     attrs['displayName'] = [user_information.get("displayName", "").encode('utf-8')]
     attrs['mail'] = [user_information.get("mail", "").encode('utf-8')]
+    attrs['preferredLanguage'] = [user_information.get("language_code", settings.LANGUAGE_CODE).encode('utf-8')]
     
     for key, value in attrs.items():
         if value == [b""] or value == None:
@@ -278,7 +324,6 @@ def ldap_update_user(cn, user_information):
     else:
         attrs['userAccountControl'] = [b'514']
 
-    attrs['preferredLanguage'] = [user_information.get("language_code", settings.LANGUAGE_CODE).encode('utf-8')]
 
     old_user_information = get_user_information_of_cn(cn)
     old_attrs = {}
@@ -295,8 +340,11 @@ def ldap_update_user(cn, user_information):
         old_attrs['userAccountControl'] = [b'512']
     else:
         old_attrs['userAccountControl'] = [b'514']
+    old_attrs['preferredLanguage'] = [old_user_information.get("language_code", settings.LANGUAGE_CODE).encode('utf-8')]
 
     ldif = modlist.modifyModlist(old_attrs, attrs)
+    
+    print("LDIF: ", ldif)
 
     if ldif != []:
         # Modify user
@@ -308,6 +356,8 @@ def ldap_update_user(cn, user_information):
         conn.unbind_s()
 
     ldap_ensure_admin_status_of_user(cn, user_information["admin"])
+
+    ensure_uidNumber_for_user(cn)
 
 # If cn is a dn, return it, else return dn of cn
 def ldap_get_dn_of_cn(cn):

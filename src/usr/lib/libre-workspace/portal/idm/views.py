@@ -399,11 +399,15 @@ def edit_user(request, cn):
             message = str(message) + "<br>" + str(pw_message)
         else:
             message = form.errors
-        form_data = form.cleaned_data
+        new_form_data = form.cleaned_data
+        new_form_data["guid"] = form_data.get("guid", "")
+        new_form_data["uidNumber"] = form_data.get("uidNumber", "")
+        form_data = new_form_data
     form = AdministratorUserEditForm()
     if form_data != {}:
         form = AdministratorUserEditForm(form_data)
     form.fields["guid"].initial = form_data.get("guid", "")
+    form.fields["uidNumber"].initial = form_data.get("uidNumber", "")
     return render(request, "idm/admin/edit_user.html", {"form": form, "message": message, "cn": cn})#
 
 @staff_member_required(login_url=settings.LOGIN_URL)

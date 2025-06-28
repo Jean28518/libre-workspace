@@ -33,6 +33,7 @@ class AdministratorUserForm(forms.Form):
 
 class AdministratorUserEditForm(forms.Form):
     guid = forms.CharField(label=_("objectGUID"), max_length=100, disabled=True, required=False)
+    uidNumber = forms.CharField(label=_("UID Number"), max_length=100, disabled=True, required=False)
     password = forms.CharField(label=_("Set new password"), max_length=100, widget=forms.PasswordInput, required=False)
     first_name = forms.CharField(label=_("First name"), max_length=100, required=False)
     last_name = forms.CharField(label=_("Last name"), max_length=100, required=False)
