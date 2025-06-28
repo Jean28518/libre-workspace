@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 15:20+0100\n"
+"POT-Creation-Date: 2025-06-28 15:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,7 +100,7 @@ msgstr ""
 
 #: addon_center/templates/addon_center/addon_center.html:90
 #: idm/templates/idm/admin/edit_group.html:51
-#: idm/templates/idm/admin/edit_user.html:67 lac/templates/lac/edit_x.html:71
+#: idm/templates/idm/admin/edit_user.html:67 lac/templates/lac/edit_x.html:72
 #: lac/templates/lac/info_x.html:70 lac/templates/lac/overview_x.html:100
 #: unix/templates/unix/data_export.html:78
 #: unix/templates/unix/data_import.html:11
@@ -241,6 +241,54 @@ msgid ""
 "libre-workspace.org/modules/addons.html</a>"
 msgstr ""
 
+#: app_dashboard/cards.py:50 app_dashboard/cards.py:106
+msgid "Management"
+msgstr ""
+
+#: app_dashboard/cards.py:101 unix/unix_scripts/unix.py:453
+msgid "Nextcloud"
+msgstr ""
+
+#: app_dashboard/cards.py:101
+msgid "Files, Calendar, ..."
+msgstr ""
+
+#: app_dashboard/cards.py:102 unix/unix_scripts/unix.py:458 unix/views.py:713
+msgid "Cloud Desktop"
+msgstr ""
+
+#: app_dashboard/cards.py:102
+msgid "Linux desktop in the browser"
+msgstr ""
+
+#: app_dashboard/cards.py:103
+msgid "Element"
+msgstr ""
+
+#: app_dashboard/cards.py:103
+msgid "Chat"
+msgstr ""
+
+#: app_dashboard/cards.py:104 unix/unix_scripts/unix.py:455
+msgid "Jitsi"
+msgstr ""
+
+#: app_dashboard/cards.py:104
+msgid "Video Conferences"
+msgstr ""
+
+#: app_dashboard/cards.py:105 welcome/templates/welcome/access.html:62
+msgid "Certificates"
+msgstr ""
+
+#: app_dashboard/cards.py:105
+msgid "For secure access"
+msgstr ""
+
+#: app_dashboard/cards.py:106
+msgid "Users, Groups, ..."
+msgstr ""
+
 #: app_dashboard/forms.py:15
 #: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:11
 msgid "Title"
@@ -372,7 +420,8 @@ msgid ""
 "administration) is adjusted."
 msgstr ""
 
-#: app_dashboard/views.py:198 lac/templates/lac/edit_x.html:46
+#: app_dashboard/views.py:198 lac/templates/lac/edit_x.html:38
+#: lac/templates/lac/edit_x.html:47
 #: unix/templates/unix/update_management.html:36 unix/views.py:629
 #: unix/views.py:652 unix/views.py:684
 msgid "Save"
@@ -807,7 +856,7 @@ msgstr ""
 #: idm/templates/idm/reset_password.html:18
 #: idm/templates/idm/user_settings.html:20 lac/templates/lac/confirm.html:17
 #: lac/templates/lac/create_x.html:31 lac/templates/lac/create_x.html:40
-#: lac/templates/lac/edit_x.html:36 lac/templates/lac/edit_x.html:44
+#: lac/templates/lac/edit_x.html:36 lac/templates/lac/edit_x.html:45
 #: lac/templates/lac/generic_form.html:32
 #: lac/templates/lac/generic_form.html:41 lac/templates/lac/info_x.html:36
 #: lac/templates/lac/info_x.html:44 unix/templates/unix/backup_settings.html:35
@@ -1404,35 +1453,18 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: lac/templates/lac/edit_x.html:27 lac/templates/lac/edit_x.html:73
+#: lac/templates/lac/edit_x.html:27 lac/templates/lac/edit_x.html:74
 #: lac/templates/lac/info_x.html:27 lac/templates/lac/info_x.html:72
 #: lac/templates/lac/overview_x.html:102
 msgid "DELETE"
 msgstr ""
 
-#: lac/templates/lac/edit_x.html:61 lac/templates/lac/info_x.html:60
+#: lac/templates/lac/edit_x.html:62 lac/templates/lac/info_x.html:60
 msgid "Really delete"
 msgstr ""
 
-#: lac/templates/lac/edit_x.html:63
+#: lac/templates/lac/edit_x.html:64
 msgid "This operation cannot be reversed!"
-msgstr ""
-
-#: lac/templates/lac/generic_form.html:6
-msgid "{{ heading }}"
-msgstr ""
-
-#: lac/templates/lac/generic_form.html:17
-msgid "{{ message }}"
-msgstr ""
-
-#: lac/templates/lac/generic_form.html:23
-msgid "{{ description }}"
-msgstr ""
-
-#: lac/templates/lac/generic_form.html:34
-#: lac/templates/lac/generic_form.html:43
-msgid "{{action}}"
 msgstr ""
 
 #: lac/templates/lac/message.html:13
@@ -2529,20 +2561,8 @@ msgstr ""
 msgid "Samba DC (Central User Management)"
 msgstr ""
 
-#: unix/unix_scripts/unix.py:453
-msgid "Nextcloud"
-msgstr ""
-
 #: unix/unix_scripts/unix.py:454
 msgid "Matrix"
-msgstr ""
-
-#: unix/unix_scripts/unix.py:455
-msgid "Jitsi"
-msgstr ""
-
-#: unix/unix_scripts/unix.py:458 unix/views.py:713
-msgid "Cloud Desktop"
 msgstr ""
 
 #: unix/unix_scripts/unix.py:459
@@ -3140,10 +3160,6 @@ msgstr ""
 
 #: welcome/templates/welcome/access.html:62
 msgid "Scroll down and find the section"
-msgstr ""
-
-#: welcome/templates/welcome/access.html:62
-msgid "Certificates"
 msgstr ""
 
 #: welcome/templates/welcome/access.html:63
