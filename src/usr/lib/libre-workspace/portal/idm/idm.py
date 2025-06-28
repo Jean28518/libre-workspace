@@ -9,6 +9,8 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 import unix.unix_scripts.unix as unix
 from django_otp.plugins.otp_totp.models import TOTPDevice
+from .models import LinuxClientUser
+import subprocess
 
 
 # user: ldap user, user object or username
@@ -152,3 +154,53 @@ def update_user(username, user_information):
         user.last_name = user_information["last_name"]
         user.email = user_information["mail"]
         user.save()
+
+
+# Works only when samba is directly installed on the same system this portal is running.
+def get_all_linux_users_with_passwords():
+    """
+    Returns a list of all users with their passwords.
+    This is used to check if the user can login with the given password.
+    """
+    if not settings.AUTH_LDAP_ENABLED:
+        return []
+
+    all_users = ldap.ldap_get_all_users()
+    users = []
+    for user in all_users:
+        user_dn = user.get("dn", "")
+        linux_client_user = LinuxClientUser.objects.filter(dn=user_dn.lower()).first()
+        if linux_client_user:
+            user["yescrypt_hash"] = linux_client_user.yescrypt_hash
+        else:
+            user["yescrypt_hash"] = None
+        user["username"] = user.get("cn", "")
+        users.append(user)
+    return users
+
+
+def update_linux_client_password(username, new_password):
+    """
+    Updates the password for the Linux client user.
+    Takes both the username and the new password as strings.
+    This function is only used if LDAP is disabled.
+    """
+    # echo -n "{new_password}" | mkpasswd -m yescrypt -s
+    yescrypt_hash = subprocess.run(["mkpasswd", "-m", "yescrypt", "-s"], input=new_password, capture_output=True, text=True).stdout.strip()
+    print(yescrypt_hash)
+
+    # Only currently works with LDAP
+    if settings.AUTH_LDAP_ENABLED:
+        # Update LDAP user
+        user_information = ldap.get_user_information_of_cn(username)
+        if user_information is None:
+            print(_("User not found"))
+            return _("User not found")
+        linux_client_user = LinuxClientUser.objects.filter(dn=user_information["dn"].lower()).first()
+        if linux_client_user is None:
+            linux_client_user = LinuxClientUser(dn=user_information["dn"].lower(), yescrypt_hash=yescrypt_hash)
+        linux_client_user.yescrypt_hash = yescrypt_hash
+        linux_client_user.save()
+        print(_("Updated Linux client user password for user: %(username)s with new password hash: %(yescrypt_hash)s") % {"username": username, "yescrypt_hash": yescrypt_hash})
+        
+   

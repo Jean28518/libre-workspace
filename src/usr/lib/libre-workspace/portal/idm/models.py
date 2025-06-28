@@ -30,3 +30,17 @@ class ApiKey(models.Model):
         verbose_name = _("API Key")
         verbose_name_plural = _("API Keys")
         ordering = ['-created_at']  # Order by creation date, newest first
+
+
+# This is currently 1:1 connected to the samba user model
+class LinuxClientUser(models.Model):
+    dn = models.CharField(
+        max_length=255, 
+        unique=True, 
+        help_text=_("Distinguished Name of the user in LDAP")
+    )
+    yescrypt_hash = models.CharField(
+        max_length=255, 
+        help_text=_("The yescrypt hash of the user's password")
+    )
+    

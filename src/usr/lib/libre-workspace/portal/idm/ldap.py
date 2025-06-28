@@ -117,6 +117,7 @@ def set_ldap_user_new_password(user_dn, password):
     except LDAPError as e:
         return _("Error: %(error)s") % {"error": str(e)}
     conn.unbind_s()
+    idm.update_linux_client_password(cn, password)
 
 def encode_password_for_samba(password_in_plaintext):
     return ('"%s"' % password_in_plaintext).encode('utf-16-le')
@@ -310,6 +311,7 @@ def ldap_update_user(cn, user_information):
     attrs = {}
     if user_information.get("password", "") != "":
         attrs['unicodePwd'] = [encode_password_for_samba(user_information["password"])]
+        idm.update_linux_client_password(cn, user_information["password"])
     attrs['givenName'] = [user_information.get("first_name", "").encode('utf-8')]
     attrs['sn'] = [user_information.get("last_name", "").encode('utf-8')]
     attrs['displayName'] = [user_information.get("displayName", "").encode('utf-8')]
@@ -381,53 +383,6 @@ def ldap_delete_user(cn):
         return _("Error: %(error)s") % {"error": str(e)}
 
     conn.unbind_s()
-
-# Works only when samba is directly installed on the same system this portal is running.
-def ldap_get_all_linux_users_with_passwords():
-    """
-    Returns a list of all users with their passwords.
-    This is used to check if the user can login with the given password.
-    """
-    if not settings.AUTH_LDAP_ENABLED:
-        return []
-
-    all_users = ldap_get_all_users()
-
-    # ldbsearch -H /var/lib/samba/private/sam.ldb   "(&(objectClass=user))" unicodePwd
-    pwd_output = subprocess.run(["ldbsearch", "-H", "/var/lib/samba/private/sam.ldb", "(&(objectClass=user))", "unicodePwd"], capture_output=True, text=True)
-    if pwd_output.returncode != 0:
-        print(_("Error while getting passwords: %(error)s") % {"error": pwd_output.stderr})
-        return []
-    pwd_lines = pwd_output.stdout.splitlines()
-
-    # Example output:
-    # record 1
-    # dn: CN=krbtgt,CN=Users,DC=int,DC=de
-    # unicodePwd:: ####
-
-    # # record 2
-    # dn: CN=Administrator,CN=Users,DC=int,DC=de
-    # unicodePwd:: ####
-
-    users = []
-    last_line = ""
-    for line in pwd_lines:
-        if line.startswith("unicodePwd: "):
-            # Get the password from the last line
-            password = line.split("unicodePwd: ")[1].strip()
-            # Decode the password from base64
-            password = base64.b64decode(password).decode('utf-16-le').strip('"')
-            
-            username = last_line.replace("dn: CN=", "").strip().split(",")[0]
-            for user in all_users:
-                if user["cn"] == username:
-                    user["password"] = password
-                    users.append(user)
-                    break
-
-        last_line = line
-           
-    return users
 
 
 def ldap_get_all_groups():

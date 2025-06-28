@@ -48,11 +48,12 @@ class LinuxUserSerializer(serializers.Serializer):
     display_name = serializers.CharField(max_length=100, required=False, allow_blank=True)
     mail = serializers.EmailField(max_length=100, required=False, allow_blank=True)
     cn = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    username = serializers.CharField(max_length=100, required=False, allow_blank=True)
     groups = serializers.ListField(child=serializers.CharField(), required=False, default=[])
     guid = serializers.CharField(max_length=100, required=False, allow_blank=True)
     enabled = serializers.BooleanField(required=False, default=True)
     admin = serializers.BooleanField(required=False, default=False)
-    password = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    yescrypt_hash = serializers.CharField(max_length=100, required=False, allow_blank=True)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

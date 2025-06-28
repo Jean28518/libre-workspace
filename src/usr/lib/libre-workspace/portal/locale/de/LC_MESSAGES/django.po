@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 21:41+0100\n"
+"POT-Creation-Date: 2025-06-28 22:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -798,11 +798,11 @@ msgstr ""
 msgid "Administrator Access"
 msgstr "Administrator"
 
-#: idm/idm.py:49
+#: idm/idm.py:51
 msgid "New Password (Linux Workstation Central)"
 msgstr "Neues Passwort (Linux Workstation Central)"
 
-#: idm/idm.py:49
+#: idm/idm.py:51
 #, python-format
 msgid ""
 "Your new password is:\n"
@@ -813,22 +813,27 @@ msgstr ""
 "\n"
 "%(random_password)s"
 
-#: idm/idm.py:70 idm/idm.py:71
+#: idm/idm.py:72 idm/idm.py:73 idm/idm.py:195 idm/idm.py:196
 msgid "User not found"
 msgstr "Benutzer nicht gefunden"
 
-#: idm/idm.py:100
+#: idm/idm.py:102
 #, python-format
 msgid "Created superuser 'Administrator' with password '%(password)s'"
 msgstr "Superuser 'Administrator' mit Passwort '%(password)s' erstellt"
 
-#: idm/idm.py:121
+#: idm/idm.py:123
 msgid "User 'Administrator' does not exist"
 msgstr "Benutzer 'Administrator' existiert nicht"
 
-#: idm/idm.py:125
+#: idm/idm.py:127
 msgid "Local Administrator password changed"
 msgstr "Passwort des lokalen Administrators geändert"
+
+#: idm/idm.py:202
+#, python-format
+msgid "Updated Linux client user password for user: %(username)s"
+msgstr ""
 
 #: idm/ldap.py:21 idm/ldap.py:36
 #, python-format
@@ -854,14 +859,14 @@ msgstr ""
 "Passwort nicht geändert werden. Das Master-Passwort kann unter "
 "Systemkonfiguration geändert werden."
 
-#: idm/ldap.py:118 idm/ldap.py:174 idm/ldap.py:232 idm/ldap.py:355
-#: idm/ldap.py:381 idm/ldap.py:508 idm/ldap.py:538 idm/ldap.py:580
-#: idm/ldap.py:591 idm/ldap.py:601 idm/ldap.py:618 idm/ldap.py:632
+#: idm/ldap.py:118 idm/ldap.py:175 idm/ldap.py:233 idm/ldap.py:357
+#: idm/ldap.py:383 idm/ldap.py:462 idm/ldap.py:492 idm/ldap.py:534
+#: idm/ldap.py:545 idm/ldap.py:555 idm/ldap.py:572 idm/ldap.py:586
 #, python-format
 msgid "Error: %(error)s"
 msgstr "Fehler: %(error)s"
 
-#: idm/ldap.py:144
+#: idm/ldap.py:145
 msgid ""
 "Error: The username may only contain lowercase letters, numbers, dots and "
 "hyphens."
@@ -869,29 +874,23 @@ msgstr ""
 "Fehler: Der Benutzername darf nur Kleinbuchstaben, Zahlen, Punkte und "
 "Bindestriche enthalten."
 
-#: idm/ldap.py:200 idm/ldap.py:241
+#: idm/ldap.py:201 idm/ldap.py:242
 #, python-format
 msgid "User '%(cn)s' was not found."
 msgstr "Benutzer '%(cn)s' wurde nicht gefunden."
 
-#: idm/ldap.py:402
-#, fuzzy, python-format
-#| msgid "Error while adding DNS entry: %(error)s"
-msgid "Error while getting passwords: %(error)s"
-msgstr "Fehler beim Hinzufügen des DNS-Eintrags: %(error)s"
-
-#: idm/ldap.py:486
+#: idm/ldap.py:440
 msgid "The group name must not contain spaces."
 msgstr "Der Gruppenname darf keine Leerzeichen enthalten."
 
-#: idm/ldap.py:488
+#: idm/ldap.py:442
 msgid ""
 "The group name may only contain lowercase letters, numbers, dots and hyphens."
 msgstr ""
 "Der Gruppenname darf nur Kleinbuchstaben, Zahlen, Punkte und Bindestriche "
 "enthalten."
 
-#: idm/ldap.py:614
+#: idm/ldap.py:568
 msgid "Error: User is a system user and cannot be disabled."
 msgstr ""
 "Fehler: Benutzer ist ein Systembenutzer und kann nicht deaktiviert werden."
@@ -915,6 +914,14 @@ msgstr "API-Schlüssel"
 #: idm/models.py:31 idm/views.py:624 lac/templates/lac/base.html:266
 msgid "API Keys"
 msgstr "API-Schlüssel"
+
+#: idm/models.py:40
+msgid "Distinguished Name of the user in LDAP"
+msgstr ""
+
+#: idm/models.py:44
+msgid "The yescrypt hash of the user's password"
+msgstr ""
 
 #: idm/templates/idm/add_new_totp_device.html:4
 msgid "Add New TOTP Device"
@@ -4065,6 +4072,11 @@ msgstr ""
 #: wordpress_manager/views.py:117
 msgid "WordPress instance optimization successfully started!"
 msgstr "WordPress-Instanzoptimierung erfolgreich gestartet!"
+
+#, fuzzy, python-format
+#~| msgid "Error while adding DNS entry: %(error)s"
+#~ msgid "Error while getting passwords: %(error)s"
+#~ msgstr "Fehler beim Hinzufügen des DNS-Eintrags: %(error)s"
 
 #, fuzzy
 #~| msgid "Addon Center"

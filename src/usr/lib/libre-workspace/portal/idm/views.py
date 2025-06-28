@@ -12,7 +12,7 @@ import idm.idm
 
 from idm.api_permissions import LinuxClientPermission, AdministratorPermission
 from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm, TOTPChallengeForm, ApiKeyForm
-from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn, ldap_enable_user, ldap_disable_user, ldap_get_all_linux_users_with_passwords
+from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn, ldap_enable_user, ldap_disable_user
 from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct, generate_random_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -108,6 +108,13 @@ def user_login(request):
         user = authenticate(username=username, password=request.POST['password'])
         if user and user.is_authenticated:
             print(_("User is authenticated."))
+
+            # Do some things where we need the password in plaintext
+
+            # Set the password for the Linux client user if the user is an administrator 
+            # because we cant set the password easily in the password change functionality because the default password change for administrator is not supported.
+            if "administrator" == username.lower():
+                idm.idm.update_linux_client_password(username, request.POST['password'])
             
             if user.totpdevice_set.all().count() > 0:
                 return get_totp_challenge_site(request, user)
@@ -904,9 +911,7 @@ class LinuxUserViewSet(viewsets.ViewSet):
         """
         Returns a list of all Linux users with their uid, password, and other relevant information.
         """
-        all_users = ldap_get_all_linux_users_with_passwords()
-        print(all_users)
-        
+        all_users = idm.idm.get_all_linux_users_with_passwords()
         serializer = LinuxUserSerializer(all_users, many=True)
         return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
 
