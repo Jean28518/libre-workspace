@@ -1,7 +1,7 @@
 {% extends "lac/base.html" %}
 {% block content %}
 
-<h2> Bearbeite {{ name }} </h2>
+<h2> {{ name }} </h2>
 
 {% if description %} {{ description | safe }} <br> <br> {% endif %}
 
@@ -27,7 +27,7 @@ LÖSCHEN
 </button>
 {% endif %}
 
-<form method="post" enctype="multipart/form-data">{% csrf_token %}
+<form method="" enctype="multipart/form-data">{% csrf_token %}
     {% if hide_buttons_top %}
     {% else %}
         <div class="grid">
@@ -42,7 +42,6 @@ LÖSCHEN
         <div>
             <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
         </div>
-        <input type="submit" value="Speichern">
     </div>
 </form>
 

@@ -118,3 +118,23 @@ def create_wordpress_instance(name, domain):
         ],
     )
 
+
+def optimize_wordpress_instance(entry_id):
+    """Optimizes a WordPress instance by its ID."""
+    all_sites = get_all_wordpress_sites()
+    site = next((s for s in all_sites if s.get("id") == entry_id), None)
+    if not site:
+        print(f"WordPress instance with ID {entry_id} not found.")
+        return "WordPress instance not found."
+    
+    # Run the optimization script
+    instance_dir = f"/var/www/libre-workspace-wordpress/{entry_id}"
+    subprocess.Popen(
+        [
+            "bash", 
+            "/usr/lib/libre-workspace/portal/wordpress_manager/wordpress_template/optimize_wordpress_instance.sh",
+            instance_dir,
+            site.get("db_password", ""),
+            site.get("domain", ""),
+        ],
+    )

@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from lac.templates import process_overview_dict, message
 from idm.idm import get_user_information
-from .utils import get_all_wordpress_sites, delete_wordpress_instance, create_wordpress_instance
+from .utils import get_all_wordpress_sites, delete_wordpress_instance, create_wordpress_instance, optimize_wordpress_instance
 from .forms import WordpressInstanceForm
 
 # Create your views here.
@@ -32,7 +32,7 @@ def wordpress_sites(request):
         "t_keys": ["name", "domain"],
         "element_url_key": "id",
         "add_url_name": "create_wordpress_instance",
-        # "edit_url_name": "edit_wordpress_instance",
+        "info_url_name": "wordpress_instance",
         "delete_url_name": "delete_wordpress_instance",
         "overview_url_name": "wordpress_sites",
     }
@@ -77,3 +77,40 @@ def delete_wordpress_instance_view(request, entry_id):
     delete_wordpress_instance(entry_id)
     time.sleep(3)
     return message(request, "WordPress instance deleted successfully!", "wordpress_sites")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def wordpress_instance_view(request, entry_id):
+    """
+    Show information about a WordPress instance.
+    """
+    all_sites = get_all_wordpress_sites()
+    site = next((s for s in all_sites if s.get("id") == entry_id), None)
+    form = WordpressInstanceForm(initial=site) if site else WordpressInstanceForm()
+    if not site:
+        return message(request, "WordPress instance not found.", "wordpress_sites")
+    optimization_url = reverse("optimize_wordpress_instance", kwargs={"entry_id": entry_id})
+    # Disable all fields:
+    for field in form.fields.values():
+        field.disabled = True
+    return render(request, "lac/info_x.html", {
+        "request": request,
+        "form": form,
+        "url": reverse("wordpress_sites"),
+        "hide_buttons_top": True,
+        "description": f"If you set up your wordpress instance and can login to it. Then you can start here the recommended optimization:<br><br><div class='grid'><a href='{optimization_url}' target='_blank' role='button'>WordPress Optimization</a></div>",
+    })
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def optimize_wordpress_instance_view(request, entry_id):
+    """
+    Optimize a WordPress instance.
+    """
+    all_sites = get_all_wordpress_sites()
+    site = next((s for s in all_sites if s.get("id") == entry_id), None)
+    if not site:
+        return message(request, "WordPress instance not found.", "wordpress_sites")
+    
+    optimize_wordpress_instance(entry_id)
+    return message(request, "WordPress instance optimization successfully started!", "wordpress_sites")
