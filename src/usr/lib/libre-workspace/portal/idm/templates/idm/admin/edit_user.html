@@ -1,7 +1,8 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>'{{cn}}' bearbeiten</h2>
+<h2>{% translate "Edit" %} {{cn}}</h2>
 
 {% if message != "" %}
 <p><strong>{{ message | safe }}</strong></p>
@@ -10,15 +11,15 @@
 <button class="contrast outline"
 data-target="modal-deletion"
 onClick="toggleModal(event)">
-BENUTZER LÖSCHEN
+{% translate "DELETE USER" %}
 </button>
 
 <div class="grid">
     <div>
-        <a href="{% url "assign_groups_to_user" cn %}"role="button" class="secondary" style="display: block;">Gruppen-Mitgliedschaften</a>
+        <a href="{% url "assign_groups_to_user" cn %}"role="button" class="secondary" style="display: block;">{% translate "Group Memberships" %}</a>
     </div>
     <div>
-        <a href="{% url "reset_2fa" cn %}"role="button" class="secondary" style="display: block;">2-Faktor-Authentifizierung zurücksetzen</a>
+        <a href="{% url "reset_2fa" cn %}"role="button" class="secondary" style="display: block;">{% translate "Reset 2-Factor Authentication" %}</a>
     </div>
 </div>
 
@@ -27,17 +28,17 @@ BENUTZER LÖSCHEN
 <form method="post">{% csrf_token %}
     <div class="grid">
         <div>
-            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
-        <input type="submit" value="Änderungen speichern">
+        <input type="submit" value="{% translate "Save Changes" %}">
     </div>
     {{ form }}
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "user_overview" %}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
-        <input type="submit" value="Änderungen speichern">
+        <input type="submit" value="{% translate "Save Changes" %}">
     </div>
 </form>
 
@@ -52,9 +53,9 @@ BENUTZER LÖSCHEN
         data-target="modal-deletion"
         onClick="toggleModal(event)">
         </a>
-        <h3>Benutzer wirklich löschen?</h3>
+        <h3>{% translate "Really delete user?" %}</h3>
         <p>
-        Dieser Vorgang ist nicht mehr umkehrbar!
+        {% translate "This operation cannot be undone!" %}
         </p>
         <footer>
         <a href="#cancel"
@@ -62,12 +63,11 @@ BENUTZER LÖSCHEN
             class="secondary"
             data-target="modal-deletion"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% translate "Cancel" %}
         </a>
-        <a href="{% url "delete_user" cn %}"role="button" class="contrast" style="height: 50px">BENUTZER LÖSCHEN</a>
+        <a href="{% url "delete_user" cn %}"role="button" class="contrast" style="height: 50px">{% translate "DELETE USER" %}</a>
         </footer>
     </article>
 </dialog>
 
 {% endblock %}
-

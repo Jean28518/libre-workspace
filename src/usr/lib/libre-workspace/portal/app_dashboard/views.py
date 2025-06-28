@@ -5,6 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import reverse
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
+from django.utils.translation import gettext as _
 
 from .models import DashboardEntry
 from .forms import DashboardEntryForm, DashboardAppearanceForm
@@ -86,15 +87,15 @@ def new_app_dashboard_entry(request):
         if form.is_valid():
             # Check for duplicate title
             if DashboardEntry.objects.filter(title=form.cleaned_data["title"]).count() > 0:
-                message = "Es existiert bereits ein Dashboard mit dem Namen."
+                message = _("A dashboard with this name already exists.")
             else:
                 form.save()  
-                message = "Das Dashboard wurde erfolgreich erstellt."
+                message = _("The dashboard was successfully created.")
         else:
-            message = "Es ist ein Fehler aufgetreten: " + str(form.errors)
+            message = _("An error occurred: %(error)s") % {"error": str(form.errors)}
     else:
         form = DashboardEntryForm()
-    return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "Dasboard-Eintrag", "url": reverse("app_dashboard_entries"), "message": message, "branding": branding})
+    return render(request, "lac/create_x.html", {"request": request, "form": form, "type": _("Dashboard Entry"), "url": reverse("app_dashboard_entries"), "message": message, "branding": branding})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -105,16 +106,16 @@ def edit_app_dashboard_entry(request, id):
         form = DashboardEntryForm(request.POST, request.FILES, instance=dashboard_entry, auto_id=True)
         if form.is_valid():
             form.save()
-            message = "Das Dashboard wurde erfolgreich bearbeitet."
+            message = _("The dashboard was successfully edited.")
         else:
-            message = "Es ist ein Fehler aufgetreten: " + str(form.errors)
+            message = _("An error occurred: %(error)s") % {"error": str(form.errors)}
 
     form = DashboardEntryForm(instance=dashboard_entry)
     description = ""
     delete_url = reverse("delete_app_dashboard_entry", kwargs={"id": id})
     if dashboard_entry.is_system:
         delete_url = None
-        description = "Hinweis: Dieser Eintrag ist ein Systemeintrag. Der Link und die Aktivierung werden automatisch aus der Konfiguration generiert."
+        description = _("Note: This entry is a system entry. The link and activation are automatically generated from the configuration.")
     return render(request, "lac/edit_x.html", 
                   {"request": request, 
                    "form": form,
@@ -148,7 +149,7 @@ def entries_json(request):
             entry["link"] = domain + entry["link"]
 
     # Add a link to the portal itself
-    entries.append({"title": "Libre Workspace Portal", "link": domain, "icon_url": "/static/lac/icons/libre-workspace.webp", "description": "Übersicht über alle installierten Apps und Dienste auf dem Portal."})
+    entries.append({"title": _("Libre Workspace Portal"), "link": domain, "icon_url": "/static/lac/icons/libre-workspace.webp", "description": _("Overview of all installed apps and services on the portal.")})
 
     # Add the apps of nextcloud to the specific nextcloud entry if it exists
     # Only choose these apps: "calendar", "contacts", "deck", "notes", "tasks", "collectives"
@@ -184,17 +185,17 @@ def app_dashboard_appearance(request):
             app_dashboard_settings.set_value("portal_branding_title", form.cleaned_data["portal_branding_title"])
             app_dashboard_settings.set_value("primary_color", form.cleaned_data["primary_color"])
             app_dashboard_settings.set_value("secondary_color", form.cleaned_data["secondary_color"])
-            message = "Die Einstellungen wurden erfolgreich gespeichert."
+            message = _("The settings were successfully saved.")
     
     form.fields["force_dark_mode"].initial = app_dashboard_settings.get_value("force_dark_mode", False)
     form.fields["portal_branding_title"].initial = app_dashboard_settings.get_value("portal_branding_title", "")
     form.fields["primary_color"].initial = app_dashboard_settings.get_value("primary_color", "")
     form.fields["secondary_color"].initial = app_dashboard_settings.get_value("secondary_color", "")
     if app_dashboard_settings.get_value("portal_branding_logo", "") != "":
-        form.fields["portal_branding_logo"].label = "Logo des Portals (Aktuell: " + app_dashboard_settings.get_value("portal_branding_logo", "") + ")"
+        form.fields["portal_branding_logo"].label = _("Portal Logo (Current: %(logo)s)") % {"logo": app_dashboard_settings.get_value("portal_branding_logo", "")}
     reset_url = reverse("reset_app_dashboard_appearance")
     branding = app_dashboard_settings.get_all_values()
-    return render(request, "lac/generic_form.html", {"request": request, "form": form, "heading": "Erscheinungsbild", "description": "Diese Einstellungen betreffen alle Benutzer<br>Aktuell wird nur der Bereich des Portals (ohne Verwaltung) angepasst." , "url": "/", "message": message, "action": "Speichern", "hide_buttons_top": True, "additional_content": f"<center><a href='{reset_url}'>Zurücksetzen</a></center>", "branding": branding})
+    return render(request, "lac/generic_form.html", {"request": request, "form": form, "heading": _("Appearance"), "description": _("These settings affect all users<br>Currently only the portal area (without administration) is adjusted.") , "url": "/", "message": message, "action": _("Save"), "hide_buttons_top": True, "additional_content": f"<center><a href='{reset_url}'>{_('Reset')}</a></center>", "branding": branding})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)

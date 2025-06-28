@@ -1,35 +1,36 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Systemkonfiguration</h2>
+<h2>{% translate "System Configuration" %}</h2>
 
 <div class="grid">
     <a class="secondary" href="{% url "email_configuration" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">email</span> 
             <br> 
-            E-Mail Konfiguration
+            {% translate "Email Configuration" %}
         </article>
     </a>
     <a class="secondary" href="{% url "module_management" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">dashboard</span> 
             <br> 
-            Libre Workspace Module
+            {% translate "Libre Workspace Modules" %}
         </article>
     </a>
     <a class="secondary" href="{% url "addon_center" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">star</span> 
             <br> 
-            Addon Center
+            {% translate "Addon Center" %}
         </article>
     </a>
     <a class="secondary" href="{% url "critical_system_configuration" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">construction</span> 
             <br> 
-            Kritische Systemkonfiguration
+            {% translate "Critical System Configuration" %}
         </article>
     </a>
     
@@ -40,28 +41,28 @@
         <article style="text-align: center;">
             <span class="material-icons md-96">refresh</span> 
             <br> 
-            Automatischer Reboot/Shutdown
+            {% translate "Automatic Reboot/Shutdown" %}
         </article>
     </a> 
     <a class="secondary" href="{% url "additional_services" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">rss_feed</span> 
             <br> 
-            Zusätzliche Dienste
+            {% translate "Additional Services" %}
         </article>
     </a>
     <a class="secondary" href="{% url "oidc_client_overview" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">login</span> 
             <br> 
-            OpenID Connect (SSO)
+            {% translate "OpenID Connect (SSO)" %}
         </article>
     </a>
     <a class="secondary" href="{% url "miscellaneous_settings" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">settings</span> 
             <br> 
-            Sonstige Einstellungen
+            {% translate "Miscellaneous Settings" %}
         </article>
     </a>
     
@@ -73,14 +74,14 @@
         <article style="text-align: center;">
             <span class="material-icons md-96">web</span> 
             <br> 
-            Webserver Konfiguration
+            {% translate "Webserver Configuration" %}
         </article>
     </a> 
     <a class="secondary" href="{% url "wordpress_sites" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96">wordpress</span> 
             <br> 
-            Wordpress Sites
+            {% translate "Wordpress Sites" %}
         </article>
     </a> 
     <div></div>

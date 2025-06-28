@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext as _
 
 from .models import DashboardEntry
 
@@ -11,18 +12,18 @@ class DashboardEntryForm(forms.ModelForm):
         model = DashboardEntry
         fields = ("title", "description", "link", "icon", "order", "is_active", "groups")
         labels = {
-            "title": "Titel",
-            "description": "Beschreibung",
-            "link": "Link",
-            "icon": "Icon",
-            "order": "Reihenfolge (< 0: Vor den festen Icons, > 0: Hinter den festen Icons)",
-            "is_active": "Aktiv",
-            "groups": "Gruppen, die diesen Eintrag sehen können (Komma-separierte Liste). Leer lassen, um für alle sichtbar zu sein. Der Administator sieht immer alle Einträge."
+            "title": _("Title"),
+            "description": _("Description"),
+            "link": _("Link"),
+            "icon": _("Icon"),
+            "order": _("Order (< 0: Before fixed icons, > 0: After fixed icons)"),
+            "is_active": _("Active"),
+            "groups": _("Groups that can see this entry (comma-separated list). Leave empty to be visible to all. The administrator always sees all entries.")
         }
 
 class DashboardAppearanceForm(forms.Form):
-    force_dark_mode = forms.BooleanField(label="Dunkles Design erzwingen", required=False)
-    portal_branding_title = forms.CharField(label="Titel des Portals", required=False)
-    portal_branding_logo = forms.ImageField(label="Logo des Portals", required=False, widget=forms.FileInput(attrs={"accept": "image/*"}))
-    primary_color = forms.CharField(label="Primärfarbe (HEX-Code) (Bsp: #09928b)", required=False)
-    secondary_color = forms.CharField(label="Sekundärfarbe (HEX-Code) (Bsp: #07746d)", required=False)
+    force_dark_mode = forms.BooleanField(label=_("Force dark mode"), required=False)
+    portal_branding_title = forms.CharField(label=_("Portal title"), required=False)
+    portal_branding_logo = forms.ImageField(label=_("Portal logo"), required=False, widget=forms.FileInput(attrs={"accept": "image/*"}))
+    primary_color = forms.CharField(label=_("Primary color (HEX code) (e.g.: #09928b)"), required=False)
+    secondary_color = forms.CharField(label=_("Secondary color (HEX code) (e.g.: #07746d)"), required=False)

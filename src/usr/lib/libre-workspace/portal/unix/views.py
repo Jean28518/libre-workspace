@@ -19,6 +19,7 @@ from lac.templates import process_overview_dict, message
 import idm.forms
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import gettext as _
 
 # Create your views here.
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -85,10 +86,9 @@ def backup_settings(request):
             unix.set_value("REMOTEPATH", "/usr/local/bin/borg" if form.cleaned_data["borg_repo_is_on_synology"] else "")
             unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"]),
             unix.set_value("ADDITIONAL_BORG_OPTIONS", form.cleaned_data["additional_borg_options"])
-            # message = "Einstellungen gespeichert."
-            message = "Einstellungen gespeichert."
+            message = _("Settings saved.")
         else:
-            message = "Einstellungen konnten nicht gespeichert werden."
+            message = _("Settings could not be saved.")
     public_key = unix.get_public_key()
     return render(request, "unix/backup_settings.html", {"form": form, "message": message, "public_key": public_key})
 
@@ -151,7 +151,7 @@ def data_management(request):
 def mount(request, partition):
     message = unix.mount(partition)
     if message != "":
-        return HttpResponse("Fehler beim Einhängen: " + message)
+        return HttpResponse(_("Error mounting: %(message)s") % {"message": message})
     time.sleep(1)
     return redirect("data_management")
 
@@ -160,7 +160,7 @@ def mount(request, partition):
 def umount(request, partition):
     message = unix.umount(partition)
     if message != "":
-        return HttpResponse("Fehler beim Aushängen: " + message)
+        return HttpResponse(_("Error unmounting: %(message)s") % {"message": message})
     time.sleep(1)
     return redirect("data_management")
 
@@ -170,9 +170,9 @@ def data_export(request):
     if request.method == "POST":
         partition = request.POST.get("partition-export", "")
     else:
-        return HttpResponse("Fehler: POST Request erwartet")
+        return HttpResponse(_("Error: POST Request expected"))
     if partition == "":
-        return HttpResponse("Fehler: Keine Partition ausgewählt")
+        return HttpResponse(_("Error: No partition selected"))
     partition += "/libre_workspace_export/"
     unix.export_data(partition)
     time.sleep(1)
@@ -191,23 +191,23 @@ def data_import_1(request):
     if request.method == "POST":
         current_directory = request.POST.get("current_directory", "")
         if current_directory == "":
-            return HttpResponse("Fehler: Kein Verzeichnis angegeben")
+            return HttpResponse(_("Error: No directory specified"))
         # The user is the nextcloud path to the user directory
         user_import = request.POST.get("user_import", "")
         if user_import == "":
-            return HttpResponse("Fehler: Kein Benutzer angegeben")
+            return HttpResponse(_("Error: No user specified"))
         request.session["current_directory"] = current_directory
         request.session["user_import"] = user_import
         request.session["redirection_after_selection"] = "data_import_2"
         request.session["redirection_on_cancel"] = "data_management"
-        request.session["description"] = "Bitte wählen Sie das Verzeichnis aus, welches Sie importieren möchten."
+        request.session["description"] = _("Please select the directory you want to import.")
         
         return redirect("pick_folder")
     
 @staff_member_required(login_url=settings.LOGIN_URL)
 def data_import_2(request):
     if request.session["current_directory"] == "/":
-        return HttpResponse("Fehler: Das Root-Verzeichnis kann nicht importiert werden")
+        return HttpResponse(_("Error: The root directory cannot be imported"))
     unix.import_folder_to_nextcloud_user(request.session["current_directory"], request.session["user_import"])
     time.sleep(1)
     return redirect("data_management")
@@ -222,7 +222,7 @@ def pick_path(request):
     if request.session.get("allow_files", "") == "True":
         allow_files = True
     if request.session.get("current_directory", "") == "":
-        return HttpResponse("Fehler: Kein Verzeichnis angegeben")
+        return HttpResponse(_("Error: No directory specified"))
     description = request.session.get("description", "")
 
 
@@ -241,7 +241,7 @@ def pick_path(request):
                         return redirect(request.session["redirection_after_selection"])
                     else:
                         request.session["allow_files"] = request.POST.get("allow_files", "False")
-                        return HttpResponse("Fehler: Es wurde eine Datei ausgewählt, aber ein Verzeichnis erwartet.")                    
+                        return HttpResponse(_("Error: A file was selected, but a directory was expected."))                    
                 request.session["current_directory"] = request.session["current_directory"] + "/" + request.POST.get("pick", "")
             request.session["current_directory"] = request.session["current_directory"].replace("//", "/")
         if request.POST.get("select", "") != "":
@@ -261,22 +261,22 @@ def pick_path(request):
 @csrf_exempt
 def unix_send_mail(request):
     if request.method != "POST":
-        return HttpResponseBadRequest("Only POST requests are allowed")
+        return HttpResponseBadRequest(_("Only POST requests are allowed"))
 
     # if ip address 127.0.0.1 return unauthorized
     # (But because we are using caddy we are not using the ip address of the request)
     if request.META.get("REMOTE_ADDR", "") != "127.0.0.1":
-        return HttpResponse("Unauthorized. Request not local.")
+        return HttpResponse(_("Unauthorized. Request not local."))
     
     # So we need to check additional headers
     # Check if the request is made not from caddy
     # Check if the request has the header X-Forwarded-For
     if request.META.get("HTTP_X_FORWARDED_FOR", "") != "":
-        return HttpResponse("Unauthorized. Request is seems not directly made.")
+        return HttpResponse(_("Unauthorized. Request is seems not directly made."))
     
     # Also we need the header for the lw admin token
     if request.POST.get("lw_admin_token", "") != unix.get_local_admin_token():
-        return HttpResponse("Unauthorized. Token is not valid.")
+        return HttpResponse(_("Unauthorized. Token is not valid."))
     
     # Get admin email address
     admin_user = get_admin_user()
@@ -286,7 +286,7 @@ def unix_send_mail(request):
         if admin_user.get("mail", None) != None:
             recipient = admin_user["mail"]
         if recipient == "":
-            return HttpResponseBadRequest("No recipient given and no admin email address found")
+            return HttpResponseBadRequest(_("No recipient given and no admin email address found"))
         
     recipients = []
     recipients.append(recipient)
@@ -297,12 +297,12 @@ def unix_send_mail(request):
     subject = request.POST.get("subject", "")
     subject += f" - ({unix.get_libre_workspace_name()})"
     message = request.POST.get("message", "").replace("\\n", "\n")
-    message += f"\n\nMessage from: {unix.get_libre_workspace_name()}"
+    message += _("\n\nMessage from: %(libre_workspace_name)s") % {"libre_workspace_name": unix.get_libre_workspace_name()}
     attachment_path = request.POST.get("attachment_path", "")
 
     email.send_mail(recipients, subject, message, attachment_path)
 
-    return HttpResponse("Mail send successfully")
+    return HttpResponse(_("Mail sent successfully"))
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -357,7 +357,7 @@ def email_configuration(request):
             else:
                 cfg.set_value("EMAIL_USE_TLS", "False")
                 cfg.set_value("EMAIL_USE_SSL", "True")
-            message = "E-Mail Konfiguration gespeichert."
+            message = _("Email configuration saved.")
             mail_config = form.cleaned_data.copy()
             if (mail_config["password"] == ""):
                 mail_config["password"] = current_email_conf["password"]
@@ -388,7 +388,7 @@ def module_management(request):
             elif data["online_office"] == "Collabora" and (unix.is_onlyoffice_installed() or not unix.is_collabora_installed()):
                 unix.remove_module("onlyoffice")
                 unix.setup_module("collabora")
-            message = "Änderungen werden angewendet. Dies kann einige Minuten dauern."
+            message = _("Changes are being applied. This may take a few minutes.")
         
     modules = unix.get_software_modules()
     # Remove the modules with the id "onlyoffice" and "collabora"
@@ -413,23 +413,23 @@ def module_management(request):
 def install_module(request, name):
     response = unix.setup_module(name)
     if response != None:
-        return render(request, "lac/message.html", {"message": f"{name} konnte nicht deinstalliert werden: {response}", "url": reverse("dashboard")})
-    return render(request, "lac/message.html", {"message": f"{name} wird installiert. Dies kann einige Minuten dauern.", "url": reverse("dashboard")})
+        return render(request, "lac/message.html", {"message": _("%(name)s could not be uninstalled: %(response)s") % {"name": name, "response": response}, "url": reverse("dashboard")})
+    return render(request, "lac/message.html", {"message": _("%(name)s is being installed. This may take a few minutes.") % {"name": name}, "url": reverse("dashboard")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def uninstall_module(request, name):
     response = unix.remove_module(name)
     if response != None:
-        return render(request, "lac/message.html", {"message": f"{name} konnte nicht deinstalliert werden: {response}", "url": reverse("dashboard")})
-    return render(request, "lac/message.html", {"message": f"{name} wird deinstalliert. Dies kann einige Minuten dauern.", "url": reverse("dashboard")})
+        return render(request, "lac/message.html", {"message": _("%(name)s could not be uninstalled: %(response)s") % {"name": name, "response": response}, "url": reverse("dashboard")})
+    return render(request, "lac/message.html", {"message": _("%(name)s is being uninstalled. This may take a few minutes.") % {"name": name}, "url": reverse("dashboard")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def mount_backups(request):
     message = unix.mount_backups()
     if message != None:
-        return render(request, "lac/message.html", {"message": f"Fehler beim Einhängen: {message}", "url": reverse("unix_index")})
+        return render(request, "lac/message.html", {"message": _("Error mounting: %(message)s") % {"message": message}, "url": reverse("unix_index")})
     return redirect("unix_index")
 
 
@@ -437,14 +437,14 @@ def mount_backups(request):
 def umount_backups(request):
     message = unix.umount_backups()
     if message != None:
-        return render(request, "lac/message.html", {"message": f"Fehler beim Aushängen: {message}", "url": reverse("unix_index")})
+        return render(request, "lac/message.html", {"message": _("Error unmounting: %(message)s") % {"message": message}, "url": reverse("unix_index")})
     return redirect("unix_index")
 
 
 # We are getting all information from request.session
 @staff_member_required(login_url=settings.LOGIN_URL)
 def recover_path(request):
-    error_page = render(request, "lac/message.html", {"message": "Fehler: Das Verzeichnis kann nicht wiederhergestellt werden. Bitte wählen Sie ein Verzeichnis in <code>/backups</code> aus.", "url": reverse("unix_index")})
+    error_page = render(request, "lac/message.html", {"message": _("Error: The directory cannot be restored. Please select a directory in <code>/backups</code>."), "url": reverse("unix_index")})
 
     # Check if everything is okay
     path = request.session["current_directory"]
@@ -462,22 +462,22 @@ def recover_path(request):
     if request.method == "POST":
         # Do the recovery
         if request.POST.get("confirm", "") != "on":
-            return render(request, "lac/message.html", {"message": "Sie müssen die Wiederherstellung bestätigen.", "url": reverse("recover_path")})
+            return render(request, "lac/message.html", {"message": _("You must confirm the recovery."), "url": reverse("recover_path")})
         
         response = unix.recover_file_or_dir(path)
         if response != None:
-            return render(request, "lac/message.html", {"message": f"Das Verzeichnis konnte nicht wiederhergestellt werden: <code>{response}</code>", "url": reverse("unix_index")})
-        return render(request, "lac/message.html", {"message": "Wiederherstellung wird durchgeführt. Dies kann einige Minuten dauern.", "url": reverse("unix_index")})
+            return render(request, "lac/message.html", {"message": _("The directory could not be restored: <code>%(response)s</code>") % {"response": response}, "url": reverse("unix_index")})
+        return render(request, "lac/message.html", {"message": _("Recovery is in progress. This may take a few minutes."), "url": reverse("unix_index")})
     else:
         # Render the confirmation page
-        return render(request, "lac/confirm.html", {"message": f"Bitte bestätigen Sie die Wiederherstellung von {path}.<br>Die Wiederherstellung wird bestehende Dateien überschreiben.", "url_cancel": reverse("unix_index")})
+        return render(request, "lac/confirm.html", {"message": _("Please confirm the recovery of %(path)s.<br>The recovery will overwrite existing files.") % {"path": path}, "url_cancel": reverse("unix_index")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def enter_recovery_selector(request):
     request.session["redirection_after_selection"] = "recover_path"
     request.session["redirection_on_cancel"] = "unix_index"
-    request.session["description"] = "Bitte wählen Sie das Verzeichnis oder die Datei aus, welche Sie wiederherstellen möchten. Die Wiederherstellung wird bestehende Dateien überschreiben."
+    request.session["description"] = _("Please select the directory or file you want to restore. The restore will overwrite existing files.")
     request.session["allow_files"] = "True"
     request.session["current_directory"] = "/backups"
     return redirect("pick_folder")
@@ -488,26 +488,26 @@ def test_mail(request):
     user_information = idm.ldap.get_user_information_of_cn(request.user.username)
     mail_adress = user_information.get("mail", "")
     if mail_adress == "" or mail_adress == None:
-        return render(request, "lac/message.html", {"message": "Keine E-Mail-Adresse gefunden. Bitte definieren Sie eine Mail-Adresse in Ihren Benutzereinstellungen.", "url": reverse("user_settings")})
-    message = email.send_mail([mail_adress], "Testmail - Libre Workspace", "Das ist eine Testmail.\nIhre Mail-Einstellungen scheinen korrekt zu sein.")
+        return render(request, "lac/message.html", {"message": _("No email address found. Please define an email address in your user settings."), "url": reverse("user_settings")})
+    message = email.send_mail([mail_adress], _("Test mail - Libre Workspace"), _("This is a test mail.\nYour mail settings seem to be correct."))
     if message != None:
-        return render(request, "lac/message.html", {"message": f"Testmail konnte nicht versendet werden: <code>{message}</code>", "url": reverse("email_configuration")})
-    return render(request, "lac/message.html", {"message": "Testmail wurde erfolgreich versendet. Bitte überprüfen Sie Ihr Postfach.", "url": reverse("email_configuration")})
+        return render(request, "lac/message.html", {"message": _("Test mail could not be sent: <code>%(message)s</code>") % {"message": message}, "url": reverse("email_configuration")})
+    return render(request, "lac/message.html", {"message": _("Test mail sent successfully. Please check your inbox."), "url": reverse("email_configuration")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def addons(request):
     addon_creator_url = reverse("addon_creator")
     overview = process_overview_dict({
-        "heading": "Lokale Addon Verwaltung",
-        "element_name": "Addon",
+        "heading": _("Local Addon Management"),
+        "element_name": _("Addon"),
         "element_url_key": "id",
         "elements": unix.get_all_addon_modules(),
-        "t_headings": ["Name", "Beschreibung", "Author"],
+        "t_headings": [_("Name"), _("Description"), _("Author")],
         "t_keys": ["name", "description", "author"],
         "add_url_name": "add_addon",
         "delete_url_name": "remove_addon",
-        "hint": f"<a href='{addon_creator_url}'>Add-On erstellen</a>"
+        "hint": _("<a href='%(addon_creator_url)s'>Create Add-On</a>") % {"addon_creator_url": addon_creator_url}
     })
     return render(request, "lac/overview_x.html", {"overview": overview})
 
@@ -519,7 +519,7 @@ def add_addon(request):
         # Move the file to /tmp folder
         # Check if the file is a zip file
         if not file.name.endswith(".zip") and not file.name.endswith(".deb"):
-            return message(request, "Die Datei muss eine .zip oder .deb Datei sein.", "add_addon")
+            return message(request, _("The file must be a .zip or .deb file."), "add_addon")
         # Move the file to /tmp
         with open("/tmp/" + file.name, "wb+") as destination:
             for chunk in file.chunks():
@@ -527,22 +527,22 @@ def add_addon(request):
         # Install the addon
         response = unix.install_addon("/tmp/" + file.name)
         if response != None:
-            return message(request, f"Das Addon konnte nicht hochgeladen werden: {response}", "addons")
+            return message(request, _("The Addon could not be uploaded: %(response)s") % {"response": response}, "addons")
         appendix = ""
         if file.name.endswith(".deb"):
-            appendix = " Das Setup des Addons läuft gerade im Hintergrund und kann einige Minuten dauern."
-        return message(request, "Das Addon wurde hochgeladen." + appendix, "module_management")
+            appendix = _(" The Addon setup is currently running in the background and may take a few minutes.")
+        return message(request, _("The Addon has been uploaded.") + appendix, "module_management")
     form = AddonForm()
-    return render(request, "lac/generic_form.html", {"form": form, "heading": "Add-On hinzufügen", "hide_buttons_top": "True", "action": "Hochladen", "url": reverse("addons")})
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Add Add-On"), "hide_buttons_top": "True", "action": _("Upload"), "url": reverse("addons")})
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def remove_addon(request, addon_id):
     if unix.is_module_installed(addon_id):
-        return message(request, f"Das Addon kann nicht deinstalliert werden, da es noch in Benutzung ist.", "addons")
+        return message(request, _("The Addon cannot be uninstalled because it is still in use."), "addons")
     response = unix.uninstall_addon(addon_id)
     if response != None:
-        return message(request, f"Das Addon konnte nicht deinstalliert werden: <code>{response}</code>", "addons")
-    return message(request, f"Das Addon wurde deinstalliert.", "addons")
+        return message(request, _("The Addon could not be uninstalled: <code>%(response)s</code>") % {"response": response}, "addons")
+    return message(request, _("The Addon has been uninstalled."), "addons")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -550,9 +550,9 @@ def change_libre_workspace_name(request):
     if request.method == "POST":
         name = request.POST.get("name", "")
         unix.set_value("LIBRE_WORKSPACE_NAME", name)
-        return message(request, "Der Name wurde geändert.", "unix_index")
+        return message(request, _("The name has been changed."), "unix_index")
     form = forms.ChangeLibreWorkspaceNameForm()
-    return render(request, "lac/create_x.html", {"form": form, "heading": "Libre Workspace Name ändern", "hide_buttons_top": "True", "url": reverse("unix_index")})
+    return render(request, "lac/create_x.html", {"form": form, "heading": _("Change Libre Workspace Name"), "hide_buttons_top": "True", "url": reverse("unix_index")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -566,18 +566,18 @@ def change_ip_address(request):
         ip = request.POST.get("ip", "")
         # Check if the ip is valid
         if not unix.is_valid_ip(ip):
-            return message(request, "Die IP-Adresse ist nicht gültig.", "critical_system_configuration")
+            return message(request, _("The IP address is not valid."), "critical_system_configuration")
         unix.set_value("IP", ip)
-        return message(request, "Die IP-Adresse wurde geändert.", "critical_system_configuration")
+        return message(request, _("The IP address has been changed."), "critical_system_configuration")
     form = forms.ChangeIpAdressForm()
     return render(request, "lac/generic_form.html", 
                   {"form": form, 
-                   "heading": "IP-Adresse ändern",
-                   "action": "Ändern",
+                   "heading": _("Change IP Address"),
+                   "action": _("Change"),
                    "hide_buttons_top": "True", 
                    "url": reverse("critical_system_configuration"), 
                    "danger": "True",
-                   "description": "Bitte geben Sie die neue IP-Adresse des Servers ein. Der Server wird direkt danach neu gestartet."})
+                   "description": _("Please enter the new IP address of the server. The server will restart immediately afterwards.")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -585,25 +585,25 @@ def change_master_password(request):
     if request.method == "POST":
         current_password = unix.get_administrator_password()
         if request.POST.get("old_password", "") != current_password:
-            return message(request, "Das aktuelle Passwort ist falsch.", "critical_system_configuration")
+            return message(request, _("The current password is incorrect."), "critical_system_configuration")
         if request.POST.get("new_password", "") != request.POST.get("new_password_repeat", ""):
-            return message(request, "Die neuen Passwörter stimmen nicht überein.", "critical_system_configuration")
+            return message(request, _("The new passwords do not match."), "critical_system_configuration")
         password = request.POST.get("new_password", "")
         errors = unix.password_challenge(password)
         if errors == "":
             unix.change_master_password(password)
-            return message(request, "Das Master-Passwort wurde geändert. Der Server startet gleich neu.", "critical_system_configuration")
+            return message(request, _("The master password has been changed. The server will restart shortly."), "critical_system_configuration")
         else:
-            return message(request, f"Das neue Passwort ist nicht sicher genug: {errors}", "critical_system_configuration")
+            return message(request, _("The new password is not strong enough: %(errors)s") % {"errors": errors}, "critical_system_configuration")
     form = idm.forms.PasswordForm()
     return render(request, "lac/generic_form.html", 
                   {"form": form, 
-                   "heading": "Master-Passwort ändern",
-                   "action": "Ändern",
+                   "heading": _("Change Master Password"),
+                   "action": _("Change"),
                    "hide_buttons_top": "True", 
                    "url": reverse("critical_system_configuration"), 
                    "danger": "True",
-                   "description": "Bitte geben Sie das neue Master-Passwort ein. Das Master-Passwort wird direkt danach geändert und der Server wird direkt neu gestartet."})
+                   "description": _("Please enter the new master password. The master password will be changed immediately afterwards and the server will restart.")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -620,13 +620,13 @@ def miscellaneous_settings(request):
             unix.set_value("CPU_WARNING_THRESHOLD", form.cleaned_data["cpu_warning_threshold"])
             unix.set_value("RAM_WARNING_THRESHOLD", form.cleaned_data["ram_warning_threshold"])
             unix.set_value("DISK_WARNING_THRESHOLD", form.cleaned_data["disk_warning_threshold"])
-            return message(request, "Einstellungen gespeichert.", "system_configuration")
+            return message(request, _("Settings saved."), "system_configuration")
     form.fields["disable_nextcloud_user_administration"].initial = not unix.is_nextcloud_user_administration_enabled()
     form.fields["additional_mail_addresses_for_system_mails"].initial = unix.get_value("ADDITIONAL_MAIL_ADDRESSES_FOR_SYSTEM_MAILS", "")
     form.fields["cpu_warning_threshold"].initial = unix.get_value("CPU_WARNING_THRESHOLD", "80")
     form.fields["ram_warning_threshold"].initial = unix.get_value("RAM_WARNING_THRESHOLD", "80")
     form.fields["disk_warning_threshold"].initial = unix.get_value("DISK_WARNING_THRESHOLD", "90")
-    return render(request, "lac/generic_form.html", {"form": form, "heading": "Verschiedene Einstellungen", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True"})
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Miscellaneous Settings"), "action": _("Save"), "url": reverse("system_configuration"), "hide_buttons_top": "True"})
 
 
 # API-Call
@@ -642,22 +642,22 @@ def additional_services(request):
         form = forms.AdditionalServicesForm(request.POST)
         if form.is_valid():
             unix.set_additional_services_control_files(form.cleaned_data["start_additional_services"], form.cleaned_data["stop_additional_services"])
-            return message(request, "Änderungen gespeichert.", "system_configuration")
-        return message(request, "Fehler: Eingaben ungültig.", "additional_services")
+            return message(request, _("Changes saved."), "system_configuration")
+        return message(request, _("Error: Invalid input."), "additional_services")
     
     form = forms.AdditionalServicesForm()
     (start_additional_services, stop_additional_services) = unix.get_additional_services_control_files()
     form.fields["start_additional_services"].initial = start_additional_services
     form.fields["stop_additional_services"].initial = stop_additional_services
-    return render(request, "lac/generic_form.html", {"form": form, "heading": "Zusätzliche Dienste", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": "Fügen Sie gültige Bash-Befehle hinzu, welche für das Starten und Stoppen ihrer zusätlichen Dienste ausgeführt werden sollen. Verwenden Sie keine cd-Befehle oder ähnliches."})
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Additional Services"), "action": _("Save"), "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": _("Add valid Bash commands to be executed for starting and stopping your additional services. Do not use cd commands or similar.")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def update_libre_workspace(request):
     m = unix.update_libre_workspace()
     if m != None:
-        return message(request, f"Libre Workspace konnte nicht aktualisiert werden: <code>{m}</code>", "unix_index")
-    return message(request, "Libre Workspace wird aktualisiert. Dies kann einige Minuten dauern. Libre Workspace ist für kurze Zeit nicht erreichbar.", "unix_index")
+        return message(request, _("Libre Workspace could not be updated: <code>%(m)s</code>") % {"m": m}, "unix_index")
+    return message(request, _("Libre Workspace is being updated. This may take a few minutes. Libre Workspace will be unavailable for a short time."), "unix_index")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -675,27 +675,27 @@ def automatic_shutdown(request):
             unix.set_value("AUTOMATIC_SHUTDOWN_WEEKDAY", form.cleaned_data["weekday"])
             
             if len(form.cleaned_data["time"]) != 5 or len(form.cleaned_data["time"].split(":")) != 2:
-                return message(request, "Fehler: Das Zeit-Format scheint nicht richtig zu sein.", "automatic_shutdown")
+                return message(request, _("Error: The time format seems incorrect."), "automatic_shutdown")
 
             unix.set_value("AUTOMATIC_SHUTDOWN_TIME", form.cleaned_data["time"])
             print(form.cleaned_data["weekday"])
-            return message(request, "Einstellungen gespeichert.", "system_configuration")
-        return message(request, "Fehler: Eingaben ungültig.", "automatic_shutdown")
-    return render(request, "lac/generic_form.html", {"form": form, "heading": "Automatische Abschaltung", "action": "Speichern", "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": "Hinweis: Der Vorgang wird nur ab der Konfigurierten Zeit innerhalb einer Stunde ausgeführt. Dauert also bspw. ein gleichzeitig terminiertes Backup oder Update länger als eine Stunde, wird der Server nicht heruntergefahren/neugestartet."})
+            return message(request, _("Settings saved."), "system_configuration")
+        return message(request, _("Error: Invalid input."), "automatic_shutdown")
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Automatic Shutdown"), "action": _("Save"), "url": reverse("system_configuration"), "hide_buttons_top": "True", "description": _("Note: The process will only be executed within one hour of the configured time. If, for example, a simultaneously scheduled backup or update takes longer than one hour, the server will not be shut down/restarted.")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def get_system_data_for_support(request):
     unix.get_system_data_for_support()
-    return message(request, "Systeminformationen wurden gesammelt und Passwörter entfernt. Klicken Sie auf weiter, um diese jetzt herunterzuladen.", "/static/support_data.zip")
+    return message(request, _("System information has been collected and passwords removed. Click continue to download now."), "/static/support_data.zip")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def update_module_now(request, module):
     m = unix.update_module(module)
     if m != None:
-        return message(request, f"Das Modul konnte nicht aktualisiert werden: <code>{m}</code>", "unix_index")
-    return message(request, "Das Modul wird nun im Hintergrund aktualisiert. Dies kann einige Minuten dauern.", "unix_index")
+        return message(request, _("The module could not be updated: <code>%(m)s</code>") % {"m": m}, "unix_index")
+    return message(request, _("The module is now being updated in the background. This may take a few minutes."), "unix_index")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -706,8 +706,8 @@ def desktop_settings(request):
         if form.is_valid():
             new_password = form.cleaned_data["set_desktop_password"]
             unix.desktop_add_user(request.user.username, new_password, request.user.is_superuser)
-            return message(request, "Einstellungen gespeichert.", "system_configuration")
-        return message(request, "Fehler: Eingaben ungültig.", "desktop_settings")
+            return message(request, _("Settings saved."), "system_configuration")
+        return message(request, _("Error: Invalid input."), "desktop_settings")
     
 
-    return render(request, "lac/generic_form.html", {"form": form, "heading": "Cloud Desktop", "action": "Anwenden", "url": reverse("dashboard"), "hide_buttons_top": "True", "description": "Hinweis: Das Passwort wird im Klartext gespeichert. Das Passwort wird nur für die Passwortabfrage während der Nutzung wie beispielweise für administrative Aufgaben benötigt. Das Passwort wird für das Login nicht benötigt. Das Passwort kann in der Zukunft beim Ändern anderer Benutzerparameter wegen Sicherheitsgründen wieder deaktiviert werden."})
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Cloud Desktop"), "action": _("Apply"), "url": reverse("dashboard"), "hide_buttons_top": "True", "description": _("Note: The password is saved in plain text. The password is only required for password queries during use, for example for administrative tasks. The password is not required for login. The password can be deactivated again in the future when changing other user parameters for security reasons.")})

@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.translation import gettext as _
 
 from lac.templates import process_overview_dict, message
 from idm.idm import get_user_information
@@ -24,11 +25,11 @@ def wordpress_sites(request):
     Overview of all WordPress sites.
     """
     overview_dict = {
-        "title": "WordPress Sites",
+        "title": _("WordPress Sites"),
         "elements": get_all_wordpress_sites(),  # This function should return a list of WordPress sites
-        "element_name": "WordPress Instance",
+        "element_name": _("WordPress Instance"),
         "element_url_key": "id",
-        "t_headings": ["Name", "Domain"],
+        "t_headings": [_("Name"), _("Domain")],
         "t_keys": ["name", "domain"],
         "element_url_key": "id",
         "add_url_name": "create_wordpress_instance",
@@ -56,12 +57,12 @@ def create_wordpress_instance_view(request):
         msg = create_wordpress_instance(name, domain)
         if msg:
             return message(request, msg, "wordpress_sites")
-        return message(request, "WordPress instance created successfully!", "wordpress_sites")
+        return message(request, _("WordPress instance created successfully!"), "wordpress_sites")
     
     # # Get the admin user email from the request
     # if request.user.is_authenticated:
     #     form.fields["admin_email"].initial = get_user_information(request.user.username).get("mail", "")
-    return render(request, "lac/create_x.html", {"request": request, "form": form, "type": "WordPress Instance", "url": reverse("wordpress_sites")})
+    return render(request, "lac/create_x.html", {"request": request, "form": form, "type": _("WordPress Instance"), "url": reverse("wordpress_sites")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -72,11 +73,11 @@ def delete_wordpress_instance_view(request, entry_id):
     all_sites = get_all_wordpress_sites()
     site = next((s for s in all_sites if s.get("id") == entry_id), None)
     if not site:
-        return message(request, "WordPress instance not found.", "wordpress_sites")
+        return message(request, _("WordPress instance not found."), "wordpress_sites")
 
     delete_wordpress_instance(entry_id)
     time.sleep(3)
-    return message(request, "WordPress instance deleted successfully!", "wordpress_sites")
+    return message(request, _("WordPress instance deleted successfully!"), "wordpress_sites")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -88,7 +89,7 @@ def wordpress_instance_view(request, entry_id):
     site = next((s for s in all_sites if s.get("id") == entry_id), None)
     form = WordpressInstanceForm(initial=site) if site else WordpressInstanceForm()
     if not site:
-        return message(request, "WordPress instance not found.", "wordpress_sites")
+        return message(request, _("WordPress instance not found."), "wordpress_sites")
     optimization_url = reverse("optimize_wordpress_instance", kwargs={"entry_id": entry_id})
     # Disable all fields:
     for field in form.fields.values():
@@ -98,7 +99,7 @@ def wordpress_instance_view(request, entry_id):
         "form": form,
         "url": reverse("wordpress_sites"),
         "hide_buttons_top": True,
-        "description": f"If you set up your wordpress instance and can login to it, you can start here the recommended optimization:<br><br><div class='grid'><a href='{optimization_url}' target='_blank' role='button'>WordPress Optimization</a></div>",
+        "description": _("If you set up your wordpress instance and can login to it, you can start here the recommended optimization:<br><br><div class='grid'><a href='%(optimization_url)s' target='_blank' role='button'>WordPress Optimization</a></div>") % {"optimization_url": optimization_url},
     })
 
 
@@ -110,7 +111,7 @@ def optimize_wordpress_instance_view(request, entry_id):
     all_sites = get_all_wordpress_sites()
     site = next((s for s in all_sites if s.get("id") == entry_id), None)
     if not site:
-        return message(request, "WordPress instance not found.", "wordpress_sites")
+        return message(request, _("WordPress instance not found."), "wordpress_sites")
     
     optimize_wordpress_instance(entry_id)
-    return message(request, "WordPress instance optimization successfully started!", "wordpress_sites")
+    return message(request, _("WordPress instance optimization successfully started!"), "wordpress_sites")

@@ -1,14 +1,15 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Addon Center</h2>
+<h2>{% translate "Addon Center" %}</h2>
 
 <p>
-    Hier können Sie Addons für Libre Workspace installieren, die Ihnen zusätzliche Module bieten.
+    {% translate "Here you can install Libre Workspace Addons that provide additional modules." %}
     <br>
-    <strong>Bitte beachten Sie, dass diese Addons von der Community bereitgestellt werden und daher nicht allgemein offiziell unterstützt werden.</strong>
+    <strong>{% translate "Please note that these Addons are provided by the community and are therefore not officially supported." %}</strong>
     <br>
-    <p>Benötigen Sie offizielle Unterstützung, wenden Sie sich gerne an den <a href="https://www.linuxguides.de/linux-support/" target="_blank" rel="noopener noreferrer">Support</a>.</p>
+    <p>{% translate "If you require official support, please contact" %} <a href="https://www.linuxguides.de/linux-support/" target="_blank" rel="noopener noreferrer">{% translate "Support" %}</a>.</p>
 </p>
 
 
@@ -31,11 +32,11 @@
 <table>
     <thead>
         <tr>
-        <th scope="col">Modul</th>
-        <th scope="col"><center>Beschreibung</center></th>
-        <th scope="col"><center>Maintainer</center></th>
-        <th scope="col"><center>Webseite</center></th>
-        <th scope="col"><center>Installieren</center></th>
+        <th scope="col">{% translate "Module" %}</th>
+        <th scope="col"><center>{% translate "Description" %}</center></th>
+        <th scope="col"><center>{% translate "Maintainer" %}</center></th>
+        <th scope="col"><center>{% translate "Website" %}</center></th>
+        <th scope="col"><center>{% translate "Install" %}</center></th>
       </tr>
     </thead>
     <tbody>
@@ -54,7 +55,7 @@
                 {% if addon.homepage %}
                     <a href="{{ addon.homepage }}" target="_blank" rel="noopener noreferrer">{{ addon.homepage }}</a>
                 {% else %}
-                    Keine Webseite
+                    {% translate "No Website" %}
                 {% endif %}
             </center></td>
             {% if addon.installed %}
@@ -62,7 +63,7 @@
                 <center>
                     {% comment %} <a href="{% url 'addon_center:uninstall_addon' addon_id=addon.id %}" title="Deinstallieren" role="button" class="secondary outline">Deinstallieren</a> {% endcomment %}
          
-                    <button data-target="uninstall-{{addon.id}}" onClick="toggleModal(event)" class="danger">Deinstallieren</button>
+                    <button data-target="uninstall-{{addon.id}}" onClick="toggleModal(event)" class="danger">{% translate "Uninstall" %}</button>
                 </center>
 
                 <dialog id="uninstall-{{addon.id}}">
@@ -73,10 +74,10 @@
                         data-target="uninstall-{{addon.id}}"
                         onClick="toggleModal(event)">
                         </a>
-                        <h3>{{ addon.name }} wirklich deinstallieren?</h3>
-                        <strong>DIES LÖSCHT EBENFALLS ALLE (BENUTZER) DATEN UND EINSTELLUNGEN DIESES ADDONS!</strong>
+                        <h3>{% translate "Really uninstall" %} {{ addon.name }}?</h3>
+                        <strong>{% translate "THIS WILL ALSO DELETE ALL (USER) DATA AND SETTINGS FOR THIS ADDON!" %}</strong>
                         <p>
-                            Dieser Vorgang ist nicht mehr umkehrbar!
+                            {% translate "This operation cannot be undone!" %}
                         </p>
                         <footer>
                         <a href="#cancel"
@@ -84,9 +85,9 @@
                             class="secondary"
                             data-target="uninstall-{{addon.id}}"
                             onClick="toggleModal(event)">
-                            Abbrechen
+                            {% translate "Cancel" %}
                         </a>
-                        <a href="{% url 'addon_center_uninstall_addon' addon_id=addon.id %}" role="button" class="contrast">DEINSTALLIEREN</a>
+                        <a href="{% url 'addon_center_uninstall_addon' addon_id=addon.id %}" role="button" class="contrast">{% translate "UNINSTALL" %}</a>
                         </footer>
                     </article>
                 </dialog>
@@ -94,7 +95,7 @@
             {% else %}
             <td>
                 <center>
-                    <a href="{% url 'addon_center_install_addon' addon_id=addon.id %}" title="Installieren" role="button" class="primary">Installieren</a>
+                    <a href="{% url 'addon_center_install_addon' addon_id=addon.id %}" title="{% translate "Install" %}" role="button" class="primary">{% translate "Install" %}</a>
                 </center>
             </td>
             {% endif %}
@@ -116,14 +117,14 @@
         <article style="text-align: center;">
             <span class="material-icons md-48">archive</span> 
             <br> 
-            Lokale Addon Verwaltung
+            {% translate "Local Addon Management" %}
         </article>
     </a>
     <a class="secondary" href="{% url "addon_creator" %}">
         <article style="text-align: center;">
             <span class="material-icons md-48">create</span> 
             <br> 
-            Addon Erstellen
+            {% translate "Create Addon" %}
         </article>
     </a>
 </div>

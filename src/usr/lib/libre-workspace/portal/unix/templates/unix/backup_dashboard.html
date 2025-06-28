@@ -1,3 +1,4 @@
+{% load i18n %}
 {% comment %} # rv["backup_status"] can be one of the following:
 # ok
 # last_backup_failed
@@ -5,36 +6,36 @@
 # deactivated
 # not_configured {% endcomment %}
 <article>
-    <h3>Vollautomatisierte Backups</h3>
+    <h3>{% translate "Fully Automated Backups" %}</h3>
     <div class="grid">
         <div>
-            <h4 align="center">Status</h4>
+            <h4 align="center">{% translate "Status" %}</h4>
             {% if backup_information.backup_status == "ok" %}
             <div align="center"><span style="color: green;" class="material-icons md-64">cloud_done</span> </div>
-            <div align="center">Letzte Sicherung erfolgreich</div>
+            <div align="center">{% translate "Last backup successful" %}</div>
             {% elif backup_information.backup_status == "no_backup_yet" %}
             <div align="center"><span style="color: grey;" class="material-icons md-64">cloud</span> </div>
-            <div align="center">Erwarte erstes Backup</div>
+            <div align="center">{% translate "Awaiting first backup" %}</div>
             {% elif backup_information.backup_status == "last_backup_failed" %}
             <div align="center"><span style="color: orange;" class="material-icons md-64">error</span> </div>
-            <div align="center">Letztes Backup mit Fehlern abgeschlossen</div>
-            <div align="center"><a href="{% url "retry_backup" %}">Erneut versuchen</a></div>
+            <div align="center">{% translate "Last backup completed with errors" %}</div>
+            <div align="center"><a href="{% url "retry_backup" %}">{% translate "Try again" %}</a></div>
             {% elif backup_information.backup_status == "running" %}
             <div align="center"><span style="color: green;" class="material-icons md-64">cloud_upload</span> </div>
-            <div align="center">Backup läuft...<br><small>Alle Dienste sind zu Beginn abgeschaltet. Bei Bedarf können diese <a href="{% url "start_all_services" %}">hier</a> gestartet werden.</small></div>
+            <div align="center">{% translate "Backup running..." %}<br><small>{% translate "All services are shut down at the beginning. If necessary, they can be started" %} <a href="{% url "start_all_services" %}">{% translate "here" %}</a>.</small></div>
             {% elif backup_information.backup_status == "recovery_running" %}
             <div align="center"><span style="color: blue;" class="material-icons md-64">cloud_download</span> </div>
-            <div align="center">Wiederherstellung läuft</div>
+            <div align="center">{% translate "Recovery running" %}</div>
             {% elif backup_information.backup_status == "deactivated" %}
             <div align="center"><span style="color: grey;" class="material-icons md-64">cloud_off</span> </div>
-            <div align="center">Backup deaktiviert</div>
+            <div align="center">{% translate "Backup deactivated" %}</div>
             {% elif backup_information.backup_status == "not_configured" %}
             <div align="center"><span style="color: grey;" class="material-icons md-64">cloud_off</span> </div>
-            <div align="center">Backup nicht konfiguriert</div>
+            <div align="center">{% translate "Backup not configured" %}</div>
             {% endif %}
         </div>
         <div>
-            <h4 align="center">Verwendete Backup-Größe</h4>
+            <h4 align="center">{% translate "Used Backup Size" %}</h4>
             <div align="center"><span class="material-icons md-64">album</span> </div>
             <div align="center">{{ backup_information.compressed_size_of_all_backups }}</div>
             
@@ -43,13 +44,13 @@
     <br> <br>
     <div class="grid">
         <div>
-            <h4>Verlauf</h4>
+            <h4>{% translate "History" %}</h4>
             <div style="max-height: 300px; overflow: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th>Datum</th>
-                        <th>Backup erfolgreich</th>
+                        <th>{% translate "Date" %}</th>
+                        <th>{% translate "Backup Successful" %}</th>
                     </tr>
                 </thead>
                     <tbody>
@@ -60,16 +61,13 @@
                                 {% if backup.success %} 
                                 <span style="color: green;" class="material-icons md-24">done</span> 
                                 {% else %}
-                                <!-- Button to trigger the modal -->
                                 <span style="color: red;" class="material-icons md-18">error</span>
                                 <a class="outline"
                                 data-target="backup-error{{ backup.date }}"
                                 onClick="toggleModal(event)"
                                 href="#">
-                                Fehler anzeigen
+                                {% translate "Show Error" %}
                                 </a>
-                                <!-- Modal -->
-                                <!-- Modal -->
                                 <dialog id="backup-error{{ backup.date }}">
                                     <article>
                                     <a href="#close"
@@ -88,7 +86,7 @@
                                         class="secondary"
                                         data-target="backup-error{{ backup.date }}"
                                         onClick="toggleModal(event)">
-                                        Schließen
+                                        {% translate "Close" %}
                                         </a>
                                     </footer>
                                     </article>
@@ -103,7 +101,7 @@
             </div>
         </div>
         <div>
-            <h4>Gespeicherte Archive</h4>
+            <h4>{% translate "Stored Archives" %}</h4>
             <div style="max-height: 300px; overflow: auto;">
                 <table>
                     <tbody>
@@ -118,16 +116,15 @@
         </div>
     </div>
     <br>
-    <a href="{% url "backup_settings" %}"><button>Backup-Konfiguration</button></a>
+    <a href="{% url "backup_settings" %}"><button>{% translate "Backup Configuration" %}</button></a>
     {% if backup_information.backup_mounted != "True" %}
         {% if backup_information.backup_status == "not_configured" %}
             {% comment %} do nothing {% endcomment %}
         {% else %}
-            <a href="{% url "mount_backups" %}"><button>Backups einbinden</button></a>
+            <a href="{% url "mount_backups" %}"><button>{% translate "Mount Backups" %}</button></a>
         {% endif %}
     {% else %}
-        <a href="{% url "umount_backups" %}"><button>Backups aushängen</button></a>
-        <a href="{% url "enter_recovery_selector" %}"><button>Backup ansehen/wiederherstellen</button></a>
+        <a href="{% url "umount_backups" %}"><button>{% translate "Unmount Backups" %}</button></a>
+        <a href="{% url "enter_recovery_selector" %}"><button>{% translate "View/Restore Backup" %}</button></a>
     {% endif %}
 </article>
-

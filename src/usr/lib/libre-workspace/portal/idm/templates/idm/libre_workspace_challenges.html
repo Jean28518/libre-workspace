@@ -1,7 +1,8 @@
+{% load i18n %}
 {% for challenge in challenges %}
     <div class="grid">
         <div style="padding: 4px;">
-            <a href="{{challenge.link}}" role="button" class="contrast" style="display: block; opacity: 1;">{{challenge.text|safe}}</a>
+            <a href="{{challenge.link}}" role="button" class="contrast" style="display: block; opacity: 1;">{% translate challenge.text|safe %}</a>
         </div>
     </div>
 {% endfor %}

@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import ldap
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType, LDAPGroupQuery
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -211,6 +212,23 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
+
+LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE", "en")
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
+
+LANGUAGES = (
+    ('en', _("language.en")),
+    ('de', _("language.de")),
+)
+
+USE_I18N = True
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,6 +1,7 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
-<h1>Abmeldung</h1>
+<h1>{% translate "Logout" %}</h1>
 
 <script type="text/javascript">
     window.onload = function() {
@@ -8,6 +9,6 @@
     };
 </script>
 
-<p>Klicke <a href="/idm/logout">hier</a>, um die Abmeldung zu bestätigen.</p>
+<p>{% translate "Click" %} <a href="/idm/logout">{% translate "here" %}</a>, {% translate "to confirm the logout." %}</p>
 
 {% endblock %}

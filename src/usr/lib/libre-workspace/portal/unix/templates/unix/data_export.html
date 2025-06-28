@@ -1,20 +1,18 @@
+{% load i18n %}
 <article>
 
-    <h2> Datenexport </h2>
+    <h2> {% translate "Data Export" %} </h2>
 
     {% if data_export_status != "running" %}
 
         {% comment %} Rsync log {% endcomment %}
         {% if rsync_history != "" %}
-        <!-- Button to trigger the modal -->
         <a class="outline"
         data-target="rsync-log"
         onClick="toggleModal(event)"
         href="#">
-        Nachrichten des letzten Exports ansehen
+        {% translate "View messages from the last export" %}
         </a>
-        <!-- Modal -->
-        <!-- Modal -->
         <dialog id="rsync-log">
             <article>
             <a href="#close"
@@ -23,8 +21,8 @@
                 data-target="rsync-log"
                 onClick="toggleModal(event)">
             </a>
-            <h3> Nachrichten des letzten Exports </h3>
-            <p> Je weniger Nachrichten zu sehen sind, desto fehlerfreier ist der letzte Export verlaufen.</p>
+            <h3> {% translate "Messages from the last export" %} </h3>
+            <p> {% translate "The fewer messages displayed, the more error-free the last export was." %}</p>
             <code>
                 {{ rsync_history | safe }}
             </code>
@@ -34,7 +32,7 @@
                 class="secondary"
                 data-target="rsync-log"
                 onClick="toggleModal(event)">
-                Schließen
+                {% translate "Close" %}
                 </a>
             </footer>
             </article>
@@ -44,16 +42,16 @@
         {% endif %}
 
         <p>
-            Wähle eine Partition aus, auf der alle Daten des Servers exportiert werden sollen.
-            Es werden alle wichtigen Daten (auch von eingebundenen Festplatten) gesichert, welche nicht in /mnt oder /media eingehängt sind.<br>
-            Sollte schon ein Export dieses Servers auf dem Ziel existieren, werden die Daten auf dem Export überschrieben/aktualisiert.
-            Es wird nicht überprüft, ob auf dem Ziel genügend Speicherplatz vorhanden ist.
+            {% translate "Select a partition where all server data should be exported." %}
+            {% translate "All important data (including from mounted hard drives) not mounted in /mnt or /media will be backed up." %}<br>
+            {% translate "If an export of this server already exists on the target, the data on the export will be overwritten/updated." %}
+            {% translate "It is not checked whether there is enough disk space on the target." %}
         </p>
 
         <form action="{% url "data_export" %}" method="post">{% csrf_token %}
-        <label for="partition-export">Festplatte</label>
+        <label for="partition-export">{% translate "Hard Drive" %}</label>
         <select name="partition-export" id="partition-export" required>
-            <option value="" selected>Wähle ein Ziel...</option>
+            <option value="" selected>{% translate "Select a destination..." %}</option>
             {% for partition in partitions %}
                 {% if partition.mountpoint %}
                     {% if partition.mountpoint != "/" %}
@@ -66,20 +64,17 @@
                 {% endif %}
             {% endfor %}
         </select>
-        <input type="submit" value="Exportieren">
+        <input type="submit" value="{% translate "Export" %}">
         </form>
 
-        <p> Hinweis: Es werden während des Export-Vorgangs alle Dienste vorrübergehend ausgeschaltet.</p>
+        <p> {% translate "Note: All services will be temporarily shut down during the export process." %}</p>
     {% else %}
-    <p> 
-        Der Daten-Export läuft gerade. Bitte warte, bis der Export abgeschlossen ist.
-        Dieser Vorgang kann einige Stunden dauern.
-        Alle weiteren Dienste werden gerade pausiert und sind aktuell nicht erreichbar.
+    <p>
+        {% translate "The data export is currently running. Please wait until the export is complete." %}
+        {% translate "This process can take several hours." %}
+        {% translate "All other services are currently paused and are not reachable." %}
     </p>
-        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
+        <a href="{% url "abort_current_data_export" %}">{% translate "Cancel" %}</a>
     {% endif %}
-
-
-
 
 </article>

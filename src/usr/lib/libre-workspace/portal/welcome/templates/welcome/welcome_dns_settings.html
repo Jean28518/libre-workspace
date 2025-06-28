@@ -1,11 +1,12 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Sichtbarkeit</h2>
+<h2>{% translate "Visibility" %}</h2>
 
 <p>
-    Wählen Sie aus, ob Libre-Workspace öffentlich oder lediglich im lokalen Netzwerk erreichbar sein soll.
-    Dies kann später nur noch manuell durch einen wissenden Linux-Administrator geändert werden.
+    {% translate "Choose whether Libre-Workspace should be publicly accessible or only reachable within the local network." %}
+    {% translate "This can only be changed manually later by a knowledgeable Linux administrator." %}
 </p>
 
 
@@ -15,57 +16,57 @@
     <fieldset>
         <label for="private">
             <input type="radio" id="private" name="visibility" value="private" onclick="change()" checked>
-            Lokal
+            {% translate "Local" %}
         </label>
         <label for="public">
           <input type="radio" id="public" name="visibility" value="public" onclick="change()">
-          Öffentlich
+          {% translate "Public" %}
         </label>
       </fieldset>
 
     <div id="domain_field" style="display: none">
         <label for="domain">
-            Domain
+            {% translate "Domain" %}
             <input type="text" id="domain" name="domain" placeholder="example.com">
-            Die oben angegebene Domain muss in Ihrer Kontrolle sein. Geben Sie hier nur den Domainnamen an, ohne Protokoll.
+            {% translate "The domain specified above must be under your control. Enter only the domain name here, without the protocol." %}
         </label>
 
         <br>
 
-        Verwenden Sie entweder eine <strong>komplette Domain</strong> und stellen folgende DNS-Einträge sicher:
+        {% translate "Either use a" %} <strong>{% translate "complete domain" %}</strong> {% translate "and ensure the following DNS entries:" %}
         <ul>
-            <li>Typ: A | Name: * | Ziel: IP-Adresses dieses Servers</li>
-            <li>Typ: A | Name: @ | Ziel: IP-Adresses dieses Servers (bei 2nd Level Domains)</li>
+            <li>{% translate "Type: A | Name: * | Target: IP address of this server" %}</li>
+            <li>{% translate "Type: A | Name: @ | Target: IP address of this server (for 2nd level domains)" %}</li>
         </ul>
 
-        <strong>oder</strong> verwenden Sie folgende <strong>Subdomains</strong> und stellen folgende DNS-Einträge sicher:
+        <strong>{% translate "or" %}</strong> {% translate "use the following" %} <strong>{% translate "subdomains" %}</strong> {% translate "and ensure the following DNS entries:" %}
         <ul>
             {% for subdomain in subdomains %}
-                <li>Typ: A | Name: {{subdomain}} | Ziel: IP-Adresses dieses Servers</li>
+                <li>{% translate "Type: A | Name:" %} {{subdomain}} | {% translate "Target: IP address of this server" %}</li>
             {% endfor %}
         </ul>
     </div>
 
      
     
-    <input type="submit" value="Weiter">
+    <input type="submit" value="{% translate "Continue" %}">
 </form>
 
-    <h3>Erklärung</h3>
+    <h3>{% translate "Explanation" %}</h3>
 
 
-    <h4>Lokal</h4>
+    <h4>{% translate "Local" %}</h4>
 
     <p>
-        Libre-Workspace ist nur im lokalen Netzwerk (Zuhause) erreichbar. Sie können sich nur von Geräten aus Ihrem lokalen Netzwerk mit Ihrem Benutzerkonto anmelden.
+        {% translate "Libre-Workspace is only accessible within the local network (home). You can only log in with your user account from devices within your local network." %}
     <br>
     <p>
         
-    <h4>Öffentlich</h4>
+    <h4>{% translate "Public" %}</h4>
 
     <p>
-        Libre-Workspace ist über das Internet erreichbar. Sie können sich von überall auf der Welt mit Ihrem Benutzerkonto anmelden.
-        Dies ist in der späteren Benutzung die einfachste Möglichkeit, um auf Libre-Workspace zuzugreifen.
+        {% translate "Libre-Workspace is accessible over the internet. You can log in with your user account from anywhere in the world." %}
+        {% translate "This is the easiest way to access Libre-Workspace in later use." %}
     <br>
 <p>
 

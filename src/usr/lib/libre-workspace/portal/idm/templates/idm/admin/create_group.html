@@ -1,7 +1,8 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Gruppe hinzufügen</h2>
+<h2>{% translate "Add Group" %}</h2>
 
 {% if message != "" %}
 <p><strong>{{ message }}</strong></p>
@@ -12,9 +13,9 @@
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
-        <input type="submit" value="Gruppe hinzufügen">
+        <input type="submit" value="{% translate "Add Group" %}">
     </div>
 </form>
 

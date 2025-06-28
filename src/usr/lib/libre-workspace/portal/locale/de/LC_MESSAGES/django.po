@@ -1,0 +1,3677 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-28 15:20+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: addon_center/templates/addon_center/addon_center.html:5
+#: unix/templates/unix/system_configuration.html:26
+msgid "Addon Center"
+msgstr "Addon-Center"
+
+#: addon_center/templates/addon_center/addon_center.html:8
+msgid ""
+"Here you can install Libre Workspace Addons that provide additional modules."
+msgstr ""
+"Hier können Sie Libre Workspace Addons installieren, die zusätzliche Module "
+"bereitstellen."
+
+#: addon_center/templates/addon_center/addon_center.html:10
+msgid ""
+"Please note that these Addons are provided by the community and are "
+"therefore not officially supported."
+msgstr ""
+"Bitte beachten Sie, dass diese Addons von der Community bereitgestellt "
+"werden und daher nicht offiziell unterstützt werden."
+
+#: addon_center/templates/addon_center/addon_center.html:12
+msgid "If you require official support, please contact"
+msgstr "Wenn Sie offizielle Unterstützung benötigen, kontaktieren Sie bitte"
+
+#: addon_center/templates/addon_center/addon_center.html:12
+msgid "Support"
+msgstr "Support"
+
+#: addon_center/templates/addon_center/addon_center.html:35
+#: unix/templates/unix/module_management.html:10
+#: unix/templates/unix/update_management.html:11
+msgid "Module"
+msgstr "Modul"
+
+#: addon_center/templates/addon_center/addon_center.html:36
+#: app_dashboard/forms.py:16 idm/forms.py:47 idm/forms.py:53
+#: idm/templates/idm/admin/group_overview.html:15 unix/views.py:506
+msgid "Description"
+msgstr "Beschreibung"
+
+#: addon_center/templates/addon_center/addon_center.html:37
+msgid "Maintainer"
+msgstr "Betreuer"
+
+#: addon_center/templates/addon_center/addon_center.html:38
+msgid "Website"
+msgstr "Webseite"
+
+#: addon_center/templates/addon_center/addon_center.html:39
+#: addon_center/templates/addon_center/addon_center.html:100
+#: m23software/views.py:60 unix/templates/unix/module_management.html:23
+#: unix/templates/unix/module_management.html:82
+#: welcome/templates/welcome/access.html:94
+#: welcome/templates/welcome/access.html:103
+#: welcome/templates/welcome/access.html:114
+#: welcome/templates/welcome/access.html:124
+#: welcome/templates/welcome/access.html:125
+msgid "Install"
+msgstr "Installieren"
+
+#: addon_center/templates/addon_center/addon_center.html:59
+msgid "No Website"
+msgstr "Keine Webseite"
+
+#: addon_center/templates/addon_center/addon_center.html:68
+#: unix/templates/unix/module_management.html:21
+#: unix/templates/unix/module_management.html:53
+msgid "Uninstall"
+msgstr "Deinstallieren"
+
+#: addon_center/templates/addon_center/addon_center.html:79
+msgid "Really uninstall"
+msgstr "Wirklich deinstallieren"
+
+#: addon_center/templates/addon_center/addon_center.html:80
+msgid "THIS WILL ALSO DELETE ALL (USER) DATA AND SETTINGS FOR THIS ADDON!"
+msgstr ""
+"DIES LÖSCHT AUCH ALLE (BENUTZER-)DATEN UND EINSTELLUNGEN FÜR DIESES ADDON!"
+
+#: addon_center/templates/addon_center/addon_center.html:82
+#: idm/templates/idm/admin/edit_user.html:59 lac/templates/lac/info_x.html:62
+#: lac/templates/lac/overview_x.html:92
+msgid "This operation cannot be undone!"
+msgstr "Dieser Vorgang kann nicht rückgängig gemacht werden!"
+
+#: addon_center/templates/addon_center/addon_center.html:90
+#: idm/templates/idm/admin/edit_group.html:51
+#: idm/templates/idm/admin/edit_user.html:67 lac/templates/lac/edit_x.html:71
+#: lac/templates/lac/info_x.html:70 lac/templates/lac/overview_x.html:100
+#: unix/templates/unix/data_export.html:78
+#: unix/templates/unix/data_import.html:11
+#: unix/templates/unix/module_management.html:47
+#: unix/templates/unix/module_management.html:77
+#: unix/templates/unix/pick_folder.html:17
+#: unix/templates/unix/system_dashboard.html:131
+#: unix/templates/unix/system_dashboard.html:171
+#: unix/templates/unix/system_dashboard.html:213
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: addon_center/templates/addon_center/addon_center.html:92
+msgid "UNINSTALL"
+msgstr "DEINSTALLIEREN"
+
+#: addon_center/templates/addon_center/addon_center.html:122 unix/views.py:502
+msgid "Local Addon Management"
+msgstr "Lokale Addon-Verwaltung"
+
+#: addon_center/templates/addon_center/addon_center.html:129
+msgid "Create Addon"
+msgstr "Addon erstellen"
+
+#: addon_center/views.py:33 addon_center/views.py:51
+#, python-format
+msgid "Addon %(addon_id)s not found."
+msgstr "Addon %(addon_id)s nicht gefunden."
+
+#: addon_center/views.py:40
+#, python-format
+msgid ""
+"Addon %(addon_id)s is installing. This process takes multiple minutes..."
+msgstr ""
+"Addon %(addon_id)s wird installiert. Dieser Vorgang dauert mehrere Minuten..."
+
+#: addon_center/views.py:54
+#, python-format
+msgid "Addon %(addon_id)s is not installed."
+msgstr "Addon %(addon_id)s ist nicht installiert."
+
+#: addon_center/views.py:60
+#, python-format
+msgid "Addon %(addon_id)s uninstalled successfully."
+msgstr "Addon %(addon_id)s erfolgreich deinstalliert."
+
+#: addon_center/views.py:84
+#, python-format
+msgid "Addon %(pk)s is installing. This process takes multiple minutes..."
+msgstr ""
+"Addon %(pk)s wird installiert. Dieser Vorgang dauert mehrere Minuten..."
+
+#: addon_center/views.py:91
+#, python-format
+msgid "Addon %(pk)s uninstalled successfully."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: addon_creator/forms.py:8
+msgid "Addon ID (lowercase and single word)"
+msgstr ""
+
+#: addon_creator/forms.py:11
+msgid "nocodb"
+msgstr ""
+
+#: addon_creator/forms.py:14
+#, fuzzy
+#| msgid "Addon Center"
+msgid "Addon Name"
+msgstr "Addon-Center"
+
+#: addon_creator/forms.py:17
+msgid "Noco DB"
+msgstr ""
+
+#: addon_creator/forms.py:20
+msgid "Addon Description (max. 10 words)"
+msgstr ""
+
+#: addon_creator/forms.py:23
+msgid "Database management"
+msgstr ""
+
+#: addon_creator/forms.py:26
+msgid "Project Homepage (optional)"
+msgstr ""
+
+#: addon_creator/forms.py:29
+msgid "https://www.nocodb.com"
+msgstr ""
+
+#: addon_creator/forms.py:32
+#, fuzzy
+#| msgid "Addon Center"
+msgid "Addon Author"
+msgstr "Addon-Center"
+
+#: addon_creator/forms.py:35
+msgid "My Name"
+msgstr ""
+
+#: addon_creator/forms.py:38
+msgid "Addon Author Email"
+msgstr ""
+
+#: addon_creator/forms.py:41
+msgid "mail@example.com"
+msgstr ""
+
+#: addon_creator/forms.py:44
+msgid "Addon URL (Recommended: similar/same as Addon ID)"
+msgstr ""
+
+#: addon_creator/forms.py:47
+msgid "db"
+msgstr ""
+
+#: addon_creator/forms.py:50
+msgid "docker-compose.yml Content"
+msgstr ""
+
+#: addon_creator/forms.py:54
+msgid "Internal http-Port for the webserver (>1000)"
+msgstr ""
+
+#: addon_creator/forms.py:60
+msgid "Addon Logo (Recommended: 256x256px webp)"
+msgstr ""
+
+#: addon_creator/views.py:28
+msgid "Add-On Generator"
+msgstr ""
+
+#: addon_creator/views.py:30
+msgid "Generate"
+msgstr ""
+
+#: addon_creator/views.py:32
+msgid ""
+"Here you can create an add-on for Libre-Workspace in seconds. It is "
+"recommended to check and, if necessary, adjust the add-on after creation."
+"<br>You can find more information about creating add-ons here: <a "
+"href='https://docs.libre-workspace.org/modules/addons.html'>https://docs."
+"libre-workspace.org/modules/addons.html</a>"
+msgstr ""
+
+#: app_dashboard/forms.py:15
+#: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:11
+msgid "Title"
+msgstr ""
+
+#: app_dashboard/forms.py:17
+msgid "Link"
+msgstr ""
+
+#: app_dashboard/forms.py:18
+msgid "Icon"
+msgstr ""
+
+#: app_dashboard/forms.py:19
+msgid "Order (< 0: Before fixed icons, > 0: After fixed icons)"
+msgstr ""
+
+#: app_dashboard/forms.py:20
+msgid "Active"
+msgstr ""
+
+#: app_dashboard/forms.py:21
+msgid ""
+"Groups that can see this entry (comma-separated list). Leave empty to be "
+"visible to all. The administrator always sees all entries."
+msgstr ""
+
+#: app_dashboard/forms.py:25
+msgid "Force dark mode"
+msgstr ""
+
+#: app_dashboard/forms.py:26
+msgid "Portal title"
+msgstr ""
+
+#: app_dashboard/forms.py:27
+msgid "Portal logo"
+msgstr ""
+
+#: app_dashboard/forms.py:28
+msgid "Primary color (HEX code) (e.g.: #09928b)"
+msgstr ""
+
+#: app_dashboard/forms.py:29
+msgid "Secondary color (HEX code) (e.g.: #07746d)"
+msgstr ""
+
+#: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:5
+msgid "Dashboard Entries"
+msgstr ""
+
+#: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:7
+msgid "New Dashboard Entry"
+msgstr ""
+
+#: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:12
+#: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:18
+#: caddy_configuration/views.py:67 idm/templates/idm/admin/edit_user.html:5
+#: idm/templates/idm/admin/group_overview.html:25
+#: idm/templates/idm/admin/user_overview.html:26
+#: lac/templates/lac/edit_x.html:5 lac/templates/lac/overview_x.html:37
+#: lac/templates/lac/overview_x.html:61
+msgid "Edit"
+msgstr ""
+
+#: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:17
+msgid "(Disabled)"
+msgstr ""
+
+#: app_dashboard/templates/app_dashboard/index.html:14
+msgid "Configure Dashboard Entries"
+msgstr ""
+
+#: app_dashboard/templates/app_dashboard/index.html:15
+msgid "Configure Dashboard Appearance"
+msgstr ""
+
+#: app_dashboard/views.py:90
+msgid "A dashboard with this name already exists."
+msgstr ""
+
+#: app_dashboard/views.py:93
+msgid "The dashboard was successfully created."
+msgstr ""
+
+#: app_dashboard/views.py:95 app_dashboard/views.py:111
+#, python-format
+msgid "An error occurred: %(error)s"
+msgstr ""
+
+#: app_dashboard/views.py:98
+msgid "Dashboard Entry"
+msgstr ""
+
+#: app_dashboard/views.py:109
+msgid "The dashboard was successfully edited."
+msgstr ""
+
+#: app_dashboard/views.py:118
+msgid ""
+"Note: This entry is a system entry. The link and activation are "
+"automatically generated from the configuration."
+msgstr ""
+
+#: app_dashboard/views.py:152
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "Libre Workspace Portal"
+msgstr "Libre-Workspace Portal"
+
+#: app_dashboard/views.py:152
+msgid "Overview of all installed apps and services on the portal."
+msgstr ""
+
+#: app_dashboard/views.py:188
+msgid "The settings were successfully saved."
+msgstr ""
+
+#: app_dashboard/views.py:195
+#, python-format
+msgid "Portal Logo (Current: %(logo)s)"
+msgstr ""
+
+#: app_dashboard/views.py:198
+msgid "Appearance"
+msgstr ""
+
+#: app_dashboard/views.py:198
+msgid ""
+"These settings affect all users<br>Currently only the portal area (without "
+"administration) is adjusted."
+msgstr ""
+
+#: app_dashboard/views.py:198 lac/templates/lac/edit_x.html:46
+#: unix/templates/unix/update_management.html:36 unix/views.py:629
+#: unix/views.py:652 unix/views.py:684
+msgid "Save"
+msgstr ""
+
+#: caddy_configuration/forms.py:5 caddy_configuration/forms.py:10
+#: caddy_configuration/views.py:21 idm/forms.py:59 idm/forms.py:81
+#: idm/views.py:152 idm/views.py:529 idm/views.py:600
+#: unix/templates/unix/system_dashboard.html:6 unix/views.py:506
+#: wordpress_manager/forms.py:5 wordpress_manager/views.py:32
+msgid "Name"
+msgstr ""
+
+#: caddy_configuration/forms.py:6
+msgid "Block"
+msgstr ""
+
+#: caddy_configuration/forms.py:11
+#: welcome/templates/welcome/welcome_dns_settings.html:29
+#: wordpress_manager/forms.py:6 wordpress_manager/views.py:32
+msgid "Domain"
+msgstr ""
+
+#: caddy_configuration/forms.py:11
+msgid "myservice.int.de"
+msgstr ""
+
+#: caddy_configuration/forms.py:12
+msgid "Port (Optional)"
+msgstr ""
+
+#: caddy_configuration/forms.py:12
+msgid "(Optional)"
+msgstr ""
+
+#: caddy_configuration/forms.py:13
+msgid "Internal HTTPS (for local instances)"
+msgstr ""
+
+#: caddy_configuration/forms.py:14
+msgid "Target URL"
+msgstr ""
+
+#: caddy_configuration/views.py:17
+msgid "Caddy Configuration"
+msgstr ""
+
+#: caddy_configuration/views.py:20
+msgid "Caddy Entry"
+msgstr ""
+
+#: caddy_configuration/views.py:21
+msgid "Endpoint"
+msgstr ""
+
+#: caddy_configuration/views.py:21
+msgid "Essential"
+msgstr ""
+
+#: caddy_configuration/views.py:26
+#, python-format
+msgid ""
+"Please note that wrong entries can break the Caddy server. Be careful when "
+"editing or deleting entries. If a breakage of Caddy is detected, the old "
+"configuration will be tried to be restored after 60 seconds.<br>Here you can "
+"add a manual entry: <a href='%(manual_add_url)s'>Add Manual Entry</a>."
+msgstr ""
+
+#: caddy_configuration/views.py:41
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Caddy entry added successfully!"
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: caddy_configuration/views.py:43
+msgid "Add Caddy Entry"
+msgstr ""
+
+#: caddy_configuration/views.py:43 welcome/templates/welcome/access.html:96
+msgid "Add"
+msgstr ""
+
+#: caddy_configuration/views.py:52 caddy_configuration/views.py:76
+msgid "Entry not found."
+msgstr ""
+
+#: caddy_configuration/views.py:54
+msgid "This entry is essential and cannot be edited from the web UI."
+msgstr ""
+
+#: caddy_configuration/views.py:63
+msgid "Caddy entry updated successfully!"
+msgstr ""
+
+#: caddy_configuration/views.py:67
+msgid "Edit Caddy Entry"
+msgstr ""
+
+#: caddy_configuration/views.py:78
+msgid "This entry is essential and cannot be deleted from the web UI."
+msgstr ""
+
+#: caddy_configuration/views.py:81
+msgid "Caddy entry deleted successfully!"
+msgstr ""
+
+#: caddy_configuration/views.py:99
+msgid "Reverse proxy entry created successfully!"
+msgstr ""
+
+#: caddy_configuration/views.py:103
+msgid "Create Reverse Proxy"
+msgstr ""
+
+#: caddy_configuration/views.py:104 lac/templates/lac/create_x.html:9
+#: lac/templates/lac/create_x.html:33 lac/templates/lac/create_x.html:42
+#, fuzzy
+#| msgid "Create Addon"
+msgid "Create"
+msgstr "Addon erstellen"
+
+#: idm/challenges.py:22
+msgid "You are currently the only user here. Let's create new users!"
+msgstr ""
+
+#: idm/challenges.py:27
+#, python-format
+msgid ""
+"Variables are still missing in the /etc/libre-workspace/libre-workspace.env "
+"file. This must be adjusted manually.<br>Found variables: %(current_keys)s"
+msgstr ""
+
+#: idm/challenges.py:31
+msgid ""
+"The administrator has not yet defined an email address. This is used to send "
+"system messages."
+msgstr ""
+
+#: idm/challenges.py:36
+msgid "Backup is not yet configured or is deactivated. Let's set it up now!"
+msgstr ""
+
+#: idm/challenges.py:40
+msgid "The last backup finished with errors."
+msgstr ""
+
+#: idm/challenges.py:44
+msgid "No backup has been performed yet."
+msgstr ""
+
+#: idm/challenges.py:51
+msgid "The last full backup is older than 7 days."
+msgstr ""
+
+#: idm/challenges.py:55
+msgid "Email settings are not yet configured or are not working."
+msgstr ""
+
+#: idm/challenges.py:60
+msgid ""
+"libre-workspace-service.service is not currently running. Automatic tasks "
+"like backups or updates will not be executed."
+msgstr ""
+
+#: idm/challenges.py:65
+msgid ""
+"The server has been running for more than 31 days without a restart. It is "
+"recommended to restart the server regularly to apply security updates."
+msgstr ""
+
+#: idm/challenges.py:71
+msgid ""
+"Two-factor authentication is not yet enabled. This increases the security of "
+"your account."
+msgstr ""
+
+#: idm/forms.py:8 idm/forms.py:26 idm/templates/idm/admin/user_overview.html:14
+msgid "Username"
+msgstr ""
+
+#: idm/forms.py:9 idm/forms.py:28 idm/forms.py:37
+msgid "First name"
+msgstr ""
+
+#: idm/forms.py:10 idm/forms.py:29 idm/forms.py:38
+msgid "Last name"
+msgstr ""
+
+#: idm/forms.py:11 idm/forms.py:39
+#: idm/templates/idm/admin/user_overview.html:15
+msgid "Display Name"
+msgstr ""
+
+#: idm/forms.py:12 idm/forms.py:22 idm/forms.py:30 idm/forms.py:40
+msgid "Email address"
+msgstr ""
+
+#: idm/forms.py:16
+msgid "Old password"
+msgstr ""
+
+#: idm/forms.py:17
+msgid "New password"
+msgstr ""
+
+#: idm/forms.py:18
+msgid "Repeat new password"
+msgstr ""
+
+#: idm/forms.py:27 idm/templates/idm/login.html:11
+#: welcome/templates/welcome/welcome_start.html:13
+msgid "Password"
+msgstr ""
+
+#: idm/forms.py:31
+msgid ""
+"Administrator (If Nextcloud is installed, these changes will take a few "
+"minutes there)"
+msgstr ""
+
+#: idm/forms.py:35
+msgid "objectGUID"
+msgstr ""
+
+#: idm/forms.py:36
+msgid "Set new password"
+msgstr ""
+
+#: idm/forms.py:41
+msgid "Administrator"
+msgstr ""
+
+#: idm/forms.py:42
+msgid "Enabled"
+msgstr ""
+
+#: idm/forms.py:46
+msgid "Group name"
+msgstr ""
+
+#: idm/forms.py:48 idm/forms.py:54
+msgid ""
+"Default group (Newly created users will be added to this group from now on)"
+msgstr ""
+
+#: idm/forms.py:49 idm/forms.py:55
+msgid "Nextcloud group folder"
+msgstr ""
+
+#: idm/forms.py:60
+msgid "Client Type"
+msgstr ""
+
+#: idm/forms.py:60
+msgid "Confidential"
+msgstr ""
+
+#: idm/forms.py:60 welcome/templates/welcome/welcome_dns_settings.html:23
+#: welcome/templates/welcome/welcome_dns_settings.html:65
+msgid "Public"
+msgstr ""
+
+#: idm/forms.py:65
+msgid "Redirect URIs (enter one URI per line)"
+msgstr ""
+
+#: idm/forms.py:66
+msgid "Client ID"
+msgstr ""
+
+#: idm/forms.py:67
+msgid "Client Secret"
+msgstr ""
+
+#: idm/forms.py:68
+msgid "JWT Algorithm"
+msgstr ""
+
+#: idm/forms.py:69
+msgid "User must consent to data access"
+msgstr ""
+
+#: idm/forms.py:70
+msgid "Reuse consent"
+msgstr ""
+
+#: idm/forms.py:75 idm/views.py:149
+msgid "TOTP Device"
+msgstr ""
+
+#: idm/forms.py:77
+msgid "TOTP Code (Six digits)"
+msgstr ""
+
+#: idm/forms.py:82
+msgid "Expiration date"
+msgstr ""
+
+#: idm/forms.py:82
+msgid "Optional. If not set, the key never expires."
+msgstr ""
+
+#: idm/idm.py:49
+msgid "New Password (Linux Workstation Central)"
+msgstr ""
+
+#: idm/idm.py:49
+#, python-format
+msgid ""
+"Your new password is:\n"
+"\n"
+"%(random_password)s"
+msgstr ""
+
+#: idm/idm.py:70 idm/idm.py:71
+msgid "User not found"
+msgstr ""
+
+#: idm/idm.py:100
+#, python-format
+msgid "Created superuser 'Administrator' with password '%(password)s'"
+msgstr ""
+
+#: idm/idm.py:121
+msgid "User 'Administrator' does not exist"
+msgstr ""
+
+#: idm/idm.py:125
+msgid "Local Administrator password changed"
+msgstr ""
+
+#: idm/ldap.py:20 idm/ldap.py:35
+#, python-format
+msgid "Can't connect to LDAP server: %(error)s"
+msgstr ""
+
+#: idm/ldap.py:21
+#, python-format
+msgid ""
+"Login not possible, contact an administrator: Can't connect to LDAP server: "
+"%(error)s"
+msgstr ""
+
+#: idm/ldap.py:105
+#, python-format
+msgid ""
+"User '%(cn)s' is a system user. For technical reasons, the password cannot "
+"be changed. The master password can be changed under System Configuration."
+msgstr ""
+
+#: idm/ldap.py:115 idm/ldap.py:170 idm/ldap.py:304 idm/ldap.py:328
+#: idm/ldap.py:407 idm/ldap.py:437 idm/ldap.py:479 idm/ldap.py:490
+#: idm/ldap.py:500 idm/ldap.py:517 idm/ldap.py:531
+#, python-format
+msgid "Error: %(error)s"
+msgstr ""
+
+#: idm/ldap.py:141
+msgid ""
+"Error: The username may only contain lowercase letters, numbers, dots and "
+"hyphens."
+msgstr ""
+
+#: idm/ldap.py:194
+#, python-format
+msgid "User '%(cn)s' was not found."
+msgstr ""
+
+#: idm/ldap.py:385
+msgid "The group name must not contain spaces."
+msgstr ""
+
+#: idm/ldap.py:387
+msgid ""
+"The group name may only contain lowercase letters, numbers, dots and hyphens."
+msgstr ""
+
+#: idm/ldap.py:513
+msgid "Error: User is a system user and cannot be disabled."
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:4
+msgid "Add New TOTP Device"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:7
+msgid "Device Name"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:8
+msgid "Enter a name for the device to identify it."
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:9
+msgid "Device Name:"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:12
+msgid "Scan QR Code"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:13
+msgid "Scan the QR code with your Authenticator app."
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:16
+msgid "Manual Entry"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:17
+msgid ""
+"If you cannot scan the QR code, please enter the following key into your "
+"Authenticator app:"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:20
+msgid "Confirm Code"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:21
+msgid "Enter the code generated by your Authenticator app."
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:23
+msgid "TOTP Code (Six Digits)"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:27
+#: idm/templates/idm/admin/assign_groups_to_user.html:23
+#: idm/templates/idm/admin/assign_users_to_group.html:27
+#: idm/templates/idm/admin/create_group.html:16
+#: idm/templates/idm/admin/edit_group.html:22
+#: idm/templates/idm/admin/edit_user.html:31
+#: idm/templates/idm/admin/edit_user.html:39
+#: idm/templates/idm/change_password.html:13
+#: idm/templates/idm/reset_password.html:18
+#: idm/templates/idm/user_settings.html:20 lac/templates/lac/confirm.html:17
+#: lac/templates/lac/create_x.html:31 lac/templates/lac/create_x.html:40
+#: lac/templates/lac/edit_x.html:36 lac/templates/lac/edit_x.html:44
+#: lac/templates/lac/generic_form.html:32
+#: lac/templates/lac/generic_form.html:41 lac/templates/lac/info_x.html:36
+#: lac/templates/lac/info_x.html:44 unix/templates/unix/backup_settings.html:35
+#: unix/templates/unix/email_configuration.html:23
+msgid "Back"
+msgstr ""
+
+#: idm/templates/idm/add_new_totp_device.html:29
+msgid "Add Device"
+msgstr ""
+
+#: idm/templates/idm/admin/assign_groups_to_user.html:5
+msgid "Group Memberships of"
+msgstr ""
+
+#: idm/templates/idm/admin/assign_groups_to_user.html:25
+msgid "Update Memberships"
+msgstr ""
+
+#: idm/templates/idm/admin/assign_groups_to_user.html:30
+#: idm/templates/idm/admin/group_overview.html:34
+msgid "Note: Some system groups are hidden."
+msgstr ""
+
+#: idm/templates/idm/admin/assign_users_to_group.html:5
+msgid "Members of group"
+msgstr ""
+
+#: idm/templates/idm/admin/assign_users_to_group.html:11
+msgid "Select all"
+msgstr ""
+
+#: idm/templates/idm/admin/assign_users_to_group.html:12
+msgid "Deselect all"
+msgstr ""
+
+#: idm/templates/idm/admin/assign_users_to_group.html:29
+msgid "Update memberships"
+msgstr ""
+
+#: idm/templates/idm/admin/assign_users_to_group.html:33
+#: idm/templates/idm/admin/user_overview.html:34
+msgid "Note: Some system users are hidden."
+msgstr ""
+
+#: idm/templates/idm/admin/create_group.html:5
+#: idm/templates/idm/admin/create_group.html:18
+#: idm/templates/idm/admin/group_overview.html:7
+msgid "Add Group"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_group.html:5
+#, python-format
+msgid "'%%s' edit"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_group.html:14
+#: idm/templates/idm/admin/edit_group.html:53
+msgid "DELETE GROUP"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_group.html:24
+msgid "Save changes"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_group.html:40
+msgid "Really delete group?"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_group.html:42
+msgid "Users will not be deleted, only removed from the group."
+msgstr ""
+
+#: idm/templates/idm/admin/edit_group.html:43
+#, fuzzy
+#| msgid "This operation cannot be undone!"
+msgid "This operation is irreversible!"
+msgstr "Dieser Vorgang kann nicht rückgängig gemacht werden!"
+
+#: idm/templates/idm/admin/edit_user.html:14
+#: idm/templates/idm/admin/edit_user.html:69
+msgid "DELETE USER"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_user.html:19
+msgid "Group Memberships"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_user.html:22
+msgid "Reset 2-Factor Authentication"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_user.html:33
+#: idm/templates/idm/admin/edit_user.html:41
+#: idm/templates/idm/user_settings.html:22
+#: unix/templates/unix/backup_settings.html:37
+#: unix/templates/unix/email_configuration.html:25
+msgid "Save Changes"
+msgstr ""
+
+#: idm/templates/idm/admin/edit_user.html:57
+msgid "Really delete user?"
+msgstr ""
+
+#: idm/templates/idm/admin/group_overview.html:5
+#: idm/templates/idm/dashboard.html:24
+msgid "Group Administration"
+msgstr ""
+
+#: idm/templates/idm/admin/group_overview.html:14
+#, fuzzy
+#| msgid "Addon Center"
+msgid "Group Name"
+msgstr "Addon-Center"
+
+#: idm/templates/idm/admin/group_overview.html:26
+msgid "Manage Members"
+msgstr ""
+
+#: idm/templates/idm/admin/user_overview.html:5
+#: idm/templates/idm/dashboard.html:17
+msgid "User Administration"
+msgstr ""
+
+#: idm/templates/idm/admin/user_overview.html:7
+msgid "Add User"
+msgstr ""
+
+#: idm/templates/idm/admin/user_overview.html:16
+msgid "Email"
+msgstr ""
+
+#: idm/templates/idm/admin/user_overview.html:23
+msgid "Disabled"
+msgstr ""
+
+#: idm/templates/idm/change_password.html:5
+#: idm/templates/idm/change_password.html:16
+#: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
+#: lac/templates/lac/base.html:251
+msgid "Change Password"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:5
+msgid "Welcome"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:32
+#: unix/templates/unix/data_management.html:5
+msgid "Data Import/Export"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:39
+msgid "File Explorer"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:48
+#: unix/templates/unix/backup_settings.html:9
+#: unix/templates/unix/system_management.html:5
+msgid "System Administration"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:63
+#: unix/templates/unix/system_configuration.html:5
+msgid "System Configuration"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:68
+msgid "Personal Settings"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:77
+msgid "Profile Settings"
+msgstr ""
+
+#: idm/templates/idm/dashboard.html:92
+msgid "Cloud Desktop Settings"
+msgstr ""
+
+#: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
+#: idm/views.py:139 lac/templates/lac/base.html:263
+msgid "Login"
+msgstr ""
+
+#: idm/templates/idm/login.html:8
+msgid "Account name or E-Mail"
+msgstr ""
+
+#: idm/templates/idm/login.html:22
+msgid "Forgot password?"
+msgstr ""
+
+#: idm/templates/idm/reset_password.html:5
+#: idm/templates/idm/reset_password.html:20
+msgid "Reset Password"
+msgstr ""
+
+#: idm/templates/idm/user_settings.html:5
+msgid "User Settings"
+msgstr ""
+
+#: idm/templates/idm/user_settings.html:12 idm/views.py:139 idm/views.py:148
+#: lac/templates/lac/base.html:253
+msgid "2-Factor Authentication"
+msgstr ""
+
+#: idm/templates/oidc_provider/authorize.html:5
+msgid "Access Request"
+msgstr ""
+
+#: idm/templates/oidc_provider/authorize.html:7
+msgid "wants to access the following information..."
+msgstr ""
+
+#: idm/templates/oidc_provider/authorize.html:22
+msgid "Deny"
+msgstr ""
+
+#: idm/templates/oidc_provider/authorize.html:23
+msgid "Accept"
+msgstr ""
+
+#: idm/templates/oidc_provider/end_session_prompt.html:4
+msgid "Logout"
+msgstr ""
+
+#: idm/templates/oidc_provider/end_session_prompt.html:12
+msgid "Click"
+msgstr ""
+
+#: idm/templates/oidc_provider/end_session_prompt.html:12
+#: unix/templates/unix/backup_dashboard.html:26
+msgid "here"
+msgstr ""
+
+#: idm/templates/oidc_provider/end_session_prompt.html:12
+msgid "to confirm the logout."
+msgstr ""
+
+#: idm/views.py:44
+#, python-format
+msgid ""
+"Context: %(context)s\n"
+"User: %(user)s\n"
+"Request: %(request)s\n"
+"Exception: %(exception)s."
+msgstr ""
+
+#: idm/views.py:72
+msgid "Too many login attempts! Please try again later."
+msgstr ""
+
+#: idm/views.py:84
+#, python-format
+msgid "Request POST: %(post)s"
+msgstr ""
+
+#: idm/views.py:86
+msgid "TOTP code is correct"
+msgstr ""
+
+#: idm/views.py:93
+#, python-format
+msgid "TOTP code is not correct: %(code)s"
+msgstr ""
+
+#: idm/views.py:95
+msgid "Error: The TOTP code is not correct! Please try again."
+msgstr ""
+
+#: idm/views.py:104
+msgid "Login failed! Please try with your username."
+msgstr ""
+
+#: idm/views.py:109
+msgid "User is authenticated."
+msgstr ""
+
+#: idm/views.py:121
+msgid "User is not authenticated"
+msgstr ""
+
+#: idm/views.py:122
+msgid "Login failed! Please try again."
+msgstr ""
+
+#: idm/views.py:168
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: idm/views.py:172
+msgid "The TOTP code must be 6 digits long!"
+msgstr ""
+
+#: idm/views.py:177
+msgid "The TOTP code is not correct! Please try again."
+msgstr ""
+
+#: idm/views.py:190
+msgid "Success. 2-Factor Authentication successfully set up."
+msgstr ""
+
+#: idm/views.py:193
+msgid "TOTP (Authenticator App)"
+msgstr ""
+
+#: idm/views.py:205
+#, python-format
+msgid "Libre Workspace: %(base_url)s - %(username)s"
+msgstr ""
+
+#: idm/views.py:227
+msgid "You are not authorized to delete this device!"
+msgstr ""
+
+#: idm/views.py:276
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Changes saved successfully!"
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: idm/views.py:292
+msgid ""
+"If the email address exists in our system, an email with a password reset "
+"link has been sent."
+msgstr ""
+
+#: idm/views.py:294
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: idm/views.py:310
+msgid "The password has been successfully changed!"
+msgstr ""
+
+#: idm/views.py:312
+msgid "The old password is not correct!"
+msgstr ""
+
+#: idm/views.py:314
+msgid "The new passwords do not match!"
+msgstr ""
+
+#: idm/views.py:324
+#, python-format
+msgid "2-Factor Authentication for %(username)s successfully reset!"
+msgstr ""
+
+#: idm/views.py:346
+#, python-format
+msgid "User '%(username)s' successfully created!"
+msgstr ""
+
+#: idm/views.py:350 idm/views.py:413
+msgid "Form is not valid"
+msgstr ""
+
+#: idm/views.py:354
+msgid "User"
+msgstr ""
+
+#: idm/views.py:371
+msgid "Password successfully changed!"
+msgstr ""
+
+#: idm/views.py:375 idm/views.py:438
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Changes successfully saved!"
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: idm/views.py:411
+#, python-format
+msgid "Group '%(cn)s' successfully created!"
+msgstr ""
+
+#: idm/views.py:436
+msgid ""
+"Nextcloud group folder will not be deleted (may contain important data), "
+"please delete manually in the Nextcloud admin interface."
+msgstr ""
+
+#: idm/views.py:464
+#, python-format
+msgid "Add user %(user_cn)s to group %(group_cn)s"
+msgstr ""
+
+#: idm/views.py:469
+#, python-format
+msgid "Remove user %(user_cn)s from group %(group_cn)s"
+msgstr ""
+
+#: idm/views.py:473 idm/views.py:516
+msgid "Memberships successfully updated!"
+msgstr ""
+
+#: idm/views.py:507
+#, python-format
+msgid "Add user %(cn)s to group %(group_cn)s"
+msgstr ""
+
+#: idm/views.py:512
+#, python-format
+msgid "Remove user %(cn)s from group %(group_cn)s"
+msgstr ""
+
+#: idm/views.py:525
+msgid "OIDC Clients"
+msgstr ""
+
+#: idm/views.py:526
+msgid "OIDC Client"
+msgstr ""
+
+#: idm/views.py:534
+#, python-format
+msgid ""
+"OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
+"a>"
+msgstr ""
+
+#: idm/views.py:596 lac/templates/lac/base.html:252
+msgid "API Keys"
+msgstr ""
+
+#: idm/views.py:597
+msgid "API Key"
+msgstr ""
+
+#: idm/views.py:600
+#, fuzzy
+#| msgid "Create Addon"
+msgid "Created At"
+msgstr "Addon erstellen"
+
+#: idm/views.py:600
+msgid "Last Used At"
+msgstr ""
+
+#: idm/views.py:600
+msgid "Expiration Date"
+msgstr ""
+
+#: idm/views.py:606
+msgid ""
+"You can view all API endpoints <a href='/api/schema/swagger-ui/' "
+"target='_blank'>here</a>."
+msgstr ""
+
+#: idm/views.py:632
+msgid "You are not authorized to edit this API key!"
+msgstr ""
+
+#: idm/views.py:652
+msgid "You are not authorized to delete this API key!"
+msgstr ""
+
+#: idm/views.py:662
+msgid "You are not authorized to view these API key details!"
+msgstr ""
+
+#: idm/views.py:664
+#, python-format
+msgid ""
+"API Key Details:<br>Name: %(name)s<br>Key: %(key)s<br>Created At: "
+"%(created_at)s<br>Last Used At: %(last_used_at)s<br>Expiration Date: "
+"%(expiration_date)s"
+msgstr ""
+
+#: idm/views.py:696
+#, python-format
+msgid "Failed to enable user. %(msg)s"
+msgstr ""
+
+#: idm/views.py:697
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "User %(pk)s has been successfully enabled."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: idm/views.py:706
+#, python-format
+msgid "Failed to disable user. %(msg)s"
+msgstr ""
+
+#: idm/views.py:707
+#, python-format
+msgid "User %(pk)s has been successfully disabled."
+msgstr ""
+
+#: idm/views.py:717
+#, python-format
+msgid "Failed to reset 2FA for user. %(msg)s"
+msgstr ""
+
+#: idm/views.py:718
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "2FA for user %(pk)s has been successfully reset."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: idm/views.py:730
+#, python-format
+msgid "Setting new password for user %(pk)s: %(new_password)s"
+msgstr ""
+
+#: idm/views.py:735
+#, python-format
+msgid "Password for user %(pk)s has been successfully changed."
+msgstr ""
+
+#: idm/views.py:738
+msgid "Password too short."
+msgstr ""
+
+#: idm/views.py:746
+#, python-format
+msgid "Failed to delete user %(pk)s: %(msg)s"
+msgstr ""
+
+#: idm/views.py:747
+#, python-format
+msgid "Failed to delete user. %(msg)s"
+msgstr ""
+
+#: idm/views.py:749
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "User %(pk)s has been successfully deleted."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: idm/views.py:773
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "User %(pk)s has been successfully updated."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: idm/views.py:795
+#, python-format
+msgid "User %(username)s has been successfully created."
+msgstr ""
+
+#: idm/views.py:838
+#, python-format
+msgid "Group %(cn)s has been successfully created."
+msgstr ""
+
+#: idm/views.py:858
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Group %(pk)s has been successfully updated."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: idm/views.py:866
+#, python-format
+msgid "Failed to delete group. %(msg)s"
+msgstr ""
+
+#: idm/views.py:867
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Group %(pk)s has been successfully deleted."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: lac/settings.py:227
+msgid "language.en"
+msgstr "language.en"
+
+#: lac/settings.py:228
+msgid "language.de"
+msgstr "language.de"
+
+#: lac/templates/lac/base.html:11 lac/templates/lac/base.html:219
+msgid "Libre-Workspace Portal"
+msgstr "Libre-Workspace Portal"
+
+#: lac/templates/lac/base.html:209 lac/templates/lac/base.html:211
+msgid "Logo"
+msgstr ""
+
+#: lac/templates/lac/base.html:223
+msgid "Administration"
+msgstr ""
+
+#: lac/templates/lac/base.html:237
+msgid "Documentation"
+msgstr ""
+
+#: lac/templates/lac/base.html:238
+msgid "Forum"
+msgstr ""
+
+#: lac/templates/lac/base.html:239
+#, fuzzy
+#| msgid "Support"
+msgid "Paid Support"
+msgstr "Support"
+
+#: lac/templates/lac/base.html:240
+msgid "Download System Information"
+msgstr ""
+
+#: lac/templates/lac/base.html:254
+msgid "Log Out"
+msgstr ""
+
+#: lac/templates/lac/confirm.html:7
+msgid "{{ message | safe }}"
+msgstr ""
+
+#: lac/templates/lac/confirm.html:19
+msgid "Confirm"
+msgstr ""
+
+#: lac/templates/lac/edit_x.html:27 lac/templates/lac/edit_x.html:73
+#: lac/templates/lac/info_x.html:27 lac/templates/lac/info_x.html:72
+#: lac/templates/lac/overview_x.html:102
+msgid "DELETE"
+msgstr ""
+
+#: lac/templates/lac/edit_x.html:61 lac/templates/lac/info_x.html:60
+msgid "Really delete"
+msgstr ""
+
+#: lac/templates/lac/edit_x.html:63
+#, fuzzy
+#| msgid "This operation cannot be undone!"
+msgid "This operation cannot be reversed!"
+msgstr "Dieser Vorgang kann nicht rückgängig gemacht werden!"
+
+#: lac/templates/lac/generic_form.html:6
+msgid "{{ heading }}"
+msgstr ""
+
+#: lac/templates/lac/generic_form.html:17
+msgid "{{ message }}"
+msgstr ""
+
+#: lac/templates/lac/generic_form.html:23
+#, fuzzy
+#| msgid "Description"
+msgid "{{ description }}"
+msgstr "Beschreibung"
+
+#: lac/templates/lac/generic_form.html:34
+#: lac/templates/lac/generic_form.html:43
+msgid "{{action}}"
+msgstr ""
+
+#: lac/templates/lac/message.html:13
+#: welcome/templates/welcome/libreworkspace_lite.html:48
+#: welcome/templates/welcome/welcome_dns_settings.html:52
+#: welcome/templates/welcome/welcome_select_apps.html:63
+#: welcome/templates/welcome/welcome_start.html:19
+msgid "Continue"
+msgstr ""
+
+#: lac/templates/lac/overview_x.html:8
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: lac/templates/lac/overview_x.html:34 lac/templates/lac/overview_x.html:54
+msgid "Information"
+msgstr ""
+
+#: lac/templates/lac/overview_x.html:40 lac/templates/lac/overview_x.html:72
+msgid "Delete"
+msgstr ""
+
+#: lac/templates/lac/overview_x.html:85
+#: unix/templates/unix/backup_dashboard.html:90
+#: unix/templates/unix/data_export.html:36
+#: unix/templates/unix/system_dashboard.html:66
+#: unix/templates/unix/update_management.html:80
+msgid "Close"
+msgstr ""
+
+#: lac/templates/lac/overview_x.html:90
+#, python-format
+msgid "%(field)s really delete?"
+msgstr ""
+
+#: m23software/forms.py:12
+msgid ""
+"Invalid MAC address. Please enter a valid MAC address in the format XX:XX:XX:"
+"XX:XX:XX."
+msgstr ""
+
+#: m23software/forms.py:18
+msgid ""
+"The client name must not contain spaces and must be at least 2 characters "
+"long."
+msgstr ""
+
+#: m23software/forms.py:42 m23software/views.py:87
+msgid "Client Name"
+msgstr ""
+
+#: m23software/forms.py:45
+msgid "My Client"
+msgstr ""
+
+#: m23software/forms.py:47
+msgid ""
+"Specifies the name of the client. <br>The name must not contain spaces and "
+"must be at least 2 characters long."
+msgstr ""
+
+#: m23software/forms.py:52
+msgid "Client IP"
+msgstr ""
+
+#: m23software/forms.py:56
+msgid ""
+"Specifies the future IP address of the client. <br>The IP address must be "
+"within the m23 server's network."
+msgstr ""
+
+#: m23software/forms.py:60
+msgid "Netmask"
+msgstr ""
+
+#: m23software/forms.py:64
+msgid ""
+"Specifies the netmask of the client. <br>The netmask must be within the m23 "
+"server's network."
+msgstr ""
+
+#: m23software/forms.py:68
+msgid "Gateway"
+msgstr ""
+
+#: m23software/forms.py:72
+msgid ""
+"Specifies the gateway of the client. <br>The gateway must be within the m23 "
+"server's network."
+msgstr ""
+
+#: m23software/forms.py:76
+msgid "DNS Server 1"
+msgstr ""
+
+#: m23software/forms.py:80
+msgid ""
+"Specifies the first DNS server of the client. <br>The DNS server must be "
+"within the m23 server's network."
+msgstr ""
+
+#: m23software/forms.py:84
+msgid "DNS Server 2"
+msgstr ""
+
+#: m23software/forms.py:88
+msgid ""
+"Specifies the second DNS server of the client. <br>The DNS server must be "
+"within the m23 server's network."
+msgstr ""
+
+#: m23software/forms.py:92
+msgid "Client MAC"
+msgstr ""
+
+#: m23software/forms.py:97
+msgid ""
+"Specifies the MAC address of the client. <br>The MAC address must be within "
+"the m23 server's network."
+msgstr ""
+
+#: m23software/forms.py:102
+msgid "Boot Type"
+msgstr ""
+
+#: m23software/forms.py:108
+msgid ""
+"Specifies the boot type of the client. <br>The boot type must be compatible "
+"with the m23 server's network."
+msgstr ""
+
+#: m23software/forms.py:113
+msgid "Client Login"
+msgstr ""
+
+#: m23software/forms.py:116
+msgid "max"
+msgstr ""
+
+#: m23software/forms.py:119
+msgid "Client Password"
+msgstr ""
+
+#: m23software/forms.py:125
+msgid "Client Root Password"
+msgstr ""
+
+#: m23software/forms.py:131
+msgid "Profile"
+msgstr ""
+
+#: m23software/forms.py:139
+msgid ""
+"Specifies the profile of the client. <br>The profile must be available on "
+"the m23 server."
+msgstr ""
+
+#: m23software/views.py:36
+msgid "Client successfully created."
+msgstr ""
+
+#: m23software/views.py:38
+msgid "Error creating the client. Please check the inputs."
+msgstr ""
+
+#: m23software/views.py:58
+#, fuzzy
+#| msgid "Install"
+msgid "Install Client"
+msgstr "Installieren"
+
+#: m23software/views.py:62
+msgid ""
+"Here you can create an installation client for m23. Please note that the "
+"client creation logic still needs to be implemented."
+msgstr ""
+
+#: m23software/views.py:76 m23software/views.py:83
+msgid "🟢"
+msgstr ""
+
+#: m23software/views.py:78
+msgid "🔴"
+msgstr ""
+
+#: m23software/views.py:81
+msgid "Computer1"
+msgstr ""
+
+#: m23software/views.py:87 unix/forms.py:42
+msgid "IP Address"
+msgstr ""
+
+#: m23software/views.py:87
+msgid "Online"
+msgstr ""
+
+#: m23software/views.py:91
+msgid "Client"
+msgstr ""
+
+#: m23software/views.py:101
+#, python-format
+msgid "Details for client %(client_name)s are not yet implemented."
+msgstr ""
+
+#: m23software/views.py:108
+#, python-format
+msgid "Delete functionality for client %(client_name)s is not yet implemented."
+msgstr ""
+
+#: unix/forms.py:6
+msgid "Enable automatic backups"
+msgstr ""
+
+#: unix/forms.py:7
+msgid "Borg Repository"
+msgstr ""
+
+#: unix/forms.py:8
+msgid "SSH access fingerprint (See important notes)"
+msgstr ""
+
+#: unix/forms.py:9
+msgid "Borg Encryption"
+msgstr ""
+
+#: unix/forms.py:10
+msgid "Borg Passphrase (only fill if encryption is enabled)"
+msgstr ""
+
+#: unix/forms.py:11
+msgid "Daily backup time (Format: HH:MM)"
+msgstr ""
+
+#: unix/forms.py:12
+msgid "Number of daily backups"
+msgstr ""
+
+#: unix/forms.py:13
+msgid "Number of weekly backups"
+msgstr ""
+
+#: unix/forms.py:14
+msgid "Number of monthly backups"
+msgstr ""
+
+#: unix/forms.py:15
+msgid "Borg Repository is on a Synology NAS"
+msgstr ""
+
+#: unix/forms.py:16
+msgid "Additional Borg Options (for experts)"
+msgstr ""
+
+#: unix/forms.py:20
+msgid "Email Server"
+msgstr ""
+
+#: unix/forms.py:21
+msgid "Email Port"
+msgstr ""
+
+#: unix/forms.py:22
+msgid "Email Username"
+msgstr ""
+
+#: unix/forms.py:23
+msgid "Email Address"
+msgstr ""
+
+#: unix/forms.py:24
+msgid "Email Password"
+msgstr ""
+
+#: unix/forms.py:25
+msgid "Email Encryption"
+msgstr ""
+
+#: unix/forms.py:30 welcome/templates/welcome/welcome_select_apps.html:21
+msgid "Online Office"
+msgstr ""
+
+#: unix/forms.py:30 unix/unix_scripts/unix.py:456
+msgid "Collabora"
+msgstr ""
+
+#: unix/forms.py:30 unix/unix_scripts/unix.py:457
+msgid "OnlyOffice"
+msgstr ""
+
+#: unix/forms.py:30 welcome/templates/welcome/welcome_select_apps.html:25
+msgid "Deactivate"
+msgstr ""
+
+#: unix/forms.py:34
+msgid "Add-on File"
+msgstr ""
+
+#: unix/forms.py:38
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "New Libre-Workspace Name"
+msgstr "Libre-Workspace Portal"
+
+#: unix/forms.py:46
+msgid ""
+"Additional email addresses for system emails (separate multiple with commas)"
+msgstr ""
+
+#: unix/forms.py:47
+msgid "Disable Nextcloud user administration"
+msgstr ""
+
+#: unix/forms.py:48
+msgid "CPU warning threshold in %"
+msgstr ""
+
+#: unix/forms.py:49
+msgid "RAM warning threshold in %"
+msgstr ""
+
+#: unix/forms.py:50
+msgid "Disk warning threshold in %"
+msgstr ""
+
+#: unix/forms.py:54
+msgid "Start command for additional services (Bash code)"
+msgstr ""
+
+#: unix/forms.py:55
+msgid "Stop command for additional services (Bash code)"
+msgstr ""
+
+#: unix/forms.py:59
+msgid "Enable automatic restart/shutdown"
+msgstr ""
+
+#: unix/forms.py:60 unix/templates/unix/module_management.html:12
+msgid "Action"
+msgstr ""
+
+#: unix/forms.py:60
+msgid "Reboot"
+msgstr ""
+
+#: unix/forms.py:60
+msgid "Shutdown"
+msgstr ""
+
+#: unix/forms.py:61
+msgid "Time (Format: HH:MM)"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Weekday"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Daily"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Monday"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Tuesday"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Wednesday"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Thursday"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Friday"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Saturday"
+msgstr ""
+
+#: unix/forms.py:62
+msgid "Sunday"
+msgstr ""
+
+#: unix/forms.py:66
+msgid "Set Desktop Password"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:10
+#: unix/templates/unix/backup_settings.html:11
+msgid "Fully Automated Backups"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:13
+msgid "Status"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:16
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Last backup successful"
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: unix/templates/unix/backup_dashboard.html:19
+msgid "Awaiting first backup"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:22
+msgid "Last backup completed with errors"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:23
+msgid "Try again"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:26
+msgid "Backup running..."
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:26
+msgid ""
+"All services are shut down at the beginning. If necessary, they can be "
+"started"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:29
+msgid "Recovery running"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:32
+msgid "Backup deactivated"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:35
+msgid "Backup not configured"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:39
+msgid "Used Backup Size"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:48
+#: unix/templates/unix/update_management.html:42
+msgid "History"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:53
+#: unix/templates/unix/update_management.html:47
+msgid "Date"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:54
+msgid "Backup Successful"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:70
+msgid "Show Error"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:105
+msgid "Stored Archives"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:120
+msgid "Backup Configuration"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:126
+msgid "Mount Backups"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:129
+msgid "Unmount Backups"
+msgstr ""
+
+#: unix/templates/unix/backup_dashboard.html:130
+msgid "View/Restore Backup"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:12
+msgid "Basic Information"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:14
+msgid ""
+"The entire server, including data and all configurations, is fully "
+"automatically backed up daily via Borg to an external location."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:15
+msgid ""
+"Currently, data restoration is only possible manually by a system "
+"administrator."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:16
+msgid ""
+"These backups are intended as a last resort in case of a system failure."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:17
+msgid ""
+"The individual backup states are stored incrementally and compressed, thus "
+"saving a lot of space."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:20
+msgid "Instructions"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:22
+msgid "Ensure that Borg is installed on the other server."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:23
+msgid ""
+"It is recommended to create a dedicated user on the other location for "
+"backups. This user should only have the necessary permissions for backups."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:24
+msgid ""
+"You must ensure that this server can log in to the other location. To do "
+"this, add the public key of this server (specified at the very bottom) to "
+"the file"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:24
+msgid "on the other location."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:25
+msgid "Create a new repository with the command"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:26
+msgid ""
+"Add the SSH fingerprint of the backup server to the corresponding field "
+"below. You can display it with the command"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:40
+msgid "Trigger Backup Manually"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:43
+msgid "Note: All services will be temporarily shut down during the backup."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:48
+msgid "Current Public Key"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:51
+msgid ""
+"With this key, the server can automatically log in to the other location."
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:53
+msgid "Important Security Notes"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:55
+msgid ""
+"If your backup is encrypted, the private key must also be entered in "
+"addition to the passphrase when restoring the archive. This is only stored "
+"on the server and cannot be recovered. If the server fails, the data will be "
+"lost if you do not have the Borg recovery key. More information can be found "
+"here:"
+msgstr ""
+
+#: unix/templates/unix/backup_settings.html:56
+#, python-format
+msgid ""
+"Never rely 100%% on the system. Regularly test manually whether all "
+"important data is backed up. More information can be found here:"
+msgstr ""
+
+#: unix/templates/unix/critical_system_configuration.html:5
+#: unix/templates/unix/system_configuration.html:33
+msgid "Critical System Configuration"
+msgstr ""
+
+#: unix/templates/unix/critical_system_configuration.html:8
+msgid ""
+"Please note that these configurations should only be carried out by "
+"experienced administrators and NEVER lightly. Incorrect settings can lead to "
+"serious problems."
+msgstr ""
+
+#: unix/templates/unix/critical_system_configuration.html:16
+msgid "IP Address Change"
+msgstr ""
+
+#: unix/templates/unix/critical_system_configuration.html:23
+msgid "Master Password Change"
+msgstr ""
+
+#: unix/templates/unix/data_export.html:4
+msgid "Data Export"
+msgstr ""
+
+#: unix/templates/unix/data_export.html:15
+msgid "View messages from the last export"
+msgstr ""
+
+#: unix/templates/unix/data_export.html:25
+msgid "Messages from the last export"
+msgstr ""
+
+#: unix/templates/unix/data_export.html:26
+msgid "The fewer messages displayed, the more error-free the last export was."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:46
+msgid "Select a partition where all server data should be exported."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:47
+msgid ""
+"All important data (including from mounted hard drives) not mounted in /mnt "
+"or /media will be backed up."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:48
+msgid ""
+"If an export of this server already exists on the target, the data on the "
+"export will be overwritten/updated."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:49
+msgid "It is not checked whether there is enough disk space on the target."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:53
+#: unix/templates/unix/data_import.html:20
+msgid "Hard Drive"
+msgstr ""
+
+#: unix/templates/unix/data_export.html:55
+msgid "Select a destination..."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:68
+#, fuzzy
+#| msgid "Support"
+msgid "Export"
+msgstr "Support"
+
+#: unix/templates/unix/data_export.html:71
+msgid ""
+"Note: All services will be temporarily shut down during the export process."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:74
+msgid ""
+"The data export is currently running. Please wait until the export is "
+"complete."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:75
+msgid "This process can take several hours."
+msgstr ""
+
+#: unix/templates/unix/data_export.html:76
+msgid "All other services are currently paused and are not reachable."
+msgstr ""
+
+#: unix/templates/unix/data_import.html:4
+msgid "Data Import (Nextcloud)"
+msgstr ""
+
+#: unix/templates/unix/data_import.html:9
+msgid ""
+"The data import is currently running. Please wait until the import process "
+"is complete. This process can take several hours. The data will only become "
+"visible in Nextcloud at the very end of the process."
+msgstr ""
+
+#: unix/templates/unix/data_import.html:15
+msgid ""
+"This tool allows you to import data from a hard drive to Nextcloud. The data "
+"will be copied to a specific user's Nextcloud area. The data will only "
+"become visible in Nextcloud at the very end of the process."
+msgstr ""
+
+#: unix/templates/unix/data_import.html:16
+msgid ""
+"If you want to import the data into a group folder, you must first import "
+"the data into a user's Nextcloud area and then move it to the group folder."
+msgstr ""
+
+#: unix/templates/unix/data_import.html:22
+msgid "Select the source hard drive..."
+msgstr ""
+
+#: unix/templates/unix/data_import.html:27
+msgid "Nextcloud User"
+msgstr ""
+
+#: unix/templates/unix/data_import.html:29
+msgid "Select the Nextcloud user..."
+msgstr ""
+
+#: unix/templates/unix/data_import.html:34
+#: welcome/templates/welcome/access.html:65
+msgid "Import..."
+msgstr ""
+
+#: unix/templates/unix/data_import.html:36
+msgid ""
+"In the next step, you will select the folder on the source hard drive that "
+"you want to import."
+msgstr ""
+
+#: unix/templates/unix/data_management.html:15
+#: unix/templates/unix/system_management.html:13
+msgid "Note: This page refreshes every 60 seconds."
+msgstr ""
+
+#: unix/templates/unix/email_configuration.html:5
+#: unix/templates/unix/system_configuration.html:12
+msgid "Email Configuration"
+msgstr ""
+
+#: unix/templates/unix/email_configuration.html:8
+msgid ""
+"To utilize full functionality, it is recommended to provide an email account "
+"through which the Libre-Workspace can autonomously send invitations, "
+"'password reset' emails, or other communications."
+msgstr ""
+
+#: unix/templates/unix/email_configuration.html:15
+msgid "Send Test Email"
+msgstr ""
+
+#: unix/templates/unix/file_explorer.html:9
+msgid "Close File Explorer"
+msgstr ""
+
+#: unix/templates/unix/file_explorer.html:14
+msgid ""
+"Note: For security reasons, it is not possible to display the content of "
+"files."
+msgstr ""
+
+#: unix/templates/unix/folder_view.html:5
+msgid "Up"
+msgstr ""
+
+#: unix/templates/unix/folder_view.html:9
+msgid "Current Folder"
+msgstr ""
+
+#: unix/templates/unix/module_management.html:5
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "Libre Workspace Module"
+msgstr "Libre-Workspace Portal"
+
+#: unix/templates/unix/module_management.html:11
+#, fuzzy
+#| msgid "Install"
+msgid "Installed?"
+msgstr "Installieren"
+
+#: unix/templates/unix/module_management.html:37
+#, python-format
+msgid "%%(module_name)s uninstall?"
+msgstr ""
+
+#: unix/templates/unix/module_management.html:39
+msgid ""
+"Do you really want to uninstall the module? This will also remove all module "
+"data and settings. If the module has been manually modified or installed "
+"administratively, problems up to further data loss may occur. Only use this "
+"function if you have set up backups, no longer need any data on the module, "
+"and the module was installed automatically."
+msgstr ""
+
+#: unix/templates/unix/module_management.html:67
+#, python-format
+msgid "%%(module_name)s install?"
+msgstr ""
+
+#: unix/templates/unix/module_management.html:69
+msgid "Do you really want to install the module? This may take some time."
+msgstr ""
+
+#: unix/templates/unix/module_management.html:96
+msgid "Online Office Module"
+msgstr ""
+
+#: unix/templates/unix/module_management.html:100 unix/views.py:713
+msgid "Apply"
+msgstr ""
+
+#: unix/templates/unix/mounting.html:4
+#: unix/templates/unix/system_dashboard.html:76
+msgid "Hard Drives"
+msgstr ""
+
+#: unix/templates/unix/mounting.html:9
+#, fuzzy
+#| msgid "Description"
+msgid "Partition"
+msgstr "Beschreibung"
+
+#: unix/templates/unix/mounting.html:10
+msgid "Size"
+msgstr ""
+
+#: unix/templates/unix/mounting.html:11
+msgid "Mount Point"
+msgstr ""
+
+#: unix/templates/unix/mounting.html:12
+msgid "Actions"
+msgstr ""
+
+#: unix/templates/unix/mounting.html:24
+msgid "Unmount"
+msgstr ""
+
+#: unix/templates/unix/mounting.html:26
+msgid "Mount"
+msgstr ""
+
+#: unix/templates/unix/pick_folder.html:5
+msgid "Select Folder"
+msgstr ""
+
+#: unix/templates/unix/pick_folder.html:24
+msgid "Select current folder"
+msgstr ""
+
+#: unix/templates/unix/system_configuration.html:19
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "Libre Workspace Modules"
+msgstr "Libre-Workspace Portal"
+
+#: unix/templates/unix/system_configuration.html:44
+msgid "Automatic Reboot/Shutdown"
+msgstr ""
+
+#: unix/templates/unix/system_configuration.html:51 unix/views.py:652
+msgid "Additional Services"
+msgstr ""
+
+#: unix/templates/unix/system_configuration.html:58
+msgid "OpenID Connect (SSO)"
+msgstr ""
+
+#: unix/templates/unix/system_configuration.html:65 unix/views.py:629
+msgid "Miscellaneous Settings"
+msgstr ""
+
+#: unix/templates/unix/system_configuration.html:77
+msgid "Webserver Configuration"
+msgstr ""
+
+#: unix/templates/unix/system_configuration.html:84
+msgid "Wordpress Sites"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:3 unix/unix_scripts/unix.py:547
+#: welcome/templates/welcome/access.html:95
+#: welcome/templates/welcome/access.html:115
+msgid "System"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:7 unix/views.py:576
+#: unix/views.py:602
+msgid "Change"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:10
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "Libre-Workspace Version"
+msgstr "Libre-Workspace Portal"
+
+#: unix/templates/unix/system_dashboard.html:13
+msgid "Managed by apt repository since 0.10.0"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:17
+msgid "Hostname"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:21
+msgid "Operating System"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:25
+msgid "Processor Load (~ 1 min)"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:29
+msgid "RAM"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:33
+msgid "Uptime"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:37
+msgid "Updates"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:46
+#: unix/templates/unix/system_dashboard.html:109
+msgid "Update system"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:47
+msgid "Show last update log"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:82
+#: unix/templates/unix/system_dashboard.html:239
+msgid "Total Size:"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:82
+#: unix/templates/unix/system_dashboard.html:239
+msgid "Used:"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:87
+msgid "Control"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:92
+msgid "Start all services"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:95
+msgid "Stop all services"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:120
+msgid "Update system?"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:122
+msgid "Do you really want to update the system?"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:123
+msgid "This will download and install all available updates."
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:136
+#: unix/templates/unix/update_management.html:12
+msgid "Update Now"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:149
+msgid "Restart system"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:160
+msgid "Restart system?"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:162
+msgid "Do you really want to restart the system?"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:163
+msgid "This will terminate all running processes and restart the system."
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:176
+msgid "Restart Now"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:191
+msgid "Shut down server"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:202
+msgid "Shut down server?"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:204
+msgid "Do you really want to shut down the server?"
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:206
+msgid ""
+"THIS WILL POWER OFF THE SERVER. TO START THE SERVER AGAIN, YOU WILL HAVE TO "
+"MANUALLY POWER IT ON (ON-SITE)."
+msgstr ""
+
+#: unix/templates/unix/system_dashboard.html:219
+msgid "SHUT DOWN NOW"
+msgstr ""
+
+#: unix/templates/unix/update_management.html:3
+msgid "Fully Automated Updates"
+msgstr ""
+
+#: unix/templates/unix/update_management.html:4
+msgid "Configuration"
+msgstr ""
+
+#: unix/templates/unix/update_management.html:26
+msgid "Update now"
+msgstr ""
+
+#: unix/templates/unix/update_management.html:33
+msgid "Perform automatic updates at:"
+msgstr ""
+
+#: unix/templates/unix/update_management.html:48
+msgid "Log Files"
+msgstr ""
+
+#: unix/templates/unix/update_management.html:60
+msgid "View Report"
+msgstr ""
+
+#: unix/templates/unix/update_management.html:70
+msgid "Update on"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:61
+#, python-format
+msgid "Setting %(key)s to %(value)s."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:164
+msgid "Error: Public key of root user not found."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:228
+msgid "minutes"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:228
+msgid "hours"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:228
+msgid "days"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:228
+msgid "weeks"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:228
+msgid "months"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:228
+msgid "years"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:229
+msgid "min"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:229
+msgid "hour"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:229
+msgid "day"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:229
+msgid "week"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:229
+msgid "month"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:229
+msgid "year"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:235
+#, python-format
+msgid "%(count)s packages can be updated."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:235
+msgid "The system is up to date."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:239
+msgid "The system is currently being updated..."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:329
+msgid "Backup already running"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:452
+msgid "Samba DC (Central User Management)"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:453
+msgid "Nextcloud"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:454
+msgid "Matrix"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:455
+msgid "Jitsi"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:458 unix/views.py:713
+msgid "Cloud Desktop"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:459
+msgid "XFCE"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:520
+msgid "Error: Module not installed."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:521
+msgid "Error: Module not found."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:607
+msgid ""
+"WARNING: Setup script not found! If you are in a development environment, "
+"that's okay. If you are in a production environment, please check your "
+"installation."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:621
+msgid "No valid IPv4 address found."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:636
+msgid ""
+"No domain found in the libre-workspace.env file. Please check the /etc/libre-"
+"workspace/libre-workspace.env file."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:651
+msgid ""
+"WARNING: Remove script not found! If you are in a development environment, "
+"that's okay. If you are in a production environment, please check your "
+"installation."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:666
+#, python-format
+msgid "Error: Mounting backups failed: %(stdout)s %(stderr)s"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:673
+#, python-format
+msgid "Error: Unmounting backups failed: %(stdout)s %(stderr)s"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:682
+#, python-format
+msgid "Error: Recovering file or directory failed: %(stdout)s %(stderr)s"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:734
+msgid "Error: File format not supported. Please use a .zip or .deb file."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:812
+#, fuzzy, python-format
+#| msgid "Libre-Workspace Portal"
+msgid "%(domain)s - Libre Workspace"
+msgstr "Libre-Workspace Portal"
+
+#: unix/unix_scripts/unix.py:904
+#, python-format
+msgid ""
+"Ensuring DNS entry for %(full_domain)s with IP %(ip)s in Samba DNS server..."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:908
+msgid ""
+"Error: The domain is not a subdomain of the configured domain in the libre-"
+"workspace.env file."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:911
+msgid "Error: The IP is not valid. Please use a valid IPv4 address."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:917
+msgid "Error: The domain is not valid. Please use a valid domain name."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:924
+#, python-format
+msgid "Result of adding DNS entry: %(result)s"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:926
+#, python-format
+msgid "Error while adding DNS entry: %(error)s"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:927
+#, python-format
+msgid ""
+"Error: %(error)s. Please check the Samba DNS server configuration and the "
+"domain name."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:952
+msgid "Password cannot be empty."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:954
+msgid "Password cannot contain spaces."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:957
+msgid "Password must contain at least one number."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:960
+msgid "Password must contain at least one letter."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:964
+msgid "Password must contain at least one special character."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:968
+msgid "Password cannot contain the following characters: $'#"
+msgstr ""
+
+#: unix/unix_scripts/unix.py:971
+msgid "Password must be at least 8 characters long."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:1059
+msgid ""
+"Error: You should run this function as root. In development mode this is "
+"okay for now."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:1062
+msgid "Error: Nextcloud is not available. Please install Nextcloud first."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:1114
+msgid "Error: Password for user in linux: could not be changed."
+msgstr ""
+
+#: unix/unix_scripts/unix.py:1165
+msgid ""
+"CAUTION: No local admin token found. If you are in a dev environment, this "
+"is okay. If you are in a production environment, please check your "
+"installation, your system is not secure."
+msgstr ""
+
+#: unix/views.py:89 unix/views.py:623 unix/views.py:682 unix/views.py:709
+msgid "Settings saved."
+msgstr ""
+
+#: unix/views.py:91
+msgid "Settings could not be saved."
+msgstr ""
+
+#: unix/views.py:154 unix/views.py:432
+#, python-format
+msgid "Error mounting: %(message)s"
+msgstr ""
+
+#: unix/views.py:163 unix/views.py:440
+#, python-format
+msgid "Error unmounting: %(message)s"
+msgstr ""
+
+#: unix/views.py:173
+msgid "Error: POST Request expected"
+msgstr ""
+
+#: unix/views.py:175
+msgid "Error: No partition selected"
+msgstr ""
+
+#: unix/views.py:194 unix/views.py:225
+msgid "Error: No directory specified"
+msgstr ""
+
+#: unix/views.py:198
+msgid "Error: No user specified"
+msgstr ""
+
+#: unix/views.py:203
+msgid "Please select the directory you want to import."
+msgstr ""
+
+#: unix/views.py:210
+msgid "Error: The root directory cannot be imported"
+msgstr ""
+
+#: unix/views.py:244
+msgid "Error: A file was selected, but a directory was expected."
+msgstr ""
+
+#: unix/views.py:264
+msgid "Only POST requests are allowed"
+msgstr ""
+
+#: unix/views.py:269
+msgid "Unauthorized. Request not local."
+msgstr ""
+
+#: unix/views.py:275
+msgid "Unauthorized. Request is seems not directly made."
+msgstr ""
+
+#: unix/views.py:279
+msgid "Unauthorized. Token is not valid."
+msgstr ""
+
+#: unix/views.py:289
+msgid "No recipient given and no admin email address found"
+msgstr ""
+
+#: unix/views.py:300
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Message from: %(libre_workspace_name)s"
+msgstr ""
+
+#: unix/views.py:305
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Mail sent successfully"
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: unix/views.py:360
+msgid "Email configuration saved."
+msgstr ""
+
+#: unix/views.py:391
+msgid "Changes are being applied. This may take a few minutes."
+msgstr ""
+
+#: unix/views.py:416 unix/views.py:424
+#, python-format
+msgid "%(name)s could not be uninstalled: %(response)s"
+msgstr ""
+
+#: unix/views.py:417
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s is installing. This process takes multiple minutes..."
+msgid "%(name)s is being installed. This may take a few minutes."
+msgstr ""
+"Addon %(pk)s wird installiert. Dieser Vorgang dauert mehrere Minuten..."
+
+#: unix/views.py:425
+#, fuzzy, python-format
+#| msgid "Addon %(pk)s is installing. This process takes multiple minutes..."
+msgid "%(name)s is being uninstalled. This may take a few minutes."
+msgstr ""
+"Addon %(pk)s wird installiert. Dieser Vorgang dauert mehrere Minuten..."
+
+#: unix/views.py:447
+msgid ""
+"Error: The directory cannot be restored. Please select a directory in <code>/"
+"backups</code>."
+msgstr ""
+
+#: unix/views.py:465
+msgid "You must confirm the recovery."
+msgstr ""
+
+#: unix/views.py:469
+#, python-format
+msgid "The directory could not be restored: <code>%(response)s</code>"
+msgstr ""
+
+#: unix/views.py:470
+msgid "Recovery is in progress. This may take a few minutes."
+msgstr ""
+
+#: unix/views.py:473
+#, python-format
+msgid ""
+"Please confirm the recovery of %(path)s.<br>The recovery will overwrite "
+"existing files."
+msgstr ""
+
+#: unix/views.py:480
+msgid ""
+"Please select the directory or file you want to restore. The restore will "
+"overwrite existing files."
+msgstr ""
+
+#: unix/views.py:491
+msgid ""
+"No email address found. Please define an email address in your user settings."
+msgstr ""
+
+#: unix/views.py:492
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "Test mail - Libre Workspace"
+msgstr "Libre-Workspace Portal"
+
+#: unix/views.py:492
+msgid ""
+"This is a test mail.\n"
+"Your mail settings seem to be correct."
+msgstr ""
+
+#: unix/views.py:494
+#, python-format
+msgid "Test mail could not be sent: <code>%(message)s</code>"
+msgstr ""
+
+#: unix/views.py:495
+msgid "Test mail sent successfully. Please check your inbox."
+msgstr ""
+
+#: unix/views.py:503
+#, fuzzy
+#| msgid "Addon Center"
+msgid "Addon"
+msgstr "Addon-Center"
+
+#: unix/views.py:506
+#, fuzzy
+#| msgid "Addon Center"
+msgid "Author"
+msgstr "Addon-Center"
+
+#: unix/views.py:510
+#, python-format
+msgid "<a href='%(addon_creator_url)s'>Create Add-On</a>"
+msgstr ""
+
+#: unix/views.py:522
+msgid "The file must be a .zip or .deb file."
+msgstr ""
+
+#: unix/views.py:530
+#, python-format
+msgid "The Addon could not be uploaded: %(response)s"
+msgstr ""
+
+#: unix/views.py:533
+msgid ""
+" The Addon setup is currently running in the background and may take a few "
+"minutes."
+msgstr ""
+
+#: unix/views.py:534
+msgid "The Addon has been uploaded."
+msgstr ""
+
+#: unix/views.py:536
+msgid "Add Add-On"
+msgstr ""
+
+#: unix/views.py:536
+msgid "Upload"
+msgstr ""
+
+#: unix/views.py:541
+msgid "The Addon cannot be uninstalled because it is still in use."
+msgstr ""
+
+#: unix/views.py:544
+#, python-format
+msgid "The Addon could not be uninstalled: <code>%(response)s</code>"
+msgstr ""
+
+#: unix/views.py:545
+#, fuzzy
+#| msgid "Addon %(addon_id)s is not installed."
+msgid "The Addon has been uninstalled."
+msgstr "Addon %(addon_id)s ist nicht installiert."
+
+#: unix/views.py:553
+msgid "The name has been changed."
+msgstr ""
+
+#: unix/views.py:555
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "Change Libre Workspace Name"
+msgstr "Libre-Workspace Portal"
+
+#: unix/views.py:569
+msgid "The IP address is not valid."
+msgstr ""
+
+#: unix/views.py:571
+msgid "The IP address has been changed."
+msgstr ""
+
+#: unix/views.py:575
+msgid "Change IP Address"
+msgstr ""
+
+#: unix/views.py:580
+msgid ""
+"Please enter the new IP address of the server. The server will restart "
+"immediately afterwards."
+msgstr ""
+
+#: unix/views.py:588
+msgid "The current password is incorrect."
+msgstr ""
+
+#: unix/views.py:590
+msgid "The new passwords do not match."
+msgstr ""
+
+#: unix/views.py:595
+msgid "The master password has been changed. The server will restart shortly."
+msgstr ""
+
+#: unix/views.py:597
+#, python-format
+msgid "The new password is not strong enough: %(errors)s"
+msgstr ""
+
+#: unix/views.py:601
+msgid "Change Master Password"
+msgstr ""
+
+#: unix/views.py:606
+msgid ""
+"Please enter the new master password. The master password will be changed "
+"immediately afterwards and the server will restart."
+msgstr ""
+
+#: unix/views.py:645
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "Changes saved."
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: unix/views.py:646 unix/views.py:683 unix/views.py:710
+msgid "Error: Invalid input."
+msgstr ""
+
+#: unix/views.py:652
+msgid ""
+"Add valid Bash commands to be executed for starting and stopping your "
+"additional services. Do not use cd commands or similar."
+msgstr ""
+
+#: unix/views.py:659
+#, python-format
+msgid "Libre Workspace could not be updated: <code>%(m)s</code>"
+msgstr ""
+
+#: unix/views.py:660
+msgid ""
+"Libre Workspace is being updated. This may take a few minutes. Libre "
+"Workspace will be unavailable for a short time."
+msgstr ""
+
+#: unix/views.py:678
+msgid "Error: The time format seems incorrect."
+msgstr ""
+
+#: unix/views.py:684
+msgid "Automatic Shutdown"
+msgstr ""
+
+#: unix/views.py:684
+msgid ""
+"Note: The process will only be executed within one hour of the configured "
+"time. If, for example, a simultaneously scheduled backup or update takes "
+"longer than one hour, the server will not be shut down/restarted."
+msgstr ""
+
+#: unix/views.py:690
+msgid ""
+"System information has been collected and passwords removed. Click continue "
+"to download now."
+msgstr ""
+
+#: unix/views.py:697
+#, python-format
+msgid "The module could not be updated: <code>%(m)s</code>"
+msgstr ""
+
+#: unix/views.py:698
+msgid ""
+"The module is now being updated in the background. This may take a few "
+"minutes."
+msgstr ""
+
+#: unix/views.py:713
+msgid ""
+"Note: The password is saved in plain text. The password is only required for "
+"password queries during use, for example for administrative tasks. The "
+"password is not required for login. The password can be deactivated again in "
+"the future when changing other user parameters for security reasons."
+msgstr ""
+
+#: welcome/templates/welcome/access.html:5
+msgid "You can reach Libre Workspace Lite after installation at"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:10
+msgid ""
+"On your router (and preferably on your devices), ensure the following DNS "
+"entry is set:"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:11
+msgid ""
+"In practice, it sometimes happens that despite correct DNS configuration, "
+"connections do not work properly due to caches."
+msgstr ""
+
+#: welcome/templates/welcome/access.html:12
+msgid ""
+"To prevent such connection problems, you can ensure the following entry in "
+"the"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:12
+msgid "file on Linux devices:"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:18
+msgid "Click here to copy text"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:22
+msgid "You can download the certificate for https connections"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:22
+msgid "after installation"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:22
+msgid "here at any time:"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:34
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "To Libre-Workspace (portal.{{domain}})"
+msgstr "Libre-Workspace Portal"
+
+#: welcome/templates/welcome/access.html:39
+msgid "How to install certificates on your devices"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:41
+msgid ""
+"For connections to Libre Workspace to be authenticated, you must install the "
+"certificate on your devices."
+msgstr ""
+
+#: welcome/templates/welcome/access.html:42
+msgid "You can download the lan.crt file here:"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:43
+msgid ""
+"If you cannot reach https://cert.int.de/, make sure you are in the same "
+"network as Libre Workspace and have entered the IP address of Libre "
+"Workspace as the DNS server."
+msgstr ""
+
+#: welcome/templates/welcome/access.html:47
+msgid "Linux"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:48
+msgid "System-wide"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:51
+msgid "Copy the file"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:51
+msgid "to"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:52
+msgid "Open a terminal and run"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:56
+msgid "For Firefox"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:59
+msgid "Open Firefox"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:60
+#: welcome/templates/welcome/access.html:77
+msgid "Open Settings"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:61
+#: welcome/templates/welcome/access.html:64
+#: welcome/templates/welcome/access.html:65
+#: welcome/templates/welcome/access.html:81
+#: welcome/templates/welcome/access.html:95
+#: welcome/templates/welcome/access.html:104
+#: welcome/templates/welcome/access.html:105
+#: welcome/templates/welcome/access.html:114
+#: welcome/templates/welcome/access.html:115
+#: welcome/templates/welcome/access.html:116
+#: welcome/templates/welcome/access.html:124
+#: welcome/templates/welcome/access.html:125
+msgid "Select"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:61
+msgid "Privacy & Security"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:62
+msgid "Scroll down and find the section"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:62
+msgid "Certificates"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:63
+#: welcome/templates/welcome/access.html:68
+#: welcome/templates/welcome/access.html:82
+#: welcome/templates/welcome/access.html:85
+#: welcome/templates/welcome/access.html:94
+#: welcome/templates/welcome/access.html:96
+#: welcome/templates/welcome/access.html:103
+#: welcome/templates/welcome/access.html:106
+msgid "Click on"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:63
+msgid "View Certificates"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:64
+msgid "Authorities"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:66
+#: welcome/templates/welcome/access.html:83
+msgid "Select the file"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:67
+#: welcome/templates/welcome/access.html:84
+msgid "Select all options"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:68
+#: welcome/templates/welcome/access.html:85
+#: welcome/templates/welcome/access.html:106
+#: welcome/templates/welcome/access.html:116
+msgid "OK"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:69
+msgid "Restart Firefox"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:74
+msgid "For Chromium, Google Chrome, Brave, ..."
+msgstr ""
+
+#: welcome/templates/welcome/access.html:78
+msgid "Select Privacy and Security"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:79
+msgid "Select Security"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:80
+msgid "Scroll down further and click on"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:80
+msgid "Manage Certificates"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:81
+msgid "Certificate Authorities"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:82
+#, fuzzy
+#| msgid "Support"
+msgid "Import"
+msgstr "Support"
+
+#: welcome/templates/welcome/access.html:86
+msgid "Restart the browser"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:90
+msgid "MacOS"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:93
+#: welcome/templates/welcome/access.html:102
+#: welcome/templates/welcome/access.html:113
+#: welcome/templates/welcome/access.html:123
+msgid "Open the file"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:99
+msgid "Windows"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:104
+msgid "Store all certificates in the following store"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:105
+msgid "Trusted Root Certification Authorities"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:110
+msgid "Android"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:120
+msgid "iOS"
+msgstr ""
+
+#: welcome/templates/welcome/access.html:147
+msgid "Text copied to clipboard!"
+msgstr ""
+
+#: welcome/templates/welcome/installation_running.html:5
+#, fuzzy
+#| msgid "Install"
+msgid "Installation..."
+msgstr "Installieren"
+
+#: welcome/templates/welcome/installation_running.html:10
+msgid "Thank you for your time!"
+msgstr ""
+
+#: welcome/templates/welcome/installation_running.html:10
+msgid ""
+"Libre-Workspace is now installing itself automatically. This may take a few "
+"minutes."
+msgstr ""
+
+#: welcome/templates/welcome/installation_running.html:11
+msgid ""
+"This page may not be accessible at times. Please ensure the server has a "
+"continuous, stable internet connection."
+msgstr ""
+
+#: welcome/templates/welcome/installation_running.html:14
+msgid ""
+"After installation, your server will restart. Then Libre-Workspace will be "
+"ready for use!"
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:5
+#, fuzzy
+#| msgid "Libre-Workspace Portal"
+msgid "Libre Workspace Lite"
+msgstr "Libre-Workspace Portal"
+
+#: welcome/templates/welcome/libreworkspace_lite.html:8
+msgid ""
+"You have not selected any modules. This will now install Libre Workspace "
+"Lite."
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:9
+msgid ""
+"This means that only the portal with its underlying administration will be "
+"installed. The central user management will also not be installed for now."
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:10
+msgid ""
+"This is optimal for administering a simple Linux server. A comparable "
+"project (with different functions) is for example"
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:11
+msgid ""
+"Should you wish to install modules or AddOns at a later time, this is "
+"possible at any time after installation via the portal, as usual."
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:14
+msgid "Portal Accessibility"
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:22
+msgid "via port 23816 (recommended for beginners)"
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:26
+msgid "via a public domain"
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:32
+msgid "Portal Domain"
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:34
+msgid "The domain specified above must be under your control."
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:35
+msgid ""
+"Tip: If the server has a service reachable at service.mydomain.com? Define "
+"service.mydomain.com:23816 in this field to reach the portal under this "
+"subdomain. This saves you further DNS entries."
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:41
+msgid "Root Domain"
+msgstr ""
+
+#: welcome/templates/welcome/libreworkspace_lite.html:43
+msgid ""
+"The root domain may be needed later for additional modules or AddOns. If you "
+"are unsure, leave the field as int.de."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:5
+msgid "Visibility"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:8
+msgid ""
+"Choose whether Libre-Workspace should be publicly accessible or only "
+"reachable within the local network."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:9
+msgid ""
+"This can only be changed manually later by a knowledgeable Linux "
+"administrator."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:19
+#: welcome/templates/welcome/welcome_dns_settings.html:58
+msgid "Local"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:31
+msgid ""
+"The domain specified above must be under your control. Enter only the domain "
+"name here, without the protocol."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:36
+msgid "Either use a"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:36
+msgid "complete domain"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:36
+#: welcome/templates/welcome/welcome_dns_settings.html:42
+msgid "and ensure the following DNS entries:"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:38
+msgid "Type: A | Name: * | Target: IP address of this server"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:39
+msgid ""
+"Type: A | Name: @ | Target: IP address of this server (for 2nd level domains)"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:42
+msgid "or"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:42
+msgid "use the following"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:42
+msgid "subdomains"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:45
+msgid "Type: A | Name:"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:45
+msgid "Target: IP address of this server"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:55
+msgid "Explanation"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:61
+msgid ""
+"Libre-Workspace is only accessible within the local network (home). You can "
+"only log in with your user account from devices within your local network."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:68
+msgid ""
+"Libre-Workspace is accessible over the internet. You can log in with your "
+"user account from anywhere in the world."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_dns_settings.html:69
+msgid "This is the easiest way to access Libre-Workspace in later use."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:5
+#, fuzzy
+#| msgid "Module"
+msgid "Modules"
+msgstr "Modul"
+
+#: welcome/templates/welcome/welcome_select_apps.html:7
+msgid "Select which modules should be installed."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:12
+msgid "Cloud"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:17
+msgid "Nextcloud - Cloud storage, contacts, calendar, tasks, notes"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:23
+msgid ""
+"Collabora Online (perfect for .odt, .ods, .odp files) (Libre Office formats)"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:24
+msgid "Only Office (perfect for .docx, .xls, .ppt files) (Microsoft formats)"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:33
+msgid "Cloud Desktop in web browser - Workspace"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:38
+msgid "Communication"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:43
+msgid "Matrix - Chat"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:49
+msgid "Jitsi - Video conferences"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_select_apps.html:53
+#, fuzzy
+#| msgid "Module"
+msgid "Other Modules"
+msgstr "Modul"
+
+#: welcome/templates/welcome/welcome_select_apps.html:58
+msgid "Desktop Interface (Xfce)"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_start.html:5
+msgid "Welcome!"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_start.html:7
+msgid ""
+"On the following pages, we will set up Libre-Workspace together. Please "
+"start by defining a secure master password."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_start.html:8
+msgid ""
+"The password must be at least 8 characters long and contain special "
+"characters, numbers, and letters."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_start.html:16
+msgid "Repeat password"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_start.html:22
+msgid "Tip:"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_start.html:22
+msgid "You can also perform the setup from another device:"
+msgstr ""
+
+#: welcome/views.py:25
+msgid "Passwords do not match. Please try again."
+msgstr ""
+
+#: welcome/views.py:61 welcome/views.py:97
+msgid "Please provide a domain."
+msgstr ""
+
+#: welcome/views.py:99
+msgid "Please ensure you only provide the domain and no subdomain."
+msgstr ""
+
+#: welcome/views.py:101
+msgid "Please provide a valid domain."
+msgstr ""
+
+#: welcome/views.py:104 welcome/views.py:111
+msgid ""
+"Please ensure the top-level domain (TLD) is not longer than 12 characters."
+msgstr ""
+
+#: welcome/views.py:134
+msgid "Libre Workspace is already configured. Please log in."
+msgstr ""
+
+#: welcome/views.py:166
+#, python-format
+msgid ""
+"Error while creating /etc/libre-workspace/libre-workspace.env file: "
+"%(error_message)s (If you are in a development environment, this is okay. If "
+"you are in a production environment, please check your installation.)"
+msgstr ""
+
+#: welcome/views.py:174 welcome/views.py:175
+msgid ""
+"WARNING: Installation script not found! If you are in a development "
+"environment, that's okay. If you are in a production environment, please "
+"check your installation."
+msgstr ""
+
+#: wordpress_manager/views.py:28
+msgid "WordPress Sites"
+msgstr ""
+
+#: wordpress_manager/views.py:30 wordpress_manager/views.py:65
+msgid "WordPress Instance"
+msgstr ""
+
+#: wordpress_manager/views.py:60
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "WordPress instance created successfully!"
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: wordpress_manager/views.py:76 wordpress_manager/views.py:92
+#: wordpress_manager/views.py:114
+msgid "WordPress instance not found."
+msgstr ""
+
+#: wordpress_manager/views.py:80
+#, fuzzy
+#| msgid "Addon %(pk)s uninstalled successfully."
+msgid "WordPress instance deleted successfully!"
+msgstr "Addon %(pk)s erfolgreich deinstalliert."
+
+#: wordpress_manager/views.py:102
+#, python-format
+msgid ""
+"If you set up your wordpress instance and can login to it, you can start "
+"here the recommended optimization:<br><br><div class='grid'><a "
+"href='%(optimization_url)s' target='_blank' role='button'>WordPress "
+"Optimization</a></div>"
+msgstr ""
+
+#: wordpress_manager/views.py:117
+msgid "WordPress instance optimization successfully started!"
+msgstr ""

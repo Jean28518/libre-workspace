@@ -1,16 +1,17 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Installation...</h2>
+<h2>{% translate "Installation..." %}</h2>
 
 {% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
 
 <p>
-    Vielen Dank für Ihre Zeit! <br> Libre-Workspace installiert sich nun selbstständig. Dies kann einige Minuten dauern. <br>
-    Diese Seite kann zu manchen Zeitpunkten nicht erreichbar sein. Bitte stellen Sie sicher, dass der Server eine durchgehende, stabile Internetverbindung hat. <br>
+    {% translate "Thank you for your time!" %} <br> {% translate "Libre-Workspace is now installing itself automatically. This may take a few minutes." %} <br>
+    {% translate "This page may not be accessible at times. Please ensure the server has a continuous, stable internet connection." %} <br>
 </p>    
 
-<p>Nach der Installation startet Ihr Server neu. Dann ist Libre-Workspace einsatzbereit!</p>
+<p>{% translate "After installation, your server will restart. Then Libre-Workspace will be ready for use!" %}</p>
 
 
 <br>

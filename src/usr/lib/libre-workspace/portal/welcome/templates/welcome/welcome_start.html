@@ -1,23 +1,24 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Willkommen!</h2>
+<h2>{% translate "Welcome!" %}</h2>
 
-<p>In den nächsten Seiten werden wir gemeinsam Libre-Workspace einrichten. Bitte definieren Sie zunächst ein sicheres Masterpasswort.<br>
-Das Passwort muss mindestens 8 Zeichen lang sein, und Sonderzeichen, Zahlen und Buchstaben enthalten.
+<p>{% translate "On the following pages, we will set up Libre-Workspace together. Please start by defining a secure master password." %}<br>
+{% translate "The password must be at least 8 characters long and contain special characters, numbers, and letters." %}
 </p>
 {% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
 
 <form method="post">{% csrf_token %}
-    <label for="text">Passwort</label>
+    <label for="text">{% translate "Password" %}</label>
     <input type="password" id="password" name="password">
 
-    <label for="text">Passwort wiederholen</label>
+    <label for="text">{% translate "Repeat password" %}</label>
     <input type="password" id="password_repeat" name="password_repeat">
     
-    <input type="submit" value="Weiter">
+    <input type="submit" value="{% translate "Continue" %}">
 </form>
 
-<p><strong>Tipp:</strong> Sie können die Einrichtung auch von einem anderen Gerät aus vornehmen: <a href="https://{{ ip }}">https://{{ ip }}</a></p>
+<p><strong>{% translate "Tip:" %}</strong> {% translate "You can also perform the setup from another device:" %} <a href="https://{{ ip }}">https://{{ ip }}</a></p>
 
 {% endblock %}

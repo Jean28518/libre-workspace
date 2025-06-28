@@ -1,49 +1,49 @@
+{% load i18n %}
 <article>
-    <h3>System</h3>
+    <h3>{% translate "System" %}</h3>
     <table>
         <tr>
-            <th>Name</th>
-            <td>{{ system_information.lw_name }} (<a href="{% url "change_libre_workspace_name" %}">Ändern</a>)</td>
+            <th>{% translate "Name" %}</th>
+            <td>{{ system_information.lw_name }} (<a href="{% url "change_libre_workspace_name" %}">{% translate "Change" %}</a>)</td>
         </tr>
         <tr>
-            <th>Libre-Workspace Version</th>
+            <th>{% translate "Libre-Workspace Version" %}</th>
             {% comment %} TODO: Remove the Managed by version in 2026 {% endcomment %}
-            <td>{{ system_information.lw_version }} (Managed by apt repository since 0.10.0)
+            <td>{{ system_information.lw_version }} ({% translate "Managed by apt repository since 0.10.0" %})
             </td>
         </tr>
         <tr>
-            <th>Hostname</th>
+            <th>{% translate "Hostname" %}</th>
             <td>{{ system_information.hostname }}</td>
         </tr>
         <tr>
-            <th>Betriebssystem</th>
+            <th>{% translate "Operating System" %}</th>
             <td>{{ system_information.os }}</td>
         </tr>
         <tr>
-            <th>Prozessorlast (~ 1 min)</th>
+            <th>{% translate "Processor Load (~ 1 min)" %}</th>
             <td><progress id="cpu_load" max="100"></progress><span id="cpu_load_desc"></span></td>
         </tr>
         <tr>
-            <th>Arbeitsspeicher</th>
+            <th>{% translate "RAM" %}</th>
             <td><progress id="ram_usage" value="{{system_information.ram_percent}}" max="100"></progress><span id="ram_usage_desc"></span></td>
         </tr>
         <tr>
-            <th>Betriebszeit</th>
+            <th>{% translate "Uptime" %}</th>
             <td>{{ system_information.uptime }}</td>
         </tr>
         <tr>
-            <th>Aktualisierungen</th>
-            <td>{{ system_information.update_information }} 
-                {% if system_information.last_update_log %} 
+            <th>{% translate "Updates" %}</th>
+            <td>{{ system_information.update_information }}
+                {% if system_information.last_update_log %}
                     <br>
                     {% comment %} Button for update log {% endcomment %}
                     <a
                     data-target="modal-update_log"
                     onClick="toggleModal(event)"
-                    title="System aktualisieren">
-                    Letzten Update Log anzeigen
+                    title="{% translate "Update system" %}">
+                    {% translate "Show last update log" %}
                     </a>
-                    <!-- Modal -->
                     <dialog id="modal-update_log">
                         <article>
                         <a href="#close"
@@ -61,7 +61,7 @@
                             class="secondary"
                             data-target="modal-update_log"
                             onClick="toggleModal(event)">
-                            Schließen
+                            {% translate "Close" %}
                             </a>
                         </footer>
                         </article>
@@ -70,27 +70,26 @@
         </tr>
     </table>
 
-    
-       
-    <h4>Festplatten</h4>
+
+    <h4>{% translate "Hard Drives" %}</h4>
     <div class="grid">
         {% for disk in disks_stats %}
         <div>
             <strong>{{ disk.name }}: {{ disk.mountpoint }}</strong>
             <progress value="{{disk.used_percent}}" max="100"></progress>
-            <p>Gesamtgröße: {{ disk.size }} Belegt: {{ disk.used }}</p>
+            <p>{% translate "Total Size:" %} {{ disk.size }} {% translate "Used:" %} {{ disk.used }}</p>
 
         </div>
         {% endfor %}
     </div>
-    <h4>Steuerung</h4>
+    <h4>{% translate "Control" %}</h4>
     {% comment %} Start / Stop all services {% endcomment %}
     <div class="grid">
         <div>
-            <a href="{% url "start_all_services" %}"role="button" class="secondary" style="display: block;">Alle Dienste starten</a>
+            <a href="{% url "start_all_services" %}"role="button" class="secondary" style="display: block;">{% translate "Start all services" %}</a>
         </div>
         <div>
-            <a href="{% url "stop_all_services" %}"role="button" class="secondary" style="display: block;">Alle Dienste stoppen</a>
+            <a href="{% url "stop_all_services" %}"role="button" class="secondary" style="display: block;">{% translate "Stop all services" %}</a>
         </div>
     </div>
 
@@ -103,10 +102,9 @@
             <button
             data-target="modal-update"
             onClick="toggleModal(event)"
-            title="System aktualisieren">
+            title="{% translate "Update system" %}">
             <span class="material-icons">upgrade</span>
             </button>
-            <!-- Modal -->
             <dialog id="modal-update">
                 <article>
                 <a href="#close"
@@ -115,10 +113,10 @@
                     data-target="modal-update"
                     onClick="toggleModal(event)">
                 </a>
-                <h3>System aktualisieren?</h3>
+                <h3>{% translate "Update system?" %}</h3>
                 <p>
-                    Möchten Sie das System wirklich aktualisieren?
-                    Dies wird alle verfügbaren Updates herunterladen und installieren.
+                    {% translate "Do you really want to update the system?" %}
+                    {% translate "This will download and install all available updates." %}
                 </p>
                 <footer>
                     <a href="#cancel"
@@ -126,12 +124,12 @@
                     class="secondary"
                     data-target="modal-update"
                     onClick="toggleModal(event)">
-                    Abbrechen
+                    {% translate "Cancel" %}
                     </a>
                     <a href="{%url 'update_system'%}"
                     role="button"
                     data-target="modal-update">
-                    Jetzt aktualisieren
+                    {% translate "Update Now" %}
                     </a>
                 </footer>
                 </article>
@@ -143,10 +141,9 @@
                 <button
                         data-target="modal-restart"
                         onClick="toggleModal(event)"
-                        title="System neustarten">
+                        title="{% translate "Restart system" %}">
                     <span class="material-icons">restart_alt</span>
                 </button>
-                <!-- Modal -->
                 <dialog id="modal-restart">
                     <article>
                         <a href="#close"
@@ -155,10 +152,10 @@
                             data-target="modal-restart"
                             onClick="toggleModal(event)">
                         </a>
-                        <h3>System neustarten?</h3>
+                        <h3>{% translate "Restart system?" %}</h3>
                         <p>
-                            Möchten Sie das System wirklich neustarten?
-                            Dies wird alle laufenden Prozesse beenden und das System neu starten.
+                            {% translate "Do you really want to restart the system?" %}
+                            {% translate "This will terminate all running processes and restart the system." %}
                         </p>
                         <footer>
                             <a href="#cancel"
@@ -166,29 +163,28 @@
                                 class="secondary"
                                 data-target="modal-restart"
                                 onClick="toggleModal(event)">
-                                Abbrechen
+                                {% translate "Cancel" %}
                             </a>
                             <a href="{%url 'reboot_system'%}"
                                 role="button"
                                 data-target="modal-restart">
-                                Jetzt neustarten
+                                {% translate "Restart Now" %}
                             </a>
                         </footer>
                     </article>
                 </dialog>
             </div>
 
-        
+
             <div>
 
                 {% comment %} Button for shutdown {% endcomment %}
                 <button
                 data-target="modal-shutdown"
                 onClick="toggleModal(event)"
-                title="Server herunterfahren">
+                title="{% translate "Shut down server" %}">
                 <span class="material-icons">power_settings_new</span>
                 </button>
-                <!-- Modal -->
                 <dialog id="modal-shutdown">
                 <article>
                 <a href="#close"
@@ -197,24 +193,24 @@
                     data-target="modal-shutdown"
                     onClick="toggleModal(event)">
                 </a>
-                <h3>Server herunterfahren?</h3>
+                <h3>{% translate "Shut down server?" %}</h3>
                 <p>
-                    Möchten Sie den Server wirklich herunterfahren?
+                    {% translate "Do you really want to shut down the server?" %}
                 </p>
-                <strong>DIES WIRD DEN SERVER AUSSCHALTEN. UM DEN SERVER WIEDER ZU STARTEN, MÜSSEN SIE IHN WIEDER MANUELL (VORT ORT) EINSCHALTEN.</strong>
+                <strong>{% translate "THIS WILL POWER OFF THE SERVER. TO START THE SERVER AGAIN, YOU WILL HAVE TO MANUALLY POWER IT ON (ON-SITE)." %}</strong>
                 <footer>
                     <a href="#cancel"
                     role="button"
                     class="secondary"
                     data-target="modal-shutdown"
                     onClick="toggleModal(event)">
-                    Abbrechen
+                    {% translate "Cancel" %}
                     </a>
                     <a href="{%url 'shutdown_system'%}"
                     role="button"
                     class="danger"
                     data-target="modal-shutdown">
-                    JETZT HERUNTERFAHREN
+                    {% translate "SHUT DOWN NOW" %}
                     </a>
                 </footer>
                 </article>
@@ -234,8 +230,8 @@
                     $("#cpu_load_desc").text(data.cpu_usage_percent + "%");
 
                     $("#ram_usage").val(data.ram_percent);
-                    $("#ram_usage_desc").text("Gesamtgröße: " + data.total_ram + "G - Belegt: " + data.ram_usage  + "G (" + data.ram_percent + "%)");
-                    
+                    $("#ram_usage_desc").text("{% translate "Total Size:" %} " + data.total_ram + "G - {% translate "Used:" %} " + data.ram_usage  + "G (" + data.ram_percent + "%)");
+
                 }
             });
             setTimeout(updateSystemInformation, 1000);

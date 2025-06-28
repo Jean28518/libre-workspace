@@ -1,45 +1,39 @@
+{% load i18n %}
 <article>
 
-    <h2> Datenimport (Nextcloud) </h2>
+    <h2> {% translate "Data Import (Nextcloud)" %} </h2>
 
     {% if nextcloud_import_process_running %}
 
-    <p> 
-        Der Datenimport läuft gerade. Bitte warte, bis der Importier-Vorgang abgeschlossen ist.
-        Dieser Vorgang kann einige Stunden dauern.
-        Erst ganz am Ende des Vorgangs werden die Daten in der Nextcloud sichtbar.<br>
+    <p>
+        {% translate "The data import is currently running. Please wait until the import process is complete. This process can take several hours. The data will only become visible in Nextcloud at the very end of the process." %}<br>
     </p>
-        <a href="{% url "abort_current_data_export" %}">Abbrechen</a>
+        <a href="{% url "abort_current_data_export" %}">{% translate "Cancel" %}</a>
     {% else %}
 
-
-
         <p>
-            Dieses Tool ermöglicht es, Daten von einer Festplatte auf die Nextcloud zu importieren.
-            Die Daten werden dabei in den Nextcloud Bereich eines bestimmten Nutzers kopiert.
-            Erst ganz am Ende des Vorgangs werden die Daten in der Nextcloud sichtbar.<br>
-            Möchten Sie die Daten in einen Gruppenordner importieren, so müssen Sie die Daten zunächst in den Nextcloud Bereich eines Nutzers importieren und anschließend in den Gruppenordner verschieben.
+            {% translate "This tool allows you to import data from a hard drive to Nextcloud. The data will be copied to a specific user's Nextcloud area. The data will only become visible in Nextcloud at the very end of the process." %}<br>
+            {% translate "If you want to import the data into a group folder, you must first import the data into a user's Nextcloud area and then move it to the group folder." %}
         </p>
 
-
         <form action="{% url "data_import_1" %}" method="post">{% csrf_token %}
-        <label for="current_directory">Festplatte</label>
+        <label for="current_directory">{% translate "Hard Drive" %}</label>
         <select name="current_directory" id="current_directory" required>
-            <option value="" selected>Wähle die Quell-Festplatte aus...</option>
+            <option value="" selected>{% translate "Select the source hard drive..." %}</option>
             {% for partition in partitions %}
             {% if partition.mountpoint %}<option value="{{ partition.mountpoint }}">{{ partition.name }} ({{partition.size}})</option>{% endif %}
             {% endfor %}
         </select>
-        <label for="user_import">Nextcloud-Benutzer</label>
+        <label for="user_import">{% translate "Nextcloud User" %}</label>
         <select name="user_import" id="user_import" required>
-            <option value="" selected>Wähle den Nextcloud-Benutzer aus...</option>
+            <option value="" selected>{% translate "Select the Nextcloud user..." %}</option>
             {% for nc_user in nextcloud_user_directories %}
             <option value="{{nc_user.path}}">{{ nc_user.name }}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="Importieren...">
+        <input type="submit" value="{% translate "Import..." %}">
         </form>
-        <p> Im nächsten Schritt wird der Ordner auf der Quell-Festplatte ausgewählt, den Sie importieren möchten. </p>
+        <p> {% translate "In the next step, you will select the folder on the source hard drive that you want to import." %} </p>
 
     {% endif %}
 

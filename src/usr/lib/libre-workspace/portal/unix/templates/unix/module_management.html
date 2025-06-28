@@ -1,14 +1,15 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Libre Workspace Module</h2>
+<h2>{% translate "Libre Workspace Module" %}</h2>
 
 <table>
     <thead>
         <tr>
-            <th scope="col">Modul</th>
-            <th scope="col">Installiert?</th>
-            <th scope="col">Aktion</th>
+            <th scope="col">{% translate "Module" %}</th>
+            <th scope="col">{% translate "Installed?" %}</th>
+            <th scope="col">{% translate "Action" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -17,15 +18,14 @@
             <td>{{ module.name }}</td>
             <td>{% if module.installed %}<span class="material-icons md-24">check</span> {% endif %}</td>
             {% if module.installed %}
-                <td><button data-target="modal-uninstall-{{ module.name }}" onClick="toggleModal(event)" class="danger">Deinstallieren</button></td>
+                <td><button data-target="modal-uninstall-{{ module.name }}" onClick="toggleModal(event)" class="danger">{% translate "Uninstall" %}</button></td>
             {% else %}
-                <td><button data-target="modal-install-{{ module.name }}" onClick="toggleModal(event)">Installieren</button></td>
+                <td><button data-target="modal-install-{{ module.name }}" onClick="toggleModal(event)">{% translate "Install" %}</button></td>
             {% endif %}
         </tr>
 
          
 
-        <!-- Modal for Uninstall -->
         <dialog id="modal-uninstall-{{ module.name }}">
         <article>
         <a href="#close"
@@ -34,11 +34,9 @@
             data-target="modal-uninstall-{{ module.name }}"
             onClick="toggleModal(event)">
         </a>
-        <h3>{{ module.name }} deinstallieren?</h3>
+        <h3>{% translate "%(module_name)s uninstall?" %}</h3>
         <p>
-            Möchten Sie das Modul wirklich deinstallieren? Das entfernt ebenfalls alle Daten und Einstellungen des Moduls.
-            Sollte das Modul administrativ manuell verändert oder installiert worden sein, kann es zu Problemen bis hin zum weiteren Datenverlust kommen.
-            Nutzen Sie diese Funktion nur, wenn Sie Backups eingerichtet haben, alle Daten auf dem Modul nicht mehr benötigen und das Modul automatisch installiert wurde.
+            {% translate "Do you really want to uninstall the module? This will also remove all module data and settings. If the module has been manually modified or installed administratively, problems up to further data loss may occur. Only use this function if you have set up backups, no longer need any data on the module, and the module was installed automatically." %}
         </p>
         <footer>
             <a href="#cancel"
@@ -46,19 +44,18 @@
             class="secondary"
             data-target="modal-uninstall-{{ module.name }}"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% translate "Cancel" %}
             </a>
             <a href="{% url 'uninstall_module' module.id %}"
             role="button"
             class="danger"
             data-target="modal-uninstall-{{ module.name }}">
-            Deinstallieren
+            {% translate "Uninstall" %}
             </a>
         </footer>
         </article>
         </dialog>
         
-        <!-- Modal for Install -->
         <dialog id="modal-install-{{ module.name }}">
         <article>
         <a href="#close"
@@ -67,9 +64,9 @@
             data-target="modal-install-{{ module.name }}"
             onClick="toggleModal(event)">
         </a>
-        <h3>{{ module.name }} installieren?</h3>
+        <h3>{% translate "%(module_name)s install?" %}</h3>
         <p>
-            Möchten Sie das Modul wirklich installieren? Das kann einige Zeit in Anspruch nehmen.
+            {% translate "Do you really want to install the module? This may take some time." %}
         </p>
         <footer>
             <a href="#cancel"
@@ -77,12 +74,12 @@
             class="secondary"
             data-target="modal-install-{{ module.name }}"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% translate "Cancel" %}
             </a>
             <a href="{% url 'install_module' module.id %}"
             role="button"
             data-target="modal-install-{{ module.name }}">
-            Installieren
+            {% translate "Install" %}
             </a>
         </footer>
         </article>
@@ -96,11 +93,11 @@
 <hr>
 
 {% if form != "" %}
-    <h3> Online Office Module </h3>
+    <h3> {% translate "Online Office Module" %} </h3>
 
     <form method="post">{% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="primary">Anwenden</button>
+        <button type="submit" class="primary">{% translate "Apply" %}</button>
     </form>
 {% endif %}
 

@@ -1,10 +1,12 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
+
 {% block content %}
 
 {% if heading %}
 <h2>{{ heading }}</h2>
 {% else %}
-<h2> Erstelle {{ type }} </h2>
+<h2> {% translate "Create" %} {{ type }} </h2>
 {% endif %}
 
 {% if message and message != "" %}
@@ -26,20 +28,19 @@
     {% else %}
         <div class="grid">
             <div>
-                <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+                <a href="{{url}}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
             </div>
-            <input type="submit" value="Erstellen">
+            <input type="submit" value="{% translate "Create" %}">
         </div>
     {% endif %}
     {{ form }}
     <br><br>
     <div class="grid">
         <div>
-            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
-        <input type="submit" value="Erstellen">
+        <input type="submit" value="{% translate "Create" %}">
     </div>
 </form>
     
 {% endblock %}
-    

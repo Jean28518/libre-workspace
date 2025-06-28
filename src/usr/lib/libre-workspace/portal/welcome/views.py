@@ -5,6 +5,7 @@ from django.conf import settings
 import unix.unix_scripts.unix as unix
 from django.http import HttpResponse
 from lac.templates import message as message_func
+from django.utils.translation import gettext as _
 
 
 # List of subdomains
@@ -21,7 +22,7 @@ def welcome_start(request):
         if password == password_repeat:
             request.session["password"] = password
         else:
-            message = "Passwörter stimmen nicht überein. Bitte versuchen Sie es erneut."
+            message = _("Passwords do not match. Please try again.")
         if message == "":
             return redirect("welcome_select_apps")
         
@@ -57,7 +58,7 @@ def welcome_dns_settings(request):
     if request.method == "POST":
         request.session["visibility"] = request.POST.get("visibility", "")
         if request.session["visibility"] == "public" and request.POST.get("domain", "") == "":
-            message = "Bitte geben Sie eine Domain an."
+            message = _("Please provide a domain.")
         if request.session["visibility"] == "public" and message == "":
             request.session["domain"] = request.POST.get("domain", "")
             message = check_domain(request.session["domain"], True)
@@ -93,21 +94,21 @@ def libreworkspace_lite(request):
 
 def check_domain(domain, subdomain=False):
     if domain == "":
-        return "Bitte geben Sie eine Domain an."
+        return _("Please provide a domain.")
     if domain.count(".") != 1 and not subdomain:
-        return "Bitte stellen Sie sicher, dass Sie nur die Domain angeben und keine Subdomain."
+        return _("Please ensure you only provide the domain and no subdomain.")
     if not (domain.count(".") >= 1 and len(domain.split(".")[-2]) > 0 and len(domain.split(".")[-1])):
-        return "Bitte geben Sie eine gültige Domain an."
+        return _("Please provide a valid domain.")
     lvl1 = domain.split(".")[-1]
     if len(lvl1) > 12:
-        return "Bitte stellen Sie sicher, dass die lvl1 Domain nicht länger als 12 Zeichen ist."
+        return _("Please ensure the top-level domain (TLD) is not longer than 12 characters.")
     return None
 
 
 def get_ldap_dc(domain):
     lvl1 = domain.split(".")[-1]
     if len(lvl1) > 12:
-        return "Bitte stellen Sie sicher, dass die lvl1 Domain nicht länger als 12 Zeichen ist."
+        return _("Please ensure the top-level domain (TLD) is not longer than 12 characters.")
     other_parts = domain.replace(lvl1, "")
     # remove the last dot
     other_parts = other_parts[:-1]
@@ -130,7 +131,7 @@ def get_shortend_domain(domain):
 
 def installation_running(request):
     if os.environ["LINUX_ARBEITSPLATZ_CONFIGURED"] == "True":
-        return message_func(request, "Libre Workspace ist bereits konfiguriert. Bitte loggen Sie sich ein.")
+        return message_func(request, _("Libre Workspace is already configured. Please log in."))
     message = ""
     os.environ["DOMAIN"] = request.session["domain"]
     os.environ["SHORTEND_DOMAIN"] = request.session["shortend_domain"]
@@ -162,7 +163,7 @@ def installation_running(request):
             f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
             f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
     except Exception as e:
-        message = f"Error while creating /etc/libre-workspace/libre-workspace.env file: {str(e)} (If you are in a development environment, this is okay. If you are in a production environment, please check your installation.)"
+        message = _("Error while creating /etc/libre-workspace/libre-workspace.env file: %(error_message)s (If you are in a development environment, this is okay. If you are in a production environment, please check your installation.)") % {"error_message": str(e)}
 
     # Run installation script
     # if file /var/lib/libre-workspace/portal/installation_running exists
@@ -170,8 +171,8 @@ def installation_running(request):
         if os.path.isfile("/usr/lib/libre-workspace/portal/unix/unix_scripts/general/install.sh"):
             subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/portal/unix/unix_scripts/general/install.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/general/" )
         else:
-            print("WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation.")
-            message = "WARNING: Installation script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
+            print(_("WARNING: Installation script not found! If you are in a development environment, that's okay. If you are in a production environment, please check your installation."))
+            message = _("WARNING: Installation script not found! If you are in a development environment, that's okay. If you are in a production environment, please check your installation.")
     
     if not "cert" in subdomains:
         subdomains.append("cert")

@@ -1,9 +1,10 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2> Ordner auswählen </h2>
+<h2> {% translate "Select Folder" %} </h2>
 
-<p>{{ description }}</p>
+<p>{% translate description %}</p>
    
 {% include "unix/folder_view.html" %}
 
@@ -13,15 +14,14 @@
         <input type="hidden" name="cancel" value="cancel">
         <div>
             <button type="submit" name="cancel" value="cancel" class="secondary">
-
-                Abbrechen
+                {% translate "Cancel" %}
             </button>
         </div>
     </form>
     <form method="post" style="display: inline;">{% csrf_token %}
         <input type="hidden" name="select" value="select">
         <button type="submit" name="select" value="select" class="primary">
-        Aktuellen Ordner "{{current_directory}}" auswählen
+            {% translate "Select current folder" %} "{{current_directory}}"
         </button>
     </form>
 </div>

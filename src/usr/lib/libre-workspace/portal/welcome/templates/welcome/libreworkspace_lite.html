@@ -1,16 +1,17 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Libre Workspace Lite</h2>
+<h2>{% translate "Libre Workspace Lite" %}</h2>
 
 <p>
-    Sie haben keine Module ausgewählt. Dadurch wird nun Libre Workspace Lite installiert.
-    Dies bedeutet, dass lediglich das Portal mit der dahinterliegenden Verwaltung installiert wird. Das zentrale Nutzermanagement wird ebenfalls erstmal nicht installiert.
-    Dies ist optimal für die Administration eines einfachen Linux-Servers. Ein vergleichbares Projekt (mit anderen Funktionen) ist bspw. <a href="https://cockpit-project.org/" target="_blank">Cockpit</a>.
-    Sollten Sie zu einem späteren Zeitpunkt Module oder AddOns installieren wollen, ist dies nach der Installation jederzeit wie gewohnt möglich über das Portal möglich.
+    {% translate "You have not selected any modules. This will now install Libre Workspace Lite." %}
+    {% translate "This means that only the portal with its underlying administration will be installed. The central user management will also not be installed for now." %}
+    {% translate "This is optimal for administering a simple Linux server. A comparable project (with different functions) is for example" %} <a href="https://cockpit-project.org/" target="_blank">Cockpit</a>.
+    {% translate "Should you wish to install modules or AddOns at a later time, this is possible at any time after installation via the portal, as usual." %}
 </p>
 
-<h2>Erreichbarkeit des Portals</h2>
+<h2>{% translate "Portal Accessibility" %}</h2>
 
 {% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
 
@@ -18,33 +19,33 @@
     <fieldset>
         <label for="port">
             <input type="radio" id="port" name="visibility" value="port" onclick="change()" checked>
-            über den Port 23816 (für Anfänger empfohlen)
+            {% translate "via port 23816 (recommended for beginners)" %}
         </label>
         <label for="portal_domain_select">
           <input type="radio" id="portal_domain_select" name="visibility" value="portal_domain_select" onclick="change()">
-          über eine öffentliche Domain
+          {% translate "via a public domain" %}
         </label>
       </fieldset>
 
     <div id="portal_domain_field" style="display: none">
         <label for="portal_domain_field">
-            Portal-Domain
+            {% translate "Portal Domain" %}
             <input type="text" id="portal_domain_field" name="portal_domain_field" placeholder="myportal.example.com">
-            Die oben angegebene Domain muss in Ihrer Kontrolle sein.<br>
-            Tipp: Der Server hat einen Dienst, der unter dienst.mydomain.com erreichbar ist? Definieren Sie in diesem Feld dienst.mydomain.com:23816 um das Portal unter dieser Subdomain zu erreichen. Damit sparen Sie sich weitere DNS-Einträge.
+            {% translate "The domain specified above must be under your control." %}<br>
+            {% translate "Tip: If the server has a service reachable at service.mydomain.com? Define service.mydomain.com:23816 in this field to reach the portal under this subdomain. This saves you further DNS entries." %}
         </label>
 
     </div>
 
     <label for="further_root_domain">
-        Root-Domain
+        {% translate "Root Domain" %}
         <input type="text" id="further_root_domain" name="further_root_domain" placeholder="int.de" value="int.de">
-        Die Root-Domain kann später für zusätzliche Module oder AddOns benötigt werden. Wenn Sie sich unsicher sind, belassen Sie das Feld bei int.de.
+        {% translate "The root domain may be needed later for additional modules or AddOns. If you are unsure, leave the field as int.de." %}
     </label>
 
     <br>
     
-    <input type="submit" value="Weiter">
+    <input type="submit" value="{% translate "Continue" %}">
 </form>
 
 <script>

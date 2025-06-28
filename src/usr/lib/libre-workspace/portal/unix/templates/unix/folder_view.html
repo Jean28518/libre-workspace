@@ -1,11 +1,12 @@
+{% load i18n %}
 <form method="post" style="display: inline;">{% csrf_token %}
     <input type="hidden" name="pick" value="..">
     <button type="submit" name="pick" value=".." class="contrast outline">
-    Nach oben
+    {% translate "Up" %}
     </button>
 </form>
 
-<h5>Aktueller Ordner: {{ current_directory }} </h5>
+<h5>{% translate "Current Folder" %}: {{ current_directory }} </h5>
 
 <table>
 <tbody>

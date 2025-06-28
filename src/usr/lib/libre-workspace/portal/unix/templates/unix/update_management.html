@@ -1,14 +1,15 @@
+{% load i18n %}
 <article>
-    <h3>Vollautomatisierte Updates</h3>
-    <h3>Konfiguration</h3>
+    <h3>{% translate "Fully Automated Updates" %}</h3>
+    <h3>{% translate "Configuration" %}</h3>
     <div>
         <fieldset>
             <form action="{% url "set_update_configuration" %}" method="POST">{% csrf_token %}
                 <table>
                     <thead>
                         <tr>
-                            <th scope="col">Modul</th>
-                            <th scope="col">Jetzt Aktualisieren</th>
+                            <th scope="col">{% translate "Module" %}</th>
+                            <th scope="col">{% translate "Update Now" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -18,34 +19,33 @@
                                     <td>
                                         <label for="{{module.id}}">
                                         <input type="checkbox" id="{{module.id}}" name="{{module.id}}" role="switch" {% if module.automaticUpdates %}checked{% endif %}>
-                                        {{module.name}}
+                                        {% translate module.name %}
                                         </label>
                                     </td>
                                     <td>
-                                        <a href="{% url "update_module_now" module.id %}">Jetzt aktualisieren</a>
+                                        <a href="{% url "update_module_now" module.id %}">{% translate "Update now" %}</a>
                                     </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
-                    <!-- Time -->
-                    <label for="time">Automatische Updates ausführen um:
+                    <label for="time">{% translate "Perform automatic updates at:" %}
                         <input type="time" id="time" name="time" value="{{update_information.update_time}}" required>
                     </label>
-                <input type="submit" value="Speichern">
+                <input type="submit" value="{% translate "Save" %}">
             </form>
         </fieldset>
     </div>
     <div class="grid">
         <div>
-            <h4>Verlauf</h4>
+            <h4>{% translate "History" %}</h4>
             <div style="max-height: 300px; overflow: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th>Datum</th>
-                        <th>Log-Dateien</th>
+                        <th>{% translate "Date" %}</th>
+                        <th>{% translate "Log Files" %}</th>
                     </tr>
                 </thead>
                     <tbody>
@@ -53,15 +53,12 @@
                         <tr>
                             <td>{{ update_log.date }}</td>
                             <td>
-                               <!-- Button to trigger the modal -->
-                                <a class="outline"
+                               <a class="outline"
                                 data-target="update_log{{ update_log.date }}"
                                 onClick="toggleModal(event)"
                                 href="#">
-                                Bericht anzeigen
+                                {% translate "View Report" %}
                                 </a>
-                                <!-- Modal -->
-                                <!-- Modal -->
                                 <dialog id="update_log{{ update_log.date }}">
                                     <article>
                                     <a href="#close"
@@ -70,7 +67,7 @@
                                         data-target="update_log{{ update_log.date }}"
                                         onClick="toggleModal(event)">
                                     </a>
-                                    <h3>Update am {{ update_log.date }}</h3>
+                                    <h3>{% translate "Update on" %} {{ update_log.date }}</h3>
                                     <code>
                                         {{ update_log.content | safe }}
                                     </code>
@@ -80,7 +77,7 @@
                                         class="secondary"
                                         data-target="update_log{{ update_log.date }}"
                                         onClick="toggleModal(event)">
-                                        Schließen
+                                        {% translate "Close" %}
                                         </a>
                                     </footer>
                                     </article>
@@ -94,4 +91,3 @@
         </div>
     </div>
 </article>
-

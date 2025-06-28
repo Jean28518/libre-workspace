@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 import os
 import time
 import subprocess
@@ -57,7 +58,7 @@ def set_value(key, value):
         config[key] = value
     elif key in config:
         del config[key]
-    print(f"Setting {key} to {value}")
+    print(_("Setting %(key)s to %(value)s.") % {"key": key, "value": value})
     write_config_file()
 
 # rv["backup_status"] can be one of the following:
@@ -160,7 +161,7 @@ def get_public_key():
     if os.path.isfile("/var/lib/libre-workspace/portal/id_rsa.pub"):
         return open("/var/lib/libre-workspace/portal/id_rsa.pub").read()
     else:
-        return "Error: Public key of root user not found."
+        return _("Error: Public key of root user not found.")
     
 def get_trusted_fingerprint():
     # Get the trusted fingerprint
@@ -222,16 +223,20 @@ def get_system_information():
 
     rv["cpu_usage_percent"] = utils.get_cpu_usage()
 
-    rv["uptime"] = subprocess.getoutput("uptime -p").replace("up", "").replace("minutes", "Minuten").replace("hours", "Stunden").replace("days", "Tage").replace("weeks", "Wochen").replace("months", "Monate").replace("years", "Jahre")
-    rv["uptime"] = rv["uptime"].replace("min", "Min").replace("hour", "Stunde").replace("day", "Tag").replace("week", "Woche").replace("month", "Monat").replace("year", "Jahr")
+    uptime_output = subprocess.getoutput("uptime -p")
+    # Translate parts of the uptime output
+    uptime_output = uptime_output.replace("up", "").replace("minutes", _("minutes")).replace("hours", _("hours")).replace("days", _("days")).replace("weeks", _("weeks")).replace("months", _("months")).replace("years", _("years"))
+    rv["uptime"] = uptime_output.replace("min", _("min")).replace("hour", _("hour")).replace("day", _("day")).replace("week", _("week")).replace("month", _("month")).replace("year", _("year"))
+
     rv["uptime_in_seconds"] = int(subprocess.getoutput("cat /proc/uptime").split(" ")[0].split(".")[0])
     rv["os"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
 
-    rv["update_information"] = f"{get_upgradable_packages()} Pakete können aktualisiert werden." if get_upgradable_packages() > 0 else "Das System ist auf dem neuesten Stand."
+    upgradable_packages = get_upgradable_packages()
+    rv["update_information"] = _("%(count)s packages can be updated.") % {"count": upgradable_packages} if upgradable_packages > 0 else _("The system is up to date.")
     if os.path.exists("/var/lib/libre-workspace/portal/history/update.log") and not is_update_currently_running():
         rv["last_update_log"] = open("/var/lib/libre-workspace/portal/history/update.log").read().replace("\n", " <br> ")
     if is_update_currently_running():
-        rv["update_information"] = "Das System wird gerade aktualisiert..."
+        rv["update_information"] = _("The system is currently being updated...")
     return rv
 
 
@@ -321,7 +326,7 @@ def umount(partition):
 def export_data(filepath):
     filepath = escape_bash_characters(filepath, False)
     if os.path.exists("export_data"):
-        return "Backup already running"
+        return _("Backup already running")
         
     os.system(f"echo '{filepath}' > export_data")
     trigger_cron_service()
@@ -444,14 +449,14 @@ def is_desktop_installed():
 
 def get_software_modules():
     modules = []
-    modules.append({ "id": "samba_dc", "name": "Samba DC (Zentrale Nutzerverwaltung)", "automaticUpdates": get_value("SAMBA_DC_AUTOMATIC_UPDATES", "False") == "True", "installed": is_samba_dc_installed() })
-    modules.append({ "id": "nextcloud", "name": "Nextcloud", "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": is_nextcloud_installed() })
-    modules.append({ "id": "matrix", "name": "Matrix", "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": is_matrix_installed() })
-    modules.append({ "id": "jitsi", "name": "Jitsi", "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": is_jitsi_installed() })
-    modules.append({ "id": "collabora", "name": "Collabora", "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": is_collabora_installed() })
-    modules.append({ "id": "onlyoffice", "name": "OnlyOffice", "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_onlyoffice_installed() })
-    modules.append({ "id": "desktop", "name": "Cloud Desktop", "automaticUpdates": get_value("DESKTOP_AUTOMATIC_UPDATES", "False") == "True", "installed": is_desktop_installed() })
-    modules.append({ "id": "xfce", "name": "XFCE", "automaticUpdates": get_value("XFCE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_xfce_installed() })
+    modules.append({ "id": "samba_dc", "name": _("Samba DC (Central User Management)"), "automaticUpdates": get_value("SAMBA_DC_AUTOMATIC_UPDATES", "False") == "True", "installed": is_samba_dc_installed() })
+    modules.append({ "id": "nextcloud", "name": _("Nextcloud"), "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": is_nextcloud_installed() })
+    modules.append({ "id": "matrix", "name": _("Matrix"), "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": is_matrix_installed() })
+    modules.append({ "id": "jitsi", "name": _("Jitsi"), "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": is_jitsi_installed() })
+    modules.append({ "id": "collabora", "name": _("Collabora"), "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": is_collabora_installed() })
+    modules.append({ "id": "onlyoffice", "name": _("OnlyOffice"), "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_onlyoffice_installed() })
+    modules.append({ "id": "desktop", "name": _("Cloud Desktop"), "automaticUpdates": get_value("DESKTOP_AUTOMATIC_UPDATES", "False") == "True", "installed": is_desktop_installed() })
+    modules.append({ "id": "xfce", "name": _("XFCE"), "automaticUpdates": get_value("XFCE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_xfce_installed() })
     
     for module in modules:
         module["scriptsFolder"] = f"{module['id']}"
@@ -512,8 +517,8 @@ def update_module(module_id):
                 p = subprocess.Popen(["/usr/bin/bash", f"update_{module_id}.sh"], cwd=module_path, env=env)
                 return
             else:
-                return "Error: Module not installed."
-    return "Error: Module not found."
+                return _("Error: Module not installed.")
+    return _("Error: Module not found.")
 
 
 # We determine if a module is installed by checking if the module's directory exists in the root directory
@@ -539,7 +544,7 @@ def get_update_history():
 def get_update_information():
     update_information = {}
     update_information["software_modules"] = get_software_modules()
-    update_information["software_modules"].insert(0, {"id": "system", "name": "System", "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "False") == "True"})
+    update_information["software_modules"].insert(0, {"id": "system", "name": _("System"), "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "False") == "True"})
 
     # Delete the software_modules xfce and samba_dc, because they are handled by system
     update_information["software_modules"] = [module for module in update_information["software_modules"] if module["id"] not in ["xfce", "samba_dc"]]
@@ -599,7 +604,7 @@ def setup_module(module_name):
     if os.path.isfile(f"{module_path}/setup_{module_name}.sh"):
         process = subprocess.Popen(["/usr/bin/bash", f"setup_{module_name}.sh"], cwd=f"{module_path}/", env=get_env_sh_variables())
     else:
-        return "WARNING: Setup script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
+        return _("WARNING: Setup script not found! If you are in a development environment, that's okay. If you are in a production environment, please check your installation.")
 
 
 def get_server_ip():
@@ -613,7 +618,7 @@ def get_server_ip():
             parts = ip.split(".")
             if len(parts) == 4 and all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
                 return ip
-    print("No valid IPv4 address found.")
+    print(_("No valid IPv4 address found."))
     return None
 
 
@@ -628,7 +633,7 @@ def remove_module(module_name):
     urls = addon.get("url", "").split(",")
     domain = get_env_sh_variables().get("DOMAIN", "")
     if domain == "":
-        return "No domain found in the libre-workspace.env file. Please check the /etc/libre-workspace/libre-workspace.env file."
+        return _("No domain found in the libre-workspace.env file. Please check the /etc/libre-workspace/libre-workspace.env file.")
     for url in urls:
         ip = get_env_sh_variables().get("IP", "")   
         os.system(f"sed -i '/{url}.{domain}/d' /etc/hosts")
@@ -643,7 +648,7 @@ def remove_module(module_name):
     if os.path.isfile(f"{module_path}/remove_{module_name}.sh"):
         process = subprocess.Popen(["/usr/bin/bash", f"remove_{module_name}.sh"], cwd=f"{module_path}/", env=get_env_sh_variables())
     else:
-        return "WARNING: Remove script not found! If you are in a development environment, thats okay. If you are in a production environment, please check your installation."
+        return _("WARNING: Remove script not found! If you are in a development environment, that's okay. If you are in a production environment, please check your installation.")
     
 
 def get_online_office_module():
@@ -658,14 +663,14 @@ def mount_backups():
     process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
     time.sleep(5)
     if process.returncode != None and process.returncode != 0:
-        return "Error: Mounting backups failed: " + str(process.stdout) + " " + str(process.stderr)
+        return _("Error: Mounting backups failed: %(stdout)s %(stderr)s") % {"stdout": str(process.stdout), "stderr": str(process.stderr)}
 
 
 def umount_backups():
     process = subprocess.Popen(["/usr/bin/bash", "umount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
     time.sleep(1)
     if process.returncode != None and process.returncode != 0:
-        return "Error: Umounting backups failed: " + str(process.stdout) + " " + str(process.stderr)
+        return _("Error: Unmounting backups failed: %(stdout)s %(stderr)s") % {"stdout": str(process.stdout), "stderr": str(process.stderr)}
     
 
 # This function needs the location in the backup to recover and the location to recover to
@@ -674,7 +679,7 @@ def recover_file_or_dir(full_path_to_backup):
     process = subprocess.Popen(["/usr/bin/bash", "recover_path.sh", full_path_to_backup], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     time.sleep(1)
     if process.returncode != None and process.returncode != 0:
-        return "Error: Recovering file or directory failed: " + str(process.stdout.read()) + " " + str(process.stderr.read())
+        return _("Error: Recovering file or directory failed: %(stdout)s %(stderr)s") % {"stdout": str(process.stdout.read()), "stderr": str(process.stderr.read())}
     
 
 def is_path_a_file(path):
@@ -726,7 +731,7 @@ def install_addon(path_to_file):
         os.system(f"cp '{path_to_file}' /tmp/lw-addons/")
     else:
         # If the file is not a .zip, .tar.gz, .tar.xz or .deb file, return an error
-        return "Error: File format not supported. Please use a .zip or .deb file."
+        return _("Error: File format not supported. Please use a .zip or .deb file.")
 
     # Check if .deb files are inside the addon folder (recursive) we can do this with "find"
     deb_files = os.popen(f"find /tmp/lw-addons/ -name '*.deb'").read().strip().split("\n")
@@ -804,7 +809,7 @@ def restart_libre_workspace_portal():
 
 def get_libre_workspace_name():
     domain = get_env_sh_variables().get("DOMAIN", "")
-    return get_value(f"LIBRE_WORKSPACE_NAME", f"{domain} - Libre Workspace")
+    return get_value(f"LIBRE_WORKSPACE_NAME", _("%(domain)s - Libre Workspace") % {"domain": domain})
 
 
 def set_libre_workspace_name(name):
@@ -896,30 +901,30 @@ def ensure_dns_entry_in_samba(ip, full_domain):
     """
     Expecting a ipv4 address and a full domain name (e.g. subdomain.domain.tld).
     """
-    print(f"Ensuring DNS entry for {full_domain} with IP {ip} in Samba DNS server...")
+    print(_("Ensuring DNS entry for %(full_domain)s with IP %(ip)s in Samba DNS server...") % {"full_domain": full_domain, "ip": ip})
     # Check if the domain is a subdomain of our domain in the libre-workspace.env file
     domain = get_env_sh_variables().get("DOMAIN", "")
     if not full_domain.endswith(domain):
-        return "Error: The domain is not a subdomain of the configured domain in the libre-workspace.env file."
+        return _("Error: The domain is not a subdomain of the configured domain in the libre-workspace.env file.")
     # Check if the IP is valid
     if not is_valid_ip(ip):
-        return "Error: The IP is not valid. Please use a valid IPv4 address."
+        return _("Error: The IP is not valid. Please use a valid IPv4 address.")
     
     # Check if the domain is already in the DNS server
     admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
     domain_parts = full_domain.split(".")
     if len(domain_parts) < 2:
-        return "Error: The domain is not valid. Please use a valid domain name."
+        return _("Error: The domain is not valid. Please use a valid domain name.")
     subdomain = full_domain.replace(f".{domain}", "")
     try:
         # Remove the existing DNS entry (if any), then add it again
         old_ip = os.popen(f"samba-tool dns query {domain} {domain} {subdomain} A -U administrator%{admin_password}").read().strip() # Unverified
         os.system(f"samba-tool dns delete {domain} {domain} {subdomain} A {old_ip} -U administrator%{admin_password}") # Unverified
         result = os.system(f"samba-tool dns add {domain} {domain} {subdomain} A {ip} -U administrator%{admin_password}") # Verified
-        print(f"Result of adding DNS entry: {result}")
+        print(_("Result of adding DNS entry: %(result)s") % {"result": result})
     except Exception as e:
-        print(f"Error while adding DNS entry: {str(e)}")
-        return f"Error: {str(e)}. Please check the Samba DNS server configuration and the domain name."
+        print(_("Error while adding DNS entry: %(error)s") % {"error": str(e)})
+        return _("Error: %(error)s. Please check the Samba DNS server configuration and the domain name.") % {"error": str(e)}
 
 
 def is_valid_ip(ip):
@@ -944,26 +949,26 @@ def password_challenge(password):
     """Returns a message if the password is not valid. If the password is valid, it returns ""."""
     message = ""
     if password.strip() == "":
-        message = "Passwort darf nicht leer sein."
+        message = _("Password cannot be empty.")
     if password.count(" ") > 0:
-        message = "Passwort darf keine Leerzeichen enthalten."
+        message = _("Password cannot contain spaces.")
     # Check if password contains at least one number
     if not any(char.isdigit() for char in password):
-        message = "Passwort muss mindestens eine Zahl enthalten."
+        message = _("Password must contain at least one number.")
     # Check if password contains at least one letter
     if not any(char.isalpha() for char in password):
-        message = "Passwort muss mindestens einen Buchstaben enthalten."
+        message = _("Password must contain at least one letter.")
     # Check if password contains at least one special character
     special_characters = "!\"%&'()*+,-./:;<=>?@[\]^_`{|}~"
     if not any(char in special_characters for char in password):
-        message = "Passwort muss mindestens ein Sonderzeichen enthalten."
+        message = _("Password must contain at least one special character.")
     # If password contains "$'# it is forbidden
     forbidden_characters = "$'#"
     if any(char in forbidden_characters for char in password):
-        message = "Passwort darf keine der folgenden Zeichen enthalten: $'#"
+        message = _("Password cannot contain the following characters: $'#")
     # Check if password is at least 8 characters long
     if len(password) < 8:
-        message = "Passwort muss mindestens 8 Zeichen lang sein."
+        message = _("Password must be at least 8 characters long.")
     return message
 
 
@@ -1051,10 +1056,10 @@ def is_samba_ad_dc_running():
 def create_nextcloud_groupfolder(group):
     # If we are not running as root, return
     if os.getuid() != 0:
-        return "Error: You should run this function as root. In development mode this is okay for now."
+        return _("Error: You should run this function as root. In development mode this is okay for now.")
     # If nextcloud is not available, return
     if not is_nextcloud_installed():
-        return "Error: Nextcloud is not available. Please install Nextcloud first."
+        return _("Error: Nextcloud is not available. Please install Nextcloud first.")
 
     # Example for groupname test:
     # sudo -u www-data php /var/www/nextcloud/occ groupfolder:create test -> returns 1 as groupfolder_id
@@ -1106,7 +1111,7 @@ def change_password_for_linux_user(username, new_password):
     # Change the password for the user in the linux operating system
     return_code = os.system(f"echo \"{username}:{new_password}\" | chpasswd")
     if return_code != 0:
-        return "Error: Password for user in linux: could not be changed."
+        return _("Error: Password for user in linux: could not be changed.")
     return
 
 
@@ -1157,7 +1162,7 @@ def get_local_admin_token():
     local_token_file_content = os.popen("cat /var/lib/libre-workspace/local-admin-token").read()
     local_token_file_content = local_token_file_content.replace("LW_ADMIN_TOKEN=", "")
     if local_token_file_content.strip() == "":
-        print("CAUTION: No local admin token found. If you are in a dev environment, this is okay. If you are in a production environment, please check your installation, your system is not secure.")
+        print(_("CAUTION: No local admin token found. If you are in a dev environment, this is okay. If you are in a production environment, please check your installation, your system is not secure."))
         return None
     return local_token_file_content.strip()
 

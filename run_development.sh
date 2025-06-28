@@ -19,6 +19,8 @@ python manage.py makemigrations
 python3 manage.py migrate --no-input
 python3 manage.py collectstatic --no-input
 python manage.py creatersakey
+python3 manage.py compilemessages
+
 
 echo "Starting server..."
 python3 manage.py runserver localhost:8000

@@ -1,25 +1,25 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Anmelden</h2>
-
+<h2>{% translate "Login" %}</h2>
 
 <form method="post">{% csrf_token %}
-    <label for="text">Kontoname oder E-Mail</label>
+    <label for="text">{% translate "Account name or E-Mail" %}</label>
     <input type="text" id="username" name="username" value="{{username}}">
     
-    <label for="text">Passwort</label>
+    <label for="text">{% translate "Password" %}</label>
     <input type="password" id="password" name="password">
     
     {% if message %}
     <p><strong>{{ message }}</strong></p>
     {% endif %}
     
-    <input type="submit" value="Anmelden">
+    <input type="submit" value="{% translate "Login" %}">
     
     <div style="text-align: center;">
         <a  href="{% url 'user_password_reset' %}">
-            Passwort vergessen?
+            {% translate "Forgot password?" %}
         </a>
     </div>
 </form>

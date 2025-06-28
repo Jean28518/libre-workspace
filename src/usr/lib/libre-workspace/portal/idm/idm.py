@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 import string
 import random
 import os
@@ -45,7 +46,7 @@ def reset_password_for_email(email):
     ldap.set_ldap_user_new_password(user, random_password)
     unix.change_password_for_linux_user(user, random_password)
     print(random_password)
-    send_mail(subject="Neues Passwort (Linux-Arbeisplatz Zentrale)", from_email=os.getenv("EMAIL_HOST_USER"), message=f"Das neue Passwort ist:\n\n{random_password}", recipient_list=[email])
+    send_mail(subject=_("New Password (Linux Workstation Central)"), from_email=os.getenv("EMAIL_HOST_USER"), message=_("Your new password is:\n\n%(random_password)s") % {"random_password": random_password}, recipient_list=[email])
     pass
 
 
@@ -66,8 +67,8 @@ def set_user_new_password(username, password):
     # Also returns the local admin user if LDAP is disabled
     user = ldap.get_user_information_of_cn(username)
     if user == None:
-        print("User not found")
-        return "User not found"
+        print(_("User not found"))
+        return _("User not found")
     # If we got a user_information dict:
     if type(user) == dict:
         message = ldap.set_ldap_user_new_password(user["dn"], password)
@@ -96,7 +97,7 @@ def ensure_superuser_exists():
                 password=settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP,
                 email="",
             )
-            print("Created superuser 'Administrator' with password '{}'".format(settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP))
+            print(_("Created superuser 'Administrator' with password '%(password)s'") % {"password": settings.INITIAL_ADMIN_PASSWORD_WITHOUT_LDAP})
 
 
 def is_2fa_enabled(user):
@@ -117,11 +118,11 @@ def change_superuser_password(new_password):
     else:
         # Check if user exists
         if not User.objects.filter(username="Administrator").exists():
-            print("User 'Administrator' does not exist")
+            print(_("User 'Administrator' does not exist"))
         user = User.objects.get(username="Administrator")
         user.set_password(new_password)
         user.save()
-        print("Local Administrator password changed")
+        print(_("Local Administrator password changed"))
 
 
 def get_admin_user():

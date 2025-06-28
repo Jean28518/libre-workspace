@@ -1,15 +1,16 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
 {% include "unix/folder_view.html" %}
 
 
 <div class="grid">
-    <a class="btn btn-primary" href="{% url 'dashboard' %}" role=button>Datei-Explorer schließen</a>
+    <a class="btn btn-primary" href="{% url 'dashboard' %}" role=button>{% translate "Close File Explorer" %}</a>
 </div>
 
 <br>
 <center>
-    Hinweis: Aus Sicherheitsgründen, ist es nicht möglich, den Inhalt von Dateien anzuzeigen.
+    {% translate "Note: For security reasons, it is not possible to display the content of files." %}
 </center>
 {% endblock %}

@@ -1,17 +1,18 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Gruppenadministration</h2>
+<h2>{% translate "Group Administration" %}</h2>
 
-<a href="{% url "create_group" %}" role="button" class="primary">Gruppe hinzufügen</a>
+<a href="{% url "create_group" %}" role="button" class="primary">{% translate "Add Group" %}</a>
 
 <hr>
 
 <table>
     <thead>
       <tr>
-        <th scope="col">Gruppenname </th>
-        <th scope="col">Beschreibung</th>
+        <th scope="col">{% translate "Group Name" %} </th>
+        <th scope="col">{% translate "Description" %}</th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
@@ -21,8 +22,8 @@
         <tr>
             <td>{{group.cn}}</td>
             <td>{{group.description}}</td>
-            <td><a href="{% url "edit_group" group.cn %}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
-            <td><a href="{% url "assign_users_to_group" group.cn %}" title="Mitglieder verwalten" role="button" class="secondary outline"><span class="material-icons md-16">group</span></a></td>
+            <td><a href="{% url "edit_group" group.cn %}" title="{% translate "Edit" %}" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a></td>
+            <td><a href="{% url "assign_users_to_group" group.cn %}" title="{% translate "Manage Members" %}" role="button" class="secondary outline"><span class="material-icons md-16">group</span></a></td>
         </tr>
             
     
@@ -30,7 +31,6 @@
     </tbody>
   </table>
 
-  Hinweis: Einige Systemgruppen sind ausgeblendet.
-
+  {% translate "Note: Some system groups are hidden." %}
         
 {% endblock %}

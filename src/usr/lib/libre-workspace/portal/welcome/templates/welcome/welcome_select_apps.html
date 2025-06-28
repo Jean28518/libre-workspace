@@ -1,27 +1,28 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Module</h2>
+<h2>{% translate "Modules" %}</h2>
 
-<p>Wählen Sie aus, welche Module installiert werden sollen.</p>
+<p>{% translate "Select which modules should be installed." %}</p>
 
 {% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
 
 <form method="post">  {% csrf_token %}
-    <h3>Cloud</h3>
+    <h3>{% translate "Cloud" %}</h3>
     <fieldset>
         <label for="nextcloud">
             <img src="/static/lac/icons/nextcloud.webp" alt="" style="height: 128px; padding: 16px;">
           <input type="checkbox" id="nextcloud" name="nextcloud" role="switch" checked onclick="change()">
-          Nextcloud - Cloudspeicher, Kontakte, Kalender, Aufgaben, Notizen
+          {% translate "Nextcloud - Cloud storage, contacts, calendar, tasks, notes" %}
         </label>
     </fieldset>
     
-    <label for="online_office" id="online_office_label">Online Office
+    <label for="online_office" id="online_office_label">{% translate "Online Office" %}
     <select id="online_office" name="online_office" required>
-        <option value="collabora" selected>Collabora Online (perfekt für .odt, .ods, .odp Dateien) (Libre Office-Formate)</option>
-        <option value="onlyoffice">Only Office (perfekt für .docx, .xls, .ppt Dateien) (Microsoft-Formate)</option>
-        <option value="deactivate">Deaktivieren</option>
+        <option value="collabora" selected>{% translate "Collabora Online (perfect for .odt, .ods, .odp files) (Libre Office formats)" %}</option>
+        <option value="onlyoffice">{% translate "Only Office (perfect for .docx, .xls, .ppt files) (Microsoft formats)" %}</option>
+        <option value="deactivate">{% translate "Deactivate" %}</option>
     </select>
     </label>
 
@@ -29,37 +30,37 @@
         <label for="desktop">
             <img src="/static/lac/icons/desktop.webp" alt="" style="height: 128px; padding: 16px;">
             <input type="checkbox" id="desktop" name="desktop" role="switch" checked>
-            Cloud Desktop im Webbrowser - Arbeitsumgebung
+            {% translate "Cloud Desktop in web browser - Workspace" %}
         </label>
     </fieldset>
 
     
-    <h3>Kommunikation</h3>
+    <h3>{% translate "Communication" %}</h3>
     <fieldset>
         <label for="matrix">
             <img src="/static/lac/icons/element.webp" alt="" style="height: 128px; padding: 16px;">
             <input type="checkbox" id="matrix" name="matrix" role="switch" checked>
-            Matrix - Chat
+            {% translate "Matrix - Chat" %}
         </label>
         
         <label for="jitsi">
             <img src="/static/lac/icons/jitsi.webp" alt="" style="height: 128px; padding: 16px;">
             <input type="checkbox" id="jitsi" name="jitsi" role="switch" checked>
-            Jitsi - Videokonferenzen
+            {% translate "Jitsi - Video conferences" %}
         </label>
     </fieldset>
 
-    <h3>Weitere Module</h3>
+    <h3>{% translate "Other Modules" %}</h3>
     <fieldset>
         <label for="xfce">
             <img src="/static/lac/icons/xfce.png" alt="" style="height: 128px; padding: 16px;">
             <input type="checkbox" id="xfce" name="xfce" role="switch">
-            Desktop-Oberfläche (Xfce)
+            {% translate "Desktop Interface (Xfce)" %}
         </label>
     </fieldset>
         
     
-    <input type="submit" value="Weiter">
+    <input type="submit" value="{% translate "Continue" %}">
 </form>
 
 <script>

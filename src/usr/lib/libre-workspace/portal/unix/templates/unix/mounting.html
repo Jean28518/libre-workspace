@@ -1,14 +1,15 @@
+{% load i18n %}
 <article>
 
-<h2> Festplatten </h2>
+<h2>{% translate "Hard Drives" %}</h2>
 
 <table>
     <thead>
         <tr>
-            <th>Partition</th>
-            <th>Größe</th>
-            <th>Einhängepunkt</th>
-            <th>Aktionen</th>
+            <th>{% translate "Partition" %}</th>
+            <th>{% translate "Size" %}</th>
+            <th>{% translate "Mount Point" %}</th>
+            <th>{% translate "Actions" %}</th>
         </tr>
     </thead>
     <tbody>
@@ -20,9 +21,9 @@
             <td>
                 {% if partition.mountpoint != "/"%}
                     {% if partition.mountpoint %}
-                        <a href="{% url "umount" partition.name %}">Aushängen</a>
+                        <a href="{% url "umount" partition.name %}">{% translate "Unmount" %}</a>
                     {% else %}
-                        <a href="{% url "mount" partition.name %}">Einhängen</a>
+                        <a href="{% url "mount" partition.name %}">{% translate "Mount" %}</a>
                     {% endif %}
                 {% endif %}
         </tr>

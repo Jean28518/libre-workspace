@@ -1,7 +1,8 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>'{{cn}}' bearbeiten</h2>
+<h2>{% translate "'%s' edit" %}</h2>
 
 {% if message != "" %}
 <p><strong>{{ message }}</strong></p>
@@ -10,7 +11,7 @@
 <button class="contrast outline"
 data-target="modal-deletion"
 onClick="toggleModal(event)">
-GRUPPE LÖSCHEN
+{% translate "DELETE GROUP" %}
 </button>
 
 <form method="post">{% csrf_token %}
@@ -18,9 +19,9 @@ GRUPPE LÖSCHEN
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "group_overview" %}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
-        <input type="submit" value="Änderungen speichern">
+        <input type="submit" value="{% translate "Save changes" %}">
     </div>
 </form>
 
@@ -35,10 +36,10 @@ GRUPPE LÖSCHEN
         data-target="modal-deletion"
         onClick="toggleModal(event)">
         </a>
-        <h3>Gruppe wirklich löschen?</h3>
+        <h3>{% translate "Really delete group?" %}</h3>
         <p>
-        Die Benutzer werden nicht gelöscht, sondern nur aus der Gruppe entfernt.
-        Dieser Vorgang ist nicht mehr umkehrbar!
+        {% translate "Users will not be deleted, only removed from the group." %}
+        {% translate "This operation is irreversible!" %}
         </p>
         <footer>
         <a href="#cancel"
@@ -46,12 +47,11 @@ GRUPPE LÖSCHEN
             class="secondary"
             data-target="modal-deletion"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% translate "Cancel" %}
         </a>
-        <a href="{% url "delete_group" cn %}"role="button" class="contrast" style="height: 50px">GRUPPE LÖSCHEN</a>
+        <a href="{% url "delete_group" cn %}"role="button" class="contrast" style="height: 50px">{% translate "DELETE GROUP" %}</a>
         </footer>
     </article>
 </dialog>
 
 {% endblock %}
-

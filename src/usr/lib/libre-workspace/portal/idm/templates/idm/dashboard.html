@@ -1,7 +1,8 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Willkommen {{ user_information.displayName }}</h2>
+<h2>{% translate "Welcome" %} {{ user_information.displayName }}</h2>
 
 {% include "idm/libre_workspace_challenges.html" %}
 
@@ -11,83 +12,83 @@
     {% if ldap_enabled %}
     <a class="secondary" href="{% url "user_overview" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">manage_accounts</span> 
-            <br> 
-            Benutzeradministration
+            <span class="material-icons md-96" style="padding: 0.5rem;">manage_accounts</span>
+            <br>
+            {% translate "User Administration" %}
         </article>
     </a>
     <a class="secondary" href="{% url "group_overview" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">groups</span> 
-            <br> 
-            Gruppenadministration
+            <span class="material-icons md-96" style="padding: 0.5rem;">groups</span>
+            <br>
+            {% translate "Group Administration" %}
         </article>
     </a>
     {% endif %}
     <a class="secondary" href="{% url "data_management" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">save</span> 
-            <br> 
-            Datenimport/-export
+            <span class="material-icons md-96" style="padding: 0.5rem;">save</span>
+            <br>
+            {% translate "Data Import/Export" %}
         </article>
     </a>
     <a class="secondary" href="{% url "file_explorer" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">folder</span> 
-            <br> 
-            Datei-Explorer
+            <span class="material-icons md-96" style="padding: 0.5rem;">folder</span>
+            <br>
+            {% translate "File Explorer" %}
         </article>
     </a>
 </div>
 <div class="grid">
     <a class="secondary" href="{% url "unix_index" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">dns</span> 
-            <br> 
-            Systemverwaltung
+            <span class="material-icons md-96" style="padding: 0.5rem;">dns</span>
+            <br>
+            {% translate "System Administration" %}
         </article>
     </a>
     {% comment %} <a class="secondary" href="{% url "m23software.client_list" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">computer</span> 
-            <br> 
+            <span class="material-icons md-96" style="padding: 0.5rem;">computer</span>
+            <br>
             Client-Verwaltung
         </article>
     </a> {% endcomment %}
     <a class="secondary" href="{% url "system_configuration" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">settings</span> 
-            <br> 
-            Systemkonfiguration
+            <span class="material-icons md-96" style="padding: 0.5rem;">settings</span>
+            <br>
+            {% translate "System Configuration" %}
         </article>
     </a>
 </div>
 
-<h3>Eigene Einstellungen</h3>
+<h3>{% translate "Personal Settings" %}</h3>
 {% endif %}
 
 
 <div class="grid">
     <a class="secondary" href="{% url "user_settings" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">account_circle</span> 
-            <br> 
-            Profileinstellungen
+            <span class="material-icons md-96" style="padding: 0.5rem;">account_circle</span>
+            <br>
+            {% translate "Profile Settings" %}
         </article>
     </a>
     <a class="secondary" href="{% url "change_password" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">password</span> 
-            <br> 
-            Passwort ändern
+            <span class="material-icons md-96" style="padding: 0.5rem;">password</span>
+            <br>
+            {% translate "Change Password" %}
         </article>
     </a>
     {% if desktop_module_active and user_information.admin %}
     <a class="secondary" href="{% url "desktop_settings" %}">
         <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">desktop_windows</span> 
-            <br> 
-            Cloud Desktop Einstellungen
+            <span class="material-icons md-96" style="padding: 0.5rem;">desktop_windows</span>
+            <br>
+            {% translate "Cloud Desktop Settings" %}
         </article>
     </a>
     {% endif %}

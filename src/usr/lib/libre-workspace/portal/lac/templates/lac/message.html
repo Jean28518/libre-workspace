@@ -1,18 +1,17 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
 <br><br>
 
-
-<center><strong> {{ message | safe }} </strong></center>
+<center><strong> {% translate message %} </strong></center>
 
 <br>
 
 <center>
 <div>
-    <a href="{{url}}" class="primary" role="button">Weiter</a>
+    <a href="{{url}}" class="primary" role="button">{% translate "Continue" %}</a>
 </div>
 </center>
 
-    
 {% endblock %}

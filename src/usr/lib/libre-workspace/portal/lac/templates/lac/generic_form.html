@@ -1,4 +1,5 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
 {% if heading %}
@@ -13,7 +14,7 @@
              background-color: orange; border-color: orange;
             {% endif %}
         
-        "><strong>{{ message | safe }}</strong></a>
+        "><strong>{{ message }}</strong></a>
     </div>
 </div>
 {% endif %}
@@ -28,7 +29,7 @@
     {% else %}
         <div class="grid">
             <div>
-                <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+                <a href="{{url}}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
             </div>
             <input type="submit" value="{{action}}" {% if danger %}class="danger"{% endif %}>
         </div>
@@ -37,7 +38,7 @@
     <br><br>
     <div class="grid">
         <div>
-            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
         <input type="submit" value="{{action}}" {% if danger %}class="danger"{% endif %}>
     </div>
@@ -48,4 +49,3 @@
 {% endif %}
     
 {% endblock %}
-    

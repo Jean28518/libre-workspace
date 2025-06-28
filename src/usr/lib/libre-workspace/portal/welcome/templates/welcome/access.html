@@ -1,26 +1,28 @@
+{% load i18n %}
+
 {% if custom_access != "" %}
     <p><strong>
-    Sie erreichen Libre Workspace Lite nach der Installation unter <a href="https://{{ custom_access }}">{{ custom_access }}</a>
+    {% translate "You can reach Libre Workspace Lite after installation at" %} <a href="https://{{ custom_access }}">{{ custom_access }}</a>
     </strong></p>
 {% endif %}
 
-{% if domain == "int.de" %} 
-    Stellen Sie auf Ihrem Router (und am besten auf Ihren Geräten) sicher, dass folgender DNS-Eintrag gesetzt ist: <strong>{{ ip }}</strong>
-    In der Praxis zeigt sich leider manchmal, dass trotz richtiger DNS-Konfiguration aufgrund von Caches die Verbindungen nicht einwandfrei funktionieren.
-    Gegen solche Verbindungsprobleme können Sie bei Linux-Geräten folgenden Eintrag in der Datei <strong>/etc/hosts</strong> sicherstellen:
+{% if domain == "int.de" %}
+    {% translate "On your router (and preferably on your devices), ensure the following DNS entry is set:" %} <strong>{{ ip }}</strong>
+    {% translate "In practice, it sometimes happens that despite correct DNS configuration, connections do not work properly due to caches." %}
+    {% translate "To prevent such connection problems, you can ensure the following entry in the" %} <strong>/etc/hosts</strong> {% translate "file on Linux devices:" %}
     <pre>
 
-    {{ ip }}{% for subdomain in subdomains %} {{subdomain}}.{{ domain }}{% endfor %}    
+    {{ ip }}{% for subdomain in subdomains %} {{subdomain}}.{{ domain }}{% endfor %}
     </pre>
 
-    <small id="copy">Hier klicken, um Text kopieren</small><br><br>
+    <small id="copy">{% translate "Click here to copy text" %}</small><br><br>
 
 
     <p>
-        Das Zertifikat für die https-Verbindungen können Sie {% if installation_running %}(nach der Installation){% endif %} jederzeit hier herunterladen: <a href="https://cert.{{ domain }}/lan.crt">https://cert.{{ domain }}/lan.crt</a>
+        {% translate "You can download the certificate for https connections" %} {% if installation_running %}({% translate "after installation" %}){% endif %} {% translate "here at any time:" %} <a href="https://cert.{{ domain }}/lan.crt">https://cert.{{ domain }}/lan.crt</a>
     </p>
 
-    
+
 {% endif %}
 
 <br>
@@ -29,98 +31,98 @@
 
 {% else %}
     <div class="grid">
-    <a href="https://portal.{{domain}}" target="_blank" role="button">Zum Libre-Workspace (portal.{{domain}})</a>
+    <a href="https://portal.{{domain}}" target="_blank" role="button">{% translate "To Libre-Workspace (portal.{{domain}})" %}</a>
     </div>
 {% endif %}
 
 {% if domain == "int.de" %}
-<h2>So installieren Sie Zertifikate auf Ihren Geräten</h2>
+<h2>{% translate "How to install certificates on your devices" %}</h2>
 <p>
-    Damit die Verbindungen zum Libre Workspace authentifiziert sind, müssen Sie das Zertifikat auf Ihren Geräten installieren.<br>
-    Die Datei lan.crt können Sie hier herunterladen: <a href="https://cert.int.de/lan.crt">https://cert.int.de/lan.crt</a><br>
-    Sollten Sie https://cert.int.de/ nicht erreichen, stellen Sie sichcer, dass Sie sich im selben Netzwerk wie der Libre Workspace befinden und als DNS-Server die IP-Adresse des Libre Workspace eingetragen haben.
+    {% translate "For connections to Libre Workspace to be authenticated, you must install the certificate on your devices." %}<br>
+    {% translate "You can download the lan.crt file here:" %} <a href="https://cert.int.de/lan.crt">https://cert.int.de/lan.crt</a><br>
+    {% translate "If you cannot reach https://cert.int.de/, make sure you are in the same network as Libre Workspace and have entered the IP address of Libre Workspace as the DNS server." %}
 </p>
 
 
-<h3>Linux</h3>
-<h4>Systemweit</h4>
+<h3>{% translate "Linux" %}</h3>
+<h4>{% translate "System-wide" %}</h4>
 <p>
     <ol>
-        <li>Kopieren Sie die Datei <strong>lan.crt</strong> nach <strong>/usr/local/share/ca-certificates/</strong></li>
-        <li>Öffnen Sie ein Terminal und führen Sie <strong>sudo update-ca-certificates</strong> aus</li>
+        <li>{% translate "Copy the file" %} <strong>lan.crt</strong> {% translate "to" %} <strong>/usr/local/share/ca-certificates/</strong></li>
+        <li>{% translate "Open a terminal and run" %} <strong>sudo update-ca-certificates</strong></li>
     </ol>
 </p>
 
-<h4>Für Firefox</h4>
+<h4>{% translate "For Firefox" %}</h4>
 <p>
     <ol>
-        <li>Öffnen Sie Firefox</li>
-        <li>Öffnen Sie die Einstellungen</li>
-        <li>Wählen Sie <strong>Datenschutz & Sicherheit</strong></li>
-        <li>Scrollen Sie nach unten und suchen Sie den Abschnitt <strong>Zertifikate</strong></li>
-        <li>Klicken Sie auf <strong>Zertifikate anzeigen</strong></li>
-        <li>Wählen Sie <strong>Zertifikatstellen</strong></li>
-        <li>Wählen Sie <strong>Importieren...</strong></li>
-        <li>Wählen Sie die Datei <strong>lan.crt</strong></li>
-        <li>Wählen Sie alle Optionen</li>
-        <li>Klicken Sie auf <strong>OK</strong></li>
-        <li>Starten Sie Firefox neu</li>
+        <li>{% translate "Open Firefox" %}</li>
+        <li>{% translate "Open Settings" %}</li>
+        <li>{% translate "Select" %} <strong>{% translate "Privacy & Security" %}</strong></li>
+        <li>{% translate "Scroll down and find the section" %} <strong>{% translate "Certificates" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "View Certificates" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Authorities" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Import..." %}</strong></li>
+        <li>{% translate "Select the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select all options" %}</li>
+        <li>{% translate "Click on" %} <strong>{% translate "OK" %}</strong></li>
+        <li>{% translate "Restart Firefox" %}</li>
     </ol>
 </p>
 
 
-<h4>Für Chromium, Google Chrome, Brave, ...</h4>
+<h4>{% translate "For Chromium, Google Chrome, Brave, ..." %}</h4>
 <p>
     <ol>
-        <li>Öffnen Sie die Einstellungen</li>
-        <li>Wählen Sie Datenschutz und Sicherheit</li>
-        <li>Wählen Sie Sicherheit</li>
-        <li>Scrollen Sie weiter nach unten und klicken Sie auf <strong>Zertifikate verwalten</strong></li>
-        <li>Wählen Sie <strong>Zertifizierungsstellen</strong></li>
-        <li>Klicken Sie auf <strong>Importieren</strong></li>
-        <li>Wählen Sie die Datei <strong>lan.crt</strong></li>
-        <li>Wählen Sie alle Optionen</li>
-        <li>Klicken Sie auf <strong>OK</strong></li>
-        <li>Starten Sie den Browser neu</li>
+        <li>{% translate "Open Settings" %}</li>
+        <li>{% translate "Select Privacy and Security" %}</li>
+        <li>{% translate "Select Security" %}</li>
+        <li>{% translate "Scroll down further and click on" %} <strong>{% translate "Manage Certificates" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Certificate Authorities" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Import" %}</strong></li>
+        <li>{% translate "Select the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select all options" %}</li>
+        <li>{% translate "Click on" %} <strong>{% translate "OK" %}</strong></li>
+        <li>{% translate "Restart the browser" %}</li>
     </ol>
 </p>
 
-<h3>MacOS</h3>
+<h3>{% translate "MacOS" %}</h3>
 <p>
     <ol>
-        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
-        <li>Klicken Sie auf <strong>Installieren</strong></li>
-        <li>Wählen Sie <strong>System</strong></li>
-        <li>Klicken Sie auf <strong>Hinzufügen</strong></li>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "System" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Add" %}</strong></li>
     </ol>
 
-<h3>Windows</h3>
+<h3>{% translate "Windows" %}</h3>
 <p>
     <ol>
-        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
-        <li>Klicken Sie auf <strong>Installieren</strong></li>
-        <li>Wählen Sie <strong>Alle Zertifikate in folgenden Speicher speichern</strong></li>
-        <li>Wählen Sie <strong>Vertrauenswürdige Stammzertifizierungsstellen</strong></li>
-        <li>Klicken Sie auf <strong>OK</strong></li>
-    </ol>
-</p>
-
-<h3>Android</h3>
-<p>
-    <ol>
-        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
-        <li>Wählen Sie <strong>Installieren</strong></li>
-        <li>Wählen Sie <strong>System</strong></li>
-        <li>Wählen Sie <strong>OK</strong></li>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Store all certificates in the following store" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Trusted Root Certification Authorities" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "OK" %}</strong></li>
     </ol>
 </p>
 
-<h3>iOS</h3>
+<h3>{% translate "Android" %}</h3>
 <p>
     <ol>
-        <li>Öffnen Sie die Datei <strong>lan.crt</strong></li>
-        <li>Wählen Sie <strong>Installieren</strong></li>
-        <li>Wählen Sie <strong>Installieren</strong></li>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "System" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "OK" %}</strong></li>
+    </ol>
+</p>
+
+<h3>{% translate "iOS" %}</h3>
+<p>
+    <ol>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Install" %}</strong></li>
     </ol>
 </p>
 
@@ -142,8 +144,7 @@
         input.select();
         document.execCommand('copy');
         document.body.removeChild(input);
-        document.getElementById('copy').textContent = 'Text wurde in die Zwischenablage kopiert!';
+        document.getElementById('copy').textContent = '{% translate "Text copied to clipboard!" %}';
     });
-        
-</script>
 
+</script>

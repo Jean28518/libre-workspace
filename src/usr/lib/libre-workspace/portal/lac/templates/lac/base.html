@@ -1,14 +1,14 @@
 {% load static %}
 {% load i18n %}
 <!doctype html>
-<html lang="de" {% if branding.force_dark_mode %}data-theme="dark"{% endif %}>
+<html lang="en" {% if branding.force_dark_mode %}data-theme="dark"{% endif %}>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% if branding.portal_branding_title %}
       <title>{{branding.portal_branding_title}} </title>
     {% else %}
-      <title>{% trans "Libre-Workspace Portal" %} </title>
+      <title>{% translate "Libre-Workspace Portal" %} </title>
     {% endif %}
     {% if branding.portal_branding_logo %}
     <link rel="icon" type="image/x-icon" href="/media/{{branding.portal_branding_logo}}">
@@ -204,22 +204,21 @@ h1, h2, h3, h4, h5, h6 {
         <li style="padding: 0px;">
           <a href="/" class="contrast">
             {% if branding.portal_branding_logo %}
-            <img src="/media/{{branding.portal_branding_logo}}" alt="Logo" style="height: 64px;padding: 8px;">
+            <img src="/media/{{branding.portal_branding_logo}}" alt="{% translate "Logo" %}" style="height: 64px;padding: 8px;">
             {% else %}
-            <img src="/static/lac/icons/libre-workspace.webp" alt="Logo" style="height: 64px;padding: 8px;">
+            <img src="/static/lac/icons/libre-workspace.webp" alt="{% translate "Logo" %}" style="height: 64px;padding: 8px;">
             {% endif %}
-            <!-- <span style="margin-top: 5px" class="material-icons md-32">apps</span>  -->
-          </a>
+            </a>
         </li>
         <li>
           {% if branding.portal_branding_title %}
             <a href="/" class="contrast"><strong>{{ branding.portal_branding_title }}</strong></a>
           {% else %}
-            <a href="/" class="contrast"><strong>Libre-Workspace Portal</strong></a>
+            <a href="/" class="contrast"><strong>{% translate "Libre-Workspace Portal" %}</strong></a>
           {% endif %}
         </li>
         {% if request.user.is_authenticated %}
-          <li><a href="/idm/dashboard">Verwaltung</a></li> 
+          <li><a href="/idm/dashboard">{% translate "Administration" %}</a></li> 
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
@@ -232,10 +231,10 @@ h1, h2, h3, h4, h5, h6 {
                   <span class="material-icons">help</span>
                 </summary>
                 <ul role="listbox">
-                  <li><a href="https://docs.libre-workspace.org/">Dokumentation</a></li>
-                  <li><a href="https://forum.libre-workspace.org/">Forum</a></li>
-                  <li><a href="https://www.linuxguides.de/linux-support/">Kostenpflichtiger Support</a></li>
-                  <li><a href="{% url "get_system_data_for_support" %}">Systeminformation herunterladen</a></li>
+                  <li><a href="https://docs.libre-workspace.org/">{% translate "Documentation" %}</a></li>
+                  <li><a href="https://forum.libre-workspace.org/">{% translate "Forum" %}</a></li>
+                  <li><a href="https://www.linuxguides.de/linux-support/">{% translate "Paid Support" %}</a></li>
+                  <li><a href="{% url "get_system_data_for_support" %}">{% translate "Download System Information" %}</a></li>
                 </ul>
               </details>
             </li>
@@ -246,10 +245,10 @@ h1, h2, h3, h4, h5, h6 {
                   {{ request.user.username }}
               </summary>
               <ul role="listbox">
-                <li><a href="{% url "change_password" %}">Passwort ändern</a></li>
-                {% if request.user.is_superuser %}<li><a href="{% url "api_key_overview" %}"><bdi>API-Keys</bdi></a></li>{% endif %}
-                <li><a href="{% url "otp_settings" %}"><bdi>2-Faktor-Authentifizierung</bdi></a></li>
-                <li><a href="{% url "user_logout" %}">Ausloggen</a></li>
+                <li><a href="{% url "change_password" %}">{% translate "Change Password" %}</a></li>
+                {% if request.user.is_superuser %}<li><a href="{% url "api_key_overview" %}"><bdi>{% translate "API Keys" %}</bdi></a></li>{% endif %}
+                <li><a href="{% url "otp_settings" %}"><bdi>{% translate "2-Factor Authentication" %}</bdi></a></li>
+                <li><a href="{% url "user_logout" %}">{% translate "Log Out" %}</a></li>
               </ul>
             </details>
           </li>
@@ -258,7 +257,7 @@ h1, h2, h3, h4, h5, h6 {
       
       {% else %}
         <ul>
-          <li title="Anmelden"><a href="{% url "user_login" %}" role="button">Anmelden</a></li>
+          <li title="{% translate "Login" %}"><a href="{% url "user_login" %}" role="button">{% translate "Login" %}</a></li>
         </ul>
       {% endif %}
     </nav> 

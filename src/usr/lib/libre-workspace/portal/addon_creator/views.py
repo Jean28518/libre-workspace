@@ -5,6 +5,7 @@ from .utils import create_addon
 from django.http import HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
+from django.utils.translation import gettext as _
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def addon_creator(request):
@@ -22,4 +23,11 @@ def addon_creator(request):
             response['Content-Disposition'] = f'attachment; filename="{addon_id}.zip"'
             return response
             
-    return render(request, "lac/generic_form.html", {"form": form, "heading": "Add-On Generator", "hide_buttons_top": "True", "action": "Generieren", "url": reverse("addon_center"), "description": "Hier können Sie in Sekunden ein Addon für Libre-Workspace erstellen. Es wird empfohlen, das Addon nach der Erstellung zu überprüfen und ggf. anzupassen.<br>Weitere Informationen zur Erstellung finden Sie hier: <a href='https://docs.libre-workspace.org/modules/addons.html'>https://docs.libre-workspace.org/modules/addons.html</a>"})
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "heading": _("Add-On Generator"),
+        "hide_buttons_top": "True",
+        "action": _("Generate"),
+        "url": reverse("addon_center"),
+        "description": _("Here you can create an add-on for Libre-Workspace in seconds. It is recommended to check and, if necessary, adjust the add-on after creation.<br>You can find more information about creating add-ons here: <a href='https://docs.libre-workspace.org/modules/addons.html'>https://docs.libre-workspace.org/modules/addons.html</a>")
+    })

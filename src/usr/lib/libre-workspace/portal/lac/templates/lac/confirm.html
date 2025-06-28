@@ -1,25 +1,23 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
 <br><br>
 
-
-<center><strong> {{ message | safe }} </strong></center>
+<center><strong> {% translate "{{ message | safe }}" %} </strong></center>
 
 <br>
 
 <form method="post">{% csrf_token %}
 
-
     <input type="hidden" id="confirm" name="confirm" value="on">
 
     <div class="grid">
         <div>
-            <a href="{{url_cancel}}" class="secondary" role="button" style="display: block">Zurück</a>
+            <a href="{{url_cancel}}" class="secondary" role="button" style="display: block">{% translate "Back" %}</a>
         </div>
-        <input type="submit" value="Bestätigen" class="primary" role="button">
+        <input type="submit" value="{% translate "Confirm" %}" class="primary" role="button">
     </div>
 </form>
-
     
 {% endblock %}

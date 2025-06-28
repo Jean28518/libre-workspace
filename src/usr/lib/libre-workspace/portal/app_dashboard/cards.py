@@ -2,6 +2,7 @@ from .models import DashboardEntry
 from django.urls import reverse
 import unix.unix_scripts.unix as unix
 from oidc_provider.models import Client
+from django.utils.translation import gettext as _
 
 def get_card_for_dict(dict : dict):
     return get_card_for(dict["title"], dict["url"], dict["icon_path"], dict["description"])
@@ -21,7 +22,7 @@ def get_card_for(title, url, icon_path, description):
         <article>
             <center>
             <div style="padding: 0.5rem;">
-                <img src="{icon_path}" alt="{title}" style="height: 6rem"/>
+                <img src="{icon_path}" alt="{_("%(title)s card icon") % {"title": title}}" style="height: 6rem"/>
             </div>
             <p><strong> {title} </strong><br><small>{description}</small></p>
             </center>
@@ -38,19 +39,19 @@ def add_all_addon_cards_to_card_data():
 
 # Only adds predefined system cards to the database not addon cards
 # Also handles if a system card is active or not and updates the link
-# Also removes all system cards wich are active but not in the caddyfile
+# Also removes all system cards which are active but not in the caddyfile
 def ensure_all_cards_exist_in_database():
     add_all_addon_cards_to_card_data()
     caddyfile_lines = open("/etc/caddy/Caddyfile", "r").readlines()
-    # The cards wich are not in the caddyfile as a list
+    # The cards which are not in the caddyfile as a list
     remaining_system_cards = list(DashboardEntry.objects.filter(is_system=True).all())
     for card_dat in card_data:
         found_in_caddyfile = False
-        if card_dat["title"] == "Verwaltung":
+        if card_dat["title"] == _("Management"):
             card_dat["url"] = reverse("dashboard")
             # Set the icon path to the default icon for the management card
             card_dat["icon_path"] = "/static/lac/icons/libre-workspace.webp"
-            # Make sure to save the "Verwaltung" card in the database and its changes
+            # Make sure to save the "Management" card in the database and its changes
             card = DashboardEntry.objects.filter(link=card_dat["url"], is_system=True).first()
             if card:
                 # If the card already exists, we update it
@@ -69,7 +70,7 @@ def ensure_all_cards_exist_in_database():
                         if not card_dat["url"].startswith("https://"):
                             card_dat["url"] = "https://" + card_dat["url"]
       
-        # Only handle the cards wich are in the caddyfile
+        # Only handle the cards which are in the caddyfile
         if not found_in_caddyfile:
             continue
 
@@ -90,17 +91,17 @@ def ensure_all_cards_exist_in_database():
         if dashboard_entry in remaining_system_cards:
             remaining_system_cards.remove(dashboard_entry)
    
-    # So now we remove all the remaining system cards wich are active but not in the caddyfile
+    # So now we remove all the remaining system cards which are active but not in the caddyfile
     for system_card in remaining_system_cards:
         DashboardEntry.objects.filter(link=system_card.link).delete()
 
     
 # Keywords are used to find the url in the caddyfile
 card_data = [
-    {"order": 2,"title": "Nextcloud", "url": "", "icon_path": "/static/lac/icons/nextcloud.webp", "description": "Dateien, Kalender, ...", "keywords": ["cloud", "nextcloud"]},
-    {"order": 3,"title": "Cloud Desktop", "url": "", "icon_path": "/static/lac/icons/desktop.webp", "description": "Linux-Desktop im Browser", "keywords": ["desktop", "guacamole"]},
-    {"order": 4,"title": "Element", "url": "", "icon_path": "/static/lac/icons/element.webp", "description": "Chat", "keywords": ["element"]},
-    {"order": 5,"title": "Jitsi", "url": "", "icon_path": "/static/lac/icons/jitsi.webp", "description": "Videokonferenzen", "keywords": ["jitsi", "meet"]},
-    {"order": 6,"title": "Zertifikate", "url": "", "icon_path": "/static/lac/icons/lock.webp", "description": "Für sicheren Zugriff", "keywords": ["certificate", "ssl", "cert"]},
-    {"order": 7,"title": "Verwaltung", "url": "/idm/dashboard", "icon_path": "/static/lac/icons/libre-workspace.webp", "description": "Benutzer, Gruppen, ...", "keywords": ["central", "verwaltung", "ldap", "portal"]},
+    {"order": 2,"title": _("Nextcloud"), "url": "", "icon_path": "/static/lac/icons/nextcloud.webp", "description": _("Files, Calendar, ..."), "keywords": ["cloud", "nextcloud"]},
+    {"order": 3,"title": _("Cloud Desktop"), "url": "", "icon_path": "/static/lac/icons/desktop.webp", "description": _("Linux desktop in the browser"), "keywords": ["desktop", "guacamole"]},
+    {"order": 4,"title": _("Element"), "url": "", "icon_path": "/static/lac/icons/element.webp", "description": _("Chat"), "keywords": ["element"]},
+    {"order": 5,"title": _("Jitsi"), "url": "", "icon_path": "/static/lac/icons/jitsi.webp", "description": _("Video Conferences"), "keywords": ["jitsi", "meet"]},
+    {"order": 6,"title": _("Certificates"), "url": "", "icon_path": "/static/lac/icons/lock.webp", "description": _("For secure access"), "keywords": ["certificate", "ssl", "cert"]},
+    {"order": 7,"title": _("Management"), "url": "/idm/dashboard", "icon_path": "/static/lac/icons/libre-workspace.webp", "description": _("Users, Groups, ..."), "keywords": ["central", "verwaltung", "ldap", "portal"]},
 ]

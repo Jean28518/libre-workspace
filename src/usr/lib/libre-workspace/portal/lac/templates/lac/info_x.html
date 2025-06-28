@@ -1,4 +1,5 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
 <h2> {{ name }} </h2>
@@ -23,7 +24,7 @@
 <button class="contrast outline"
 data-target="modal-deletion"
 onClick="toggleModal(event)">
-LÖSCHEN
+{% translate "DELETE" %}
 </button>
 {% endif %}
 
@@ -32,7 +33,7 @@ LÖSCHEN
     {% else %}
         <div class="grid">
             <div>
-                <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+                <a href="{{url}}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
             </div>
         </div>    
     {% endif %}
@@ -40,7 +41,7 @@ LÖSCHEN
     <br><br>
     <div class="grid">
         <div>
-            <a href="{{url}}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{{url}}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
     </div>
 </form>
@@ -55,9 +56,9 @@ LÖSCHEN
         data-target="modal-deletion"
         onClick="toggleModal(event)">
         </a>
-        <h3>{{name}} wirklich löschen?</h3>
+        <h3>{% translate "Really delete" %} {{name}}?</h3>
         <p>
-        Dieser Vorgang ist nicht mehr umkehrbar!
+        {% translate "This operation cannot be undone!" %}
         </p>
         <footer>
         <a href="#cancel"
@@ -65,9 +66,9 @@ LÖSCHEN
             class="secondary"
             data-target="modal-deletion"
             onClick="toggleModal(event)">
-            Abbrechen
+            {% translate "Cancel" %}
         </a>
-        <a href="{{delete_url}}"role="button" class="contrast" style="height: 50px">LÖSCHEN</a>
+        <a href="{{delete_url}}"role="button" class="contrast" style="height: 50px">{% translate "DELETE" %}</a>
         </footer>
     </article>
 </dialog>

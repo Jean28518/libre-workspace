@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 import ldap
 import ldap.modlist as modlist
 from ldap import LDAPError
@@ -16,8 +17,8 @@ def is_ldap_fine_and_working():
         conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
         conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
     except LDAPError as e:
-        print("Can't connect to LDAP server: " + str(e))
-        return "Login nicht möglich, kontaktiere einen Administrator: Can't connect to LDAP server: " + str(e)
+        print(_("Can't connect to LDAP server: %(error)s") % {"error": str(e)})
+        return _("Login not possible, contact an administrator: Can't connect to LDAP server: %(error)s") % {"error": str(e)}
     return None
 
 
@@ -31,7 +32,7 @@ def get_user_information_of_cn(cn):
         conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
         conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
     except LDAPError as e:
-        print("Can't connect to LDAP server: " + str(e))
+        print(_("Can't connect to LDAP server: %(error)s") % {"error": str(e)})
         return None
 
     dn = ldap_get_dn_of_cn(cn)
@@ -101,7 +102,7 @@ def set_ldap_user_new_password(user_dn, password):
     if not "," in user_dn:
         user_dn = ldap_get_dn_of_cn(cn)
     if ldap_is_system_user(cn) or cn.lower() == "administrator":
-        return f"Benutzer '{cn}' ist ein Systembenutzer. Aufgrund technischen Gründen kann das Passwort nicht verändert werden. Das Masterpasswort kann unter Systemkonfiguration geändert werden."
+        return _("User '%(cn)s' is a system user. For technical reasons, the password cannot be changed. The master password can be changed under System Configuration.") % {"cn": cn}
 
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
@@ -111,7 +112,7 @@ def set_ldap_user_new_password(user_dn, password):
     try:
         conn.modify_s(user_dn, [(ldap.MOD_REPLACE, 'unicodePwd', [encoded_password])])
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
     conn.unbind_s()
 
 def encode_password_for_samba(password_in_plaintext):
@@ -137,7 +138,7 @@ def ldap_create_user(user_information):
     username = user_information["username"]
     # Only allow lowercase letters, numbers and the following special character: -.
     if username.replace("-", "").replace(".", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "").replace("a", "").replace("b", "").replace("c", "").replace("d", "").replace("e", "").replace("f", "").replace("g", "").replace("h", "").replace("i", "").replace("j", "").replace("k", "").replace("l", "").replace("m", "").replace("n", "").replace("o", "").replace("p", "").replace("q", "").replace("r", "").replace("s", "").replace("t", "").replace("u", "").replace("v", "").replace("w", "").replace("x", "").replace("y", "").replace("z", "").replace("ä", "").replace("ö", "").replace("ü", "") != "":
-        return "Fehler: Der Benutzername darf nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich enthalten"
+        return _("Error: The username may only contain lowercase letters, numbers, dots and hyphens.")
 
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
@@ -166,7 +167,7 @@ def ldap_create_user(user_information):
     try:
         conn.add_s(dn, ldif)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
     
     # Add user to all default groups
     groups = ldap_get_all_groups()
@@ -190,7 +191,7 @@ def ldap_ensure_admin_status_of_user(cn : str, admin : bool):
     dn = ldap_get_dn_of_cn(cn)
     user_information = get_user_information_of_cn(cn)
     if user_information is None:
-        return f"Benutzer '{cn}' wurde nicht gefunden."
+        return _("User '%(cn)s' was not found.") % {"cn": cn}
     current_admin_status = user_information["admin"]
     if admin and not current_admin_status:
         ldap_add_user_to_group(dn, f"cn=Administrators,cn=Builtin,{settings.AUTH_LDAP_DC}")
@@ -300,7 +301,7 @@ def ldap_update_user(cn, user_information):
         try:
             conn.modify_s(dn, ldif)
         except LDAPError as e:
-            return f"Fehler: {str(e)}"
+            return _("Error: %(error)s") % {"error": str(e)}
 
         conn.unbind_s()
 
@@ -324,7 +325,7 @@ def ldap_delete_user(cn):
     try:
         conn.delete_s(dn)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
 
     conn.unbind_s()
 
@@ -381,9 +382,9 @@ def ldap_create_group(group_information):
     # Check if group name is allowd:
     # Only allow lowercase letters, numbers and the following special character: -.
     if " " in group_information["cn"]:
-        return "Der Gruppenname darf keine Leerzeichen enthalten"
+        return _("The group name must not contain spaces.")
     if group_information["cn"].replace("-", "").replace(".", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "").replace("a", "").replace("b", "").replace("c", "").replace("d", "").replace("e", "").replace("f", "").replace("g", "").replace("h", "").replace("i", "").replace("j", "").replace("k", "").replace("l", "").replace("m", "").replace("n", "").replace("o", "").replace("p", "").replace("q", "").replace("r", "").replace("s", "").replace("t", "").replace("u", "").replace("v", "").replace("w", "").replace("x", "").replace("y", "").replace("z", "").replace("ä", "").replace("ö", "").replace("ü", "") != "":
-        return "Der Gruppenname darf nur Kleinbuchstaben, Zahlen, Punkt und Bindestrich enthalten"
+        return _("The group name may only contain lowercase letters, numbers, dots and hyphens.")
 
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
@@ -403,7 +404,7 @@ def ldap_create_group(group_information):
     try:
         conn.add_s(dn, ldif)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
 
     conn.unbind_s()
 
@@ -433,7 +434,7 @@ def ldap_update_group(cn, group_information):
         try:
             conn.modify_s(dn, ldif)
         except LDAPError as e:
-            return f"Fehler: {str(e)}"
+            return _("Error: %(error)s") % {"error": str(e)}
 
     conn.unbind_s()
 
@@ -475,7 +476,7 @@ def ldap_delete_group(cn):
     try:
         conn.delete_s(dn)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
 
     conn.unbind_s()
 
@@ -486,7 +487,7 @@ def ldap_remove_user_from_group(user_dn, group_dn):
     try:
         conn.modify_s(group_dn, mod_attrs)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
     conn.unbind_s()
 
 def ldap_add_user_to_group(user_dn, group_dn):
@@ -496,7 +497,7 @@ def ldap_add_user_to_group(user_dn, group_dn):
     try:
         conn.modify_s(group_dn, mod_attrs)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
     conn.unbind_s()
 
 
@@ -509,11 +510,11 @@ def ldap_disable_user(user_dn):
     cn = ldap_get_cn_of_dn(user_dn)
     user_dn = ldap_get_dn_of_cn(cn)
     if ldap_is_system_user(cn) or cn.lower() == "administrator":
-        return "Fehler: Benutzer ist ein Systembenutzer und kann nicht deaktiviert werden."
+        return _("Error: User is a system user and cannot be disabled.")
     try:
         conn.modify_s(user_dn, mod_attrs)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
     conn.unbind_s()
 
 
@@ -527,5 +528,5 @@ def ldap_enable_user(user_dn):
     try:
         conn.modify_s(user_dn, mod_attrs)
     except LDAPError as e:
-        return f"Fehler: {str(e)}"
+        return _("Error: %(error)s") % {"error": str(e)}
     conn.unbind_s()

@@ -10,6 +10,7 @@ from rest_framework import permissions, viewsets
 from .serializers import AddonSerializer
 from rest_framework.decorators import action
 from rest_framework.renderers import JSONRenderer
+from django.utils.translation import gettext as _
 
 
 
@@ -29,14 +30,14 @@ def addon_center_install_addon(request, addon_id):
             addon = addon_s
             break
     if not addon:
-        return message(request, f"Addon {addon_id} not found.", "addon_center")
+        return message(request, _("Addon %(addon_id)s not found.") % {"addon_id": addon_id}, "addon_center")
 
     msg = install_addon(addon_id)  
     if msg:
         return message(request, msg, "addon_center")
 
 
-    return message(request, f"Addon {addon_id} is installing. This process takes multiple minutes...", "addon_center")
+    return message(request, _("Addon %(addon_id)s is installing. This process takes multiple minutes...") % {"addon_id": addon_id}, "addon_center")
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def addon_center_uninstall_addon(request, addon_id):
@@ -47,16 +48,16 @@ def addon_center_uninstall_addon(request, addon_id):
             addon = addon_s
             break
     if not addon:
-        return message(request, f"Addon {addon_id} not found.", "addon_center")
+        return message(request, _("Addon %(addon_id)s not found.") % {"addon_id": addon_id}, "addon_center")
     
     if not addon["installed"]:
-        return message(request, f"Addon {addon_id} is not installed.", "addon_center")
+        return message(request, _("Addon %(addon_id)s is not installed.") % {"addon_id": addon_id}, "addon_center")
 
     msg = uninstall_addon(addon_id)
     if msg:
         return message(request, msg, "addon_center")
 
-    return message(request, f"Addon {addon_id} uninstalled successfully.", "addon_center")
+    return message(request, _("Addon %(addon_id)s uninstalled successfully.") % {"addon_id": addon_id}, "addon_center")
 
 
 class AddonViewSet(viewsets.ViewSet):
@@ -80,11 +81,11 @@ class AddonViewSet(viewsets.ViewSet):
         msg = install_addon(pk)
         if msg:
             return HttpResponse(msg, status=400)
-        return HttpResponse(f"Addon {pk} is installing. This process takes multiple minutes...", status=202)
+        return HttpResponse(_("Addon %(pk)s is installing. This process takes multiple minutes...") % {"pk": pk}, status=202)
     
     @action(detail=True, methods=['post'], url_name='uninstall')
     def uninstall(self, request, pk=None):
         msg = uninstall_addon(pk)
         if msg:
             return HttpResponse(msg, status=400)
-        return HttpResponse(f"Addon {pk} uninstalled successfully.", status=200)
+        return HttpResponse(_("Addon %(pk)s uninstalled successfully.") % {"pk": pk}, status=200)

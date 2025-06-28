@@ -1,7 +1,8 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Gruppen-Mitgliedschaften von {{ user_information.displayName }}</h2>
+<h2>{% translate "Group Memberships of" %} {{ user_information.displayName }}</h2>
 
 {% if message != "" %}
 <p><strong>{{ message }}</strong></p>
@@ -12,21 +13,21 @@
     {% for group in groups %}
     
     <input type="checkbox" id="{{ group.cn }}" name="{{ group.cn }}" value="On" {% if group.memberOfCurrentUser %}checked{% endif %}>
-    <label for="{{ group.cn }}">{{ group.cn }}</label>
+    <label for="{{ group.cn }}">{% translate group.cn %}</label>
     <br>   
     
     {% endfor %}
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "edit_user" user_information.cn %}"role="button" class="secondary" style="display: block;">Zurück</a>
+            <a href="{% url "edit_user" user_information.cn %}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
-        <input type="submit" value="Mitgliedschaften aktualisieren">
+        <input type="submit" value="{% translate "Update Memberships" %}">
     </div>
 </form>
 
 
-Hinweis: Einige Systemgruppen sind ausgeblendet.
+{% translate "Note: Some system groups are hidden." %}
 
         
 {% endblock %}

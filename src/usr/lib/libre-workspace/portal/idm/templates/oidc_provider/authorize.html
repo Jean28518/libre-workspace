@@ -1,9 +1,10 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>Zugriffsanfrage</h2>
+<h2>{% translate "Access Request" %}</h2>
 
-<p><strong>{{ client.name }}</strong> möchte auf folgende Informationen zugreifen ...</p>
+<p><strong>{{ client.name }}</strong> {% translate "wants to access the following information..." %}</p>
 
 <form method="post" action="{% url 'oidc_provider:authorize' %}">{% csrf_token %}
 
@@ -18,8 +19,8 @@
     
 
     <div class="grid">
-        <input type="submit" value="Ablehnen" class="secondary"/>
-        <input name="allow" type="submit" value="Annehmen" />
+        <input type="submit" value="{% translate "Deny" %}" class="secondary"/>
+        <input name="allow" type="submit" value="{% translate "Accept" %}" />
     </div>
 
 </form>

@@ -1,10 +1,11 @@
 {% extends "lac/base.html" %}
+{% load i18n %}
 {% block content %}
 
-<h2>{{ overview.heading }}</h2>
+<h2>{% translate overview.heading %}</h2>
 
 {% if overview.add_url %}
-<a href="{{ overview.add_url }}" role="button" class="primary">{{ overview.element_name }} hinzufügen</a>
+<a href="{{ overview.add_url }}" role="button" class="primary">{% blocktranslate with name=overview.element_name %}Add {{ name }}{% endblocktranslate %}</a>
 {% endif %}
 
 {% if overview.message and overview.message != "" %}
@@ -25,18 +26,18 @@
 <table>
     <thead>
         <tr>
-        <th scope="col">{{overview.first_t_heading}}</th>
+        <th scope="col">{% translate overview.first_t_heading %}</th>
         {% for t_heading in overview.t_headings %}
-        <th scope="col"><center>{{t_heading}} </center></th>
+        <th scope="col"><center>{% translate t_heading %} </center></th>
         {% endfor %}
         {% if overview.info_url_name %}
-            <th scope="col"><center>Informationen</center></th>
+            <th scope="col"><center>{% translate "Information" %}</center></th>
         {% endif %}
         {% if overview.edit_url_name %}
-            <th scope="col"><center>Bearbeiten</center></th>
+            <th scope="col"><center>{% translate "Edit" %}</center></th>
         {% endif %}
         {% if overview.delete_url_name %}
-            <th scope="col"><center>Löschen</center></th>
+            <th scope="col"><center>{% translate "Delete" %}</center></th>
         {% endif %}
       </tr>
     </thead>
@@ -50,14 +51,14 @@
             {% if t_row.info_url %}
                 <td>
                     <center>
-                        <a href="{{t_row.info_url}}" title="Informationen" role="button" class="secondary outline"><span class="material-icons md-16">info</span></a>
+                        <a href="{{t_row.info_url}}" title="{% translate "Information" %}" role="button" class="secondary outline"><span class="material-icons md-16">info</span></a>
                     </center>
                 </td>
             {% endif %}
             {% if t_row.edit_url %}
                 <td>
                     <center>
-                        <a href="{{t_row.edit_url}}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a>
+                        <a href="{{t_row.edit_url}}" title="{% translate "Edit" %}" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a>
                     </center>
                 </td>
             {% endif %}
@@ -68,7 +69,7 @@
                         data-target="modal-{{t_row.delete_url}}"
                         onClick="toggleModal(event)"
                         style="width: 3.5rem; margin-bottom: 0;"
-                        title="Löschen">
+                        title="{% translate "Delete" %}">
                         <span class="material-icons md-16">delete</span>
                     </button>
                 </center>
@@ -79,14 +80,14 @@
         <dialog id="modal-{{t_row.delete_url}}">
             <article>
                 <a href="#close"
-                aria-label="Close"
+                aria-label="{% translate "Close" %}"
                 class="close"
                 data-target="modal-{{t_row.delete_url}}"
                 onClick="toggleModal(event)">
                 </a>
-                <h3>{{t_row.first_field}} wirklich löschen?</h3>
+                <h3>{% blocktranslate with field=t_row.first_field %}{{ field }} really delete?{% endblocktranslate %}</h3>
                 <p>
-                Dieser Vorgang ist nicht mehr umkehrbar!
+                {% translate "This operation cannot be undone!" %}
                 </p>
                 <footer>
                 <a href="#cancel"
@@ -94,9 +95,9 @@
                     class="secondary"
                     data-target="modal-{{t_row.delete_url}}"
                     onClick="toggleModal(event)">
-                    Abbrechen
+                    {% translate "Cancel" %}
                 </a>
-                <a href="{{t_row.delete_url}}"role="button" class="contrast">LÖSCHEN</a>
+                <a href="{{t_row.delete_url}}"role="button" class="contrast">{% translate "DELETE" %}</a>
                 </footer>
             </article>
         </dialog>

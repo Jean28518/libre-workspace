@@ -6,7 +6,7 @@ import m23software.connector as m23_connector
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from lac import templates
-
+from django.utils.translation import gettext as _
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -33,9 +33,9 @@ def install_client(request):
                 profile=cleaned_form["profile"]
             )
             if response:
-                message = "Client erfolgreich erstellt."
+                message = _("Client successfully created.")
             else:
-                message = "Fehler beim Erstellen des Clients. Bitte überprüfen Sie die Eingaben."
+                message = _("Error creating the client. Please check the inputs.")
     
     network_settings_proposal = m23_connector.get_network_settings_proposal()
     if network_settings_proposal:
@@ -55,11 +55,11 @@ def install_client(request):
 
     return render(request, "lac/create_x.html", {
         "form": form,
-        "heading": "Install Client",
+        "heading": _("Install Client"),
         "hide_buttons_top": "True",
-        "action": "Installieren",
+        "action": _("Install"),
         "url": reverse("m23software.client_list"),
-        "description": "Hier können Sie einen Installationsclient für m23 erstellen. Bitte beachten Sie, dass die Logik zur Erstellung des Clients noch implementiert werden muss."
+        "description": _("Here you can create an installation client for m23. Please note that the client creation logic still needs to be implemented.")
     })
 
 
@@ -73,22 +73,22 @@ def m23_client_list(request):
     m23_clients = m23_connector.get_client_list()
     for client in m23_clients:
         if client["online"]:
-            client["online"] = "🟢"
+            client["online"] = _("🟢")
         else:
-            client["online"] = "🔴"
+            client["online"] = _("🔴")
     overview = templates.process_overview_dict({
         "elements": [{
-            "client_name": "Rechner1",
+            "client_name": _("Computer1"),
             "ip_address": "1.2.3.4",
-            "online": "🟢",
+            "online": _("🟢"),
         } 
         ],
         
-        "t_headings": ["Client Name", "IP Address", "Online"],
+        "t_headings": [_("Client Name"), _("IP Address"), _("Online")],
         "t_keys": ["client_name", "ip_address", "online"],
         "add_url_name": "m23software.install_client",
         "element_url_key": "client_name",
-        "element_name": "Client",
+        "element_name": _("Client"),
         "info_url_name": "m23software.client_detail",
         "delete_url_name": "m23software.client_delete",
     })
@@ -98,13 +98,13 @@ def m23_client_list(request):
 
 def m23_client_detail(request, client_name):
     return render(request, "lac/message.html", {
-        "message": f"Details for client {client_name} are not yet implemented.",
+        "message": _("Details for client %(client_name)s are not yet implemented.") % {"client_name": client_name},
         "url": "m23software.client_list"
     })
 
 
 def m23_client_delete(request, client_name):
     return render(request, "lac/message.html", {
-        "message": f"Delete functionality for client {client_name} is not yet implemented.",
+        "message": _("Delete functionality for client %(client_name)s is not yet implemented.") % {"client_name": client_name},
         "url": "m23software.client_list"
     })
