@@ -1,4 +1,3 @@
-# Called from root crontab every minute
 import os
 import unix_config # (its in the same directory)
 import time
@@ -14,7 +13,7 @@ if os.geteuid() != 0:
 
 print("Running libre workspace service...")
 
-# Let us get the environment of /etc/libre-workspace/libre-workspace.env
+# Let's get the environment of /etc/libre-workspace/libre-workspace.env
 env_file_path = "/etc/libre-workspace/libre-workspace.env"
 env = {}
 lines = open(env_file_path).readlines()
@@ -28,7 +27,7 @@ for line in lines:
     env[key] = value
 
 def ensure_fingerprint_is_trusted():
-    ## Ensure trusted ssh fingerprints are available
+    ## Ensure trusted SSH fingerprints are available
     # Fingerprint is located in trusted_fingerprints file
     # If the fingerprints are not in the /root/.ssh/known_hosts file, add them
     if not os.path.isfile("/root/.ssh/known_hosts"):
@@ -69,7 +68,7 @@ def ensure_linux_arbeitsplatz_package_is_removed():
 
 
 def check_caddy_running_and_rescue():
-    # Check if caddy is running. If caddy is not running, try to load the backup if a backup exists and the backup is not older than 3 hours.
+    # Check if Caddy is running. If Caddy is not running, try to load the backup if a backup exists and the backup is not older than 3 hours.
     if not utils.is_caddy_running():
         print("Caddy is not running. Trying to load backup...")
         # Check if the backup file exists
@@ -82,7 +81,7 @@ def check_caddy_running_and_rescue():
                 # If the backup file is not older than 3 hours, copy it to the Caddyfile
                 print("Backup file found and is not older than 3 hours. Restoring backup...")
                 os.system(f"cp {backup_file} /etc/caddy/Caddyfile")
-                # Restart caddy
+                # Restart Caddy
                 os.system("systemctl restart caddy")
 
 
@@ -122,9 +121,9 @@ while True:
 
     lw_admin_token = get_lw_admin_token()
     if lw_admin_token == "":
-        print("No local admin token. Cant send emails.")
+        print("No local admin token. Can't send emails.")
 
-    # Check if caddy is running. If not try to get the backup of the caddyfile entry.
+    # Check if Caddy is running. If not try to get the backup of the Caddyfile entry.
     check_caddy_running_and_rescue()
 
     ## BACKUP ######################################################################################################
@@ -148,7 +147,7 @@ while True:
             if read_errors.strip() != "":
                 # Full path of the log file:
                 log_file = os.path.abspath(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log")
-                os.system(f"curl -X POST -F 'subject=💾❌ Backup mit Fehlern abgeschlossen❌' -F 'message=Das heutige Backup war nicht vollständig erfolgreich.\nIm Anhang finden Sie die Fehlermeldungen.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+                os.system(f"curl -X POST -F 'subject=💾❌ Backup completed with errors❌' -F 'message=Today's backup was not fully successful.\nAttached you will find the error messages.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## SYSTEM UPDATE ################################################################################################
 
@@ -168,7 +167,7 @@ while True:
     
     ## RUN PATCHES ###################################################################################################
 
-    # We run patches at the defined backup time (after the backups of course). It this is not defined, then we take 02:00 as default
+    # We run patches at the defined backup time (after the backups of course). If this is not defined, then we take 02:00 as default
     # We check if we had run the patches today already by checking the history folder (DATE-patch.log)
     patch_time = unix_config.get_value("BORG_BACKUP_TIME", "02:00")
     patch_log_path = f"/var/lib/libre-workspace/portal/history/patch-{current_date}.log"
@@ -192,7 +191,7 @@ while True:
 
         possible_module_or_addon_folders = possible_modules + possible_addons
 
-        # In this state also some other folders are in the list, so we need to filter all folders out wich don't have a patches folder
+        # In this state also some other folders are in the list, so we need to filter all folders out which don't have a patches folder
         possible_module_or_addon_folders = [folder for folder in possible_module_or_addon_folders if os.path.isdir(folder+"/patches")]
       
 
@@ -289,12 +288,12 @@ while True:
     if utils.get_cpu_usage(five_min=True) >  int(unix_config.get_value("CPU_WARNING_THRESHOLD", 80)):
         if not "cpu" in last_message_sent or time.time() - last_message_sent["cpu"] > 3600:
             last_message_sent["cpu"] = time.time()
-            os.system(f"curl -X POST -F 'subject=🖥️📈 CPU-Auslastung hoch📈' -F 'message=Die CPU-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+            os.system(f"curl -X POST -F 'subject=🖥️📈 High CPU Usage📈' -F 'message=The CPU usage of the server is too high. Please check the server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     if utils.get_ram_usage()["ram_percent"] > int(unix_config.get_value("RAM_WARNING_THRESHOLD", 80)):
         if not "ram" in last_message_sent or time.time() - last_message_sent["ram"] > 3600:
             last_message_sent["ram"] = time.time()
-        os.system(f"curl -X POST -F 'subject=💾📈 RAM-Auslastung hoch📈' -F 'message=Die RAM-Auslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+        os.system(f"curl -X POST -F 'subject=💾📈 High RAM Usage📈' -F 'message=The RAM usage of the server is too high. Please check the server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## CHECK EVERY DOMAIN IN CADDY CONFIG IF THE SPECIFIED SERVICE IS STILL WORKING ##################################
 
@@ -316,13 +315,13 @@ while True:
                         last_message_sent[domain] = time.time()
                         with open(f"/tmp/{domain}_response.txt", "w") as f:
                             f.write(response.text)
-                        os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+                        os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} not reachable❌' -F 'message=The domain {domain} is not reachable. Please check the server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
             except requests.exceptions.RequestException as e:
                 if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                     last_message_sent[domain] = time.time()
                     with open(f"/tmp/{domain}_response.txt", "w") as f:
                         f.write(str(e))
-                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} nicht erreichbar❌' -F 'message=Die Domain {domain} ist nicht erreichbar. Bitte überprüfen Sie den Server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+                    os.system(f"curl -X POST -F 'subject=🌐❌ Domain {domain} not reachable❌' -F 'message=The domain {domain} is not reachable. Please check the server.' -F 'attachment_path=/tmp/{domain}_response.txt' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
     
     
     ##################################################################################################################
@@ -337,7 +336,7 @@ while True:
     disks = utils.get_disks_stats()
     for disk in disks:
         if int(disk["used_percent"]) > int(unix_config.get_value("DISK_WARNING_THRESHOLD", 90)):
-            os.system(f"curl -X POST -F 'subject=💿📈 Festplattenauslastung hoch📈' -F 'message=Die Festplattenauslastung des Servers ist zu hoch. Bitte überprüfen Sie den Server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+            os.system(f"curl -X POST -F 'subject=💿📈 High Disk Usage📈' -F 'message=The disk usage of the server is too high. Please check the server.' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## Get list of upgradable packages
     os.system("apt list --upgradable > /var/lib/libre-workspace/portal/upgradable_packages")
@@ -349,4 +348,3 @@ while True:
         os.system("ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N ''")
     os.system("cp /root/.ssh/id_rsa.pub /var/lib/libre-workspace/portal/")
     os.system("chmod 440 /var/lib/libre-workspace/portal/id_rsa.pub")
-    
