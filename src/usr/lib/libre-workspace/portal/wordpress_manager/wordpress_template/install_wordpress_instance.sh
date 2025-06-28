@@ -120,30 +120,3 @@ docker-compose -f "$INSTANCE_PATH/docker-compose.yml" up -d
 #   --admin_email="$ADMIN_EMAIL_ADDRESS" \
 #   --locale="$LOCALE" \
 #   --skip-email
-
-
-# # Remove plugins:
-# rm -rf /root/wordpress/html/wp-content/plugins/hello.php
-# rm -rf /root/wordpress/html/wp-content/plugins/akismet
-# # Remove old themes:
-# rm -rf /root/wordpress/html/wp-content/themes/twentytwenty
-# rm -rf /root/wordpress/html/wp-content/themes/twentytwentyone
-# rm -rf /root/wordpress/html/wp-content/themes/twentytwentytwo
-# rm -rf /root/wordpress/html/wp-content/themes/twentytwentythree
-# rm -rf /root/wordpress/html/wp-content/themes/twentytwentyfour
-
-
-
-
-# # Enable auto updates for the litespeed cache plugin, themes, translations and core
-# run_wp_cli plugin auto-updates enable --all
-# run_wp_cli theme auto-updates enable --all
-
-
-
-
-# # Change some php values for better upload and memory handling
-# echo "php_value upload_max_filesize 512M
-# php_value post_max_size 512M
-# php_value memory_limit 1024M
-# " >> $INSTANCE_PATH/html/.htaccess
