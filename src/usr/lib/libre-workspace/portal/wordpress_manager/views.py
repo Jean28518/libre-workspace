@@ -98,7 +98,7 @@ def wordpress_instance_view(request, entry_id):
         "form": form,
         "url": reverse("wordpress_sites"),
         "hide_buttons_top": True,
-        "description": f"If you set up your wordpress instance and can login to it. Then you can start here the recommended optimization:<br><br><div class='grid'><a href='{optimization_url}' target='_blank' role='button'>WordPress Optimization</a></div>",
+        "description": f"If you set up your wordpress instance and can login to it, you can start here the recommended optimization:<br><br><div class='grid'><a href='{optimization_url}' target='_blank' role='button'>WordPress Optimization</a></div>",
     })
 
 
