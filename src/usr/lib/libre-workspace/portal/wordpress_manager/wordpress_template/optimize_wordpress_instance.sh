@@ -19,20 +19,20 @@ if [ -z "$DOMAIN" ]; then
 fi
 
 # Remove plugins:
-rm -rf /root/wordpress/html/wp-content/plugins/hello.php
-rm -rf /root/wordpress/html/wp-content/plugins/akismet
+rm -rf  $INSTANCE_PATH/html/wp-content/plugins/hello.php
+rm -rf  $INSTANCE_PATH/html/wp-content/plugins/akismet
 # Remove old themes:
-rm -rf /root/wordpress/html/wp-content/themes/twentytwenty
-rm -rf /root/wordpress/html/wp-content/themes/twentytwentyone
-rm -rf /root/wordpress/html/wp-content/themes/twentytwentytwo
-rm -rf /root/wordpress/html/wp-content/themes/twentytwentythree
-rm -rf /root/wordpress/html/wp-content/themes/twentytwentyfour
+rm -rf  $INSTANCE_PATH/html/wp-content/themes/twentytwenty
+rm -rf  $INSTANCE_PATH/html/wp-content/themes/twentytwentyone
+rm -rf  $INSTANCE_PATH/html/wp-content/themes/twentytwentytwo
+rm -rf  $INSTANCE_PATH/html/wp-content/themes/twentytwentythree
+rm -rf  $INSTANCE_PATH/html/wp-content/themes/twentytwentyfour
 
 DOCKER_CONTAINER_NAME=$(echo "$DOMAIN" | sed 's/[^a-zA-Z0-9]//g' | tr '[:upper:]' '[:lower:]')
 DOCKER_CONTAINER_NAME="${DOCKER_CONTAINER_NAME}_wordpress_1"
 
 run_wp_cli() {
-  docker run -it --rm --volumes-from $DOCKER_CONTAINER_NAME \
+  docker run --rm --volumes-from $DOCKER_CONTAINER_NAME \
     --network container:$DOCKER_CONTAINER_NAME \
     -e WORDPRESS_DB_USER=wordpress \
     -e WORDPRESS_DB_PASSWORD=$DB_PASSWORD \
@@ -65,4 +65,4 @@ else
     echo "PHP values already set in .htaccess, skipping..."
 fi
 
-
+docker-compose -f "$INSTANCE_PATH/docker-compose.yml" restart
