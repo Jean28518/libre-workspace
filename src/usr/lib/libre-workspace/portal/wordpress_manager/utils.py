@@ -53,7 +53,7 @@ def delete_wordpress_instance(entry_id):
     )
 
     # Remove the app card entry from the dashboard
-    if not domain:
+    if domain:
         DashboardEntry.objects.filter(link=f"https://{domain}").delete()  # Remove the dashboard entry
 
 
