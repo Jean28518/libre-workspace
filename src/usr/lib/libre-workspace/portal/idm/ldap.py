@@ -391,9 +391,6 @@ def ldap_get_all_linux_users_with_passwords():
     if not settings.AUTH_LDAP_ENABLED:
         return []
 
-    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
-    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
-
     all_users = ldap_get_all_users()
 
     # ldbsearch -H /var/lib/samba/private/sam.ldb   "(&(objectClass=user))" unicodePwd
@@ -425,6 +422,8 @@ def ldap_get_all_linux_users_with_passwords():
             for user in all_users:
                 if user["cn"] == username:
                     user["password"] = password
+                    users.append(user)
+                    break
 
         last_line = line
            
