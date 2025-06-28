@@ -244,7 +244,7 @@ def create_reverse_proxy(name, domain, port=None, internal_https=False, target_u
         description=f"",
         link=f"https://{domain}",
         icon_url="",
-        is_system=True,
+        is_system=False,
         order=8,  # Default order, can be adjusted later
     )
     if wordpress_logo:

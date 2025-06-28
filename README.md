@@ -56,12 +56,17 @@ Your default account is called "Administrator".
 ```bash
 # Make sure on your dev machine no actual libre workspace component is installed.
 # Start from this directory
-sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev
+sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev docker caddy
+sudo usermod -aG docker $USER
+sudo usermod -aG www-data $USER
+# (Reboot your computer to apply the user group changes)
 sudo mkdir -p /var/www/libre-workspace-static
 sudo chown -R $USER:$USER /var/www/libre-workspace-static
 sudo ln -s $PWD/src/etc/libre-workspace/ /etc/libre-workspace
 sudo ln -s $PWD/src/usr/lib/libre-workspace /usr/lib/libre-workspace
 sudo ln -s $PWD/src/var/lib/libre-workspace/ /var/lib/libre-workspace
+sudo mkdir -p /var/www/libre-workspace-wordpress
+sudo chown -R $USER:$USER /var/www/libre-workspace-wordpress
 
 cd /var/lib/libre-workspace/portal
 python3 -m venv venv
@@ -83,6 +88,7 @@ sudo rm -rf /var/www/libre-workspace-static
 sudo rm /etc/libre-workspace
 sudo rm /usr/lib/libre-workspace
 sudo rm /var/lib/libre-workspace
+sudo rm -rf /var/www/libre-workspace-wordpress
 ```
 
 ### Start a new django app

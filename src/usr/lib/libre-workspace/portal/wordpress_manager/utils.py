@@ -8,13 +8,13 @@ import caddy_configuration.utils
 
 def get_all_wordpress_sites():
     """Fetches all WordPress sites from the database."""
-    os.system("mkdir -p /var/www/libreworkspace-wordpress/")
-    # Get all subdirectories in /var/www/libreworkspace-wordpress/
-    entries = os.listdir("/var/www/libreworkspace-wordpress/")
+    os.system("mkdir -p /var/www/libre-workspace-wordpress/")
+    # Get all subdirectories in /var/www/libre-workspace-wordpress/
+    entries = os.listdir("/var/www/libre-workspace-wordpress/")
     # Have a look to every subdirectory and check if a lw_config.json file exists
     sites = []
     for entry in entries:
-        entry_path = os.path.join("/var/www/libreworkspace-wordpress/", entry)
+        entry_path = os.path.join("/var/www/libre-workspace-wordpress/", entry)
         if os.path.isdir(entry_path):
             config_file = os.path.join(entry_path, "lw_config.json")
             if os.path.isfile(config_file):
@@ -42,7 +42,7 @@ def delete_wordpress_instance(entry_id):
     domain = site.get("domain")
     subprocess.Popen(f'bash -c "sleep 4; libre-workspace-remove-webserver-entry {domain}"', shell=True)
 
-    instance_dir = f"/var/www/libreworkspace-wordpress/{entry_id}"
+    instance_dir = f"/var/www/libre-workspace-wordpress/{entry_id}"
     if not os.path.exists(instance_dir):
         print(f"Instance directory {instance_dir} does not exist. Cannot delete.")
         return
@@ -72,7 +72,7 @@ def create_wordpress_instance(name, domain):
     random_db_root_password = subprocess.getoutput("openssl rand -base64 12")
 
     # Create the directory for the WordPress instance
-    instance_dir = f"/var/www/libreworkspace-wordpress/{domain}"
+    instance_dir = f"/var/www/libre-workspace-wordpress/{domain}"
     os.makedirs(instance_dir, exist_ok=True)
 
     # Preapare all the files:
