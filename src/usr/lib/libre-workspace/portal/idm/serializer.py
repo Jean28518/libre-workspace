@@ -39,3 +39,22 @@ class GroupSerializer(serializers.Serializer):
         representation['default'] = instance.get('defaultGroup', False)
         return representation
 
+
+class LinuxUserSerializer(serializers.Serializer):
+    """
+    Serializer for Linux user data.
+    """
+    dn = serializers.CharField(max_length=255, required=False, allow_blank=True)
+    display_name = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    mail = serializers.EmailField(max_length=100, required=False, allow_blank=True)
+    cn = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    groups = serializers.ListField(child=serializers.CharField(), required=False, default=[])
+    guid = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    enabled = serializers.BooleanField(required=False, default=True)
+    admin = serializers.BooleanField(required=False, default=False)
+    password = serializers.CharField(max_length=100, required=False, allow_blank=True)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['display_name'] = instance.get('displayName', '')
+        return representation

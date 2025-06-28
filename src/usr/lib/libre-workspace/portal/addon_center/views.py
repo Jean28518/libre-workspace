@@ -11,6 +11,7 @@ from .serializers import AddonSerializer
 from rest_framework.decorators import action
 from rest_framework.renderers import JSONRenderer
 from django.utils.translation import gettext as _
+from idm.api_permissions import AdministratorPermission
 
 
 
@@ -61,7 +62,7 @@ def addon_center_uninstall_addon(request, addon_id):
 
 
 class AddonViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AdministratorPermission]
 
     def list(self, request):
         all_available_addons = get_all_available_addons()

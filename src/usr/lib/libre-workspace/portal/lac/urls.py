@@ -23,7 +23,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 
 from addon_center.views import AddonViewSet
-from idm.views import UserViewSet, GroupViewSet
+from idm.views import UserViewSet, GroupViewSet, LinuxUserViewSet
 
 api_router = routers.DefaultRouter()
 
@@ -31,6 +31,7 @@ api_router = routers.DefaultRouter()
 api_router.register(r'addons', AddonViewSet, basename='addons')
 api_router.register(r'users', UserViewSet, basename='users')
 api_router.register(r'groups', GroupViewSet, basename='groups')
+api_router.register(r'linux_users', LinuxUserViewSet, basename='linux_users')  # Assuming UserViewSet handles Linux users
 
 
 urlpatterns = [

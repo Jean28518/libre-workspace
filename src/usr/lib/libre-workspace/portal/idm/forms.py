@@ -81,3 +81,8 @@ class TOTPChallengeForm(forms.Form):
 class ApiKeyForm(forms.Form):
     name = forms.CharField(label=_("Name"), max_length=100)
     expiration_date = forms.DateField(label=_("Expiration date"), required=False, help_text=_("Optional. If not set, the key never expires."))
+    permissions = forms.SelectMultiple(
+        choices=[
+            ("linux_client", _("Linux Client Access")),
+            ("administrator", _("Administrator Access")),
+        ])

@@ -10,8 +10,9 @@ from django.utils import translation
 
 import idm.idm
 
+from idm.api_permissions import LinuxClientPermission, AdministratorPermission
 from .forms import BasicUserForm, PasswordForm, PasswordResetForm, AdministratorUserForm, AdministratorUserEditForm, GroupCreateForm, GroupEditForm, OIDCClientForm, TOTPChallengeForm, ApiKeyForm
-from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn, ldap_enable_user, ldap_disable_user
+from .ldap import get_user_information_of_cn, is_ldap_user_password_correct, set_ldap_user_new_password, ldap_get_all_users, ldap_create_user, ldap_update_user, ldap_delete_user, ldap_get_all_groups, ldap_create_group, ldap_update_group, ldap_get_group_information_of_cn, ldap_delete_group, is_user_in_group, ldap_remove_user_from_group, ldap_add_user_to_group, get_user_dn_by_email, ldap_get_cn_of_dn, ldap_enable_user, ldap_disable_user, ldap_get_all_linux_users_with_passwords
 from .idm import reset_password_for_email, get_user_information, set_user_new_password, is_user_password_correct, generate_random_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -30,7 +31,7 @@ import random
 import datetime
 from .oidc_provider_settings import add_oidc_provider_client
 from .models import ApiKey
-from .serializer import UserSerializer, GroupSerializer
+from .serializer import UserSerializer, GroupSerializer, LinuxUserSerializer
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
@@ -646,6 +647,7 @@ def create_api_key(request):
             api_key.name = form.cleaned_data["name"]
             api_key.key = generate_random_password(length=64, alphanumeric_only=True)  # Generate a random key
             api_key.expiration_date = form.cleaned_data["expiration_date"]
+            api_key.permissions = form.cleaned_data["permissions"]
             api_key.save()
             return redirect(api_key_overview)
     form.fields["expiration_date"].initial = datetime.datetime.now() + datetime.timedelta(days=365)  # Default to 1 year
@@ -667,6 +669,7 @@ def edit_api_key(request, id):
         if form.is_valid():
             api_key.name = form.cleaned_data["name"]
             api_key.expiration_date = form.cleaned_data["expiration_date"]
+            api_key.permissions = form.cleaned_data["permissions"]
             api_key.save()
             return redirect(api_key_overview)
     return render(request, "lac/edit_x.html", {"form": form, "id": id, "url": reverse("api_key_overview")})
@@ -693,7 +696,7 @@ def api_key_details(request, id):
 
 
 class UserViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AdministratorPermission]
 
     def list(self, request):
         """
@@ -824,7 +827,7 @@ class UserViewSet(viewsets.ViewSet):
 
 
 class GroupViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AdministratorPermission]
 
     def list(self, request):
         """
@@ -894,3 +897,19 @@ class GroupViewSet(viewsets.ViewSet):
         return HttpResponse(_("Group %(pk)s has been successfully deleted.") % {"pk": pk}, status=200)
     
 
+class LinuxUserViewSet(viewsets.ViewSet):
+    permission_classes = [LinuxClientPermission]
+
+    def list(self, request):
+        """
+        Returns a list of all Linux users with their uid, password, and other relevant information.
+        """
+        all_users = ldap_get_all_linux_users_with_passwords()
+        print(all_users)
+        
+        serializer = LinuxUserSerializer(all_users, many=True)
+        return HttpResponse(JSONRenderer().render(serializer.data), content_type="application/json")
+
+
+        
+        
