@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 15:35+0100\n"
+"POT-Creation-Date: 2025-06-28 16:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -429,7 +429,7 @@ msgstr ""
 
 #: caddy_configuration/forms.py:5 caddy_configuration/forms.py:10
 #: caddy_configuration/views.py:21 idm/forms.py:59 idm/forms.py:81
-#: idm/views.py:152 idm/views.py:529 idm/views.py:600
+#: idm/views.py:152 idm/views.py:548 idm/views.py:619
 #: unix/templates/unix/system_dashboard.html:6 unix/views.py:506
 #: wordpress_manager/forms.py:5 wordpress_manager/views.py:32
 msgid "Name"
@@ -628,7 +628,7 @@ msgid "Repeat new password"
 msgstr ""
 
 #: idm/forms.py:27 idm/templates/idm/login.html:11
-#: welcome/templates/welcome/welcome_start.html:13
+#: welcome/templates/welcome/welcome_password.html:12
 msgid "Password"
 msgstr ""
 
@@ -761,41 +761,41 @@ msgid ""
 "%(error)s"
 msgstr ""
 
-#: idm/ldap.py:105
+#: idm/ldap.py:106
 #, python-format
 msgid ""
 "User '%(cn)s' is a system user. For technical reasons, the password cannot "
 "be changed. The master password can be changed under System Configuration."
 msgstr ""
 
-#: idm/ldap.py:115 idm/ldap.py:170 idm/ldap.py:304 idm/ldap.py:328
-#: idm/ldap.py:407 idm/ldap.py:437 idm/ldap.py:479 idm/ldap.py:490
-#: idm/ldap.py:500 idm/ldap.py:517 idm/ldap.py:531
+#: idm/ldap.py:116 idm/ldap.py:171 idm/ldap.py:306 idm/ldap.py:330
+#: idm/ldap.py:409 idm/ldap.py:439 idm/ldap.py:481 idm/ldap.py:492
+#: idm/ldap.py:502 idm/ldap.py:519 idm/ldap.py:533
 #, python-format
 msgid "Error: %(error)s"
 msgstr ""
 
-#: idm/ldap.py:141
+#: idm/ldap.py:142
 msgid ""
 "Error: The username may only contain lowercase letters, numbers, dots and "
 "hyphens."
 msgstr ""
 
-#: idm/ldap.py:194
+#: idm/ldap.py:195
 #, python-format
 msgid "User '%(cn)s' was not found."
 msgstr ""
 
-#: idm/ldap.py:385
+#: idm/ldap.py:387
 msgid "The group name must not contain spaces."
 msgstr ""
 
-#: idm/ldap.py:387
+#: idm/ldap.py:389
 msgid ""
 "The group name may only contain lowercase letters, numbers, dots and hyphens."
 msgstr ""
 
-#: idm/ldap.py:513
+#: idm/ldap.py:515
 msgid "Error: User is a system user and cannot be disabled."
 msgstr ""
 
@@ -992,7 +992,7 @@ msgstr ""
 #: idm/templates/idm/change_password.html:5
 #: idm/templates/idm/change_password.html:16
 #: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
-#: lac/templates/lac/base.html:251
+#: lac/templates/lac/base.html:265
 msgid "Change Password"
 msgstr ""
 
@@ -1033,7 +1033,7 @@ msgid "Cloud Desktop Settings"
 msgstr ""
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:139 lac/templates/lac/base.html:263
+#: idm/views.py:139 lac/templates/lac/base.html:277
 msgid "Login"
 msgstr ""
 
@@ -1055,7 +1055,7 @@ msgid "User Settings"
 msgstr ""
 
 #: idm/templates/idm/user_settings.html:12 idm/views.py:139 idm/views.py:148
-#: lac/templates/lac/base.html:253
+#: lac/templates/lac/base.html:267
 msgid "2-Factor Authentication"
 msgstr ""
 
@@ -1164,151 +1164,155 @@ msgstr ""
 msgid "Libre Workspace: %(base_url)s - %(username)s"
 msgstr ""
 
-#: idm/views.py:227
+#: idm/views.py:224
+msgid "The selected language is not supported!"
+msgstr ""
+
+#: idm/views.py:246
 msgid "You are not authorized to delete this device!"
 msgstr ""
 
-#: idm/views.py:276
+#: idm/views.py:295
 msgid "Changes saved successfully!"
 msgstr ""
 
-#: idm/views.py:292
+#: idm/views.py:311
 msgid ""
 "If the email address exists in our system, an email with a password reset "
 "link has been sent."
 msgstr ""
 
-#: idm/views.py:294
+#: idm/views.py:313
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: idm/views.py:310
+#: idm/views.py:329
 msgid "The password has been successfully changed!"
 msgstr ""
 
-#: idm/views.py:312
+#: idm/views.py:331
 msgid "The old password is not correct!"
 msgstr ""
 
-#: idm/views.py:314
+#: idm/views.py:333
 msgid "The new passwords do not match!"
 msgstr ""
 
-#: idm/views.py:324
+#: idm/views.py:343
 #, python-format
 msgid "2-Factor Authentication for %(username)s successfully reset!"
 msgstr ""
 
-#: idm/views.py:346
+#: idm/views.py:365
 #, python-format
 msgid "User '%(username)s' successfully created!"
 msgstr ""
 
-#: idm/views.py:350 idm/views.py:413
+#: idm/views.py:369 idm/views.py:432
 msgid "Form is not valid"
 msgstr ""
 
-#: idm/views.py:354
+#: idm/views.py:373
 msgid "User"
 msgstr ""
 
-#: idm/views.py:371
+#: idm/views.py:390
 msgid "Password successfully changed!"
 msgstr ""
 
-#: idm/views.py:375 idm/views.py:438
+#: idm/views.py:394 idm/views.py:457
 msgid "Changes successfully saved!"
 msgstr ""
 
-#: idm/views.py:411
+#: idm/views.py:430
 #, python-format
 msgid "Group '%(cn)s' successfully created!"
 msgstr ""
 
-#: idm/views.py:436
+#: idm/views.py:455
 msgid ""
 "Nextcloud group folder will not be deleted (may contain important data), "
 "please delete manually in the Nextcloud admin interface."
 msgstr ""
 
-#: idm/views.py:464
+#: idm/views.py:483
 #, python-format
 msgid "Add user %(user_cn)s to group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:469
+#: idm/views.py:488
 #, python-format
 msgid "Remove user %(user_cn)s from group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:473 idm/views.py:516
+#: idm/views.py:492 idm/views.py:535
 msgid "Memberships successfully updated!"
 msgstr ""
 
-#: idm/views.py:507
+#: idm/views.py:526
 #, python-format
 msgid "Add user %(cn)s to group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:512
+#: idm/views.py:531
 #, python-format
 msgid "Remove user %(cn)s from group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:525
+#: idm/views.py:544
 msgid "OIDC Clients"
 msgstr ""
 
-#: idm/views.py:526
+#: idm/views.py:545
 msgid "OIDC Client"
 msgstr ""
 
-#: idm/views.py:534
+#: idm/views.py:553
 #, python-format
 msgid ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
 "a>"
 msgstr ""
 
-#: idm/views.py:596 lac/templates/lac/base.html:252
+#: idm/views.py:615 lac/templates/lac/base.html:266
 msgid "API Keys"
 msgstr ""
 
-#: idm/views.py:597
+#: idm/views.py:616
 msgid "API Key"
 msgstr ""
 
-#: idm/views.py:600
+#: idm/views.py:619
 msgid "Created At"
 msgstr ""
 
-#: idm/views.py:600
+#: idm/views.py:619
 msgid "Last Used At"
 msgstr ""
 
-#: idm/views.py:600
+#: idm/views.py:619
 msgid "Expiration Date"
 msgstr ""
 
-#: idm/views.py:606
+#: idm/views.py:625
 msgid ""
 "You can view all API endpoints <a href='/api/schema/swagger-ui/' "
 "target='_blank'>here</a>."
 msgstr ""
 
-#: idm/views.py:632
+#: idm/views.py:651
 msgid "You are not authorized to edit this API key!"
 msgstr ""
 
-#: idm/views.py:652
+#: idm/views.py:671
 msgid "You are not authorized to delete this API key!"
 msgstr ""
 
-#: idm/views.py:662
+#: idm/views.py:681
 msgid "You are not authorized to view these API key details!"
 msgstr ""
 
-#: idm/views.py:664
+#: idm/views.py:683
 #, python-format
 msgid ""
 "API Key Details:<br>Name: %(name)s<br>Key: %(key)s<br>Created At: "
@@ -1316,102 +1320,102 @@ msgid ""
 "%(expiration_date)s"
 msgstr ""
 
-#: idm/views.py:696
+#: idm/views.py:715
 #, python-format
 msgid "Failed to enable user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:697
+#: idm/views.py:716
 #, python-format
 msgid "User %(pk)s has been successfully enabled."
 msgstr ""
 
-#: idm/views.py:706
+#: idm/views.py:725
 #, python-format
 msgid "Failed to disable user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:707
+#: idm/views.py:726
 #, python-format
 msgid "User %(pk)s has been successfully disabled."
 msgstr ""
 
-#: idm/views.py:717
+#: idm/views.py:736
 #, python-format
 msgid "Failed to reset 2FA for user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:718
+#: idm/views.py:737
 #, python-format
 msgid "2FA for user %(pk)s has been successfully reset."
 msgstr ""
 
-#: idm/views.py:730
+#: idm/views.py:749
 #, python-format
 msgid "Setting new password for user %(pk)s: %(new_password)s"
 msgstr ""
 
-#: idm/views.py:735
+#: idm/views.py:754
 #, python-format
 msgid "Password for user %(pk)s has been successfully changed."
 msgstr ""
 
-#: idm/views.py:738
+#: idm/views.py:757
 msgid "Password too short."
 msgstr ""
 
-#: idm/views.py:746
+#: idm/views.py:765
 #, python-format
 msgid "Failed to delete user %(pk)s: %(msg)s"
 msgstr ""
 
-#: idm/views.py:747
+#: idm/views.py:766
 #, python-format
 msgid "Failed to delete user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:749
+#: idm/views.py:768
 #, python-format
 msgid "User %(pk)s has been successfully deleted."
 msgstr ""
 
-#: idm/views.py:773
+#: idm/views.py:792
 #, python-format
 msgid "User %(pk)s has been successfully updated."
 msgstr ""
 
-#: idm/views.py:795
+#: idm/views.py:814
 #, python-format
 msgid "User %(username)s has been successfully created."
 msgstr ""
 
-#: idm/views.py:838
+#: idm/views.py:857
 #, python-format
 msgid "Group %(cn)s has been successfully created."
 msgstr ""
 
-#: idm/views.py:858
+#: idm/views.py:877
 #, python-format
 msgid "Group %(pk)s has been successfully updated."
 msgstr ""
 
-#: idm/views.py:866
+#: idm/views.py:885
 #, python-format
 msgid "Failed to delete group. %(msg)s"
 msgstr ""
 
-#: idm/views.py:867
+#: idm/views.py:886
 #, python-format
 msgid "Group %(pk)s has been successfully deleted."
 msgstr ""
 
-#: lac/settings.py:227
+#: lac/settings.py:227 lac/templates/lac/base.html:253
 msgid "language.en"
-msgstr ""
+msgstr "English"
 
-#: lac/settings.py:228
+#: lac/settings.py:228 lac/templates/lac/base.html:254
 msgid "language.de"
-msgstr ""
+msgstr "German"
 
 #: lac/templates/lac/base.html:11 lac/templates/lac/base.html:219
 msgid "Libre-Workspace Portal"
@@ -1425,23 +1429,23 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
-#: lac/templates/lac/base.html:237
+#: lac/templates/lac/base.html:239
 msgid "Documentation"
 msgstr ""
 
-#: lac/templates/lac/base.html:238
+#: lac/templates/lac/base.html:240
 msgid "Forum"
 msgstr ""
 
-#: lac/templates/lac/base.html:239
+#: lac/templates/lac/base.html:241
 msgid "Paid Support"
 msgstr ""
 
-#: lac/templates/lac/base.html:240
+#: lac/templates/lac/base.html:242
 msgid "Download System Information"
 msgstr ""
 
-#: lac/templates/lac/base.html:254
+#: lac/templates/lac/base.html:268
 msgid "Log Out"
 msgstr ""
 
@@ -1470,8 +1474,8 @@ msgstr ""
 #: lac/templates/lac/message.html:13
 #: welcome/templates/welcome/libreworkspace_lite.html:48
 #: welcome/templates/welcome/welcome_dns_settings.html:52
+#: welcome/templates/welcome/welcome_password.html:18
 #: welcome/templates/welcome/welcome_select_apps.html:63
-#: welcome/templates/welcome/welcome_start.html:19
 msgid "Continue"
 msgstr ""
 
@@ -3039,6 +3043,10 @@ msgid ""
 "the future when changing other user parameters for security reasons."
 msgstr ""
 
+#: welcome/forms.py:8
+msgid "Select Language"
+msgstr ""
+
 #: welcome/templates/welcome/access.html:5
 msgid "You can reach Libre Workspace Lite after installation at"
 msgstr ""
@@ -3449,6 +3457,20 @@ msgstr ""
 msgid "This is the easiest way to access Libre-Workspace in later use."
 msgstr ""
 
+#: welcome/templates/welcome/welcome_password.html:5
+msgid "Master Password"
+msgstr ""
+
+#: welcome/templates/welcome/welcome_password.html:7
+msgid ""
+"The password must be at least 8 characters long and contain special "
+"characters, numbers, and letters."
+msgstr ""
+
+#: welcome/templates/welcome/welcome_password.html:15
+msgid "Repeat password"
+msgstr ""
+
 #: welcome/templates/welcome/welcome_select_apps.html:5
 msgid "Modules"
 msgstr ""
@@ -3502,20 +3524,14 @@ msgstr ""
 msgid "Welcome!"
 msgstr ""
 
-#: welcome/templates/welcome/welcome_start.html:7
-msgid ""
-"On the following pages, we will set up Libre-Workspace together. Please "
-"start by defining a secure master password."
-msgstr ""
-
 #: welcome/templates/welcome/welcome_start.html:8
 msgid ""
-"The password must be at least 8 characters long and contain special "
-"characters, numbers, and letters."
+"On the following pages, we will set up Libre-Workspace together. Please "
+"start by selecting your language."
 msgstr ""
 
-#: welcome/templates/welcome/welcome_start.html:16
-msgid "Repeat password"
+#: welcome/templates/welcome/welcome_start.html:18
+msgid "Next"
 msgstr ""
 
 #: welcome/templates/welcome/welcome_start.html:22
@@ -3526,32 +3542,32 @@ msgstr ""
 msgid "You can also perform the setup from another device:"
 msgstr ""
 
-#: welcome/views.py:25
+#: welcome/views.py:50
 msgid "Passwords do not match. Please try again."
 msgstr ""
 
-#: welcome/views.py:61 welcome/views.py:97
+#: welcome/views.py:84 welcome/views.py:120
 msgid "Please provide a domain."
 msgstr ""
 
-#: welcome/views.py:99
+#: welcome/views.py:122
 msgid "Please ensure you only provide the domain and no subdomain."
 msgstr ""
 
-#: welcome/views.py:101
+#: welcome/views.py:124
 msgid "Please provide a valid domain."
 msgstr ""
 
-#: welcome/views.py:104 welcome/views.py:111
+#: welcome/views.py:127 welcome/views.py:134
 msgid ""
 "Please ensure the top-level domain (TLD) is not longer than 12 characters."
 msgstr ""
 
-#: welcome/views.py:134
+#: welcome/views.py:157
 msgid "Libre Workspace is already configured. Please log in."
 msgstr ""
 
-#: welcome/views.py:166
+#: welcome/views.py:191
 #, python-format
 msgid ""
 "Error while creating /etc/libre-workspace/libre-workspace.env file: "
@@ -3559,7 +3575,7 @@ msgid ""
 "you are in a production environment, please check your installation.)"
 msgstr ""
 
-#: welcome/views.py:174 welcome/views.py:175
+#: welcome/views.py:199 welcome/views.py:200
 msgid ""
 "WARNING: Installation script not found! If you are in a development "
 "environment, that's okay. If you are in a production environment, please "

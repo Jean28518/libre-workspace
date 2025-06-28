@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 15:38+0100\n"
+"POT-Creation-Date: 2025-06-28 16:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -460,7 +460,7 @@ msgstr "Speichern"
 
 #: caddy_configuration/forms.py:5 caddy_configuration/forms.py:10
 #: caddy_configuration/views.py:21 idm/forms.py:59 idm/forms.py:81
-#: idm/views.py:152 idm/views.py:529 idm/views.py:600
+#: idm/views.py:152 idm/views.py:548 idm/views.py:619
 #: unix/templates/unix/system_dashboard.html:6 unix/views.py:506
 #: wordpress_manager/forms.py:5 wordpress_manager/views.py:32
 msgid "Name"
@@ -688,7 +688,7 @@ msgid "Repeat new password"
 msgstr "Neues Passwort wiederholen"
 
 #: idm/forms.py:27 idm/templates/idm/login.html:11
-#: welcome/templates/welcome/welcome_start.html:13
+#: welcome/templates/welcome/welcome_password.html:12
 msgid "Password"
 msgstr "Passwort"
 
@@ -830,7 +830,7 @@ msgstr ""
 "Login nicht möglich, kontaktieren Sie einen Administrator: Verbindung zum "
 "LDAP-Server nicht möglich: %(error)s"
 
-#: idm/ldap.py:105
+#: idm/ldap.py:106
 #, python-format
 msgid ""
 "User '%(cn)s' is a system user. For technical reasons, the password cannot "
@@ -840,14 +840,14 @@ msgstr ""
 "Passwort nicht geändert werden. Das Master-Passwort kann unter "
 "Systemkonfiguration geändert werden."
 
-#: idm/ldap.py:115 idm/ldap.py:170 idm/ldap.py:304 idm/ldap.py:328
-#: idm/ldap.py:407 idm/ldap.py:437 idm/ldap.py:479 idm/ldap.py:490
-#: idm/ldap.py:500 idm/ldap.py:517 idm/ldap.py:531
+#: idm/ldap.py:116 idm/ldap.py:171 idm/ldap.py:306 idm/ldap.py:330
+#: idm/ldap.py:409 idm/ldap.py:439 idm/ldap.py:481 idm/ldap.py:492
+#: idm/ldap.py:502 idm/ldap.py:519 idm/ldap.py:533
 #, python-format
 msgid "Error: %(error)s"
 msgstr "Fehler: %(error)s"
 
-#: idm/ldap.py:141
+#: idm/ldap.py:142
 msgid ""
 "Error: The username may only contain lowercase letters, numbers, dots and "
 "hyphens."
@@ -855,23 +855,23 @@ msgstr ""
 "Fehler: Der Benutzername darf nur Kleinbuchstaben, Zahlen, Punkte und "
 "Bindestriche enthalten."
 
-#: idm/ldap.py:194
+#: idm/ldap.py:195
 #, python-format
 msgid "User '%(cn)s' was not found."
 msgstr "Benutzer '%(cn)s' wurde nicht gefunden."
 
-#: idm/ldap.py:385
+#: idm/ldap.py:387
 msgid "The group name must not contain spaces."
 msgstr "Der Gruppenname darf keine Leerzeichen enthalten."
 
-#: idm/ldap.py:387
+#: idm/ldap.py:389
 msgid ""
 "The group name may only contain lowercase letters, numbers, dots and hyphens."
 msgstr ""
 "Der Gruppenname darf nur Kleinbuchstaben, Zahlen, Punkte und Bindestriche "
 "enthalten."
 
-#: idm/ldap.py:513
+#: idm/ldap.py:515
 msgid "Error: User is a system user and cannot be disabled."
 msgstr ""
 "Fehler: Benutzer ist ein Systembenutzer und kann nicht deaktiviert werden."
@@ -1075,7 +1075,7 @@ msgstr "Deaktiviert"
 #: idm/templates/idm/change_password.html:5
 #: idm/templates/idm/change_password.html:16
 #: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
-#: lac/templates/lac/base.html:251
+#: lac/templates/lac/base.html:265
 msgid "Change Password"
 msgstr "Passwort ändern"
 
@@ -1116,7 +1116,7 @@ msgid "Cloud Desktop Settings"
 msgstr "Cloud Desktop Einstellungen"
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:139 lac/templates/lac/base.html:263
+#: idm/views.py:139 lac/templates/lac/base.html:277
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1138,7 +1138,7 @@ msgid "User Settings"
 msgstr "Benutzereinstellungen"
 
 #: idm/templates/idm/user_settings.html:12 idm/views.py:139 idm/views.py:148
-#: lac/templates/lac/base.html:253
+#: lac/templates/lac/base.html:267
 msgid "2-Factor Authentication"
 msgstr "2-Faktor-Authentifizierung"
 
@@ -1252,17 +1252,21 @@ msgstr "TOTP (Authenticator-App)"
 msgid "Libre Workspace: %(base_url)s - %(username)s"
 msgstr "Libre Workspace: %(base_url)s - %(username)s"
 
-#: idm/views.py:227
+#: idm/views.py:224
+msgid "The selected language is not supported!"
+msgstr ""
+
+#: idm/views.py:246
 msgid "You are not authorized to delete this device!"
 msgstr "Sie sind nicht berechtigt, dieses Gerät zu löschen!"
 
-#: idm/views.py:276
+#: idm/views.py:295
 #, fuzzy
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes saved successfully!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
-#: idm/views.py:292
+#: idm/views.py:311
 msgid ""
 "If the email address exists in our system, an email with a password reset "
 "link has been sent."
@@ -1270,56 +1274,56 @@ msgstr ""
 "Wenn die E-Mail-Adresse in unserem System existiert, wurde eine E-Mail mit "
 "einem Link zum Zurücksetzen des Passworts gesendet."
 
-#: idm/views.py:294
+#: idm/views.py:313
 msgid "Please enter a valid email address."
 msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
 
-#: idm/views.py:310
+#: idm/views.py:329
 msgid "The password has been successfully changed!"
 msgstr "Das Passwort wurde erfolgreich geändert!"
 
-#: idm/views.py:312
+#: idm/views.py:331
 msgid "The old password is not correct!"
 msgstr "Das alte Passwort ist nicht korrekt!"
 
-#: idm/views.py:314
+#: idm/views.py:333
 msgid "The new passwords do not match!"
 msgstr "Die neuen Passwörter stimmen nicht überein!"
 
-#: idm/views.py:324
+#: idm/views.py:343
 #, python-format
 msgid "2-Factor Authentication for %(username)s successfully reset!"
 msgstr "2-Faktor-Authentifizierung für %(username)s erfolgreich zurückgesetzt!"
 
-#: idm/views.py:346
+#: idm/views.py:365
 #, python-format
 msgid "User '%(username)s' successfully created!"
 msgstr "Benutzer '%(username)s' erfolgreich erstellt!"
 
-#: idm/views.py:350 idm/views.py:413
+#: idm/views.py:369 idm/views.py:432
 msgid "Form is not valid"
 msgstr "Formular ist nicht gültig"
 
-#: idm/views.py:354
+#: idm/views.py:373
 msgid "User"
 msgstr "Benutzer"
 
-#: idm/views.py:371
+#: idm/views.py:390
 msgid "Password successfully changed!"
 msgstr "Passwort erfolgreich geändert!"
 
-#: idm/views.py:375 idm/views.py:438
+#: idm/views.py:394 idm/views.py:457
 #, fuzzy
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes successfully saved!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
-#: idm/views.py:411
+#: idm/views.py:430
 #, python-format
 msgid "Group '%(cn)s' successfully created!"
 msgstr "Gruppe '%(cn)s' erfolgreich erstellt!"
 
-#: idm/views.py:436
+#: idm/views.py:455
 msgid ""
 "Nextcloud group folder will not be deleted (may contain important data), "
 "please delete manually in the Nextcloud admin interface."
@@ -1327,39 +1331,39 @@ msgstr ""
 "Nextcloud-Gruppenordner wird nicht gelöscht (kann wichtige Daten enthalten), "
 "bitte manuell in der Nextcloud-Admin-Oberfläche löschen."
 
-#: idm/views.py:464
+#: idm/views.py:483
 #, python-format
 msgid "Add user %(user_cn)s to group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:469
+#: idm/views.py:488
 #, python-format
 msgid "Remove user %(user_cn)s from group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:473 idm/views.py:516
+#: idm/views.py:492 idm/views.py:535
 msgid "Memberships successfully updated!"
 msgstr "Mitgliedschaften erfolgreich aktualisiert!"
 
-#: idm/views.py:507
+#: idm/views.py:526
 #, python-format
 msgid "Add user %(cn)s to group %(group_cn)s"
 msgstr "Benutzer %(cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:512
+#: idm/views.py:531
 #, python-format
 msgid "Remove user %(cn)s from group %(group_cn)s"
 msgstr "Benutzer %(cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:525
+#: idm/views.py:544
 msgid "OIDC Clients"
 msgstr "OIDC-Clients"
 
-#: idm/views.py:526
+#: idm/views.py:545
 msgid "OIDC Client"
 msgstr "OIDC-Client"
 
-#: idm/views.py:534
+#: idm/views.py:553
 #, python-format
 msgid ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
@@ -1368,29 +1372,29 @@ msgstr ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
 "a>"
 
-#: idm/views.py:596 lac/templates/lac/base.html:252
+#: idm/views.py:615 lac/templates/lac/base.html:266
 msgid "API Keys"
 msgstr "API-Schlüssel"
 
-#: idm/views.py:597
+#: idm/views.py:616
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: idm/views.py:600
+#: idm/views.py:619
 #, fuzzy
 #| msgid "Create Addon"
 msgid "Created At"
 msgstr "Erstellt am"
 
-#: idm/views.py:600
+#: idm/views.py:619
 msgid "Last Used At"
 msgstr "Zuletzt verwendet am"
 
-#: idm/views.py:600
+#: idm/views.py:619
 msgid "Expiration Date"
 msgstr "Ablaufdatum"
 
-#: idm/views.py:606
+#: idm/views.py:625
 msgid ""
 "You can view all API endpoints <a href='/api/schema/swagger-ui/' "
 "target='_blank'>here</a>."
@@ -1398,19 +1402,19 @@ msgstr ""
 "Sie können alle API-Endpunkte <a href='/api/schema/swagger-ui/' "
 "target='_blank'>hier</a> einsehen."
 
-#: idm/views.py:632
+#: idm/views.py:651
 msgid "You are not authorized to edit this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu bearbeiten!"
 
-#: idm/views.py:652
+#: idm/views.py:671
 msgid "You are not authorized to delete this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu löschen!"
 
-#: idm/views.py:662
+#: idm/views.py:681
 msgid "You are not authorized to view these API key details!"
 msgstr "Sie sind nicht berechtigt, diese API-Schlüsseldetails anzuzeigen!"
 
-#: idm/views.py:664
+#: idm/views.py:683
 #, python-format
 msgid ""
 "API Key Details:<br>Name: %(name)s<br>Key: %(key)s<br>Created At: "
@@ -1421,108 +1425,108 @@ msgstr ""
 "am: %(created_at)s<br>Zuletzt verwendet am: %(last_used_at)s<br>Ablaufdatum: "
 "%(expiration_date)s"
 
-#: idm/views.py:696
+#: idm/views.py:715
 #, python-format
 msgid "Failed to enable user. %(msg)s"
 msgstr "Benutzer konnte nicht aktiviert werden. %(msg)s"
 
-#: idm/views.py:697
+#: idm/views.py:716
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully enabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktiviert."
 
-#: idm/views.py:706
+#: idm/views.py:725
 #, python-format
 msgid "Failed to disable user. %(msg)s"
 msgstr "Benutzer konnte nicht deaktiviert werden. %(msg)s"
 
-#: idm/views.py:707
+#: idm/views.py:726
 #, python-format
 msgid "User %(pk)s has been successfully disabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich deaktiviert."
 
-#: idm/views.py:717
+#: idm/views.py:736
 #, python-format
 msgid "Failed to reset 2FA for user. %(msg)s"
 msgstr "2FA für Benutzer konnte nicht zurückgesetzt werden. %(msg)s"
 
-#: idm/views.py:718
+#: idm/views.py:737
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "2FA for user %(pk)s has been successfully reset."
 msgstr "2FA für Benutzer %(pk)s wurde erfolgreich zurückgesetzt."
 
-#: idm/views.py:730
+#: idm/views.py:749
 #, python-format
 msgid "Setting new password for user %(pk)s: %(new_password)s"
 msgstr "Neues Passwort für Benutzer %(pk)s festlegen: %(new_password)s"
 
-#: idm/views.py:735
+#: idm/views.py:754
 #, python-format
 msgid "Password for user %(pk)s has been successfully changed."
 msgstr "Passwort für Benutzer %(pk)s wurde erfolgreich geändert."
 
-#: idm/views.py:738
+#: idm/views.py:757
 msgid "Password too short."
 msgstr "Passwort zu kurz."
 
-#: idm/views.py:746
+#: idm/views.py:765
 #, python-format
 msgid "Failed to delete user %(pk)s: %(msg)s"
 msgstr "Benutzer %(pk)s konnte nicht gelöscht werden: %(msg)s"
 
-#: idm/views.py:747
+#: idm/views.py:766
 #, python-format
 msgid "Failed to delete user. %(msg)s"
 msgstr "Benutzer konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:749
+#: idm/views.py:768
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully deleted."
 msgstr "Benutzer %(pk)s wurde erfolgreich gelöscht."
 
-#: idm/views.py:773
+#: idm/views.py:792
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully updated."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:795
+#: idm/views.py:814
 #, python-format
 msgid "User %(username)s has been successfully created."
 msgstr "Benutzer %(username)s wurde erfolgreich erstellt."
 
-#: idm/views.py:838
+#: idm/views.py:857
 #, python-format
 msgid "Group %(cn)s has been successfully created."
 msgstr "Gruppe %(cn)s wurde erfolgreich erstellt."
 
-#: idm/views.py:858
+#: idm/views.py:877
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Group %(pk)s has been successfully updated."
 msgstr "Gruppe %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:866
+#: idm/views.py:885
 #, python-format
 msgid "Failed to delete group. %(msg)s"
 msgstr "Gruppe konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:867
+#: idm/views.py:886
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Group %(pk)s has been successfully deleted."
 msgstr "Gruppe %(pk)s wurde erfolgreich gelöscht."
 
-#: lac/settings.py:227
+#: lac/settings.py:227 lac/templates/lac/base.html:253
 msgid "language.en"
-msgstr "language.en"
+msgstr "Englisch"
 
-#: lac/settings.py:228
+#: lac/settings.py:228 lac/templates/lac/base.html:254
 msgid "language.de"
-msgstr "language.de"
+msgstr "Deutsch"
 
 #: lac/templates/lac/base.html:11 lac/templates/lac/base.html:219
 msgid "Libre-Workspace Portal"
@@ -1536,25 +1540,25 @@ msgstr "Logo"
 msgid "Administration"
 msgstr "Administration"
 
-#: lac/templates/lac/base.html:237
+#: lac/templates/lac/base.html:239
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: lac/templates/lac/base.html:238
+#: lac/templates/lac/base.html:240
 msgid "Forum"
 msgstr "Forum"
 
-#: lac/templates/lac/base.html:239
+#: lac/templates/lac/base.html:241
 #, fuzzy
 #| msgid "Support"
 msgid "Paid Support"
 msgstr "Kostenpflichtiger Support"
 
-#: lac/templates/lac/base.html:240
+#: lac/templates/lac/base.html:242
 msgid "Download System Information"
 msgstr "Systeminformationen herunterladen"
 
-#: lac/templates/lac/base.html:254
+#: lac/templates/lac/base.html:268
 msgid "Log Out"
 msgstr "Abmelden"
 
@@ -1585,8 +1589,8 @@ msgstr "Dieser Vorgang kann nicht rückgängig gemacht werden!"
 #: lac/templates/lac/message.html:13
 #: welcome/templates/welcome/libreworkspace_lite.html:48
 #: welcome/templates/welcome/welcome_dns_settings.html:52
+#: welcome/templates/welcome/welcome_password.html:18
 #: welcome/templates/welcome/welcome_select_apps.html:63
-#: welcome/templates/welcome/welcome_start.html:19
 msgid "Continue"
 msgstr "Weiter"
 
@@ -3363,6 +3367,12 @@ msgstr ""
 "Passwort kann aus Sicherheitsgründen zukünftig beim Ändern anderer "
 "Benutzerparameter wieder deaktiviert werden."
 
+#: welcome/forms.py:8
+#, fuzzy
+#| msgid "Select all"
+msgid "Select Language"
+msgstr "Alle auswählen"
+
 #: welcome/templates/welcome/access.html:5
 msgid "You can reach Libre Workspace Lite after installation at"
 msgstr "Sie erreichen Libre Workspace Lite nach der Installation unter"
@@ -3826,6 +3836,24 @@ msgstr ""
 msgid "This is the easiest way to access Libre-Workspace in later use."
 msgstr "Dies ist der einfachste Weg, um Libre-Workspace später zu nutzen."
 
+#: welcome/templates/welcome/welcome_password.html:5
+#, fuzzy
+#| msgid "Master Password Change"
+msgid "Master Password"
+msgstr "Master-Passwort ändern"
+
+#: welcome/templates/welcome/welcome_password.html:7
+msgid ""
+"The password must be at least 8 characters long and contain special "
+"characters, numbers, and letters."
+msgstr ""
+"Das Passwort muss mindestens 8 Zeichen lang sein und Sonderzeichen, Zahlen "
+"und Buchstaben enthalten."
+
+#: welcome/templates/welcome/welcome_password.html:15
+msgid "Repeat password"
+msgstr "Passwort wiederholen"
+
 #: welcome/templates/welcome/welcome_select_apps.html:5
 #, fuzzy
 #| msgid "Module"
@@ -3886,25 +3914,23 @@ msgstr "Desktop-Oberfläche (Xfce)"
 msgid "Welcome!"
 msgstr "Willkommen!"
 
-#: welcome/templates/welcome/welcome_start.html:7
+#: welcome/templates/welcome/welcome_start.html:8
+#, fuzzy
+#| msgid ""
+#| "On the following pages, we will set up Libre-Workspace together. Please "
+#| "start by defining a secure master password."
 msgid ""
 "On the following pages, we will set up Libre-Workspace together. Please "
-"start by defining a secure master password."
+"start by selecting your language."
 msgstr ""
 "Auf den folgenden Seiten richten wir gemeinsam Libre-Workspace ein. Bitte "
 "beginnen Sie mit der Definition eines sicheren Master-Passworts."
 
-#: welcome/templates/welcome/welcome_start.html:8
-msgid ""
-"The password must be at least 8 characters long and contain special "
-"characters, numbers, and letters."
-msgstr ""
-"Das Passwort muss mindestens 8 Zeichen lang sein und Sonderzeichen, Zahlen "
-"und Buchstaben enthalten."
-
-#: welcome/templates/welcome/welcome_start.html:16
-msgid "Repeat password"
-msgstr "Passwort wiederholen"
+#: welcome/templates/welcome/welcome_start.html:18
+#, fuzzy
+#| msgid "Nextcloud"
+msgid "Next"
+msgstr "Nextcloud"
 
 #: welcome/templates/welcome/welcome_start.html:22
 msgid "Tip:"
@@ -3915,36 +3941,36 @@ msgid "You can also perform the setup from another device:"
 msgstr ""
 "Sie können die Einrichtung auch von einem anderen Gerät aus durchführen:"
 
-#: welcome/views.py:25
+#: welcome/views.py:50
 msgid "Passwords do not match. Please try again."
 msgstr "Passwörter stimmen nicht überein. Bitte versuchen Sie es erneut."
 
-#: welcome/views.py:61 welcome/views.py:97
+#: welcome/views.py:84 welcome/views.py:120
 msgid "Please provide a domain."
 msgstr "Bitte geben Sie eine Domain an."
 
-#: welcome/views.py:99
+#: welcome/views.py:122
 msgid "Please ensure you only provide the domain and no subdomain."
 msgstr ""
 "Bitte stellen Sie sicher, dass Sie nur die Domain und keine Subdomain "
 "angeben."
 
-#: welcome/views.py:101
+#: welcome/views.py:124
 msgid "Please provide a valid domain."
 msgstr "Bitte geben Sie eine gültige Domain an."
 
-#: welcome/views.py:104 welcome/views.py:111
+#: welcome/views.py:127 welcome/views.py:134
 msgid ""
 "Please ensure the top-level domain (TLD) is not longer than 12 characters."
 msgstr ""
 "Bitte stellen Sie sicher, dass die Top-Level-Domain (TLD) nicht länger als "
 "12 Zeichen ist."
 
-#: welcome/views.py:134
+#: welcome/views.py:157
 msgid "Libre Workspace is already configured. Please log in."
 msgstr "Libre Workspace ist bereits konfiguriert. Bitte melden Sie sich an."
 
-#: welcome/views.py:166
+#: welcome/views.py:191
 #, python-format
 msgid ""
 "Error while creating /etc/libre-workspace/libre-workspace.env file: "
@@ -3956,7 +3982,7 @@ msgstr ""
 "das in Ordnung. Wenn Sie sich in einer Produktionsumgebung befinden, "
 "überprüfen Sie bitte Ihre Installation.)"
 
-#: welcome/views.py:174 welcome/views.py:175
+#: welcome/views.py:199 welcome/views.py:200
 msgid ""
 "WARNING: Installation script not found! If you are in a development "
 "environment, that's okay. If you are in a production environment, please "
@@ -4007,6 +4033,16 @@ msgstr ""
 #: wordpress_manager/views.py:117
 msgid "WordPress instance optimization successfully started!"
 msgstr "WordPress-Instanzoptimierung erfolgreich gestartet!"
+
+#, fuzzy
+#~| msgid "Addon Center"
+#~ msgid "Your Name"
+#~ msgstr "Gruppenname"
+
+#, fuzzy
+#~| msgid "Group name"
+#~ msgid "Enter your name"
+#~ msgstr "Gruppenname"
 
 #~ msgid "{{ heading }}"
 #~ msgstr "{{ heading }}"

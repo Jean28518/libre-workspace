@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("start", views.welcome_start, name="welcome_start"),
+    path("password", views.welcome_password, name="welcome_password"),
     path("select_apps", views.welcome_select_apps, name="welcome_select_apps"),
     path("dns_settings", views.welcome_dns_settings, name="welcome_dns_settings"),
     path("libreworkspace_lite", views.libreworkspace_lite, name="libreworkspace_lite"),

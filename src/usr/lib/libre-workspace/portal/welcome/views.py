@@ -5,14 +5,38 @@ from django.conf import settings
 import unix.unix_scripts.unix as unix
 from django.http import HttpResponse
 from lac.templates import message as message_func
+from django.utils import translation
 from django.utils.translation import gettext as _
+from welcome.forms import LanguageSelectionForm
 
 
 # List of subdomains
 subdomains = ["cloud", "office", "portal", "la", "chat", "meet", "element", "matrix", "desktop"]
 
-# Create your views here.
+# Lets define our language
 def welcome_start(request):
+    # If request is POST
+    message = ""
+    form = LanguageSelectionForm()
+    if request.method == "POST":
+        form = LanguageSelectionForm(request.POST)
+        if form.is_valid():
+            language_code = form.cleaned_data["language_code"]
+            request.session["language_code"] = language_code
+            os.environ["LANGUAGE_CODE"] = language_code
+            # Set the language in the settings
+            settings.LANGUAGE_CODE = language_code
+            # Set the language in the request
+            translation.activate(language_code)
+            # Redirect to welcome_password
+            return redirect("welcome_password")
+    ip = os.popen("hostname -I").read().split(" ")[0]
+    if ":" in ip:
+        ip = f"[{ip}]" # IPv6
+    return render(request, "welcome/welcome_start.html", {"message": message, "hide_login_button": True, "ip": ip, "form": form})
+
+# Create your views here.
+def welcome_password(request):
     # If request is POST
     message = ""
     if request.method == "POST":
@@ -26,11 +50,8 @@ def welcome_start(request):
         if message == "":
             return redirect("welcome_select_apps")
         
-    ip = os.popen("hostname -I").read().split(" ")[0]
-    if ":" in ip:
-        ip = f"[{ip}]" # IPv6
 
-    return render(request, "welcome/welcome_start.html", {"message": message, "hide_login_button": True, "ip": ip})
+    return render(request, "welcome/welcome_password.html", {"message": message, "hide_login_button": True})
 
 
 def welcome_select_apps(request):
@@ -139,6 +160,7 @@ def installation_running(request):
     # Get output of script: in lac/unix/unix_scripts/get_ip.sh
     os.environ["IP"] = os.popen("hostname -I").read().split(" ")[0]
     os.environ["LDAP_DC"] = request.session["ldap_dc"]
+    os.environ["LANGUAGE_CODE"] = request.session.get("language_code", "en")
     # Run basics script
     os.environ["SAMBA_DC"] = request.session["nextcloud"] or request.session["matrix"] or request.session["jitsi"] or request.session["desktop"]
     os.environ["NEXTCLOUD"] = request.session["nextcloud"]
@@ -162,6 +184,7 @@ def installation_running(request):
             f.write(f"export IP={os.environ['IP']}\n")
             f.write(f"export ADMIN_PASSWORD={os.environ['ADMIN_PASSWORD']}\n")
             f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
+            f.write(f"export LANGUAGE_CODE={os.environ['LANGUAGE_CODE']}\n")
     except Exception as e:
         message = _("Error while creating /etc/libre-workspace/libre-workspace.env file: %(error_message)s (If you are in a development environment, this is okay. If you are in a production environment, please check your installation.)") % {"error_message": str(e)}
 

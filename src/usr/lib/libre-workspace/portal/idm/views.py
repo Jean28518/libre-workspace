@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
-from django.utils.translation import gettext as _
+from django.utils import translation
 
 import idm.idm
 
@@ -36,7 +36,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework import permissions
 from rest_framework.decorators import action
-
+from django.utils.translation import gettext as _
 
 
 
@@ -215,7 +215,30 @@ def create_totp_device(request):
 
     return render(request, "idm/add_new_totp_device.html", {"base32_code": base32_code, "img": settings.MEDIA_URL + f"totp_{random_appendix}.png", "device_name": device.name})
 
-    pass
+
+def change_language(request, language_code):
+    """
+    Change the language of the user.
+    """
+    if not language_code in dict(settings.LANGUAGES).keys():
+        return lac.templates.message(request, _("The selected language is not supported!"), "index")
+    
+    # Set the language in the request
+    translation.activate(language_code)
+
+    # if the user is authenticated, set the language in the session
+    if request.user.is_authenticated:
+        request.session['language_code'] = language_code
+        # Also set the language in the user profile if needed
+        user_information = get_user_information(request.user)
+        user_information["language_code"] = language_code
+        ldap_update_user(request.user.username, user_information)
+    
+    # Redirect to the page where the user came from
+    if request.GET.get("next", "") != "":
+        return HttpResponseRedirect(request.GET['next'])
+    else:
+        return redirect("index")
 
 @login_required
 def delete_totp_device(request, id):
@@ -865,3 +888,5 @@ class GroupViewSet(viewsets.ViewSet):
         if msg:
             return HttpResponse(_("Failed to delete group. %(msg)s") % {"msg": msg}, status=500)
         return HttpResponse(_("Group %(pk)s has been successfully deleted.") % {"pk": pk}, status=200)
+    
+

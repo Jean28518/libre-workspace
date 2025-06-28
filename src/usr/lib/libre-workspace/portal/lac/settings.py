@@ -203,8 +203,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'de-de'
-
 TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
@@ -217,7 +215,8 @@ USE_TZ = True
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE", "en")
+# Set the default language code to German for older systems (which are all german and dont have set an environment variable via portal.conf yet.)
+LANGUAGE_CODE = os.environ.get("LANGUAGE_CODE", "de")
 
 LOCALE_PATHS = [
     BASE_DIR / "locale",

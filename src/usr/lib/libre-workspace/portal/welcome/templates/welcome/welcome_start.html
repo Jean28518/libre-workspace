@@ -4,19 +4,18 @@
 
 <h2>{% translate "Welcome!" %}</h2>
 
-<p>{% translate "On the following pages, we will set up Libre-Workspace together. Please start by defining a secure master password." %}<br>
-{% translate "The password must be at least 8 characters long and contain special characters, numbers, and letters." %}
+<p>
+    {% translate "On the following pages, we will set up Libre-Workspace together. Please start by selecting your language." %}
 </p>
 {% if message != "" %}<p><strong>{{ message }}</strong></p>{% endif %}
 
-<form method="post">{% csrf_token %}
-    <label for="text">{% translate "Password" %}</label>
-    <input type="password" id="password" name="password">
-
-    <label for="text">{% translate "Repeat password" %}</label>
-    <input type="password" id="password_repeat" name="password_repeat">
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
     
-    <input type="submit" value="{% translate "Continue" %}">
+    {{ form }}
+    <br><br>
+    <div class="grid">
+        <input type="submit" value="{% translate "Next" %}">
+    </div>
 </form>
 
 <p><strong>{% translate "Tip:" %}</strong> {% translate "You can also perform the setup from another device:" %} <a href="https://{{ ip }}">https://{{ ip }}</a></p>

@@ -39,4 +39,5 @@ urlpatterns = [
     path("delete_api_key/<str:id>", views.delete_api_key, name="delete_api_key"),
     path("api_key_details/<str:id>", views.api_key_details, name="api_key_details"),
 
+    path("change_language/<str:language_code>", views.change_language, name="change_language"),
 ]

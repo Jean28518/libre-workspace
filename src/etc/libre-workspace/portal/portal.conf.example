@@ -9,6 +9,9 @@
 # Enable the unix service if you skip the automated install: /usr/bin/systemctl enable libre-workspace-service.service
 export LINUX_ARBEITSPLATZ_CONFIGURED=False
 
+# Language Code like "de", "en", ...
+LANGUAGE_CODE="en"
+
 # Mail Settings
 # (This is only for the management interface, not for other services like nextcloud)
 export EMAIL_HOST=""                         

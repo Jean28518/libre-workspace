@@ -103,7 +103,7 @@ An example of setup_nocodb.sh would be:
 .. code-block:: bash
 
   #!/bin/bash
-  # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC
+  # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC, $LANGUAGE_CODE
   mkdir -p /root/nocodb
   # Dont forget to escape " with a backslash:
   echo "version: \"2.1\"
@@ -224,7 +224,7 @@ It is a good practice to name the patch at the date when it was created, so you 
 These patch scripts are executed after a daily backup and update of the system or daily at 02:00 am. 
 The run order is based on the filename. The patch with the oldest date is executed first.
 The patch scripts are executed as root and the current working directory is the root directory of the addon.
-The environment variables $DOMAIN, $ADMIN_PASSWORD, $IP and $LDAP_DC are passed to the script and are available in the script.
+The environment variables $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC and $LANGUAGE_CODE are passed to the script and are available in the script.
 
 The patch should only patch your addon once.
 But for this you have to check by yourself if the patched settings are present or not. This can be different for every single patch.

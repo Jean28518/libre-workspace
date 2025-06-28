@@ -3,6 +3,7 @@
 # ADMIN_PASSWORD
 # IP
 # LDAP_DC
+# LANGUAGE_CODE
 
 
 DEBIAN_FRONTEND=noninteractive
@@ -94,6 +95,9 @@ sed -i "s/LINUX_ARBEITSPLATZ_CONFIGURED=False/LINUX_ARBEITSPLATZ_CONFIGURED=True
 
 # Remove the lines with "EMAIL" in it
 sed -i "/EMAIL/d" /etc/libre-workspace/portal/portal.conf
+
+# Set the LANGUAGE_CODE in the portal.conf
+sed -i "s/LANGUAGE_CODE=.*/LANGUAGE_CODE=$LANGUAGE_CODE/g" /etc/libre-workspace/portal/portal.conf
 
 # Enable the unix service
 /usr/bin/systemctl enable libre-workspace-service.service

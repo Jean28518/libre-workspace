@@ -242,6 +242,19 @@ h1, h2, h3, h4, h5, h6 {
           <li>
             <details role="list" dir="rtl">
               <summary aria-haspopup="listbox" role="link" class="secondary">
+                <span class="material-icons">language</span>
+              </summary>
+              <ul role="listbox">
+                {% with request.get_full_path as next %}
+                <li><a href="{% url "change_language" "en" %}?next={{ next }}">{% translate "language.en" %}</a></li>
+                <li><a href="{% url "change_language" "de" %}?next={{ next }}">{% translate "language.de" %}</a></li>
+                {% endwith %}
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details role="list" dir="rtl">
+              <summary aria-haspopup="listbox" role="link" class="secondary">
                   {{ request.user.username }}
               </summary>
               <ul role="listbox">
