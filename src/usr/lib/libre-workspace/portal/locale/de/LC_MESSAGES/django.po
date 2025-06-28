@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 22:31+0100\n"
+"POT-Creation-Date: 2025-06-28 23:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -460,7 +460,7 @@ msgstr "Speichern"
 
 #: caddy_configuration/forms.py:5 caddy_configuration/forms.py:10
 #: caddy_configuration/views.py:21 idm/forms.py:60 idm/forms.py:82
-#: idm/views.py:153 idm/views.py:557 idm/views.py:628
+#: idm/views.py:160 idm/views.py:564 idm/views.py:635
 #: unix/templates/unix/system_dashboard.html:6 unix/views.py:506
 #: wordpress_manager/forms.py:5 wordpress_manager/views.py:32
 msgid "Name"
@@ -772,7 +772,7 @@ msgstr "Benutzer muss dem Datenzugriff zustimmen"
 msgid "Reuse consent"
 msgstr "Einwilligung wiederverwenden"
 
-#: idm/forms.py:76 idm/views.py:150
+#: idm/forms.py:76 idm/views.py:157
 msgid "TOTP Device"
 msgstr "TOTP-Gerät"
 
@@ -788,11 +788,15 @@ msgstr "Ablaufdatum"
 msgid "Optional. If not set, the key never expires."
 msgstr "Optional. Wenn nicht festgelegt, läuft der Schlüssel nie ab."
 
-#: idm/forms.py:86
-msgid "Linux Client Access"
+#: idm/forms.py:85
+msgid "Permissions"
 msgstr ""
 
 #: idm/forms.py:87
+msgid "Linux Client Access"
+msgstr ""
+
+#: idm/forms.py:88
 #, fuzzy
 #| msgid "Administrator"
 msgid "Administrator Access"
@@ -813,7 +817,7 @@ msgstr ""
 "\n"
 "%(random_password)s"
 
-#: idm/idm.py:72 idm/idm.py:73 idm/idm.py:195 idm/idm.py:196
+#: idm/idm.py:72 idm/idm.py:73 idm/idm.py:197 idm/idm.py:198
 msgid "User not found"
 msgstr "Benutzer nicht gefunden"
 
@@ -830,9 +834,11 @@ msgstr "Benutzer 'Administrator' existiert nicht"
 msgid "Local Administrator password changed"
 msgstr "Passwort des lokalen Administrators geändert"
 
-#: idm/idm.py:202
+#: idm/idm.py:204
 #, python-format
-msgid "Updated Linux client user password for user: %(username)s"
+msgid ""
+"Updated Linux client user password for user: %(username)s with new password "
+"hash: %(yescrypt_hash)s"
 msgstr ""
 
 #: idm/ldap.py:21 idm/ldap.py:36
@@ -859,9 +865,9 @@ msgstr ""
 "Passwort nicht geändert werden. Das Master-Passwort kann unter "
 "Systemkonfiguration geändert werden."
 
-#: idm/ldap.py:118 idm/ldap.py:175 idm/ldap.py:233 idm/ldap.py:357
-#: idm/ldap.py:383 idm/ldap.py:462 idm/ldap.py:492 idm/ldap.py:534
-#: idm/ldap.py:545 idm/ldap.py:555 idm/ldap.py:572 idm/ldap.py:586
+#: idm/ldap.py:118 idm/ldap.py:175 idm/ldap.py:233 idm/ldap.py:358
+#: idm/ldap.py:384 idm/ldap.py:463 idm/ldap.py:493 idm/ldap.py:535
+#: idm/ldap.py:546 idm/ldap.py:556 idm/ldap.py:573 idm/ldap.py:587
 #, python-format
 msgid "Error: %(error)s"
 msgstr "Fehler: %(error)s"
@@ -879,18 +885,18 @@ msgstr ""
 msgid "User '%(cn)s' was not found."
 msgstr "Benutzer '%(cn)s' wurde nicht gefunden."
 
-#: idm/ldap.py:440
+#: idm/ldap.py:441
 msgid "The group name must not contain spaces."
 msgstr "Der Gruppenname darf keine Leerzeichen enthalten."
 
-#: idm/ldap.py:442
+#: idm/ldap.py:443
 msgid ""
 "The group name may only contain lowercase letters, numbers, dots and hyphens."
 msgstr ""
 "Der Gruppenname darf nur Kleinbuchstaben, Zahlen, Punkte und Bindestriche "
 "enthalten."
 
-#: idm/ldap.py:568
+#: idm/ldap.py:569
 msgid "Error: User is a system user and cannot be disabled."
 msgstr ""
 "Fehler: Benutzer ist ein Systembenutzer und kann nicht deaktiviert werden."
@@ -907,11 +913,11 @@ msgstr ""
 msgid "Comma-separated list of permissions granted to this API key"
 msgstr ""
 
-#: idm/models.py:30 idm/views.py:625
+#: idm/models.py:30 idm/views.py:632
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: idm/models.py:31 idm/views.py:624 lac/templates/lac/base.html:266
+#: idm/models.py:31 idm/views.py:631 lac/templates/lac/base.html:266
 msgid "API Keys"
 msgstr "API-Schlüssel"
 
@@ -1163,7 +1169,7 @@ msgid "Cloud Desktop Settings"
 msgstr "Cloud Desktop Einstellungen"
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:140 lac/templates/lac/base.html:277
+#: idm/views.py:147 lac/templates/lac/base.html:277
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1184,7 +1190,7 @@ msgstr "Passwort zurücksetzen"
 msgid "User Settings"
 msgstr "Benutzereinstellungen"
 
-#: idm/templates/idm/user_settings.html:12 idm/views.py:140 idm/views.py:149
+#: idm/templates/idm/user_settings.html:12 idm/views.py:147 idm/views.py:156
 #: lac/templates/lac/base.html:267
 msgid "2-Factor Authentication"
 msgstr "2-Faktor-Authentifizierung"
@@ -1266,54 +1272,54 @@ msgstr "Login fehlgeschlagen! Bitte versuchen Sie es mit Ihrem Benutzernamen."
 msgid "User is authenticated."
 msgstr "Benutzer ist authentifiziert."
 
-#: idm/views.py:122
+#: idm/views.py:129
 msgid "User is not authenticated"
 msgstr "Benutzer ist nicht authentifiziert"
 
-#: idm/views.py:123
+#: idm/views.py:130
 msgid "Login failed! Please try again."
 msgstr "Login fehlgeschlagen! Bitte versuchen Sie es erneut."
 
-#: idm/views.py:169
+#: idm/views.py:176
 msgid "An error occurred. Please try again."
 msgstr "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
 
-#: idm/views.py:173
+#: idm/views.py:180
 msgid "The TOTP code must be 6 digits long!"
 msgstr "Der TOTP-Code muss 6 Ziffern lang sein!"
 
-#: idm/views.py:178
+#: idm/views.py:185
 msgid "The TOTP code is not correct! Please try again."
 msgstr "Der TOTP-Code ist nicht korrekt! Bitte versuchen Sie es erneut."
 
-#: idm/views.py:191
+#: idm/views.py:198
 msgid "Success. 2-Factor Authentication successfully set up."
 msgstr "Erfolg. 2-Faktor-Authentifizierung erfolgreich eingerichtet."
 
-#: idm/views.py:194
+#: idm/views.py:201
 msgid "TOTP (Authenticator App)"
 msgstr "TOTP (Authenticator-App)"
 
-#: idm/views.py:206
+#: idm/views.py:213
 #, python-format
 msgid "Libre Workspace: %(base_url)s - %(username)s"
 msgstr "Libre Workspace: %(base_url)s - %(username)s"
 
-#: idm/views.py:225
+#: idm/views.py:232
 msgid "The selected language is not supported!"
 msgstr ""
 
-#: idm/views.py:251
+#: idm/views.py:258
 msgid "You are not authorized to delete this device!"
 msgstr "Sie sind nicht berechtigt, dieses Gerät zu löschen!"
 
-#: idm/views.py:300
+#: idm/views.py:307
 #, fuzzy
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes saved successfully!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
-#: idm/views.py:316
+#: idm/views.py:323
 msgid ""
 "If the email address exists in our system, an email with a password reset "
 "link has been sent."
@@ -1321,56 +1327,56 @@ msgstr ""
 "Wenn die E-Mail-Adresse in unserem System existiert, wurde eine E-Mail mit "
 "einem Link zum Zurücksetzen des Passworts gesendet."
 
-#: idm/views.py:318
+#: idm/views.py:325
 msgid "Please enter a valid email address."
 msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
 
-#: idm/views.py:334
+#: idm/views.py:341
 msgid "The password has been successfully changed!"
 msgstr "Das Passwort wurde erfolgreich geändert!"
 
-#: idm/views.py:336
+#: idm/views.py:343
 msgid "The old password is not correct!"
 msgstr "Das alte Passwort ist nicht korrekt!"
 
-#: idm/views.py:338
+#: idm/views.py:345
 msgid "The new passwords do not match!"
 msgstr "Die neuen Passwörter stimmen nicht überein!"
 
-#: idm/views.py:348
+#: idm/views.py:355
 #, python-format
 msgid "2-Factor Authentication for %(username)s successfully reset!"
 msgstr "2-Faktor-Authentifizierung für %(username)s erfolgreich zurückgesetzt!"
 
-#: idm/views.py:370
+#: idm/views.py:377
 #, python-format
 msgid "User '%(username)s' successfully created!"
 msgstr "Benutzer '%(username)s' erfolgreich erstellt!"
 
-#: idm/views.py:374 idm/views.py:441
+#: idm/views.py:381 idm/views.py:448
 msgid "Form is not valid"
 msgstr "Formular ist nicht gültig"
 
-#: idm/views.py:378
+#: idm/views.py:385
 msgid "User"
 msgstr "Benutzer"
 
-#: idm/views.py:395
+#: idm/views.py:402
 msgid "Password successfully changed!"
 msgstr "Passwort erfolgreich geändert!"
 
-#: idm/views.py:399 idm/views.py:466
+#: idm/views.py:406 idm/views.py:473
 #, fuzzy
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes successfully saved!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
-#: idm/views.py:439
+#: idm/views.py:446
 #, python-format
 msgid "Group '%(cn)s' successfully created!"
 msgstr "Gruppe '%(cn)s' erfolgreich erstellt!"
 
-#: idm/views.py:464
+#: idm/views.py:471
 msgid ""
 "Nextcloud group folder will not be deleted (may contain important data), "
 "please delete manually in the Nextcloud admin interface."
@@ -1378,39 +1384,39 @@ msgstr ""
 "Nextcloud-Gruppenordner wird nicht gelöscht (kann wichtige Daten enthalten), "
 "bitte manuell in der Nextcloud-Admin-Oberfläche löschen."
 
-#: idm/views.py:492
+#: idm/views.py:499
 #, python-format
 msgid "Add user %(user_cn)s to group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:497
+#: idm/views.py:504
 #, python-format
 msgid "Remove user %(user_cn)s from group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:501 idm/views.py:544
+#: idm/views.py:508 idm/views.py:551
 msgid "Memberships successfully updated!"
 msgstr "Mitgliedschaften erfolgreich aktualisiert!"
 
-#: idm/views.py:535
+#: idm/views.py:542
 #, python-format
 msgid "Add user %(cn)s to group %(group_cn)s"
 msgstr "Benutzer %(cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:540
+#: idm/views.py:547
 #, python-format
 msgid "Remove user %(cn)s from group %(group_cn)s"
 msgstr "Benutzer %(cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:553
+#: idm/views.py:560
 msgid "OIDC Clients"
 msgstr "OIDC-Clients"
 
-#: idm/views.py:554
+#: idm/views.py:561
 msgid "OIDC Client"
 msgstr "OIDC-Client"
 
-#: idm/views.py:562
+#: idm/views.py:569
 #, python-format
 msgid ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
@@ -1419,21 +1425,21 @@ msgstr ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
 "a>"
 
-#: idm/views.py:628
+#: idm/views.py:635
 #, fuzzy
 #| msgid "Create Addon"
 msgid "Created At"
 msgstr "Erstellt am"
 
-#: idm/views.py:628
+#: idm/views.py:635
 msgid "Last Used At"
 msgstr "Zuletzt verwendet am"
 
-#: idm/views.py:628
+#: idm/views.py:635
 msgid "Expiration Date"
 msgstr "Ablaufdatum"
 
-#: idm/views.py:634
+#: idm/views.py:641
 msgid ""
 "You can view all API endpoints <a href='/api/schema/swagger-ui/' "
 "target='_blank'>here</a>."
@@ -1441,19 +1447,19 @@ msgstr ""
 "Sie können alle API-Endpunkte <a href='/api/schema/swagger-ui/' "
 "target='_blank'>hier</a> einsehen."
 
-#: idm/views.py:661
+#: idm/views.py:668
 msgid "You are not authorized to edit this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu bearbeiten!"
 
-#: idm/views.py:682
+#: idm/views.py:690
 msgid "You are not authorized to delete this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu löschen!"
 
-#: idm/views.py:692
+#: idm/views.py:700
 msgid "You are not authorized to view these API key details!"
 msgstr "Sie sind nicht berechtigt, diese API-Schlüsseldetails anzuzeigen!"
 
-#: idm/views.py:694
+#: idm/views.py:702
 #, python-format
 msgid ""
 "API Key Details:<br>Name: %(name)s<br>Key: %(key)s<br>Created At: "
@@ -1464,96 +1470,96 @@ msgstr ""
 "am: %(created_at)s<br>Zuletzt verwendet am: %(last_used_at)s<br>Ablaufdatum: "
 "%(expiration_date)s"
 
-#: idm/views.py:726
+#: idm/views.py:734
 #, python-format
 msgid "Failed to enable user. %(msg)s"
 msgstr "Benutzer konnte nicht aktiviert werden. %(msg)s"
 
-#: idm/views.py:727
+#: idm/views.py:735
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully enabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktiviert."
 
-#: idm/views.py:736
+#: idm/views.py:744
 #, python-format
 msgid "Failed to disable user. %(msg)s"
 msgstr "Benutzer konnte nicht deaktiviert werden. %(msg)s"
 
-#: idm/views.py:737
+#: idm/views.py:745
 #, python-format
 msgid "User %(pk)s has been successfully disabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich deaktiviert."
 
-#: idm/views.py:747
+#: idm/views.py:755
 #, python-format
 msgid "Failed to reset 2FA for user. %(msg)s"
 msgstr "2FA für Benutzer konnte nicht zurückgesetzt werden. %(msg)s"
 
-#: idm/views.py:748
+#: idm/views.py:756
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "2FA for user %(pk)s has been successfully reset."
 msgstr "2FA für Benutzer %(pk)s wurde erfolgreich zurückgesetzt."
 
-#: idm/views.py:760
+#: idm/views.py:768
 #, python-format
 msgid "Setting new password for user %(pk)s: %(new_password)s"
 msgstr "Neues Passwort für Benutzer %(pk)s festlegen: %(new_password)s"
 
-#: idm/views.py:765
+#: idm/views.py:773
 #, python-format
 msgid "Password for user %(pk)s has been successfully changed."
 msgstr "Passwort für Benutzer %(pk)s wurde erfolgreich geändert."
 
-#: idm/views.py:768
+#: idm/views.py:776
 msgid "Password too short."
 msgstr "Passwort zu kurz."
 
-#: idm/views.py:776
+#: idm/views.py:784
 #, python-format
 msgid "Failed to delete user %(pk)s: %(msg)s"
 msgstr "Benutzer %(pk)s konnte nicht gelöscht werden: %(msg)s"
 
-#: idm/views.py:777
+#: idm/views.py:785
 #, python-format
 msgid "Failed to delete user. %(msg)s"
 msgstr "Benutzer konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:779
+#: idm/views.py:787
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully deleted."
 msgstr "Benutzer %(pk)s wurde erfolgreich gelöscht."
 
-#: idm/views.py:803
+#: idm/views.py:811
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully updated."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:825
+#: idm/views.py:833
 #, python-format
 msgid "User %(username)s has been successfully created."
 msgstr "Benutzer %(username)s wurde erfolgreich erstellt."
 
-#: idm/views.py:868
+#: idm/views.py:876
 #, python-format
 msgid "Group %(cn)s has been successfully created."
 msgstr "Gruppe %(cn)s wurde erfolgreich erstellt."
 
-#: idm/views.py:888
+#: idm/views.py:896
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Group %(pk)s has been successfully updated."
 msgstr "Gruppe %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:896
+#: idm/views.py:904
 #, python-format
 msgid "Failed to delete group. %(msg)s"
 msgstr "Gruppe konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:897
+#: idm/views.py:905
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Group %(pk)s has been successfully deleted."

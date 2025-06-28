@@ -654,7 +654,7 @@ def create_api_key(request):
             api_key.name = form.cleaned_data["name"]
             api_key.key = generate_random_password(length=64, alphanumeric_only=True)  # Generate a random key
             api_key.expiration_date = form.cleaned_data["expiration_date"]
-            api_key.permissions = form.cleaned_data["permissions"]
+            api_key.permissions = ','.join(form.cleaned_data["permissions"])
             api_key.save()
             return redirect(api_key_overview)
     form.fields["expiration_date"].initial = datetime.datetime.now() + datetime.timedelta(days=365)  # Default to 1 year
@@ -670,13 +670,14 @@ def edit_api_key(request, id):
     form = ApiKeyForm(initial={
         "name": api_key.name,
         "expiration_date": api_key.expiration_date,
+        "permissions": api_key.permissions.split(',') if api_key.permissions else [],
     })
     if request.method == 'POST':
         form = ApiKeyForm(request.POST)
         if form.is_valid():
             api_key.name = form.cleaned_data["name"]
             api_key.expiration_date = form.cleaned_data["expiration_date"]
-            api_key.permissions = form.cleaned_data["permissions"]
+            api_key.permissions = ','.join(form.cleaned_data["permissions"])
             api_key.save()
             return redirect(api_key_overview)
     return render(request, "lac/edit_x.html", {"form": form, "id": id, "url": reverse("api_key_overview")})

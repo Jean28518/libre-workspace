@@ -54,6 +54,9 @@ class LinuxUserSerializer(serializers.Serializer):
     enabled = serializers.BooleanField(required=False, default=True)
     admin = serializers.BooleanField(required=False, default=False)
     yescrypt_hash = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    uidNumber = serializers.CharField(max_length=100, required=False, allow_blank=True)
+    enabled = serializers.BooleanField(required=False, default=True)
+    admin = serializers.BooleanField(required=False, default=False)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

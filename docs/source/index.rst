@@ -19,6 +19,7 @@ Libre Workspace Documentation (for Administrators)
    modules/nextcloud
    modules/desktop
    modules/addons
+   modules/linux_client
 
 
 

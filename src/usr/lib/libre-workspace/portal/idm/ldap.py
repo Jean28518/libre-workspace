@@ -275,13 +275,14 @@ def ldap_get_all_users():
             groups = user.get("memberOf", [])
             guid = user.get("objectGUID", [b''])[0].hex()
             enabled = int(user.get("userAccountControl", [b'512'])[0]) & 2 == 0
+            uidNumber = user.get("uidNumber", [b''])[0].decode('utf-8')
             for i in range(len(groups)):
                 groups[i] = groups[i].decode('utf-8')
 
             if ldap_is_system_user(cn):
                 continue
 
-            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "guid": guid, "enabled": enabled, "admin": is_user_in_group({"groups": groups}, "Administrators"), "first_name": first_name, "last_name": last_name})
+            users.append({"dn": dn, "displayName": displayName, "mail": mail, "cn": cn, "groups": groups, "guid": guid, "enabled": enabled, "admin": is_user_in_group({"groups": groups}, "Administrators"), "first_name": first_name, "last_name": last_name, "uidNumber": uidNumber})
     return users
 
 def ldap_is_system_user(cn):
