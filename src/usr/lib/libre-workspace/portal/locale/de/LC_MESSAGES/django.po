@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 17:00+0100\n"
+"POT-Creation-Date: 2025-06-28 17:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1520,11 +1520,11 @@ msgstr "Gruppe konnte nicht gelöscht werden. %(msg)s"
 msgid "Group %(pk)s has been successfully deleted."
 msgstr "Gruppe %(pk)s wurde erfolgreich gelöscht."
 
-#: lac/settings.py:226 lac/templates/lac/base.html:234
+#: lac/settings.py:227 lac/templates/lac/base.html:234
 msgid "language.en"
 msgstr "Englisch"
 
-#: lac/settings.py:227 lac/templates/lac/base.html:235
+#: lac/settings.py:228 lac/templates/lac/base.html:235
 msgid "language.de"
 msgstr "Deutsch"
 
