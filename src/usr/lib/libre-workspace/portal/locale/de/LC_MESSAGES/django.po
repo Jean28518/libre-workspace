@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-28 16:41+0100\n"
+"POT-Creation-Date: 2025-06-28 16:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -460,7 +460,7 @@ msgstr "Speichern"
 
 #: caddy_configuration/forms.py:5 caddy_configuration/forms.py:10
 #: caddy_configuration/views.py:21 idm/forms.py:59 idm/forms.py:81
-#: idm/views.py:152 idm/views.py:548 idm/views.py:619
+#: idm/views.py:152 idm/views.py:552 idm/views.py:623
 #: unix/templates/unix/system_dashboard.html:6 unix/views.py:506
 #: wordpress_manager/forms.py:5 wordpress_manager/views.py:32
 msgid "Name"
@@ -1075,7 +1075,7 @@ msgstr "Deaktiviert"
 #: idm/templates/idm/change_password.html:5
 #: idm/templates/idm/change_password.html:16
 #: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
-#: lac/templates/lac/base.html:265
+#: lac/templates/lac/base.html:264
 msgid "Change Password"
 msgstr "Passwort ändern"
 
@@ -1116,7 +1116,7 @@ msgid "Cloud Desktop Settings"
 msgstr "Cloud Desktop Einstellungen"
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:139 lac/templates/lac/base.html:277
+#: idm/views.py:139 lac/templates/lac/base.html:276
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1138,7 +1138,7 @@ msgid "User Settings"
 msgstr "Benutzereinstellungen"
 
 #: idm/templates/idm/user_settings.html:12 idm/views.py:139 idm/views.py:148
-#: lac/templates/lac/base.html:267
+#: lac/templates/lac/base.html:266
 msgid "2-Factor Authentication"
 msgstr "2-Faktor-Authentifizierung"
 
@@ -1256,17 +1256,17 @@ msgstr "Libre Workspace: %(base_url)s - %(username)s"
 msgid "The selected language is not supported!"
 msgstr ""
 
-#: idm/views.py:246
+#: idm/views.py:250
 msgid "You are not authorized to delete this device!"
 msgstr "Sie sind nicht berechtigt, dieses Gerät zu löschen!"
 
-#: idm/views.py:295
+#: idm/views.py:299
 #, fuzzy
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes saved successfully!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
-#: idm/views.py:311
+#: idm/views.py:315
 msgid ""
 "If the email address exists in our system, an email with a password reset "
 "link has been sent."
@@ -1274,56 +1274,56 @@ msgstr ""
 "Wenn die E-Mail-Adresse in unserem System existiert, wurde eine E-Mail mit "
 "einem Link zum Zurücksetzen des Passworts gesendet."
 
-#: idm/views.py:313
+#: idm/views.py:317
 msgid "Please enter a valid email address."
 msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein."
 
-#: idm/views.py:329
+#: idm/views.py:333
 msgid "The password has been successfully changed!"
 msgstr "Das Passwort wurde erfolgreich geändert!"
 
-#: idm/views.py:331
+#: idm/views.py:335
 msgid "The old password is not correct!"
 msgstr "Das alte Passwort ist nicht korrekt!"
 
-#: idm/views.py:333
+#: idm/views.py:337
 msgid "The new passwords do not match!"
 msgstr "Die neuen Passwörter stimmen nicht überein!"
 
-#: idm/views.py:343
+#: idm/views.py:347
 #, python-format
 msgid "2-Factor Authentication for %(username)s successfully reset!"
 msgstr "2-Faktor-Authentifizierung für %(username)s erfolgreich zurückgesetzt!"
 
-#: idm/views.py:365
+#: idm/views.py:369
 #, python-format
 msgid "User '%(username)s' successfully created!"
 msgstr "Benutzer '%(username)s' erfolgreich erstellt!"
 
-#: idm/views.py:369 idm/views.py:432
+#: idm/views.py:373 idm/views.py:436
 msgid "Form is not valid"
 msgstr "Formular ist nicht gültig"
 
-#: idm/views.py:373
+#: idm/views.py:377
 msgid "User"
 msgstr "Benutzer"
 
-#: idm/views.py:390
+#: idm/views.py:394
 msgid "Password successfully changed!"
 msgstr "Passwort erfolgreich geändert!"
 
-#: idm/views.py:394 idm/views.py:457
+#: idm/views.py:398 idm/views.py:461
 #, fuzzy
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes successfully saved!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
-#: idm/views.py:430
+#: idm/views.py:434
 #, python-format
 msgid "Group '%(cn)s' successfully created!"
 msgstr "Gruppe '%(cn)s' erfolgreich erstellt!"
 
-#: idm/views.py:455
+#: idm/views.py:459
 msgid ""
 "Nextcloud group folder will not be deleted (may contain important data), "
 "please delete manually in the Nextcloud admin interface."
@@ -1331,39 +1331,39 @@ msgstr ""
 "Nextcloud-Gruppenordner wird nicht gelöscht (kann wichtige Daten enthalten), "
 "bitte manuell in der Nextcloud-Admin-Oberfläche löschen."
 
-#: idm/views.py:483
+#: idm/views.py:487
 #, python-format
 msgid "Add user %(user_cn)s to group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:488
+#: idm/views.py:492
 #, python-format
 msgid "Remove user %(user_cn)s from group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:492 idm/views.py:535
+#: idm/views.py:496 idm/views.py:539
 msgid "Memberships successfully updated!"
 msgstr "Mitgliedschaften erfolgreich aktualisiert!"
 
-#: idm/views.py:526
+#: idm/views.py:530
 #, python-format
 msgid "Add user %(cn)s to group %(group_cn)s"
 msgstr "Benutzer %(cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:531
+#: idm/views.py:535
 #, python-format
 msgid "Remove user %(cn)s from group %(group_cn)s"
 msgstr "Benutzer %(cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:544
+#: idm/views.py:548
 msgid "OIDC Clients"
 msgstr "OIDC-Clients"
 
-#: idm/views.py:545
+#: idm/views.py:549
 msgid "OIDC Client"
 msgstr "OIDC-Client"
 
-#: idm/views.py:553
+#: idm/views.py:557
 #, python-format
 msgid ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
@@ -1372,29 +1372,29 @@ msgstr ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
 "a>"
 
-#: idm/views.py:615 lac/templates/lac/base.html:266
+#: idm/views.py:619 lac/templates/lac/base.html:265
 msgid "API Keys"
 msgstr "API-Schlüssel"
 
-#: idm/views.py:616
+#: idm/views.py:620
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: idm/views.py:619
+#: idm/views.py:623
 #, fuzzy
 #| msgid "Create Addon"
 msgid "Created At"
 msgstr "Erstellt am"
 
-#: idm/views.py:619
+#: idm/views.py:623
 msgid "Last Used At"
 msgstr "Zuletzt verwendet am"
 
-#: idm/views.py:619
+#: idm/views.py:623
 msgid "Expiration Date"
 msgstr "Ablaufdatum"
 
-#: idm/views.py:625
+#: idm/views.py:629
 msgid ""
 "You can view all API endpoints <a href='/api/schema/swagger-ui/' "
 "target='_blank'>here</a>."
@@ -1402,19 +1402,19 @@ msgstr ""
 "Sie können alle API-Endpunkte <a href='/api/schema/swagger-ui/' "
 "target='_blank'>hier</a> einsehen."
 
-#: idm/views.py:651
+#: idm/views.py:655
 msgid "You are not authorized to edit this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu bearbeiten!"
 
-#: idm/views.py:671
+#: idm/views.py:675
 msgid "You are not authorized to delete this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu löschen!"
 
-#: idm/views.py:681
+#: idm/views.py:685
 msgid "You are not authorized to view these API key details!"
 msgstr "Sie sind nicht berechtigt, diese API-Schlüsseldetails anzuzeigen!"
 
-#: idm/views.py:683
+#: idm/views.py:687
 #, python-format
 msgid ""
 "API Key Details:<br>Name: %(name)s<br>Key: %(key)s<br>Created At: "
@@ -1425,106 +1425,106 @@ msgstr ""
 "am: %(created_at)s<br>Zuletzt verwendet am: %(last_used_at)s<br>Ablaufdatum: "
 "%(expiration_date)s"
 
-#: idm/views.py:715
+#: idm/views.py:719
 #, python-format
 msgid "Failed to enable user. %(msg)s"
 msgstr "Benutzer konnte nicht aktiviert werden. %(msg)s"
 
-#: idm/views.py:716
+#: idm/views.py:720
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully enabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktiviert."
 
-#: idm/views.py:725
+#: idm/views.py:729
 #, python-format
 msgid "Failed to disable user. %(msg)s"
 msgstr "Benutzer konnte nicht deaktiviert werden. %(msg)s"
 
-#: idm/views.py:726
+#: idm/views.py:730
 #, python-format
 msgid "User %(pk)s has been successfully disabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich deaktiviert."
 
-#: idm/views.py:736
+#: idm/views.py:740
 #, python-format
 msgid "Failed to reset 2FA for user. %(msg)s"
 msgstr "2FA für Benutzer konnte nicht zurückgesetzt werden. %(msg)s"
 
-#: idm/views.py:737
+#: idm/views.py:741
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "2FA for user %(pk)s has been successfully reset."
 msgstr "2FA für Benutzer %(pk)s wurde erfolgreich zurückgesetzt."
 
-#: idm/views.py:749
+#: idm/views.py:753
 #, python-format
 msgid "Setting new password for user %(pk)s: %(new_password)s"
 msgstr "Neues Passwort für Benutzer %(pk)s festlegen: %(new_password)s"
 
-#: idm/views.py:754
+#: idm/views.py:758
 #, python-format
 msgid "Password for user %(pk)s has been successfully changed."
 msgstr "Passwort für Benutzer %(pk)s wurde erfolgreich geändert."
 
-#: idm/views.py:757
+#: idm/views.py:761
 msgid "Password too short."
 msgstr "Passwort zu kurz."
 
-#: idm/views.py:765
+#: idm/views.py:769
 #, python-format
 msgid "Failed to delete user %(pk)s: %(msg)s"
 msgstr "Benutzer %(pk)s konnte nicht gelöscht werden: %(msg)s"
 
-#: idm/views.py:766
+#: idm/views.py:770
 #, python-format
 msgid "Failed to delete user. %(msg)s"
 msgstr "Benutzer konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:768
+#: idm/views.py:772
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully deleted."
 msgstr "Benutzer %(pk)s wurde erfolgreich gelöscht."
 
-#: idm/views.py:792
+#: idm/views.py:796
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "User %(pk)s has been successfully updated."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:814
+#: idm/views.py:818
 #, python-format
 msgid "User %(username)s has been successfully created."
 msgstr "Benutzer %(username)s wurde erfolgreich erstellt."
 
-#: idm/views.py:857
+#: idm/views.py:861
 #, python-format
 msgid "Group %(cn)s has been successfully created."
 msgstr "Gruppe %(cn)s wurde erfolgreich erstellt."
 
-#: idm/views.py:877
+#: idm/views.py:881
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Group %(pk)s has been successfully updated."
 msgstr "Gruppe %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:885
+#: idm/views.py:889
 #, python-format
 msgid "Failed to delete group. %(msg)s"
 msgstr "Gruppe konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:886
+#: idm/views.py:890
 #, fuzzy, python-format
 #| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Group %(pk)s has been successfully deleted."
 msgstr "Gruppe %(pk)s wurde erfolgreich gelöscht."
 
-#: lac/settings.py:227 lac/templates/lac/base.html:253
+#: lac/settings.py:226 lac/templates/lac/base.html:252
 msgid "language.en"
 msgstr "Englisch"
 
-#: lac/settings.py:228 lac/templates/lac/base.html:254
+#: lac/settings.py:227 lac/templates/lac/base.html:253
 msgid "language.de"
 msgstr "Deutsch"
 
@@ -1540,25 +1540,25 @@ msgstr "Logo"
 msgid "Administration"
 msgstr "Administration"
 
-#: lac/templates/lac/base.html:239
+#: lac/templates/lac/base.html:237
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: lac/templates/lac/base.html:240
+#: lac/templates/lac/base.html:238
 msgid "Forum"
 msgstr "Forum"
 
-#: lac/templates/lac/base.html:241
+#: lac/templates/lac/base.html:239
 #, fuzzy
 #| msgid "Support"
 msgid "Paid Support"
 msgstr "Kostenpflichtiger Support"
 
-#: lac/templates/lac/base.html:242
+#: lac/templates/lac/base.html:240
 msgid "Download System Information"
 msgstr "Systeminformationen herunterladen"
 
-#: lac/templates/lac/base.html:268
+#: lac/templates/lac/base.html:267
 msgid "Log Out"
 msgstr "Abmelden"
 
@@ -3926,51 +3926,51 @@ msgstr ""
 "Auf den folgenden Seiten richten wir gemeinsam Libre-Workspace ein. Bitte "
 "beginnen Sie mit der Definition eines sicheren Master-Passworts."
 
-#: welcome/templates/welcome/welcome_start.html:18
+#: welcome/templates/welcome/welcome_start.html:17
 #, fuzzy
 #| msgid "Nextcloud"
 msgid "Next"
 msgstr "Nextcloud"
 
-#: welcome/templates/welcome/welcome_start.html:22
+#: welcome/templates/welcome/welcome_start.html:21
 msgid "Tip:"
 msgstr "Tipp:"
 
-#: welcome/templates/welcome/welcome_start.html:22
+#: welcome/templates/welcome/welcome_start.html:21
 msgid "You can also perform the setup from another device:"
 msgstr ""
 "Sie können die Einrichtung auch von einem anderen Gerät aus durchführen:"
 
-#: welcome/views.py:50
+#: welcome/views.py:49
 msgid "Passwords do not match. Please try again."
 msgstr "Passwörter stimmen nicht überein. Bitte versuchen Sie es erneut."
 
-#: welcome/views.py:84 welcome/views.py:120
+#: welcome/views.py:82 welcome/views.py:118
 msgid "Please provide a domain."
 msgstr "Bitte geben Sie eine Domain an."
 
-#: welcome/views.py:122
+#: welcome/views.py:120
 msgid "Please ensure you only provide the domain and no subdomain."
 msgstr ""
 "Bitte stellen Sie sicher, dass Sie nur die Domain und keine Subdomain "
 "angeben."
 
-#: welcome/views.py:124
+#: welcome/views.py:122
 msgid "Please provide a valid domain."
 msgstr "Bitte geben Sie eine gültige Domain an."
 
-#: welcome/views.py:127 welcome/views.py:134
+#: welcome/views.py:125 welcome/views.py:132
 msgid ""
 "Please ensure the top-level domain (TLD) is not longer than 12 characters."
 msgstr ""
 "Bitte stellen Sie sicher, dass die Top-Level-Domain (TLD) nicht länger als "
 "12 Zeichen ist."
 
-#: welcome/views.py:157
+#: welcome/views.py:155
 msgid "Libre Workspace is already configured. Please log in."
 msgstr "Libre Workspace ist bereits konfiguriert. Bitte melden Sie sich an."
 
-#: welcome/views.py:191
+#: welcome/views.py:189
 #, python-format
 msgid ""
 "Error while creating /etc/libre-workspace/libre-workspace.env file: "
@@ -3982,7 +3982,7 @@ msgstr ""
 "das in Ordnung. Wenn Sie sich in einer Produktionsumgebung befinden, "
 "überprüfen Sie bitte Ihre Installation.)"
 
-#: welcome/views.py:199 welcome/views.py:200
+#: welcome/views.py:197 welcome/views.py:198
 msgid ""
 "WARNING: Installation script not found! If you are in a development "
 "environment, that's okay. If you are in a production environment, please "
