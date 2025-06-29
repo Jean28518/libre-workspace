@@ -222,7 +222,8 @@ h1, h2, h3, h4, h5, h6 {
         {% endif %}
       </ul>
       <ul>
-        <li>
+        {% comment %} Hide Language Button because it doesnt work at the moment and the Middleware decides reagrding the browser setting. {% endcomment %}
+        {% comment %} <li>
             <details role="list" dir="rtl">
               <summary aria-haspopup="listbox" role="link" class="secondary">
                 <span class="material-icons">language</span>
@@ -234,7 +235,7 @@ h1, h2, h3, h4, h5, h6 {
                 {% endwith %}
               </ul>
             </details>
-          </li>
+          </li> {% endcomment %}
       {% if request.user.is_authenticated %}
           {% comment %} <li><a href="#">Link</a></li> {% endcomment %}
           {% if request.user.is_superuser %}
