@@ -47,7 +47,8 @@ def ensure_all_cards_exist_in_database():
     remaining_system_cards = list(DashboardEntry.objects.filter(is_system=True).all())
     for card_dat in card_data:
         found_in_caddyfile = False
-        if card_dat["title"] == _("Management"):
+        # Is this the management card?
+        if "/idm/dashboard" in card_dat["url"]:
             card_dat["url"] = reverse("dashboard")
             # Set the icon path to the default icon for the management card
             card_dat["icon_path"] = "/static/lac/icons/libre-workspace.webp"
