@@ -90,9 +90,13 @@ for user in /home/*; do
     if [ -d "$user" ]; then
         if [ -f "$user/.setup_desktop" ]; then
             echo "Removing .setup_desktop file for user: $(basename "$user")"
-            rm -f "$user/.setup_desktop"
-            cp /usr/lib/libre-workspace/modules/desktop/scripts/setup_user_desktop.sh "$user/.scripts/"
+            rm -f "$user/.setup_desktop"    
         fi
+        # Also update the setup_user_desktop.sh script in the user's .scripts directory
+        mkdir -p "$user/.scripts"
+        cp /usr/lib/libre-workspace/modules/desktop/scripts/setup_user_desktop.sh "$user/.scripts/"
+        chmod +x "$user/.scripts/setup_user_desktop.sh"
+        chown -R "$(basename "$user"):$(basename "$user")" "$user/.scripts/setup_user_desktop.sh"
     fi
 done
 
