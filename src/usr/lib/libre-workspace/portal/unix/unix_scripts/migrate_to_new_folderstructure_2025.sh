@@ -43,7 +43,6 @@ source_array=(
     "/usr/share/linux-arbeitsplatz/db.sqlite3"
     "/usr/share/linux-arbeitsplatz/media/"
     "/usr/share/linux-arbeitsplatz/unix/unix_scripts/app_dashboard_settings.json"
-    "/var/www/linux-arbeitsplatz-static/"
 )
 
 destination_array=(
@@ -55,7 +54,6 @@ destination_array=(
     "/var/lib/libre-workspace/portal/db.sqlite3"
     "/var/lib/libre-workspace/portal/media/"
     "/var/lib/libre-workspace/portal/app_dashboard_settings.json"
-    "/var/www/libre-workspace-static/"
 )
 
 mkdir -p /usr/lib/libre-workspace/modules/
@@ -71,6 +69,12 @@ for i in "${!source_array[@]}"; do
     # Handle globbing for sources with wildcards
     cp -ra $source $destination
 done
+
+
+# Rsync static files to the new location
+mkdir -p /var/www/libre-workspace-static/
+rsync -ra /var/www/linux-arbeitsplatz-static/* /var/www/libre-workspace-static/
+
 
 # Change the "root * /var/www/linux-arbeitsplatz-static" to "root * /var/www/libre-workspace-static" in the Caddyfile
 sed -i 's|root \* /var/www/linux-arbeitsplatz-static|root \* /var/www/libre-workspace-static|g' /etc/caddy/Caddyfile
