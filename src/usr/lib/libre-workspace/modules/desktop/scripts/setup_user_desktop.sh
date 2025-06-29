@@ -13,7 +13,7 @@ sleep 10
 # We are in a cinnamon desktop environment
 
 # Set the background image
-gsettings set org.cinnamon.desktop.background picture-uri "file:///usr/lib/libre-workspace/portal/lac/static/lac/images/desktop_remote.jpg"
+gsettings set org.cinnamon.desktop.background picture-uri "file:///usr/share/backgrounds/libre-workspace/desktop_remote.jpg"
 
 # Set icon theme to yaru-blue
 gsettings set org.cinnamon.desktop.interface icon-theme "Yaru-blue"

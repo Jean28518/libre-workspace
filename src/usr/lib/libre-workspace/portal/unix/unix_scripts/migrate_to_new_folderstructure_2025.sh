@@ -83,6 +83,20 @@ chown -R www-data:www-data /var/www/libre-workspace-static/
 sed -i 's|root \* /usr/share/linux-arbeitsplatz/media/|root \* /var/lib/libre-workspace/portal/media|g' /etc/caddy/Caddyfile
 chown -R www-data:www-data /var/lib/libre-workspace/portal/media/
 
+
+# Rerun the setup_desktop script for all users. For that we need to remove the .setup_desktop file from all users' home directories
+# (Because the background image path has changed. And we want to disable the )
+for user in /home/*; do
+    if [ -d "$user" ]; then
+        if [ -f "$user/.setup_desktop" ]; then
+            echo "Removing .setup_desktop file for user: $(basename "$user")"
+            rm -f "$user/.setup_desktop"
+            cp /usr/lib/libre-workspace/modules/desktop/scripts/setup_user_desktop.sh "$user/.scripts/"
+        fi
+    fi
+done
+
+
 # Create a file to indicate that the migration has been performed
 touch /var/lib/libre-workspace/.migrated_to_new_folderstructure_2025
 echo "Migration to new folder structure completed successfully."
