@@ -231,6 +231,74 @@ def ensure_uidNumber_for_user(cn):
         conn.modify_s(dn, ldif)
     except LDAPError as e:
         return _("Error: %(error)s") % {"error": str(e)}
+    
+
+def ensure_gidNumber_for_group(cn):
+    """Ensures that the group has a gidNumber set. If not, it generates a new one."""
+    group_information = get_group_information_of_cn(cn)
+    if group_information is None:
+        return _("Group '%(cn)s' was not found.") % {"cn": cn}
+    
+    if group_information.get("gidNumber", "") != "":
+        # Group already has a gidNumber, so we don't need to set it again
+        return
+
+    # Generate a gidNumber for the group
+    # Get the current highest gidNumber
+    conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+    conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    result = conn.search_s(f"cn=users,{settings.AUTH_LDAP_DC}", ldap.SCOPE_SUBTREE, "(objectClass=*)", ["gidNumber"])
+    max_gid_number = 1000000  # Start at 1000000 to avoid conflicts with system groups
+    for entry in result:
+        if b'gidNumber' in entry[1]:
+            gid_number = int(entry[1]['gidNumber'][0].decode('utf-8'))
+            if gid_number > max_gid_number:
+                max_gid_number = gid_number
+
+    new_number = max_gid_number + 1
+
+    attrs = {
+        'gidNumber': [str(new_number).encode('utf-8')]
+    }
+    ldif = modlist.modifyModlist({}, attrs)
+    
+    dn = ldap_get_dn_of_cn(cn)
+    try:
+        conn.modify_s(dn, ldif)
+    except LDAPError as e:
+        return _("Error: %(error)s") % {"error": str(e)}
+    
+
+def get_group_information_of_cn(cn):
+    if not settings.AUTH_LDAP_ENABLED:
+        return None
+
+    try:
+        conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
+        conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
+    except LDAPError as e:
+        print(_("Can't connect to LDAP server: %(error)s") % {"error": str(e)})
+        return None
+
+    dn = ldap_get_dn_of_cn(cn)
+
+    # Get group with dn
+    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "gidNumber", "memberOf"])
+
+    conn.unbind_s()
+
+    if len(ldap_reply) != 1:
+        return None
+    
+    group_information = {}
+    group_information["dn"] = dn
+    group_information["cn"] = cn
+    group_information["gidNumber"] = ldap_reply[0][1].get("gidNumber", [b""])[0].decode('utf-8')
+    group_information["groups"] = ldap_reply[0][1].get("memberOf", [])
+    for i in range(len(group_information["groups"])):
+        group_information["groups"][i] = group_information["groups"][i].decode('utf-8')
+
+    return group_information
 
 
 # Revokes or grants admin rights to a user. If nothing changes, nothing happens.
@@ -391,7 +459,7 @@ def ldap_get_all_groups():
     conn.bind_s(settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD)
 
     # Get all Groups: (objectClass=group)
-    result = conn.search_s(f"cn=users,{settings.AUTH_LDAP_DC}", ldap.SCOPE_SUBTREE, "(objectClass=group)", ["cn", "description"])
+    result = conn.search_s(f"cn=users,{settings.AUTH_LDAP_DC}", ldap.SCOPE_SUBTREE, "(objectClass=group)", ["cn", "description", "gidNumber"])
     conn.unbind_s()
    
     groups = []
@@ -400,13 +468,14 @@ def ldap_get_all_groups():
         group = group[1]
         cn = group.get("cn", [b''])[0].decode('utf-8')
         description = group.get("description", [b''])[0].decode('utf-8')
+        gidNumber = group.get("gidNumber", [b''])[0].decode('utf-8')
 
         # Check if group is default group
         (description, isDefaultGroup) = ldap_check_if_group_is_default_group(description)
 
         if ldap_is_system_group(cn):
             continue
-        groups.append({"dn": dn, "cn": cn, "description": description, "defaultGroup": isDefaultGroup})
+        groups.append({"dn": dn, "cn": cn, "description": description, "defaultGroup": isDefaultGroup, "gidNumber": gidNumber})
     return groups
 
 # Returns tuple of description (str) and isDefaultGroup (bool)
@@ -464,6 +533,9 @@ def ldap_create_group(group_information):
 
     conn.unbind_s()
 
+    # Ensure that the group has a gidNumber set
+    ensure_gidNumber_for_group(group_information["cn"])
+
 def ldap_update_group(cn, group_information):
     # We dont want to modify the original dict
     group_information = group_information.copy()
@@ -494,6 +566,9 @@ def ldap_update_group(cn, group_information):
 
     conn.unbind_s()
 
+    # Get the information of a group by its cn (common name)
+    ensure_gidNumber_for_group(cn)
+
 # Returns an single dict with all information to a group
 def ldap_get_group_information_of_cn(cn, dontRemoveDefaultGroupOfDescription = False):
     conn = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)
@@ -502,7 +577,7 @@ def ldap_get_group_information_of_cn(cn, dontRemoveDefaultGroupOfDescription = F
     dn = ldap_get_dn_of_cn(cn)
 
     # Get group with dn
-    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "description"])
+    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "description", "objectGUID", "gidNumber"])
 
     
     conn.unbind_s()
@@ -514,6 +589,16 @@ def ldap_get_group_information_of_cn(cn, dontRemoveDefaultGroupOfDescription = F
     group_information = {}
     group_information["dn"] = dn
     group_information["cn"] = ldap_reply[0][1].get("cn", [b""])[0].decode('utf-8')
+    group_information["objectGUID"] = ldap_reply[0][1].get("objectGUID", [b""])[0].hex()
+    # Correct the byte order
+    raw_guid = ldap_reply[0][1].get("objectGUID", [b""])[0]
+    part1 = raw_guid[0:4][::-1]   # Reverse first 4 bytes
+    part2 = raw_guid[4:6][::-1]   # Reverse next 2 bytes
+    part3 = raw_guid[6:8][::-1]   # Reverse next 2 bytes
+    part4 = raw_guid[8:]          # Keep the rest as is
+    raw_guid = part1 + part2 + part3 + part4
+    group_information["guid"] = uuid.UUID(bytes=raw_guid, version=4)
+    group_information["gidNumber"] = ldap_reply[0][1].get("gidNumber", [b""])[0].decode('utf-8')
     group_information["description"] = ldap_reply[0][1].get("description", [b""])[0].decode('utf-8')
 
     # Check if group is default group

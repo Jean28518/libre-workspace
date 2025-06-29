@@ -166,6 +166,11 @@ def get_all_linux_users_with_passwords():
         return []
 
     all_users = ldap.ldap_get_all_users()
+    all_groups = ldap.ldap_get_all_groups()
+
+    print(all_groups)
+
+
     users = []
     for user in all_users:
         user_dn = user.get("dn", "")
@@ -175,6 +180,22 @@ def get_all_linux_users_with_passwords():
         else:
             user["yescrypt_hash"] = None
         user["username"] = user.get("cn", "")
+
+        current_group_dns_of_user = user.get("groups", [])
+        # Match the real groups:
+        group_return_list = []
+        for current_group_dn in current_group_dns_of_user:
+            group = next((g for g in all_groups if g.get("dn", "").lower() == current_group_dn.lower()), None)
+            if group:
+                group_dict = {
+                    "dn": group.get("dn", ""),
+                    "cn": group.get("cn", ""),
+                    "description": group.get("description", ""),
+                    "gidNumber": group.get("gidNumber", "")
+                }
+                group_return_list.append(group_dict)
+
+        user["groups"] = group_return_list
         users.append(user)
     return users
 

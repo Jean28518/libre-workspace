@@ -2,13 +2,16 @@
 Linux Client User Sync
 **********************
 
-The Libre Workspace Project provides a script to sync users from the Libre Workspace Portal to the Linux client.
+The Libre Workspace Project provides a script to sync users and libre workspace groups from the Libre Workspace Portal to the Linux client.
 These properties are synced:
+
 - Username
+- Display name
 - Password
 - Activation status
 - User id (uid) (starting at 10000)
 - Administrator status
+- Groups
 
 At the moment there is no two factor authentication support for login at a client. So a user will only need his normal libre workspace password to log in.
 

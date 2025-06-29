@@ -49,7 +49,7 @@ class LinuxUserSerializer(serializers.Serializer):
     mail = serializers.EmailField(max_length=100, required=False, allow_blank=True)
     cn = serializers.CharField(max_length=100, required=False, allow_blank=True)
     username = serializers.CharField(max_length=100, required=False, allow_blank=True)
-    groups = serializers.ListField(child=serializers.CharField(), required=False, default=[])
+    groups = serializers.ListField(child=serializers.DictField(), required=False, default=list)
     guid = serializers.CharField(max_length=100, required=False, allow_blank=True)
     enabled = serializers.BooleanField(required=False, default=True)
     admin = serializers.BooleanField(required=False, default=False)

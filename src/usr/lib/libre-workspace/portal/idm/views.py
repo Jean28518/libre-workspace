@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
 from django.utils import translation
+from django import forms
 
 import idm.idm
 
@@ -473,11 +474,16 @@ def edit_group(request, cn):
                 message = _("Changes successfully saved!")
         else:
             message = form.errors
-        form_data = form.cleaned_data
+        new_form_data = form.cleaned_data
+        new_form_data["guid"] = form_data.get("guid", "")
+        new_form_data["gidNumber"] = form_data.get("gidNumber", "")
+        form_data = new_form_data
     form = GroupEditForm()
     if form_data != {}:
         form_data["nextcloud_groupfolder"] = unix.nextcloud_groupfolder_exists(cn)
         form = GroupEditForm(form_data)
+    form.fields["guid"].initial = form_data.get("guid", "")
+    form.fields["gidNumber"].initial = form_data.get("gidNumber", "")
     return render(request, "idm/admin/edit_group.html", {"form": form, "message": message, "cn": cn})
 
 @staff_member_required(login_url=settings.LOGIN_URL)
