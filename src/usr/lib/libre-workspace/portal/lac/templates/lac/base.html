@@ -279,9 +279,9 @@ h1, h2, h3, h4, h5, h6 {
 
     <br/>
     <br/>
-
-    <div class="container">
-  
+    {% comment %} Make sure the body minimum height is 85% if the screen height (for footer) {% endcomment %}
+    <div class="container" style="min-height: 85vh;">
+       
         {% block content %}
         {% endblock %}
 
@@ -289,10 +289,12 @@ h1, h2, h3, h4, h5, h6 {
         <br>
   
     </div>
+    <footer style="text-align: center; padding: 1rem 0; color: #888;">
+      {% if not branding.hide_about %}
+         {% include "lac/about.html" %}
+      {% endif %}
+    </footer>
   </body>
 
-  <footer style="text-align: center; padding: 1rem 0; color: #888;">
-    &copy; {{ now|date:"Y" }} Libre-Workspace
-  </footer>
 
 </html>

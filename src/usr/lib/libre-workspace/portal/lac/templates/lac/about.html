@@ -1,0 +1,140 @@
+{% load i18n %}
+
+<a
+    data-target="modal-about-libre-workspace"
+    onClick="toggleModal(event)"
+    href="#"
+>
+    {% translate "About Libre Workspace" %}
+</a>
+
+<dialog id="modal-about-libre-workspace">
+    <article style="max-width: 90vw; min-width: 70vw; overflow: auto; text-align: left;">
+        <a href="#close"
+           aria-label="{% translate 'Close' %}"
+           class="close"
+           data-target="modal-about-libre-workspace"
+           onClick="toggleModal(event)">
+        </a>
+        <div style="min-height: 60vh;">
+            <h2>
+                {% translate "Libre Workspace" %} {{ libre_workspace_version }}
+            </h2>
+            <p>
+                {% translate "Libre Workspace is an extensible open source server solution providing cloud services for your own infrastructure." %}
+            </p>
+            <p>
+                {% translate "Official website:" %} <a href="https://www.libre-workspace.org" target="_blank">libre-workspace.org</a><br>
+                {% translate "Source code repository:" %} <a href="https://github.com/jean28518/libre-workspace" target="_blank">github.com/jean28518/libre-workspace</a><br>
+                {% translate "Documentation:" %} <a href="https://docs.libre-workspace.org" target="_blank">docs.libre-workspace.org</a><br>
+                {% translate "Community forum:" %} <a href="https://forum.libre-workspace.org" target="_blank">forum.libre-workspace.org</a><br>
+                {% translate "Support:" %} <a href="https://www.linuxguides.de/linux-support" target="_blank">www.linuxguides.de/linux-support</a><br>
+                {% translate "Sponsor a feature or service:" %} <a href="https://www.libre-workspace.org/sponsor" target="_blank">www.libre-workspace.org/sponsor</a>
+            </p>
+
+            <br><br>
+
+            <div class="grid">
+                <button class="" onClick="showContent('sponsors-content')" id="sponsors-button">
+                    {% translate "Sponsors" %}
+                </button>
+                <button class="outline" onClick="showContent('authors-content')" id="authors-button">
+                    {% translate "Authors" %}
+                </button>
+                <button class="outline" onClick="showContent('license-content')" id="license-button">
+                    {% translate "License" %}
+                </button>
+            </div>
+            <div style="margin-top: 1rem; background-color: rgba(0, 0, 0, 0.03); padding: 2.5rem; border-radius: 5px;">
+                <div id="sponsors-content">
+                    <p>
+                        {% translate "The Libre Workspace Project is supported by following instances:" %}
+                    </p>
+                    <br>
+                    <ul>
+                        <li>
+                            <a href="https://www.linuxguides.de" target="_blank">Linux Guides</a>:
+                            {% translate "Main project holder and service provider" %}
+                        </li>
+                        <li>
+                            <a href="https://forum.libre-workspace.org" target="_blank">Libre Workspace Community</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="authors-content">
+                    <p>
+                        {% translate "The Libre Workspace Project is developed by following persons:" %}
+                    </p>
+                    <br>
+                    <ul>
+                        <li>Jean28518: {% translate "Project initiator and main developer" %}</li>
+                        <li>mettbroetchen43: {% translate "Code Contributor" %}</li>
+                        <li>cledge: {% translate "Code Contributor" %}</li>
+                        <li>gelbphoenix: {% translate "Code Contributor" %}</li>
+                    </ul>
+                </div>
+
+                <div id="license-content">
+                    <p>
+                        {% translate "Libre Workspace is licensed under the GNU General Public License v3.0." %}
+                    </p>
+                    <br>
+                    <p>
+                        {% translate "You can find the full license text in the source code repository or on the official website:" %}
+                        <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3.0</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <center>
+                <a href="#cancel"
+                   role="button"
+                   data-target="modal-about-libre-workspace"
+                   onClick="toggleModal(event)">
+                    {% translate "Close" %}
+                </a>
+            </center>
+        </footer>
+    </article>
+</dialog>
+
+<script>
+function showContent(contentId) {
+    const sponsorsContent = document.getElementById("sponsors-content");
+    const authorsContent = document.getElementById("authors-content");
+    const licenseContent = document.getElementById("license-content");
+
+    const sponsorsButton = document.getElementById("sponsors-button");
+    const authorsButton = document.getElementById("authors-button");
+    const licenseButton = document.getElementById("license-button");
+
+    if (contentId === "sponsors-content") {
+        sponsorsContent.style.display = "block";
+        authorsContent.style.display = "none";
+        licenseContent.style.display = "none";
+        sponsorsButton.classList.remove("outline");
+        authorsButton.classList.add("outline");
+        licenseButton.classList.add("outline");
+    } else if (contentId === "authors-content") {
+        sponsorsContent.style.display = "none";
+        authorsContent.style.display = "block";
+        licenseContent.style.display = "none";
+        sponsorsButton.classList.add("outline");
+        authorsButton.classList.remove("outline");
+        licenseButton.classList.add("outline");
+    } else if (contentId === "license-content") {
+        sponsorsContent.style.display = "none";
+        authorsContent.style.display = "none";
+        licenseContent.style.display = "block";
+        sponsorsButton.classList.add("outline");
+        authorsButton.classList.add("outline");
+        licenseButton.classList.remove("outline");
+    }
+}
+// Initialize the first content to be shown
+document.addEventListener("DOMContentLoaded", function() {
+    showContent('sponsors-content');
+});
+</script>

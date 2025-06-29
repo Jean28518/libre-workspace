@@ -816,11 +816,18 @@ def set_libre_workspace_name(name):
     set_value("LIBRE_WORKSPACE_NAME", name)
 
 
+libre_workspace_version = ""
+
 def get_libre_workspace_version():
+    global libre_workspace_version
+    if libre_workspace_version != "":
+        return libre_workspace_version
     # Get the version of installed libre-workspace-portal.deb:
     output = subprocess.getoutput("dpkg -s libre-workspace-portal | grep Version")
     if "Version" in output:
-        return output.split(":")[1].strip()
+        version = output.split(":")[1].strip()
+        libre_workspace_version = version
+        return version
     else:
         return "?"
     

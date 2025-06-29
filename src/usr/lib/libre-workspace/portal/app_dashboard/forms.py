@@ -25,5 +25,6 @@ class DashboardAppearanceForm(forms.Form):
     force_dark_mode = forms.BooleanField(label=_("Force dark mode"), required=False)
     portal_branding_title = forms.CharField(label=_("Portal title"), required=False)
     portal_branding_logo = forms.ImageField(label=_("Portal logo"), required=False, widget=forms.FileInput(attrs={"accept": "image/*"}))
+    hide_about = forms.BooleanField(label=_("Hide 'About Libre Workspace' section in footer"), required=False)
     primary_color = forms.CharField(label=_("Primary color (HEX code) (e.g.: #09928b)"), required=False)
     secondary_color = forms.CharField(label=_("Secondary color (HEX code) (e.g.: #07746d)"), required=False)

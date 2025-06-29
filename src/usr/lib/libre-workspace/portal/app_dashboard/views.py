@@ -183,12 +183,14 @@ def app_dashboard_appearance(request):
                 app_dashboard_settings.set_value("portal_branding_logo", filename)
             app_dashboard_settings.set_value("force_dark_mode", form.cleaned_data["force_dark_mode"])
             app_dashboard_settings.set_value("portal_branding_title", form.cleaned_data["portal_branding_title"])
+            app_dashboard_settings.set_value("hide_about", form.cleaned_data["hide_about"])
             app_dashboard_settings.set_value("primary_color", form.cleaned_data["primary_color"])
             app_dashboard_settings.set_value("secondary_color", form.cleaned_data["secondary_color"])
             message = _("The settings were successfully saved.")
     
     form.fields["force_dark_mode"].initial = app_dashboard_settings.get_value("force_dark_mode", False)
     form.fields["portal_branding_title"].initial = app_dashboard_settings.get_value("portal_branding_title", "")
+    form.fields["hide_about"].initial = app_dashboard_settings.get_value("hide_about", False)
     form.fields["primary_color"].initial = app_dashboard_settings.get_value("primary_color", "")
     form.fields["secondary_color"].initial = app_dashboard_settings.get_value("secondary_color", "")
     if app_dashboard_settings.get_value("portal_branding_logo", "") != "":
@@ -204,6 +206,7 @@ def reset_app_dashboard_appearance(request):
     app_dashboard_settings.set_value("portal_branding_title", "")
     app_dashboard_settings.set_value("portal_branding_logo", "")
     app_dashboard_settings.set_value("portal_branding_favicon", "")
+    app_dashboard_settings.set_value("hide_about", False)
     app_dashboard_settings.set_value("primary_color", "")
     app_dashboard_settings.set_value("secondary_color", "")
     return redirect("app_dashboard_appearance")
