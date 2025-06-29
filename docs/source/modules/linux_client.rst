@@ -25,7 +25,7 @@ For example, to run the script every hour. Here is a full example how to set up 
 - Login via administrator in to the Libre Workspace Portal.
 - Create an API key with the permission "Linux Client" and copy the key.
 
-code-block:: bash
+.. code-block:: bash
 
     # If your libre workspace instance is available via int.de we have to install the CA certificate:
     sudo wget --no-check-certificate https://cert.int.de/lan.crt -O /usr/local/share/ca-certificates/cert.int.de.crt
