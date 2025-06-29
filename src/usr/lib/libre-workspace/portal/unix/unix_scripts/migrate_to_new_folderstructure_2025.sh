@@ -85,7 +85,7 @@ chown -R www-data:www-data /var/lib/libre-workspace/portal/media/
 
 
 # Rerun the setup_desktop script for all users. For that we need to remove the .setup_desktop file from all users' home directories
-# (Because the background image path has changed. And we want to disable the )
+# (Because the background image path has changed. And we want to disable the screensaver by default)
 for user in /home/*; do
     if [ -d "$user" ]; then
         if [ -f "$user/.setup_desktop" ]; then
