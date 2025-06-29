@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 00:20+0100\n"
+"POT-Creation-Date: 2025-06-29 15:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -329,10 +329,14 @@ msgid "Portal logo"
 msgstr ""
 
 #: app_dashboard/forms.py:28
-msgid "Primary color (HEX code) (e.g.: #09928b)"
+msgid "Hide 'About Libre Workspace' section in footer"
 msgstr ""
 
 #: app_dashboard/forms.py:29
+msgid "Primary color (HEX code) (e.g.: #09928b)"
+msgstr ""
+
+#: app_dashboard/forms.py:30
 msgid "Secondary color (HEX code) (e.g.: #07746d)"
 msgstr ""
 
@@ -401,26 +405,26 @@ msgstr ""
 msgid "Overview of all installed apps and services on the portal."
 msgstr ""
 
-#: app_dashboard/views.py:188
+#: app_dashboard/views.py:189
 msgid "The settings were successfully saved."
 msgstr ""
 
-#: app_dashboard/views.py:195
+#: app_dashboard/views.py:197
 #, python-format
 msgid "Portal Logo (Current: %(logo)s)"
 msgstr ""
 
-#: app_dashboard/views.py:198
+#: app_dashboard/views.py:200
 msgid "Appearance"
 msgstr ""
 
-#: app_dashboard/views.py:198
+#: app_dashboard/views.py:200
 msgid ""
 "These settings affect all users<br>Currently only the portal area (without "
 "administration) is adjusted."
 msgstr ""
 
-#: app_dashboard/views.py:198 lac/templates/lac/edit_x.html:38
+#: app_dashboard/views.py:200 lac/templates/lac/edit_x.html:38
 #: lac/templates/lac/edit_x.html:47
 #: unix/templates/unix/update_management.html:36 unix/views.py:629
 #: unix/views.py:652 unix/views.py:684
@@ -429,7 +433,7 @@ msgstr ""
 
 #: caddy_configuration/forms.py:5 caddy_configuration/forms.py:10
 #: caddy_configuration/views.py:21 idm/forms.py:62 idm/forms.py:84
-#: idm/views.py:161 idm/views.py:572 idm/views.py:643
+#: idm/views.py:161 idm/views.py:570 idm/views.py:641
 #: unix/templates/unix/system_dashboard.html:6 unix/views.py:506
 #: wordpress_manager/forms.py:5 wordpress_manager/views.py:32
 msgid "Name"
@@ -752,7 +756,7 @@ msgid ""
 "%(random_password)s"
 msgstr ""
 
-#: idm/idm.py:72 idm/idm.py:73 idm/idm.py:197 idm/idm.py:198
+#: idm/idm.py:72 idm/idm.py:73 idm/idm.py:218 idm/idm.py:219
 msgid "User not found"
 msgstr ""
 
@@ -769,7 +773,7 @@ msgstr ""
 msgid "Local Administrator password changed"
 msgstr ""
 
-#: idm/idm.py:204
+#: idm/idm.py:225
 #, python-format
 msgid ""
 "Updated Linux client user password for user: %(username)s with new password "
@@ -796,9 +800,9 @@ msgid ""
 msgstr ""
 
 #: idm/ldap.py:118 idm/ldap.py:175 idm/ldap.py:233 idm/ldap.py:269
-#: idm/ldap.py:426 idm/ldap.py:452 idm/ldap.py:531 idm/ldap.py:564
-#: idm/ldap.py:611 idm/ldap.py:622 idm/ldap.py:632 idm/ldap.py:649
-#: idm/ldap.py:663
+#: idm/ldap.py:426 idm/ldap.py:452 idm/ldap.py:532 idm/ldap.py:565
+#: idm/ldap.py:620 idm/ldap.py:631 idm/ldap.py:641 idm/ldap.py:658
+#: idm/ldap.py:672
 #, python-format
 msgid "Error: %(error)s"
 msgstr ""
@@ -819,16 +823,16 @@ msgstr ""
 msgid "Group '%(cn)s' was not found."
 msgstr ""
 
-#: idm/ldap.py:509
+#: idm/ldap.py:510
 msgid "The group name must not contain spaces."
 msgstr ""
 
-#: idm/ldap.py:511
+#: idm/ldap.py:512
 msgid ""
 "The group name may only contain lowercase letters, numbers, dots and hyphens."
 msgstr ""
 
-#: idm/ldap.py:645
+#: idm/ldap.py:654
 msgid "Error: User is a system user and cannot be disabled."
 msgstr ""
 
@@ -844,11 +848,11 @@ msgstr ""
 msgid "Comma-separated list of permissions granted to this API key"
 msgstr ""
 
-#: idm/models.py:30 idm/views.py:640
+#: idm/models.py:30 idm/views.py:638
 msgid "API Key"
 msgstr ""
 
-#: idm/models.py:31 idm/views.py:639 lac/templates/lac/base.html:266
+#: idm/models.py:31 idm/views.py:637 lac/templates/lac/base.html:269
 msgid "API Keys"
 msgstr ""
 
@@ -1053,7 +1057,7 @@ msgstr ""
 #: idm/templates/idm/change_password.html:5
 #: idm/templates/idm/change_password.html:16
 #: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
-#: lac/templates/lac/base.html:265
+#: lac/templates/lac/base.html:268
 msgid "Change Password"
 msgstr ""
 
@@ -1094,7 +1098,7 @@ msgid "Cloud Desktop Settings"
 msgstr ""
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:148 lac/templates/lac/base.html:277
+#: idm/views.py:148 lac/templates/lac/base.html:280
 msgid "Login"
 msgstr ""
 
@@ -1116,7 +1120,7 @@ msgid "User Settings"
 msgstr ""
 
 #: idm/templates/idm/user_settings.html:12 idm/views.py:148 idm/views.py:157
-#: lac/templates/lac/base.html:267
+#: lac/templates/lac/base.html:270
 msgid "2-Factor Authentication"
 msgstr ""
 
@@ -1281,7 +1285,7 @@ msgstr ""
 msgid "Password successfully changed!"
 msgstr ""
 
-#: idm/views.py:407 idm/views.py:477
+#: idm/views.py:407 idm/views.py:474
 msgid "Changes successfully saved!"
 msgstr ""
 
@@ -1290,82 +1294,82 @@ msgstr ""
 msgid "Group '%(cn)s' successfully created!"
 msgstr ""
 
-#: idm/views.py:475
+#: idm/views.py:472
 msgid ""
 "Nextcloud group folder will not be deleted (may contain important data), "
 "please delete manually in the Nextcloud admin interface."
 msgstr ""
 
-#: idm/views.py:507
+#: idm/views.py:505
 #, python-format
 msgid "Add user %(user_cn)s to group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:512
+#: idm/views.py:510
 #, python-format
 msgid "Remove user %(user_cn)s from group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:516 idm/views.py:559
+#: idm/views.py:514 idm/views.py:557
 msgid "Memberships successfully updated!"
 msgstr ""
 
-#: idm/views.py:550
+#: idm/views.py:548
 #, python-format
 msgid "Add user %(cn)s to group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:555
+#: idm/views.py:553
 #, python-format
 msgid "Remove user %(cn)s from group %(group_cn)s"
 msgstr ""
 
-#: idm/views.py:568
+#: idm/views.py:566
 msgid "OIDC Clients"
 msgstr ""
 
-#: idm/views.py:569
+#: idm/views.py:567
 msgid "OIDC Client"
 msgstr ""
 
-#: idm/views.py:577
+#: idm/views.py:575
 #, python-format
 msgid ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
 "a>"
 msgstr ""
 
-#: idm/views.py:643
+#: idm/views.py:641
 msgid "Created At"
 msgstr ""
 
-#: idm/views.py:643
+#: idm/views.py:641
 msgid "Last Used At"
 msgstr ""
 
-#: idm/views.py:643
+#: idm/views.py:641
 msgid "Expiration Date"
 msgstr ""
 
-#: idm/views.py:649
+#: idm/views.py:647
 msgid ""
 "You can view all API endpoints <a href='/api/schema/swagger-ui/' "
 "target='_blank'>here</a>."
 msgstr ""
 
-#: idm/views.py:676
+#: idm/views.py:674
 msgid "You are not authorized to edit this API key!"
 msgstr ""
 
-#: idm/views.py:698
+#: idm/views.py:696
 msgid "You are not authorized to delete this API key!"
 msgstr ""
 
-#: idm/views.py:708
+#: idm/views.py:706
 msgid "You are not authorized to view these API key details!"
 msgstr ""
 
-#: idm/views.py:710
+#: idm/views.py:708
 #, python-format
 msgid ""
 "API Key Details:<br>Name: %(name)s<br>Key: %(key)s<br>Created At: "
@@ -1373,102 +1377,192 @@ msgid ""
 "%(expiration_date)s"
 msgstr ""
 
-#: idm/views.py:742
+#: idm/views.py:740
 #, python-format
 msgid "Failed to enable user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:743
+#: idm/views.py:741
 #, python-format
 msgid "User %(pk)s has been successfully enabled."
 msgstr ""
 
-#: idm/views.py:752
+#: idm/views.py:750
 #, python-format
 msgid "Failed to disable user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:753
+#: idm/views.py:751
 #, python-format
 msgid "User %(pk)s has been successfully disabled."
 msgstr ""
 
-#: idm/views.py:763
+#: idm/views.py:761
 #, python-format
 msgid "Failed to reset 2FA for user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:764
+#: idm/views.py:762
 #, python-format
 msgid "2FA for user %(pk)s has been successfully reset."
 msgstr ""
 
-#: idm/views.py:776
+#: idm/views.py:774
 #, python-format
 msgid "Setting new password for user %(pk)s: %(new_password)s"
 msgstr ""
 
-#: idm/views.py:781
+#: idm/views.py:779
 #, python-format
 msgid "Password for user %(pk)s has been successfully changed."
 msgstr ""
 
-#: idm/views.py:784
+#: idm/views.py:782
 msgid "Password too short."
 msgstr ""
 
-#: idm/views.py:792
+#: idm/views.py:790
 #, python-format
 msgid "Failed to delete user %(pk)s: %(msg)s"
 msgstr ""
 
-#: idm/views.py:793
+#: idm/views.py:791
 #, python-format
 msgid "Failed to delete user. %(msg)s"
 msgstr ""
 
-#: idm/views.py:795
+#: idm/views.py:793
 #, python-format
 msgid "User %(pk)s has been successfully deleted."
 msgstr ""
 
-#: idm/views.py:819
+#: idm/views.py:817
 #, python-format
 msgid "User %(pk)s has been successfully updated."
 msgstr ""
 
-#: idm/views.py:841
+#: idm/views.py:839
 #, python-format
 msgid "User %(username)s has been successfully created."
 msgstr ""
 
-#: idm/views.py:884
+#: idm/views.py:882
 #, python-format
 msgid "Group %(cn)s has been successfully created."
 msgstr ""
 
-#: idm/views.py:904
+#: idm/views.py:902
 #, python-format
 msgid "Group %(pk)s has been successfully updated."
 msgstr ""
 
-#: idm/views.py:912
+#: idm/views.py:910
 #, python-format
 msgid "Failed to delete group. %(msg)s"
 msgstr ""
 
-#: idm/views.py:913
+#: idm/views.py:911
 #, python-format
 msgid "Group %(pk)s has been successfully deleted."
 msgstr ""
 
-#: lac/settings.py:227 lac/templates/lac/base.html:234
+#: lac/settings.py:228
 msgid "language.en"
 msgstr "English"
 
-#: lac/settings.py:228 lac/templates/lac/base.html:235
+#: lac/settings.py:229
 msgid "language.de"
 msgstr "German"
+
+#: lac/templates/lac/about.html:8
+msgid "About Libre Workspace"
+msgstr ""
+
+#: lac/templates/lac/about.html:14 lac/templates/lac/about.html:96
+#: lac/templates/lac/overview_x.html:85
+#: unix/templates/unix/backup_dashboard.html:90
+#: unix/templates/unix/data_export.html:36
+#: unix/templates/unix/system_dashboard.html:66
+#: unix/templates/unix/update_management.html:80
+msgid "Close"
+msgstr ""
+
+#: lac/templates/lac/about.html:21
+msgid "Libre Workspace"
+msgstr ""
+
+#: lac/templates/lac/about.html:24
+msgid ""
+"Libre Workspace is an extensible open source server solution providing cloud "
+"services for your own infrastructure."
+msgstr ""
+
+#: lac/templates/lac/about.html:27
+msgid "Official website:"
+msgstr ""
+
+#: lac/templates/lac/about.html:28
+msgid "Source code repository:"
+msgstr ""
+
+#: lac/templates/lac/about.html:29
+msgid "Documentation:"
+msgstr ""
+
+#: lac/templates/lac/about.html:30
+msgid "Community forum:"
+msgstr ""
+
+#: lac/templates/lac/about.html:31
+msgid "Support:"
+msgstr ""
+
+#: lac/templates/lac/about.html:32
+msgid "Sponsor a feature or service:"
+msgstr ""
+
+#: lac/templates/lac/about.html:39
+msgid "Sponsors"
+msgstr ""
+
+#: lac/templates/lac/about.html:42
+msgid "Authors"
+msgstr ""
+
+#: lac/templates/lac/about.html:45
+msgid "License"
+msgstr ""
+
+#: lac/templates/lac/about.html:51
+msgid "The Libre Workspace Project is supported by following instances:"
+msgstr ""
+
+#: lac/templates/lac/about.html:57
+msgid "Main project holder and service provider"
+msgstr ""
+
+#: lac/templates/lac/about.html:67
+msgid "The Libre Workspace Project is developed by following persons:"
+msgstr ""
+
+#: lac/templates/lac/about.html:71
+msgid "Project initiator and main developer"
+msgstr ""
+
+#: lac/templates/lac/about.html:72 lac/templates/lac/about.html:73
+#: lac/templates/lac/about.html:74
+msgid "Code Contributor"
+msgstr ""
+
+#: lac/templates/lac/about.html:80
+msgid "Libre Workspace is licensed under the GNU General Public License v3.0."
+msgstr ""
+
+#: lac/templates/lac/about.html:84
+msgid ""
+"You can find the full license text in the source code repository or on the "
+"official website:"
+msgstr ""
 
 #: lac/templates/lac/base.html:11 lac/templates/lac/base.html:219
 msgid "Libre-Workspace Portal"
@@ -1482,23 +1576,23 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
-#: lac/templates/lac/base.html:250
+#: lac/templates/lac/base.html:253
 msgid "Documentation"
 msgstr ""
 
-#: lac/templates/lac/base.html:251
+#: lac/templates/lac/base.html:254
 msgid "Forum"
 msgstr ""
 
-#: lac/templates/lac/base.html:252
+#: lac/templates/lac/base.html:255
 msgid "Paid Support"
 msgstr ""
 
-#: lac/templates/lac/base.html:253
+#: lac/templates/lac/base.html:256
 msgid "Download System Information"
 msgstr ""
 
-#: lac/templates/lac/base.html:268
+#: lac/templates/lac/base.html:271
 msgid "Log Out"
 msgstr ""
 
@@ -1543,14 +1637,6 @@ msgstr ""
 
 #: lac/templates/lac/overview_x.html:40 lac/templates/lac/overview_x.html:72
 msgid "Delete"
-msgstr ""
-
-#: lac/templates/lac/overview_x.html:85
-#: unix/templates/unix/backup_dashboard.html:90
-#: unix/templates/unix/data_export.html:36
-#: unix/templates/unix/system_dashboard.html:66
-#: unix/templates/unix/update_management.html:80
-msgid "Close"
 msgstr ""
 
 #: lac/templates/lac/overview_x.html:90
@@ -2682,86 +2768,86 @@ msgstr ""
 msgid "%(domain)s - Libre Workspace"
 msgstr ""
 
-#: unix/unix_scripts/unix.py:904
+#: unix/unix_scripts/unix.py:911
 #, python-format
 msgid ""
 "Ensuring DNS entry for %(full_domain)s with IP %(ip)s in Samba DNS server..."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:908
+#: unix/unix_scripts/unix.py:915
 msgid ""
 "Error: The domain is not a subdomain of the configured domain in the libre-"
 "workspace.env file."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:911
+#: unix/unix_scripts/unix.py:918
 msgid "Error: The IP is not valid. Please use a valid IPv4 address."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:917
+#: unix/unix_scripts/unix.py:924
 msgid "Error: The domain is not valid. Please use a valid domain name."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:924
+#: unix/unix_scripts/unix.py:931
 #, python-format
 msgid "Result of adding DNS entry: %(result)s"
 msgstr ""
 
-#: unix/unix_scripts/unix.py:926
+#: unix/unix_scripts/unix.py:933
 #, python-format
 msgid "Error while adding DNS entry: %(error)s"
 msgstr ""
 
-#: unix/unix_scripts/unix.py:927
+#: unix/unix_scripts/unix.py:934
 #, python-format
 msgid ""
 "Error: %(error)s. Please check the Samba DNS server configuration and the "
 "domain name."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:952
+#: unix/unix_scripts/unix.py:959
 msgid "Password cannot be empty."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:954
+#: unix/unix_scripts/unix.py:961
 msgid "Password cannot contain spaces."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:957
+#: unix/unix_scripts/unix.py:964
 msgid "Password must contain at least one number."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:960
+#: unix/unix_scripts/unix.py:967
 msgid "Password must contain at least one letter."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:964
+#: unix/unix_scripts/unix.py:971
 msgid "Password must contain at least one special character."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:968
+#: unix/unix_scripts/unix.py:975
 msgid "Password cannot contain the following characters: $'#"
 msgstr ""
 
-#: unix/unix_scripts/unix.py:971
+#: unix/unix_scripts/unix.py:978
 msgid "Password must be at least 8 characters long."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:1059
+#: unix/unix_scripts/unix.py:1066
 msgid ""
 "Error: You should run this function as root. In development mode this is "
 "okay for now."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:1062
+#: unix/unix_scripts/unix.py:1069
 msgid "Error: Nextcloud is not available. Please install Nextcloud first."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:1114
+#: unix/unix_scripts/unix.py:1121
 msgid "Error: Password for user in linux: could not be changed."
 msgstr ""
 
-#: unix/unix_scripts/unix.py:1165
+#: unix/unix_scripts/unix.py:1172
 msgid ""
 "CAUTION: No local admin token found. If you are in a dev environment, this "
 "is okay. If you are in a production environment, please check your "

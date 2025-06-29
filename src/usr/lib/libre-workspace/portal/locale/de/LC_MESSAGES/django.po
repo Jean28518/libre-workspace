@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 00:20+0100\n"
+"POT-Creation-Date: 2025-06-29 15:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,8 +172,6 @@ msgid "nocodb"
 msgstr "nocodb"
 
 #: addon_creator/forms.py:14
-#, fuzzy
-#| msgid "Addon Center"
 msgid "Addon Name"
 msgstr "Addon-Name"
 
@@ -198,8 +196,6 @@ msgid "https://www.nocodb.com"
 msgstr "https://www.nocodb.com"
 
 #: addon_creator/forms.py:32
-#, fuzzy
-#| msgid "Addon Center"
 msgid "Addon Author"
 msgstr "Addon-Autor"
 
@@ -258,10 +254,8 @@ msgstr ""
 "html'>https://docs.libre-workspace.org/modules/addons.html</a>"
 
 #: app_dashboard/cards.py:50 app_dashboard/cards.py:106
-#, fuzzy
-#| msgid "Manage Members"
 msgid "Management"
-msgstr "Mitglieder verwalten"
+msgstr "Verwaltung"
 
 #: app_dashboard/cards.py:101 unix/unix_scripts/unix.py:453
 msgid "Nextcloud"
@@ -269,35 +263,31 @@ msgstr "Nextcloud"
 
 #: app_dashboard/cards.py:101
 msgid "Files, Calendar, ..."
-msgstr ""
+msgstr "Dateien, Kalender, ..."
 
 #: app_dashboard/cards.py:102 unix/unix_scripts/unix.py:458 unix/views.py:713
 msgid "Cloud Desktop"
 msgstr "Cloud-Desktop"
 
 #: app_dashboard/cards.py:102
-#, fuzzy
-#| msgid "Restart the browser"
 msgid "Linux desktop in the browser"
-msgstr "Browser neu starten"
+msgstr "Linux-Desktop im Browser"
 
 #: app_dashboard/cards.py:103
 msgid "Element"
-msgstr ""
+msgstr "Element"
 
 #: app_dashboard/cards.py:103
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #: app_dashboard/cards.py:104 unix/unix_scripts/unix.py:455
 msgid "Jitsi"
 msgstr "Jitsi"
 
 #: app_dashboard/cards.py:104
-#, fuzzy
-#| msgid "Jitsi - Video conferences"
 msgid "Video Conferences"
-msgstr "Jitsi - Videokonferenzen"
+msgstr "Videokonferenzen"
 
 #: app_dashboard/cards.py:105 welcome/templates/welcome/access.html:62
 msgid "Certificates"
@@ -305,11 +295,11 @@ msgstr "Zertifikate"
 
 #: app_dashboard/cards.py:105
 msgid "For secure access"
-msgstr ""
+msgstr "Für sicheren Zugriff"
 
 #: app_dashboard/cards.py:106
 msgid "Users, Groups, ..."
-msgstr ""
+msgstr "Benutzer, Gruppen, ..."
 
 #: app_dashboard/forms.py:15
 #: app_dashboard/templates/app_dashboard/app_dashboard_entries.html:11
@@ -354,10 +344,14 @@ msgid "Portal logo"
 msgstr "Portal-Logo"
 
 #: app_dashboard/forms.py:28
+msgid "Hide 'About Libre Workspace' section in footer"
+msgstr "Abschnitt 'Über Libre Workspace' in der Fußzeile ausblenden"
+
+#: app_dashboard/forms.py:29
 msgid "Primary color (HEX code) (e.g.: #09928b)"
 msgstr "Primärfarbe (HEX-Code) (z.B.: #09928b)"
 
-#: app_dashboard/forms.py:29
+#: app_dashboard/forms.py:30
 msgid "Secondary color (HEX code) (e.g.: #07746d)"
 msgstr "Sekundärfarbe (HEX-Code) (z.B.: #07746d)"
 
@@ -421,29 +415,27 @@ msgstr ""
 "werden automatisch aus der Konfiguration generiert."
 
 #: app_dashboard/views.py:152
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "Libre Workspace Portal"
-msgstr "Libre-Workspace Portal"
+msgstr "Libre Workspace Portal"
 
 #: app_dashboard/views.py:152
 msgid "Overview of all installed apps and services on the portal."
 msgstr "Übersicht aller installierten Apps und Dienste auf dem Portal."
 
-#: app_dashboard/views.py:188
+#: app_dashboard/views.py:189
 msgid "The settings were successfully saved."
 msgstr "Die Einstellungen wurden erfolgreich gespeichert."
 
-#: app_dashboard/views.py:195
+#: app_dashboard/views.py:197
 #, python-format
 msgid "Portal Logo (Current: %(logo)s)"
 msgstr "Portal-Logo (Aktuell: %(logo)s)"
 
-#: app_dashboard/views.py:198
+#: app_dashboard/views.py:200
 msgid "Appearance"
 msgstr "Erscheinungsbild"
 
-#: app_dashboard/views.py:198
+#: app_dashboard/views.py:200
 msgid ""
 "These settings affect all users<br>Currently only the portal area (without "
 "administration) is adjusted."
@@ -451,7 +443,7 @@ msgstr ""
 "Diese Einstellungen betreffen alle Benutzer<br>Derzeit wird nur der "
 "Portalbereich (ohne Administration) angepasst."
 
-#: app_dashboard/views.py:198 lac/templates/lac/edit_x.html:38
+#: app_dashboard/views.py:200 lac/templates/lac/edit_x.html:38
 #: lac/templates/lac/edit_x.html:47
 #: unix/templates/unix/update_management.html:36 unix/views.py:629
 #: unix/views.py:652 unix/views.py:684
@@ -460,7 +452,7 @@ msgstr "Speichern"
 
 #: caddy_configuration/forms.py:5 caddy_configuration/forms.py:10
 #: caddy_configuration/views.py:21 idm/forms.py:62 idm/forms.py:84
-#: idm/views.py:161 idm/views.py:572 idm/views.py:643
+#: idm/views.py:161 idm/views.py:570 idm/views.py:641
 #: unix/templates/unix/system_dashboard.html:6 unix/views.py:506
 #: wordpress_manager/forms.py:5 wordpress_manager/views.py:32
 msgid "Name"
@@ -528,8 +520,6 @@ msgstr ""
 "hinzufügen</a>."
 
 #: caddy_configuration/views.py:41
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Caddy entry added successfully!"
 msgstr "Caddy-Eintrag erfolgreich hinzugefügt!"
 
@@ -579,8 +569,6 @@ msgstr "Reverse Proxy erstellen"
 
 #: caddy_configuration/views.py:104 lac/templates/lac/create_x.html:9
 #: lac/templates/lac/create_x.html:33 lac/templates/lac/create_x.html:42
-#, fuzzy
-#| msgid "Create Addon"
 msgid "Create"
 msgstr "Erstellen"
 
@@ -736,10 +724,8 @@ msgid "Nextcloud group folder"
 msgstr "Nextcloud Gruppenordner"
 
 #: idm/forms.py:55
-#, fuzzy
-#| msgid "UID Number"
 msgid "GID Number"
-msgstr "UID-Nummer"
+msgstr "GID-Nummer"
 
 #: idm/forms.py:63
 msgid "Client Type"
@@ -796,17 +782,15 @@ msgstr "Optional. Wenn nicht festgelegt, läuft der Schlüssel nie ab."
 
 #: idm/forms.py:87
 msgid "Permissions"
-msgstr ""
+msgstr "Berechtigungen"
 
 #: idm/forms.py:89
 msgid "Linux Client Access"
-msgstr ""
+msgstr "Linux Client-Zugriff"
 
 #: idm/forms.py:90
-#, fuzzy
-#| msgid "Administrator"
 msgid "Administrator Access"
-msgstr "Administrator"
+msgstr "Administratorzugriff"
 
 #: idm/idm.py:51
 msgid "New Password (Linux Workstation Central)"
@@ -823,7 +807,7 @@ msgstr ""
 "\n"
 "%(random_password)s"
 
-#: idm/idm.py:72 idm/idm.py:73 idm/idm.py:197 idm/idm.py:198
+#: idm/idm.py:72 idm/idm.py:73 idm/idm.py:218 idm/idm.py:219
 msgid "User not found"
 msgstr "Benutzer nicht gefunden"
 
@@ -840,12 +824,14 @@ msgstr "Benutzer 'Administrator' existiert nicht"
 msgid "Local Administrator password changed"
 msgstr "Passwort des lokalen Administrators geändert"
 
-#: idm/idm.py:204
+#: idm/idm.py:225
 #, python-format
 msgid ""
 "Updated Linux client user password for user: %(username)s with new password "
 "hash: %(yescrypt_hash)s"
 msgstr ""
+"Passwort des Linux-Client-Benutzers für Benutzer: %(username)s mit neuem "
+"Passwort-Hash aktualisiert: %(yescrypt_hash)s"
 
 #: idm/ldap.py:21 idm/ldap.py:36 idm/ldap.py:280
 #, python-format
@@ -872,9 +858,9 @@ msgstr ""
 "Systemkonfiguration geändert werden."
 
 #: idm/ldap.py:118 idm/ldap.py:175 idm/ldap.py:233 idm/ldap.py:269
-#: idm/ldap.py:426 idm/ldap.py:452 idm/ldap.py:531 idm/ldap.py:564
-#: idm/ldap.py:611 idm/ldap.py:622 idm/ldap.py:632 idm/ldap.py:649
-#: idm/ldap.py:663
+#: idm/ldap.py:426 idm/ldap.py:452 idm/ldap.py:532 idm/ldap.py:565
+#: idm/ldap.py:620 idm/ldap.py:631 idm/ldap.py:641 idm/ldap.py:658
+#: idm/ldap.py:672
 #, python-format
 msgid "Error: %(error)s"
 msgstr "Fehler: %(error)s"
@@ -893,54 +879,53 @@ msgid "User '%(cn)s' was not found."
 msgstr "Benutzer '%(cn)s' wurde nicht gefunden."
 
 #: idm/ldap.py:240
-#, fuzzy, python-format
-#| msgid "User '%(cn)s' was not found."
+#, python-format
 msgid "Group '%(cn)s' was not found."
-msgstr "Benutzer '%(cn)s' wurde nicht gefunden."
+msgstr "Gruppe '%(cn)s' wurde nicht gefunden."
 
-#: idm/ldap.py:509
+#: idm/ldap.py:510
 msgid "The group name must not contain spaces."
 msgstr "Der Gruppenname darf keine Leerzeichen enthalten."
 
-#: idm/ldap.py:511
+#: idm/ldap.py:512
 msgid ""
 "The group name may only contain lowercase letters, numbers, dots and hyphens."
 msgstr ""
 "Der Gruppenname darf nur Kleinbuchstaben, Zahlen, Punkte und Bindestriche "
 "enthalten."
 
-#: idm/ldap.py:645
+#: idm/ldap.py:654
 msgid "Error: User is a system user and cannot be disabled."
 msgstr ""
 "Fehler: Benutzer ist ein Systembenutzer und kann nicht deaktiviert werden."
 
 #: idm/models.py:13
 msgid "A descriptive name for the API key"
-msgstr ""
+msgstr "Ein aussagekräftiger Name für den API-Schlüssel"
 
 #: idm/models.py:19
 msgid "The date when the API key will expire"
-msgstr ""
+msgstr "Das Datum, an dem der API-Schlüssel abläuft"
 
 #: idm/models.py:22
 msgid "Comma-separated list of permissions granted to this API key"
-msgstr ""
+msgstr "Kommagetrennte Liste der diesem API-Schlüssel gewährten Berechtigungen"
 
-#: idm/models.py:30 idm/views.py:640
+#: idm/models.py:30 idm/views.py:638
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: idm/models.py:31 idm/views.py:639 lac/templates/lac/base.html:266
+#: idm/models.py:31 idm/views.py:637 lac/templates/lac/base.html:269
 msgid "API Keys"
 msgstr "API-Schlüssel"
 
 #: idm/models.py:40
 msgid "Distinguished Name of the user in LDAP"
-msgstr ""
+msgstr "Distinguished Name des Benutzers in LDAP"
 
 #: idm/models.py:44
 msgid "The yescrypt hash of the user's password"
-msgstr ""
+msgstr "Der Yescrypt-Hash des Benutzerpassworts"
 
 #: idm/templates/idm/add_new_totp_device.html:4
 msgid "Add New TOTP Device"
@@ -1076,8 +1061,6 @@ msgid "Users will not be deleted, only removed from the group."
 msgstr "Benutzer werden nicht gelöscht, sondern nur aus der Gruppe entfernt."
 
 #: idm/templates/idm/admin/edit_group.html:43
-#, fuzzy
-#| msgid "This operation cannot be undone!"
 msgid "This operation is irreversible!"
 msgstr "Dieser Vorgang ist irreversibel!"
 
@@ -1112,8 +1095,6 @@ msgid "Group Administration"
 msgstr "Gruppenverwaltung"
 
 #: idm/templates/idm/admin/group_overview.html:14
-#, fuzzy
-#| msgid "Addon Center"
 msgid "Group Name"
 msgstr "Gruppenname"
 
@@ -1141,7 +1122,7 @@ msgstr "Deaktiviert"
 #: idm/templates/idm/change_password.html:5
 #: idm/templates/idm/change_password.html:16
 #: idm/templates/idm/dashboard.html:84 idm/templates/idm/user_settings.html:11
-#: lac/templates/lac/base.html:265
+#: lac/templates/lac/base.html:268
 msgid "Change Password"
 msgstr "Passwort ändern"
 
@@ -1182,7 +1163,7 @@ msgid "Cloud Desktop Settings"
 msgstr "Cloud Desktop Einstellungen"
 
 #: idm/templates/idm/login.html:5 idm/templates/idm/login.html:18
-#: idm/views.py:148 lac/templates/lac/base.html:277
+#: idm/views.py:148 lac/templates/lac/base.html:280
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1204,7 +1185,7 @@ msgid "User Settings"
 msgstr "Benutzereinstellungen"
 
 #: idm/templates/idm/user_settings.html:12 idm/views.py:148 idm/views.py:157
-#: lac/templates/lac/base.html:267
+#: lac/templates/lac/base.html:270
 msgid "2-Factor Authentication"
 msgstr "2-Faktor-Authentifizierung"
 
@@ -1320,15 +1301,13 @@ msgstr "Libre Workspace: %(base_url)s - %(username)s"
 
 #: idm/views.py:233
 msgid "The selected language is not supported!"
-msgstr ""
+msgstr "Die ausgewählte Sprache wird nicht unterstützt!"
 
 #: idm/views.py:259
 msgid "You are not authorized to delete this device!"
 msgstr "Sie sind nicht berechtigt, dieses Gerät zu löschen!"
 
 #: idm/views.py:308
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes saved successfully!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
@@ -1378,9 +1357,7 @@ msgstr "Benutzer"
 msgid "Password successfully changed!"
 msgstr "Passwort erfolgreich geändert!"
 
-#: idm/views.py:407 idm/views.py:477
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
+#: idm/views.py:407 idm/views.py:474
 msgid "Changes successfully saved!"
 msgstr "Änderungen erfolgreich gespeichert!"
 
@@ -1389,7 +1366,7 @@ msgstr "Änderungen erfolgreich gespeichert!"
 msgid "Group '%(cn)s' successfully created!"
 msgstr "Gruppe '%(cn)s' erfolgreich erstellt!"
 
-#: idm/views.py:475
+#: idm/views.py:472
 msgid ""
 "Nextcloud group folder will not be deleted (may contain important data), "
 "please delete manually in the Nextcloud admin interface."
@@ -1397,39 +1374,39 @@ msgstr ""
 "Nextcloud-Gruppenordner wird nicht gelöscht (kann wichtige Daten enthalten), "
 "bitte manuell in der Nextcloud-Admin-Oberfläche löschen."
 
-#: idm/views.py:507
+#: idm/views.py:505
 #, python-format
 msgid "Add user %(user_cn)s to group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:512
+#: idm/views.py:510
 #, python-format
 msgid "Remove user %(user_cn)s from group %(group_cn)s"
 msgstr "Benutzer %(user_cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:516 idm/views.py:559
+#: idm/views.py:514 idm/views.py:557
 msgid "Memberships successfully updated!"
 msgstr "Mitgliedschaften erfolgreich aktualisiert!"
 
-#: idm/views.py:550
+#: idm/views.py:548
 #, python-format
 msgid "Add user %(cn)s to group %(group_cn)s"
 msgstr "Benutzer %(cn)s zu Gruppe %(group_cn)s hinzufügen"
 
-#: idm/views.py:555
+#: idm/views.py:553
 #, python-format
 msgid "Remove user %(cn)s from group %(group_cn)s"
 msgstr "Benutzer %(cn)s aus Gruppe %(group_cn)s entfernen"
 
-#: idm/views.py:568
+#: idm/views.py:566
 msgid "OIDC Clients"
 msgstr "OIDC-Clients"
 
-#: idm/views.py:569
+#: idm/views.py:567
 msgid "OIDC Client"
 msgstr "OIDC-Client"
 
-#: idm/views.py:577
+#: idm/views.py:575
 #, python-format
 msgid ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
@@ -1438,21 +1415,19 @@ msgstr ""
 "OpenID Connect Discovery URL: <a href='%(discovery_url)s'>%(discovery_url)s</"
 "a>"
 
-#: idm/views.py:643
-#, fuzzy
-#| msgid "Create Addon"
+#: idm/views.py:641
 msgid "Created At"
 msgstr "Erstellt am"
 
-#: idm/views.py:643
+#: idm/views.py:641
 msgid "Last Used At"
 msgstr "Zuletzt verwendet am"
 
-#: idm/views.py:643
+#: idm/views.py:641
 msgid "Expiration Date"
 msgstr "Ablaufdatum"
 
-#: idm/views.py:649
+#: idm/views.py:647
 msgid ""
 "You can view all API endpoints <a href='/api/schema/swagger-ui/' "
 "target='_blank'>here</a>."
@@ -1460,19 +1435,19 @@ msgstr ""
 "Sie können alle API-Endpunkte <a href='/api/schema/swagger-ui/' "
 "target='_blank'>hier</a> einsehen."
 
-#: idm/views.py:676
+#: idm/views.py:674
 msgid "You are not authorized to edit this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu bearbeiten!"
 
-#: idm/views.py:698
+#: idm/views.py:696
 msgid "You are not authorized to delete this API key!"
 msgstr "Sie sind nicht berechtigt, diesen API-Schlüssel zu löschen!"
 
-#: idm/views.py:708
+#: idm/views.py:706
 msgid "You are not authorized to view these API key details!"
 msgstr "Sie sind nicht berechtigt, diese API-Schlüsseldetails anzuzeigen!"
 
-#: idm/views.py:710
+#: idm/views.py:708
 #, python-format
 msgid ""
 "API Key Details:<br>Name: %(name)s<br>Key: %(key)s<br>Created At: "
@@ -1483,108 +1458,197 @@ msgstr ""
 "am: %(created_at)s<br>Zuletzt verwendet am: %(last_used_at)s<br>Ablaufdatum: "
 "%(expiration_date)s"
 
-#: idm/views.py:742
+#: idm/views.py:740
 #, python-format
 msgid "Failed to enable user. %(msg)s"
 msgstr "Benutzer konnte nicht aktiviert werden. %(msg)s"
 
-#: idm/views.py:743
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s uninstalled successfully."
+#: idm/views.py:741
+#, python-format
 msgid "User %(pk)s has been successfully enabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktiviert."
 
-#: idm/views.py:752
+#: idm/views.py:750
 #, python-format
 msgid "Failed to disable user. %(msg)s"
 msgstr "Benutzer konnte nicht deaktiviert werden. %(msg)s"
 
-#: idm/views.py:753
+#: idm/views.py:751
 #, python-format
 msgid "User %(pk)s has been successfully disabled."
 msgstr "Benutzer %(pk)s wurde erfolgreich deaktiviert."
 
-#: idm/views.py:763
+#: idm/views.py:761
 #, python-format
 msgid "Failed to reset 2FA for user. %(msg)s"
 msgstr "2FA für Benutzer konnte nicht zurückgesetzt werden. %(msg)s"
 
-#: idm/views.py:764
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s uninstalled successfully."
+#: idm/views.py:762
+#, python-format
 msgid "2FA for user %(pk)s has been successfully reset."
 msgstr "2FA für Benutzer %(pk)s wurde erfolgreich zurückgesetzt."
 
-#: idm/views.py:776
+#: idm/views.py:774
 #, python-format
 msgid "Setting new password for user %(pk)s: %(new_password)s"
 msgstr "Neues Passwort für Benutzer %(pk)s festlegen: %(new_password)s"
 
-#: idm/views.py:781
+#: idm/views.py:779
 #, python-format
 msgid "Password for user %(pk)s has been successfully changed."
 msgstr "Passwort für Benutzer %(pk)s wurde erfolgreich geändert."
 
-#: idm/views.py:784
+#: idm/views.py:782
 msgid "Password too short."
 msgstr "Passwort zu kurz."
 
-#: idm/views.py:792
+#: idm/views.py:790
 #, python-format
 msgid "Failed to delete user %(pk)s: %(msg)s"
 msgstr "Benutzer %(pk)s konnte nicht gelöscht werden: %(msg)s"
 
-#: idm/views.py:793
+#: idm/views.py:791
 #, python-format
 msgid "Failed to delete user. %(msg)s"
 msgstr "Benutzer konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:795
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s uninstalled successfully."
+#: idm/views.py:793
+#, python-format
 msgid "User %(pk)s has been successfully deleted."
 msgstr "Benutzer %(pk)s wurde erfolgreich gelöscht."
 
-#: idm/views.py:819
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s uninstalled successfully."
+#: idm/views.py:817
+#, python-format
 msgid "User %(pk)s has been successfully updated."
 msgstr "Benutzer %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:841
+#: idm/views.py:839
 #, python-format
 msgid "User %(username)s has been successfully created."
 msgstr "Benutzer %(username)s wurde erfolgreich erstellt."
 
-#: idm/views.py:884
+#: idm/views.py:882
 #, python-format
 msgid "Group %(cn)s has been successfully created."
 msgstr "Gruppe %(cn)s wurde erfolgreich erstellt."
 
-#: idm/views.py:904
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s uninstalled successfully."
+#: idm/views.py:902
+#, python-format
 msgid "Group %(pk)s has been successfully updated."
 msgstr "Gruppe %(pk)s wurde erfolgreich aktualisiert."
 
-#: idm/views.py:912
+#: idm/views.py:910
 #, python-format
 msgid "Failed to delete group. %(msg)s"
 msgstr "Gruppe konnte nicht gelöscht werden. %(msg)s"
 
-#: idm/views.py:913
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s uninstalled successfully."
+#: idm/views.py:911
+#, python-format
 msgid "Group %(pk)s has been successfully deleted."
 msgstr "Gruppe %(pk)s wurde erfolgreich gelöscht."
 
-#: lac/settings.py:227 lac/templates/lac/base.html:234
+#: lac/settings.py:228
 msgid "language.en"
 msgstr "Englisch"
 
-#: lac/settings.py:228 lac/templates/lac/base.html:235
+#: lac/settings.py:229
 msgid "language.de"
 msgstr "Deutsch"
+
+#: lac/templates/lac/about.html:8
+msgid "About Libre Workspace"
+msgstr "Über Libre Workspace"
+
+#: lac/templates/lac/about.html:14 lac/templates/lac/about.html:96
+#: lac/templates/lac/overview_x.html:85
+#: unix/templates/unix/backup_dashboard.html:90
+#: unix/templates/unix/data_export.html:36
+#: unix/templates/unix/system_dashboard.html:66
+#: unix/templates/unix/update_management.html:80
+msgid "Close"
+msgstr "Schließen"
+
+#: lac/templates/lac/about.html:21
+msgid "Libre Workspace"
+msgstr "Libre Workspace"
+
+#: lac/templates/lac/about.html:24
+msgid ""
+"Libre Workspace is an extensible open source server solution providing cloud "
+"services for your own infrastructure."
+msgstr ""
+"Libre Workspace ist eine erweiterbare Open-Source-Serverlösung, die Cloud-"
+"Dienste für Ihre eigene Infrastruktur bereitstellt."
+
+#: lac/templates/lac/about.html:27
+msgid "Official website:"
+msgstr "Offizielle Webseite:"
+
+#: lac/templates/lac/about.html:28
+msgid "Source code repository:"
+msgstr "Quellcode-Repository:"
+
+#: lac/templates/lac/about.html:29
+msgid "Documentation:"
+msgstr "Dokumentation:"
+
+#: lac/templates/lac/about.html:30
+msgid "Community forum:"
+msgstr "Community-Forum:"
+
+#: lac/templates/lac/about.html:31
+msgid "Support:"
+msgstr "Support:"
+
+#: lac/templates/lac/about.html:32
+msgid "Sponsor a feature or service:"
+msgstr "Eine Funktion sponsern:"
+
+#: lac/templates/lac/about.html:39
+msgid "Sponsors"
+msgstr "Sponsoren"
+
+#: lac/templates/lac/about.html:42
+msgid "Authors"
+msgstr "Autoren"
+
+#: lac/templates/lac/about.html:45
+msgid "License"
+msgstr "Lizenz"
+
+#: lac/templates/lac/about.html:51
+msgid "The Libre Workspace Project is supported by following instances:"
+msgstr "Das Libre Workspace Projekt wird von folgenden Instanzen unterstützt:"
+
+#: lac/templates/lac/about.html:57
+msgid "Main project holder and service provider"
+msgstr "Hauptprojektinhaber und Service-Dienstleister"
+
+#: lac/templates/lac/about.html:67
+msgid "The Libre Workspace Project is developed by following persons:"
+msgstr "Das Libre Workspace Projekt wird von folgenden Personen entwickelt:"
+
+#: lac/templates/lac/about.html:71
+msgid "Project initiator and main developer"
+msgstr "Projektinitiator und Hauptentwickler"
+
+#: lac/templates/lac/about.html:72 lac/templates/lac/about.html:73
+#: lac/templates/lac/about.html:74
+msgid "Code Contributor"
+msgstr "Code-Beitragender"
+
+#: lac/templates/lac/about.html:80
+msgid "Libre Workspace is licensed under the GNU General Public License v3.0."
+msgstr ""
+"Libre Workspace ist unter der GNU General Public License v3.0 lizenziert."
+
+#: lac/templates/lac/about.html:84
+msgid ""
+"You can find the full license text in the source code repository or on the "
+"official website:"
+msgstr ""
+"Den vollständigen Lizenztext finden Sie im Quellcode-Repository oder auf der "
+"offiziellen Webseite:"
 
 #: lac/templates/lac/base.html:11 lac/templates/lac/base.html:219
 msgid "Libre-Workspace Portal"
@@ -1598,25 +1662,23 @@ msgstr "Logo"
 msgid "Administration"
 msgstr "Administration"
 
-#: lac/templates/lac/base.html:250
+#: lac/templates/lac/base.html:253
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: lac/templates/lac/base.html:251
+#: lac/templates/lac/base.html:254
 msgid "Forum"
 msgstr "Forum"
 
-#: lac/templates/lac/base.html:252
-#, fuzzy
-#| msgid "Support"
+#: lac/templates/lac/base.html:255
 msgid "Paid Support"
 msgstr "Kostenpflichtiger Support"
 
-#: lac/templates/lac/base.html:253
+#: lac/templates/lac/base.html:256
 msgid "Download System Information"
 msgstr "Systeminformationen herunterladen"
 
-#: lac/templates/lac/base.html:268
+#: lac/templates/lac/base.html:271
 msgid "Log Out"
 msgstr "Abmelden"
 
@@ -1639,8 +1701,6 @@ msgid "Really delete"
 msgstr "Wirklich löschen"
 
 #: lac/templates/lac/edit_x.html:64
-#, fuzzy
-#| msgid "This operation cannot be undone!"
 msgid "This operation cannot be reversed!"
 msgstr "Dieser Vorgang kann nicht rückgängig gemacht werden!"
 
@@ -1664,14 +1724,6 @@ msgstr "Informationen"
 #: lac/templates/lac/overview_x.html:40 lac/templates/lac/overview_x.html:72
 msgid "Delete"
 msgstr "Löschen"
-
-#: lac/templates/lac/overview_x.html:85
-#: unix/templates/unix/backup_dashboard.html:90
-#: unix/templates/unix/data_export.html:36
-#: unix/templates/unix/system_dashboard.html:66
-#: unix/templates/unix/update_management.html:80
-msgid "Close"
-msgstr "Schließen"
 
 #: lac/templates/lac/overview_x.html:90
 #, python-format
@@ -1831,8 +1883,6 @@ msgid "Error creating the client. Please check the inputs."
 msgstr "Fehler beim Erstellen des Clients. Bitte überprüfen Sie die Eingaben."
 
 #: m23software/views.py:58
-#, fuzzy
-#| msgid "Install"
 msgid "Install Client"
 msgstr "Client installieren"
 
@@ -1967,8 +2017,6 @@ msgid "Add-on File"
 msgstr "Add-on-Datei"
 
 #: unix/forms.py:38
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "New Libre-Workspace Name"
 msgstr "Neuer Libre-Workspace-Name"
 
@@ -2072,8 +2120,6 @@ msgid "Status"
 msgstr "Status"
 
 #: unix/templates/unix/backup_dashboard.html:16
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Last backup successful"
 msgstr "Letztes Backup erfolgreich"
 
@@ -2361,8 +2407,6 @@ msgid "Select a destination..."
 msgstr "Ziel auswählen..."
 
 #: unix/templates/unix/data_export.html:68
-#, fuzzy
-#| msgid "Support"
 msgid "Export"
 msgstr "Exportieren"
 
@@ -2493,14 +2537,10 @@ msgid "Current Folder"
 msgstr "Aktueller Ordner"
 
 #: unix/templates/unix/module_management.html:5
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "Libre Workspace Module"
 msgstr "Libre Workspace Modul"
 
 #: unix/templates/unix/module_management.html:11
-#, fuzzy
-#| msgid "Install"
 msgid "Installed?"
 msgstr "Installiert?"
 
@@ -2548,8 +2588,6 @@ msgid "Hard Drives"
 msgstr "Festplatten"
 
 #: unix/templates/unix/mounting.html:9
-#, fuzzy
-#| msgid "Description"
 msgid "Partition"
 msgstr "Partition"
 
@@ -2582,8 +2620,6 @@ msgid "Select current folder"
 msgstr "Aktuellen Ordner auswählen"
 
 #: unix/templates/unix/system_configuration.html:19
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "Libre Workspace Modules"
 msgstr "Libre Workspace Module"
 
@@ -2623,8 +2659,6 @@ msgid "Change"
 msgstr "Ändern"
 
 #: unix/templates/unix/system_dashboard.html:10
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "Libre-Workspace Version"
 msgstr "Libre-Workspace Version"
 
@@ -2928,12 +2962,11 @@ msgstr ""
 "deb-Datei."
 
 #: unix/unix_scripts/unix.py:812
-#, fuzzy, python-format
-#| msgid "Libre-Workspace Portal"
+#, python-format
 msgid "%(domain)s - Libre Workspace"
 msgstr "%(domain)s - Libre Workspace"
 
-#: unix/unix_scripts/unix.py:904
+#: unix/unix_scripts/unix.py:911
 #, python-format
 msgid ""
 "Ensuring DNS entry for %(full_domain)s with IP %(ip)s in Samba DNS server..."
@@ -2941,7 +2974,7 @@ msgstr ""
 "Stelle sicher, dass der DNS-Eintrag für %(full_domain)s mit IP %(ip)s im "
 "Samba-DNS-Server vorhanden ist..."
 
-#: unix/unix_scripts/unix.py:908
+#: unix/unix_scripts/unix.py:915
 msgid ""
 "Error: The domain is not a subdomain of the configured domain in the libre-"
 "workspace.env file."
@@ -2949,29 +2982,29 @@ msgstr ""
 "Fehler: Die Domain ist keine Subdomain der konfigurierten Domain in der "
 "libre-workspace.env-Datei."
 
-#: unix/unix_scripts/unix.py:911
+#: unix/unix_scripts/unix.py:918
 msgid "Error: The IP is not valid. Please use a valid IPv4 address."
 msgstr ""
 "Fehler: Die IP ist nicht gültig. Bitte verwenden Sie eine gültige IPv4-"
 "Adresse."
 
-#: unix/unix_scripts/unix.py:917
+#: unix/unix_scripts/unix.py:924
 msgid "Error: The domain is not valid. Please use a valid domain name."
 msgstr ""
 "Fehler: Die Domain ist nicht gültig. Bitte verwenden Sie einen gültigen "
 "Domainnamen."
 
-#: unix/unix_scripts/unix.py:924
+#: unix/unix_scripts/unix.py:931
 #, python-format
 msgid "Result of adding DNS entry: %(result)s"
 msgstr "Ergebnis des Hinzufügens des DNS-Eintrags: %(result)s"
 
-#: unix/unix_scripts/unix.py:926
+#: unix/unix_scripts/unix.py:933
 #, python-format
 msgid "Error while adding DNS entry: %(error)s"
 msgstr "Fehler beim Hinzufügen des DNS-Eintrags: %(error)s"
 
-#: unix/unix_scripts/unix.py:927
+#: unix/unix_scripts/unix.py:934
 #, python-format
 msgid ""
 "Error: %(error)s. Please check the Samba DNS server configuration and the "
@@ -2980,35 +3013,35 @@ msgstr ""
 "Fehler: %(error)s. Bitte überprüfen Sie die Samba-DNS-Server-Konfiguration "
 "und den Domainnamen."
 
-#: unix/unix_scripts/unix.py:952
+#: unix/unix_scripts/unix.py:959
 msgid "Password cannot be empty."
 msgstr "Passwort darf nicht leer sein."
 
-#: unix/unix_scripts/unix.py:954
+#: unix/unix_scripts/unix.py:961
 msgid "Password cannot contain spaces."
 msgstr "Passwort darf keine Leerzeichen enthalten."
 
-#: unix/unix_scripts/unix.py:957
+#: unix/unix_scripts/unix.py:964
 msgid "Password must contain at least one number."
 msgstr "Passwort muss mindestens eine Zahl enthalten."
 
-#: unix/unix_scripts/unix.py:960
+#: unix/unix_scripts/unix.py:967
 msgid "Password must contain at least one letter."
 msgstr "Passwort muss mindestens einen Buchstaben enthalten."
 
-#: unix/unix_scripts/unix.py:964
+#: unix/unix_scripts/unix.py:971
 msgid "Password must contain at least one special character."
 msgstr "Passwort muss mindestens ein Sonderzeichen enthalten."
 
-#: unix/unix_scripts/unix.py:968
+#: unix/unix_scripts/unix.py:975
 msgid "Password cannot contain the following characters: $'#"
 msgstr "Passwort darf folgende Zeichen nicht enthalten: $'#"
 
-#: unix/unix_scripts/unix.py:971
+#: unix/unix_scripts/unix.py:978
 msgid "Password must be at least 8 characters long."
 msgstr "Passwort muss mindestens 8 Zeichen lang sein."
 
-#: unix/unix_scripts/unix.py:1059
+#: unix/unix_scripts/unix.py:1066
 msgid ""
 "Error: You should run this function as root. In development mode this is "
 "okay for now."
@@ -3016,17 +3049,17 @@ msgstr ""
 "Fehler: Sie sollten diese Funktion als Root ausführen. Im Entwicklungsmodus "
 "ist das vorerst in Ordnung."
 
-#: unix/unix_scripts/unix.py:1062
+#: unix/unix_scripts/unix.py:1069
 msgid "Error: Nextcloud is not available. Please install Nextcloud first."
 msgstr ""
 "Fehler: Nextcloud ist nicht verfügbar. Bitte installieren Sie Nextcloud "
 "zuerst."
 
-#: unix/unix_scripts/unix.py:1114
+#: unix/unix_scripts/unix.py:1121
 msgid "Error: Password for user in linux: could not be changed."
 msgstr "Fehler: Passwort für Benutzer in Linux: konnte nicht geändert werden."
 
-#: unix/unix_scripts/unix.py:1165
+#: unix/unix_scripts/unix.py:1172
 msgid ""
 "CAUTION: No local admin token found. If you are in a dev environment, this "
 "is okay. If you are in a production environment, please check your "
@@ -3117,8 +3150,6 @@ msgstr ""
 "Nachricht von: %(libre_workspace_name)s"
 
 #: unix/views.py:305
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Mail sent successfully"
 msgstr "E-Mail erfolgreich gesendet"
 
@@ -3136,14 +3167,12 @@ msgid "%(name)s could not be uninstalled: %(response)s"
 msgstr "%(name)s konnte nicht deinstalliert werden: %(response)s"
 
 #: unix/views.py:417
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s is installing. This process takes multiple minutes..."
+#, python-format
 msgid "%(name)s is being installed. This may take a few minutes."
 msgstr "%(name)s wird installiert. Dies kann einige Minuten dauern."
 
 #: unix/views.py:425
-#, fuzzy, python-format
-#| msgid "Addon %(pk)s is installing. This process takes multiple minutes..."
+#, python-format
 msgid "%(name)s is being uninstalled. This may take a few minutes."
 msgstr "%(name)s wird deinstalliert. Dies kann einige Minuten dauern."
 
@@ -3196,8 +3225,6 @@ msgstr ""
 "Ihren Benutzereinstellungen."
 
 #: unix/views.py:492
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "Test mail - Libre Workspace"
 msgstr "Testmail - Libre Workspace"
 
@@ -3220,14 +3247,10 @@ msgstr ""
 "Test-E-Mail erfolgreich gesendet. Bitte überprüfen Sie Ihren Posteingang."
 
 #: unix/views.py:503
-#, fuzzy
-#| msgid "Addon Center"
 msgid "Addon"
 msgstr "Addon"
 
 #: unix/views.py:506
-#, fuzzy
-#| msgid "Addon Center"
 msgid "Author"
 msgstr "Autor"
 
@@ -3275,8 +3298,6 @@ msgid "The Addon could not be uninstalled: <code>%(response)s</code>"
 msgstr "Das Addon konnte nicht deinstalliert werden: <code>%(response)s</code>"
 
 #: unix/views.py:545
-#, fuzzy
-#| msgid "Addon %(addon_id)s is not installed."
 msgid "The Addon has been uninstalled."
 msgstr "Das Addon wurde deinstalliert."
 
@@ -3285,8 +3306,6 @@ msgid "The name has been changed."
 msgstr "Der Name wurde geändert."
 
 #: unix/views.py:555
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "Change Libre Workspace Name"
 msgstr "Libre Workspace Namen ändern"
 
@@ -3341,8 +3360,6 @@ msgstr ""
 "anschließend sofort geändert und der Server wird neu gestartet."
 
 #: unix/views.py:645
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
 msgid "Changes saved."
 msgstr "Änderungen gespeichert."
 
@@ -3426,10 +3443,8 @@ msgstr ""
 "Benutzerparameter wieder deaktiviert werden."
 
 #: welcome/forms.py:8
-#, fuzzy
-#| msgid "Select all"
 msgid "Select Language"
-msgstr "Alle auswählen"
+msgstr "Sprache auswählen"
 
 #: welcome/templates/welcome/access.html:5
 msgid "You can reach Libre Workspace Lite after installation at"
@@ -3480,8 +3495,6 @@ msgid "here at any time:"
 msgstr "jederzeit hier:"
 
 #: welcome/templates/welcome/access.html:34
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "To Libre-Workspace (portal.{{domain}})"
 msgstr "Zu Libre-Workspace (portal.{{domain}})"
 
@@ -3632,8 +3645,6 @@ msgid "Certificate Authorities"
 msgstr "Zertifizierungsstellen"
 
 #: welcome/templates/welcome/access.html:82
-#, fuzzy
-#| msgid "Support"
 msgid "Import"
 msgstr "Importieren"
 
@@ -3677,8 +3688,6 @@ msgid "Text copied to clipboard!"
 msgstr "Text in Zwischenablage kopiert!"
 
 #: welcome/templates/welcome/installation_running.html:5
-#, fuzzy
-#| msgid "Install"
 msgid "Installation..."
 msgstr "Installation läuft..."
 
@@ -3711,8 +3720,6 @@ msgstr ""
 "Workspace einsatzbereit!"
 
 #: welcome/templates/welcome/libreworkspace_lite.html:5
-#, fuzzy
-#| msgid "Libre-Workspace Portal"
 msgid "Libre Workspace Lite"
 msgstr "Libre Workspace Lite"
 
@@ -3895,10 +3902,8 @@ msgid "This is the easiest way to access Libre-Workspace in later use."
 msgstr "Dies ist der einfachste Weg, um Libre-Workspace später zu nutzen."
 
 #: welcome/templates/welcome/welcome_password.html:5
-#, fuzzy
-#| msgid "Master Password Change"
 msgid "Master Password"
-msgstr "Master-Passwort ändern"
+msgstr "Master-Passwort"
 
 #: welcome/templates/welcome/welcome_password.html:7
 msgid ""
@@ -3913,8 +3918,6 @@ msgid "Repeat password"
 msgstr "Passwort wiederholen"
 
 #: welcome/templates/welcome/welcome_select_apps.html:5
-#, fuzzy
-#| msgid "Module"
 msgid "Modules"
 msgstr "Module"
 
@@ -3959,8 +3962,6 @@ msgid "Jitsi - Video conferences"
 msgstr "Jitsi - Videokonferenzen"
 
 #: welcome/templates/welcome/welcome_select_apps.html:53
-#, fuzzy
-#| msgid "Module"
 msgid "Other Modules"
 msgstr "Andere Module"
 
@@ -3973,22 +3974,16 @@ msgid "Welcome!"
 msgstr "Willkommen!"
 
 #: welcome/templates/welcome/welcome_start.html:8
-#, fuzzy
-#| msgid ""
-#| "On the following pages, we will set up Libre-Workspace together. Please "
-#| "start by defining a secure master password."
 msgid ""
 "On the following pages, we will set up Libre-Workspace together. Please "
 "start by selecting your language."
 msgstr ""
 "Auf den folgenden Seiten richten wir gemeinsam Libre-Workspace ein. Bitte "
-"beginnen Sie mit der Definition eines sicheren Master-Passworts."
+"beginnen Sie mit der Auswahl Ihrer Sprache."
 
 #: welcome/templates/welcome/welcome_start.html:17
-#, fuzzy
-#| msgid "Nextcloud"
 msgid "Next"
-msgstr "Nextcloud"
+msgstr "Weiter"
 
 #: welcome/templates/welcome/welcome_start.html:21
 msgid "Tip:"
@@ -4059,8 +4054,6 @@ msgid "WordPress Instance"
 msgstr "WordPress-Instanz"
 
 #: wordpress_manager/views.py:60
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
 msgid "WordPress instance created successfully!"
 msgstr "WordPress-Instanz erfolgreich erstellt!"
 
@@ -4070,8 +4063,6 @@ msgid "WordPress instance not found."
 msgstr "WordPress-Instanz nicht gefunden."
 
 #: wordpress_manager/views.py:80
-#, fuzzy
-#| msgid "Addon %(pk)s uninstalled successfully."
 msgid "WordPress instance deleted successfully!"
 msgstr "WordPress-Instanz erfolgreich gelöscht!"
 
@@ -4091,32 +4082,3 @@ msgstr ""
 #: wordpress_manager/views.py:117
 msgid "WordPress instance optimization successfully started!"
 msgstr "WordPress-Instanzoptimierung erfolgreich gestartet!"
-
-#, fuzzy, python-format
-#~| msgid "Error while adding DNS entry: %(error)s"
-#~ msgid "Error while getting passwords: %(error)s"
-#~ msgstr "Fehler beim Hinzufügen des DNS-Eintrags: %(error)s"
-
-#, fuzzy
-#~| msgid "Addon Center"
-#~ msgid "Your Name"
-#~ msgstr "Gruppenname"
-
-#, fuzzy
-#~| msgid "Group name"
-#~ msgid "Enter your name"
-#~ msgstr "Gruppenname"
-
-#~ msgid "{{ heading }}"
-#~ msgstr "{{ heading }}"
-
-#~ msgid "{{ message }}"
-#~ msgstr "{{ message }}"
-
-#, fuzzy
-#~| msgid "Description"
-#~ msgid "{{ description }}"
-#~ msgstr "Beschreibung"
-
-#~ msgid "{{action}}"
-#~ msgstr "{{action}}"
