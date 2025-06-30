@@ -13,36 +13,36 @@ fi
 
 if [ "$NEXTCLOUD_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting nextcloud update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    bash ../nextcloud/update_nextcloud.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+    bash /usr/lib/libre-workspace/modules/nextcloud/update_nextcloud.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
 fi
 
 if [ "$DESKTOP_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting cloud desktop update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    bash ../desktop/update_desktop.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+    bash /usr/lib/libre-workspace/modules/desktop/update_desktop.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
 fi
 
 if [ "$ONLYOFFICE_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting onlyoffice update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    bash ../onlyoffice/update_onlyoffice.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+    bash /usr/lib/libre-workspace/modules/onlyoffice/update_onlyoffice.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
 fi
 
 if [ "$COLLABORA_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting collabora update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    bash ../collabora/update_collabora.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+    bash /usr/lib/libre-workspace/modules/collabora/update_collabora.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
 fi
 
 if [ "$MATRIX_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting matrix update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    bash ../matrix/update_matrix.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+    bash /usr/lib/libre-workspace/modules/matrix/update_matrix.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
 fi
 
 if [ "$JITSI_AUTOMATIC_UPDATES" == "True" ]; then
     echo "Starting jitsi update at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-    bash ../jitsi/update_jitsi.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+    bash /usr/lib/libre-workspace/modules/jitsi/update_jitsi.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
 fi
 
 # Update all addons which are located in /usr/lib/libre-workspace/modules
-for ADDON in /var/lib/libre-workspace/modules/*; do
+for ADDON in /usr/lib/libre-workspace/modules/*; do
     if [ -d "$ADDON" ]; then
         # Get folder name from path.
         ADDON_NAME=$(basename $ADDON)
@@ -50,7 +50,7 @@ for ADDON in /var/lib/libre-workspace/modules/*; do
         ADDON_VAR_NAME=$(echo $ADDON_NAME | sed -e 's/\(.*\)/\U\1/' -e 's/-/_/g')
         if [ "$(eval "echo \$${ADDON_VAR_NAME}_AUTOMATIC_UPDATES")" == "True" ]; then
             echo "Starting update of $ADDON_NAME at $DATE" >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
-            bash /var/lib/libre-workspace/modules/$ADDON_NAME/update_$ADDON_NAME.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
+            bash /usr/lib/libre-workspace/modules/$ADDON_NAME/update_$ADDON_NAME.sh >> /var/lib/libre-workspace/portal/history/update-$DATE.log 2>&1
         fi
     fi
 done
