@@ -213,9 +213,16 @@ Then you have to edit the settings.py file of the django application:
 
 .. code-block:: bash
 
-    sudo nano /usr/lib/libre-workspace/portal/lac/settings.py
+    sudo nano /etc/libre-workspace/portal/portal.conf
 
-Then set the ``DEBUG variable`` to ``True`` and restart the webserver:
+Then you have to set the ``DEBUG`` variable to ``True``:
+
+.. code-block:: bash
+
+    # Write the line exactly like this:
+    DEBUG=True
+
+After that you can save the file and restart the libre workspace portal service:
 
 .. code-block:: bash
 
