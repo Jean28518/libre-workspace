@@ -33,7 +33,7 @@ For example, to run the script every hour. Here is a full example how to set up 
 
     sudo apt install wget
     sudo mkdir -p /root/scripts
-    sudo wget https://raw.githubusercontent.com/linux-arbeitsplatz/linux-arbeitsplatz-central/main/src/join_scripts/linux-client/sync_linux_users.py -O /root/scripts/sync_linux_users.py
+    sudo wget https://raw.githubusercontent.com/Jean28518/libre-workspace/refs/heads/main/src/join_scripts/linux-client/sync_linux_users.py -O /root/scripts/sync_linux_users.py
     sudo chmod +x /root/scripts/sync_linux_users.py
     sudo nano /root/scripts/sync_linux_users.py
     # Update the environment variables LIBRE_WORKSPACE_URL and API_KEY at the top of the file
