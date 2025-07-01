@@ -20,6 +20,9 @@ def get_all_available_addons():
         if "libre-workspace-module-" in line:
             addon_id = line.split()[0].replace("/stable", "")
             addon_id = addon_id.replace("libre-workspace-module-", "")
+            # If a comma is in the addon_id, remove it and take the first part: e.g. "libre-workspace-module-addon,now"
+            if "," in addon_id:
+                addon_id = addon_id.split(",")[0]
             information = subprocess.run(
                 ["apt", "show", f"libre-workspace-module-{addon_id}"],
                 capture_output=True,
