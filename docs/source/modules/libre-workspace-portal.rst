@@ -220,7 +220,7 @@ Then you have to set the ``DEBUG`` variable to ``True``:
 .. code-block:: bash
 
     # Write the line exactly like this:
-    DEBUG=True
+    export DEBUG=True
 
 After that you can save the file and restart the libre workspace portal service:
 
