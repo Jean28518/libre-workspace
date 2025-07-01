@@ -148,6 +148,16 @@ A complete curl example would look like this:
     # Create a new user max
     curl -X 'POST' -H 'Api-key: UArlEkY22lh78dxaYrr8RQphTegrj5q9tAltz2pdeEfqkcY9Y8V6EocvAPC38IBS' -H 'Content-Type: application/json' -d '{"username": "max", "first_name": "Max", "last_name": "Doe", "mail": "test@int.de", "admin": false, "enabled": true}' 'https://portal.int.de/api/users/'
 
+
+You can also create a new API key from the shell as root:
+
+.. code-block:: bash
+
+    libre-workspace-add-api-key <name> <permissions> <expiration_date>
+    # Usage: libre-workspace-add-api-key <name> <permissions> <expire_date>
+    # Example: libre-workspace-add-api-key 'My API Key' 'linux_client,administrator' '2025-12-31'
+    # If you want to set no expire date, use '0' as value
+
 unix
 ----
 

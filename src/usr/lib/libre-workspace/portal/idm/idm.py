@@ -1,16 +1,19 @@
-from django.utils.translation import gettext as _
+import os
+import subprocess
 import string
 import random
-import os
-import idm.ldap as ldap
 
+from django.utils.translation import gettext as _
+from django.contrib.auth import authenticate
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
-import unix.unix_scripts.unix as unix
 from django_otp.plugins.otp_totp.models import TOTPDevice
+
+import idm.ldap as ldap
+import unix.unix_scripts.unix as unix
 from .models import LinuxClientUser
-import subprocess
+
 
 
 # user: ldap user, user object or username
@@ -127,9 +130,15 @@ def change_superuser_password(new_password):
         print(_("Local Administrator password changed"))
 
 
-def get_admin_user():
+def get_admin_user(user_object=False):
     """Returns the user_information dict of the admin user."""
+    
+
     if settings.AUTH_LDAP_ENABLED:
+        if user_object:
+            # If user_object is True, we return the User object instead of the user_information dict
+            user =  authenticate(username="Administrator", password=settings.AUTH_LDAP_BIND_PASSWORD)
+            return user                
         return get_user_information("Administrator")
     else:
         user_information = User.objects.get(username="Administrator").__dict__

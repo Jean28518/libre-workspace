@@ -102,6 +102,7 @@ python3 manage.py startapp my_new_app
 ### Access django shell
 
 ```bash
+. /etc/libre-workspace/portal/portal.conf
 cd /usr/lib/libre-workspace/portal
 . /var/lib/libre-workspace/portal/venv/bin/activate
 python3 manage.py shell

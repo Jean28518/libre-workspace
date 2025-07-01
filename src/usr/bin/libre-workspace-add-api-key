@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Check if the script is run as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
+. /etc/libre-workspace/portal/portal.conf
+
+NAME="$1"
+if [ -z "$NAME" ]; then
+    echo "Usage: $0 <name> <permissions> <expire_date>"
+    echo "Example: $0 'My API Key' 'linux_client,administrator' '2025-12-31'"
+    echo "If you want to set no expire date, use '0' as value"
+    exit 1
+fi
+
+PERMISSIONS="$2"
+if [ -z "$PERMISSIONS" ]; then
+    echo "Usage: $0 <name> <permissions> <expire_date>"
+    echo "Example: $0 $NAME 'linux_client,administrator'"
+    exit 1
+fi
+
+EXPIRE_DATE="$3"
+if [ -z "$EXPIRE_DATE" ]; then
+    echo "Usage: $0 <name> <permissions> <expire_date>"
+    echo "Example: $0 $NAME '$PERMISSIONS' '2025-12-31'"
+    echo "If you want to set no expire date, use '0' as value"
+    exit 1
+fi
+
+if [ -d src/lac ]; then
+    cd src/lac
+fi
+
+# Activate the virtual environment
+if [ -f /var/lib/libre-workspace/portal/venv/bin/activate ]; then
+    source /var/lib/libre-workspace/portal/venv/bin/activate
+fi
+
+cd /usr/lib/libre-workspace/portal/
+
+python3 manage.py shell -c "from idm.utils import create_api_key; from idm.idm import get_admin_user; api_key = create_api_key(user=get_admin_user(user_object=True), name='$NAME', permissions='$PERMISSIONS', expiration_date='$EXPIRE_DATE'); print(f\"API Key created: {api_key}\")"
+
+if [ $? -ne 0 ]; then
+    echo "Failed to create API key"
+    exit 1
+fi

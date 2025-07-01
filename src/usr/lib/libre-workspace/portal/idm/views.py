@@ -39,7 +39,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework import permissions
 from rest_framework.decorators import action
 from django.utils.translation import gettext as _
-
+from .utils import create_api_key
 
 
 def signal_handler(context, user, request, exception, **kwargs):
@@ -650,18 +650,19 @@ def api_key_overview(request):
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def create_api_key(request):
+def create_api_key_view(request):
     form = ApiKeyForm()
     if request.method == 'POST':
         form = ApiKeyForm(request.POST)
         if form.is_valid():
-            api_key = ApiKey()
-            api_key.user = request.user
-            api_key.name = form.cleaned_data["name"]
-            api_key.key = generate_random_password(length=64, alphanumeric_only=True)  # Generate a random key
-            api_key.expiration_date = form.cleaned_data["expiration_date"]
-            api_key.permissions = ','.join(form.cleaned_data["permissions"])
-            api_key.save()
+            permissions = ','.join(form.cleaned_data["permissions"])
+            expiration_date = form.cleaned_data["expiration_date"].strftime("%Y-%m-%d")
+            create_api_key(
+                user=request.user,
+                name=form.cleaned_data["name"],
+                permissions=permissions,
+                expiration_date=expiration_date
+            )
             return redirect(api_key_overview)
     form.fields["expiration_date"].initial = datetime.datetime.now() + datetime.timedelta(days=365)  # Default to 1 year
     return render(request, "lac/create_x.html", {"form": form, "url": reverse("api_key_overview"), "hide_buttons_top": True})

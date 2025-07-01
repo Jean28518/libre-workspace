@@ -34,7 +34,7 @@ urlpatterns = [
     path("delete_oidc_client/<str:id>", views.delete_oidc_client, name="delete_oidc_client"),
 
     path("api_key_overview", views.api_key_overview, name="api_key_overview"),
-    path("create_api_key", views.create_api_key, name="create_api_key"),
+    path("create_api_key", views.create_api_key_view, name="create_api_key"),
     path("edit_api_key/<str:id>", views.edit_api_key, name="edit_api_key"),
     path("delete_api_key/<str:id>", views.delete_api_key, name="delete_api_key"),
     path("api_key_details/<str:id>", views.api_key_details, name="api_key_details"),
