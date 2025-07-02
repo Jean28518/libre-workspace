@@ -64,7 +64,7 @@
             data-target="modal-install-{{ module.name }}"
             onClick="toggleModal(event)">
         </a>
-        <h3>{% translate "%(module_name)s install?" %}</h3>
+        <h3>{% blocktranslate with name=module.name %}Install {{ name }}?{% endblocktranslate %}</h3>
         <p>
             {% translate "Do you really want to install the module? This may take some time." %}
         </p>
