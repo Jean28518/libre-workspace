@@ -34,7 +34,7 @@
             data-target="modal-uninstall-{{ module.name }}"
             onClick="toggleModal(event)">
         </a>
-        <h3>{% translate "%(module_name)s uninstall?" %}</h3>
+        <h3>{% blocktranslate with name=module.name %}Uninstall {{ name }}?{% endblocktranslate %}</h3>
         <p>
             {% translate "Do you really want to uninstall the module? This will also remove all module data and settings. If the module has been manually modified or installed administratively, problems up to further data loss may occur. Only use this function if you have set up backups, no longer need any data on the module, and the module was installed automatically." %}
         </p>
