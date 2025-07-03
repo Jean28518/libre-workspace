@@ -966,13 +966,18 @@ def password_challenge(password):
     if not any(char.isalpha() for char in password):
         message = _("Password must contain at least one letter.")
     # Check if password contains at least one special character
-    special_characters = "!\"%&'()*+,-./:;<=>?@[\]^_`{|}~"
+    special_characters = "!%&'()*+,-./:;<=>?@[\]_{|}~"
     if not any(char in special_characters for char in password):
         message = _("Password must contain at least one special character.")
-    # If password contains "$'# it is forbidden
-    forbidden_characters = "$'#"
-    if any(char in forbidden_characters for char in password):
-        message = _("Password cannot contain the following characters: $'#")
+    
+    # Check if the password only contains allowed characters
+    # Remove all the special characters from the password
+    for char in password:
+        if char in special_characters:
+            password = password.replace(char, "")
+    if not password.isalnum():
+        message = _("Password can only contain these special characters: ") + special_characters
+
     # Check if password is at least 8 characters long
     if len(password) < 8:
         message = _("Password must be at least 8 characters long.")
