@@ -582,6 +582,7 @@ def get_module_path(module_name):
 # Also "installs" addons
 def setup_module(module_name):
     module_path = get_module_path(module_name)
+    all_addons = get_all_addon_modules()
     # Check if module is an addon:
     if "addon" in module_path:
         # Add the entry to the /etc/hosts file
@@ -687,11 +688,16 @@ def is_path_a_file(path):
 
 
 # Returns array with all configs
-def get_all_addon_modules():
+def get_all_addon_modules(with_system_modules=False):
     # Get all folders in the addons directory
     addons = []
     for folder in os.listdir("/usr/lib/libre-workspace/modules/"):
         if os.path.isdir(f"/usr/lib/libre-workspace/modules/{folder}") and os.path.isfile(f"/usr/lib/libre-workspace/modules/{folder}/{folder}.conf"):
+            # Check if "system_module="true"" is in the config file
+            # Only add the addon if it is not a system module or if with_system_modules is True
+            file_content = "".join(open(f"/usr/lib/libre-workspace/modules/{folder}/{folder}.conf").readlines())
+            if "system_module=\"true\"" in file_content.lower() and not with_system_modules:
+                continue
             addons.append(get_config_of_addon(folder))
     return addons
 
@@ -773,6 +779,12 @@ def uninstall_addon(addon_id):
     """"
     Removes the folder of the addon. Don't uninstall the addon if it is currently installed into the server.
     """
+
+    # Check if addon is a system_module. Then we cannot uninstall it.
+    file_content = "".join(open(f"/usr/lib/libre-workspace/modules/{addon_id}/{addon_id}.conf").readlines())
+    if "system_module=\"true\"" in file_content.lower():
+        return _("Error: This addon is a system module and cannot be uninstalled.")
+
     addon_information = get_config_of_addon(addon_id)
 
     # Check if the addon is installed as a .deb package via dpkg. It has to be named like "libre-workspace-module-<addon_id>"
