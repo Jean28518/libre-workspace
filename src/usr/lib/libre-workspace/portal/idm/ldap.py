@@ -39,7 +39,7 @@ def get_user_information_of_cn(cn):
     dn = ldap_get_dn_of_cn(cn)
 
     # Get user with dn
-    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf", "objectGUID", "userAccountControl", "preferredLanguage", "uidNumber"])
+    ldap_reply = conn.search_s(dn, ldap.SCOPE_BASE, "(objectClass=*)", ["cn", "givenName", "sn", "displayName", "mail", "memberOf", "objectGUID", "userAccountControl", "uidNumber"])
 
     
     conn.unbind_s()
@@ -65,7 +65,7 @@ def get_user_information_of_cn(cn):
     user_information["enabled"] = int(ldap_reply[0][1].get("userAccountControl", [b'512'])[0]) & 2 == 0
     user_information["dn"] = dn
     user_information["cn"] = cn
-    user_information["language_code"] = ldap_reply[0][1].get("preferredLanguage", [b"en"])[0].decode('utf-8')
+    # user_information["language_code"] = ldap_reply[0][1].get("preferredLanguage", [b"en"])[0].decode('utf-8')
     user_information["uidNumber"] = ldap_reply[0][1].get("uidNumber", [b""])[0].decode('utf-8')
 
     user_information["groups"] = ldap_reply[0][1].get("memberOf", [])
@@ -385,7 +385,7 @@ def ldap_update_user(cn, user_information):
     attrs['sn'] = [user_information.get("last_name", "").encode('utf-8')]
     attrs['displayName'] = [user_information.get("displayName", "").encode('utf-8')]
     attrs['mail'] = [user_information.get("mail", "").encode('utf-8')]
-    attrs['preferredLanguage'] = [user_information.get("language_code", settings.LANGUAGE_CODE).encode('utf-8')]
+    # attrs['preferredLanguage'] = [user_information.get("language_code", settings.LANGUAGE_CODE).encode('utf-8')]
     
     for key, value in attrs.items():
         if value == [b""] or value == None:
@@ -412,7 +412,7 @@ def ldap_update_user(cn, user_information):
         old_attrs['userAccountControl'] = [b'512']
     else:
         old_attrs['userAccountControl'] = [b'514']
-    old_attrs['preferredLanguage'] = [old_user_information.get("language_code", settings.LANGUAGE_CODE).encode('utf-8')]
+    # old_attrs['preferredLanguage'] = [old_user_information.get("language_code", settings.LANGUAGE_CODE).encode('utf-8')]
 
     ldif = modlist.modifyModlist(old_attrs, attrs)
     
