@@ -6,7 +6,8 @@ def process_overview_dict(overview : dict) -> dict:
     """
     Process the overview dictionary and returns the processed dictionary
     """
-    overview["add_url"] = reverse(overview["add_url_name"])
+    if "add_url_name" in overview.keys():
+        overview["add_url"] = reverse(overview["add_url_name"])
     if overview["element_url_key"] is None:
         overview["element_url_key"] = overview["t_keys"][0]
     overview["table_content"] = []
@@ -47,6 +48,8 @@ def _get_attr(obj, attr):
         value = value.strftime("%Y-%m-%d %H:%M:%S")
     elif value is None:
         value = "-"
+    if isinstance(value, list):
+        value = ", ".join(value)
     return value
         
 def message(request, message : str, url_name : str = "", url_args : list = []):
@@ -59,3 +62,17 @@ def message(request, message : str, url_name : str = "", url_args : list = []):
         return render(request, "lac/message.html", {"message": message, "url": url_name})
     
     return render(request, "lac/message.html", {"message": message, "url": reverse(url_name, args=url_args)})
+
+
+def get_2column_table(data: dict):
+    """
+    Returns a 2 column table with the data in html format.
+    The data should be a dictionary with the keys as the first column and the values as the second column.
+    """
+    table = "<table>"
+    for key, value in data.items():
+        field2 = _get_attr(data, key)
+        table += f"<tr><td><b>{key}</b></td><td>{field2}</td></tr>"
+    table += "</table>"
+    return table
+    

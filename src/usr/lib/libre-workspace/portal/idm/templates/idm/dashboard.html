@@ -48,13 +48,15 @@
             {% translate "System Administration" %}
         </article>
     </a>
-    {% comment %} <a class="secondary" href="{% url "m23software.client_list" %}">
-        <article style="text-align: center;">
-            <span class="material-icons md-96" style="padding: 0.5rem;">computer</span>
-            <br>
-            Client-Verwaltung
-        </article>
-    </a> {% endcomment %}
+    {% if m23_installed %}
+        <a class="secondary" href="{% url "m23software.client_list" %}">
+            <article style="text-align: center;">
+                <span class="material-icons md-96" style="padding: 0.5rem;">computer</span>
+                <br>
+                {% translate "Client-Management" %}
+            </article>
+        </a>
+    {% endif %}
     <a class="secondary" href="{% url "system_configuration" %}">
         <article style="text-align: center;">
             <span class="material-icons md-96" style="padding: 0.5rem;">settings</span>

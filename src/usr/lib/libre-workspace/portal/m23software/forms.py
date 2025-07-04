@@ -4,12 +4,12 @@ from django.utils.translation import gettext as _
 
 
 def true(value):
-    return True
+    return False
 
 def check_mac_address(value):
     # Simple MAC address validation
-    if len(value) != 17 or not all(c in "0123456789ABCDEF:" for c in value.upper()):
-        raise forms.ValidationError(_("Invalid MAC address. Please enter a valid MAC address in the format XX:XX:XX:XX:XX:XX."))
+    if len(value) != 12 or not all(c in "0123456789ABCDEF" for c in value.upper()):
+        raise forms.ValidationError(_("Invalid MAC address. Please enter a valid MAC address in the format XXXXXXXXXXXX."))
     return value
 
 def client_name_validator(value):
@@ -42,7 +42,7 @@ class M23SoftwareInstallClientForm(forms.Form):
         label=_("Client Name"),
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={"placeholder": _("My Client")}),
+        widget=forms.TextInput(attrs={"placeholder": _("MyClient")}),
         help_text=mark_safe(
             _("Specifies the name of the client. <br>The name must not contain spaces and must be at least 2 characters long.")
         ),
@@ -92,7 +92,7 @@ class M23SoftwareInstallClientForm(forms.Form):
         label=_("Client MAC"),
         max_length=17,
         required=True,
-        widget=forms.TextInput(attrs={"placeholder": "00:11:22:33:44:55"}),
+        widget=forms.TextInput(attrs={"placeholder": "001122334455"}),
         help_text=mark_safe(
             _("Specifies the MAC address of the client. <br>The MAC address must be within the m23 server's network.")
         ),
@@ -140,4 +140,91 @@ class M23SoftwareInstallClientForm(forms.Form):
         ),
         validators=[true]
 
+    )
+
+
+class M23SoftwareAddClientForm(forms.Form):
+    """
+    Form for adding a new client to m23.
+    This form is used to collect the necessary information for adding a client.
+    """
+
+			# /**
+			# **description Adds needed data for assimilating a client.
+			# **url rest.php?api_key=[key]&cmd=assimilateClient&client=[client]&ip=[ip]&password=[password]&ubuntuuser=[ubuntuuser]&clientusesdynamicip=[clientusesdynamicip]
+			# **parameter client: name of the client
+			# **parameter ip: IP of the client
+			# **parameter password: root password on Debian systems or combines user/root password on Ubuntu systems
+			# **parameter ubuntuuser: name of the Ubuntu user or empty if a Debian system is meant.
+			# **parameter clientUsesDynamicIP: if set to 1, the client uses a dynamic IP address
+			# **/
+    
+    client_name = forms.CharField(
+        label=_("Client Name"),
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={"placeholder": _("MyClient")}),
+        help_text=mark_safe(
+            _("Specifies the name of the client. <br>The name must not contain spaces and must be at least 2 characters long.")
+        ),
+        validators=[client_name_validator]
+    )
+    client_ip = forms.GenericIPAddressField(
+        label=_("Client IP"),
+        required=True,
+        widget=forms.TextInput(attrs={"placeholder": "1.2.3.4"}),
+        help_text=mark_safe(
+            _("Specifies the future IP address of the client. <br>The IP address must be reachable from this server.")
+        ),
+    )
+    client_password = forms.CharField(
+        label=_("Administrator password on the client"),
+        max_length=100,
+        required=True,
+        widget=forms.PasswordInput(attrs={"placeholder": ""}),
+    )
+    client_ubuntu_user = forms.CharField(
+        label=_("Ubuntu User"),
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": _("ubuntu")}),
+        help_text=_("Name of the Ubuntu/Linux Mint/... user. Leave empty if the client is a Debian system.")
+    )
+    client_uses_dynamic_ip = forms.BooleanField(
+        label=_("Client uses dynamic IP"),
+        required=False,
+        initial=False,
+        help_text=_("Check this box if the client uses a dynamic IP address. (DHCP)")
+    )
+
+
+class M23SoftwareAddGroupForm(forms.Form):
+    """
+    Form for adding a new group to m23.
+    This form is used to collect the necessary information for adding a group.
+    """
+
+    group_name = forms.CharField(
+        label=_("Group Name"),
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={"placeholder": _("MyGroup")}),
+        help_text=_("Specifies the name of the group. The name must not contain spaces and must be at least 2 characters long."),
+        validators=[client_name_validator]
+    )
+    description = forms.CharField(
+        label=_("Description"),
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": _("A short description of the group")}),
+    )
+
+class M23AddClientToGroupsForm(forms.Form):
+    """
+    Form for adding a client to groups in m23.
+    This form is used to collect the necessary information for adding a client to groups.
+    """
+    groups = forms.MultipleChoiceField(
+        choices=[],
+        widget=forms.CheckboxSelectMultiple,
     )

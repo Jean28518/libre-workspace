@@ -4,6 +4,10 @@
 
 <h2>{% translate overview.heading %}</h2>
 
+{% if overview.content_above %}
+    {{ overview.content_above | safe }}
+{% endif %}
+
 {% if overview.add_url %}
 <a href="{{ overview.add_url }}" role="button" class="primary">{% blocktranslate with name=overview.element_name %}Add {{ name }}{% endblocktranslate %}</a>
 {% endif %}
@@ -105,6 +109,12 @@
     {% endfor %}
     </tbody>
   </table>
+
+
+{% if overview.back_url_name %}
+    <center><a href="{% url overview.back_url_name %}"role="button" class="secondary">{% translate "Back" %}</a></center>
+{% endif %}
+
 
   {% if overview.hint %}
       <center>{{ overview.hint | safe }}</center>
