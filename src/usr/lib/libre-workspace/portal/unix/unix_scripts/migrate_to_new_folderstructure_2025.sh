@@ -43,6 +43,7 @@ source_array=(
     "/usr/share/linux-arbeitsplatz/db.sqlite3"
     "/usr/share/linux-arbeitsplatz/media/"
     "/usr/share/linux-arbeitsplatz/unix/unix_scripts/app_dashboard_settings.json"
+    "/usr/share/linux-arbeitsplatz/unix/unix_scripts/welcome/templates/welcome/access_rendered.html"
 )
 
 destination_array=(
@@ -54,6 +55,7 @@ destination_array=(
     "/var/lib/libre-workspace/portal/db.sqlite3"
     "/var/lib/libre-workspace/portal/media/"
     "/var/lib/libre-workspace/portal/app_dashboard_settings.json"
+    "/usr/lib/libre-workspace/portal/welcome/templates/welcome/access_rendered.html"
 )
 
 mkdir -p /usr/lib/libre-workspace/modules/
