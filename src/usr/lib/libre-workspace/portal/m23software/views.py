@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .forms import M23SoftwareInstallClientForm, M23SoftwareAddClientForm, M23SoftwareAddGroupForm, M23AddClientToGroupsForm
+from .forms import M23SoftwareInstallClientForm, M23SoftwareAddClientForm, M23SoftwareAddGroupForm, M23AddClientToGroupsForm, M23ClientPackagesFilterForm, M23ClientPackageSearchForm, M23ClientRemovePackagesForm
 import m23software.utils
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
@@ -165,6 +165,7 @@ def m23_client_detail(request, client_name):
         "content": message_content,
         "hide_buttons_top": "True",
         "content_above": f"""
+                <a href="{reverse('m23software.package_management', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Manage Packages')}</a>
                 <a href="{reverse('m23software.add_groups_to_client', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Add Groups to Client')}</a>
                 <a href="{reverse('m23software.reboot_client', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Reboot Client')}</a>
                 <a href="{reverse('m23software.shutdown_client', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Shutdown Client')}</a>
@@ -349,72 +350,152 @@ def m23_reboot_client(request, client_name):
     return message(request, _("Client %(client_name)s has been successfully rebooted.") % {"client_name": client_name}, reverse("m23software.client_list"))
 
 
-# @staff_member_required(login_url=settings.LOGIN_URL)
-# def m23_package_management(request, client_name):
-#     """
-#     View to manage packages on a specific client in m23.
-#     """
-#     # This function should handle the package management for a client.
-#     # For now, we will just return a placeholder response.
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_package_management(request, client_name):
+    """
+    View to manage packages on a specific client in m23.
+    """
+    # This function should handle the package management for a client.
+    # For now, we will just return a placeholder response.
+    search_term = request.GET.get("search", "")
+    filter_type = request.GET.get("filter", "all")
+    form = M23ClientPackagesFilterForm(initial={"search": search_term, "filter_by_action": filter_type})
 
-#     search_term = request.GET.get("search", "")
-#     filter_type = request.GET.get("filter", "all")
+    if request.method == "POST":
+        form = M23ClientPackagesFilterForm(request.POST)
+        if form.is_valid():
+            search_term = form.cleaned_data.get("search", "")
+            filter_type = form.cleaned_data.get("filter_by_action", "all")
+            return HttpResponseRedirect(reverse("m23software.package_management", args=[client_name]) + f"?search={search_term}&filter={filter_type}")
+
+
     
     
-#     if filter_type not in ["installed", "removed", "purged", "all"]:
-#         return message(request, _("Invalid filter type."), reverse("m23software.client_list"))
+    if filter_type not in ["installed", "removed", "purged", "all"]:
+        return message(request, _("Invalid filter type."), "m23software.client_detail", [client_name])
     
-#     packages = m23software.utils.get_packages(client_name, search_term, filter_type)
+    packages = m23software.utils.client_packages(client_name, search_term, filter_type)
 
-#     if not packages:
-#         return message(request, _("No packages found for client %(client_name)s.") % {"client_name": client_name}, reverse("m23software.client_list"))
+    # if not packages:
+    #     return message(request, _("No packages found for client %(client_name)s for search term '%(search_term)s' and filter '%(filter_type)s'.") % {
+    #         "client_name": client_name,
+    #         "search_term": search_term,
+    #         "filter_type": filter_type
+    #     }, "m23software.client_detail", [client_name])
     
-#     overview = templates.process_overview_dict({
-#         "elements": packages,
-#         "t_headings": [_("Package Name"), _("Version"), _("Status")],
-#         "t_keys": ["name", "version", "status"],
-#         "element_url_key": "name",
-#         "element_name": _("Package"),
-#         "info_url_name": "m23software.package_detail",
-#         "delete_url_name": "m23software.package_remove",
-#         "add_url_name": "m23software.package_install",
-#         "content_above": f"""
-#             <form method="GET" action="{reverse('m23software.package_management', args=[client_name])}">
-#                 <input type="text" name="search" value="{search_term}" placeholder="{_('Search packages...')}" />
-#                 <select name="filter">
-#                     <option value="all" {"selected" if filter_type == "all" else ""}>All</option>
-#                     <option value="installed" {"selected" if filter_type == "installed" else ""}>{_('Installed')}</option>
-#                     <option value="removed" {"selected" if filter_type == "removed" else ""}>Removed</option>
-#                     <option value="purged" {"selected" if filter_type == "purged" else ""}>Purged</option>
-#                 </select>
-#                 <button type="submit" class="primary">{_('Search')}</button>
-#             </form>
-#             <a href="{reverse('m23software.package_install', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Install Package')}</a>
-#             <a href="{reverse('m23software.package_remove', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Remove Package')}</a>
-#         """,
-#         "heading": _("Package Management for %(client_name)s") % {"client_name": client_name},
-#         "back_url_name": "m23software.client_detail",
-#     })
+    html_list_string = "<ul>\n"
+    for package in packages:
+        html_a_tag = ""
+        if filter_type == "installed":
+            html_a_tag = f"  <a href='{reverse('m23software.package_remove', args=[client_name])}?packages={package}' style='margin-left: 0.5rem;'>{_('Remove')}</a>"
+        html_list_string += f"  <li>{package} {html_a_tag}</li>\n"
+    html_list_string += "</ul>\n"
+
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "action": _("Filter Packages"),
+        "hide_buttons_top": "True",
+        "content_above": f"""
+            <a href="{reverse('m23software.apt_package_search', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Install Packages')}</a>
+            <a href="{reverse('m23software.package_remove', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Remove Packages')}</a>
+        """,
+        "additional_content": html_list_string,
+        "heading": _("Package Management for: %(client_name)s") % {"client_name": client_name},
+        })
+
+    
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_package_search(request, client_name):
+    """
+    View to search for apt packages on a specific client in m23.
+    """
+    # This function should handle the apt package search for a client.
+    # For now, we will just return a placeholder response.
+
+    search_term = request.GET.get("search", "")
+    package_type = request.GET.get("package_type", "apt")
+    install = request.GET.get("install", False)
+    form = M23ClientPackageSearchForm(initial={"search": search_term})
+    if request.method == "POST":
+        form = M23ClientPackageSearchForm(request.POST)
+        if form.is_valid():
+            search_term = form.cleaned_data.get("search", "")
+            package_type = form.cleaned_data.get("package_type")
+            install = form.cleaned_data.get("install", False)
+            if install:
+                return HttpResponseRedirect(reverse("m23software.package_install", args=[client_name]) + f"?packages={search_term}")
+            return HttpResponseRedirect(reverse("m23software.m23_package_search", args=[client_name]) + f"?search={search_term}&package_type={package_type}&install={install}")
+    
+    packages = []
+    if package_type == "apt":
+        packages = m23software.utils.search_client_packages_apt(client_name, search_term)
+    elif package_type == "flatpak":
+        packages = m23software.utils.search_client_packages_flatpak(client_name, search_term)
+
+    if not packages:
+        return message(request, _("No packages found for client %(client_name)s for search term '%(search_term)s'.") % {
+            "client_name": client_name,
+            "search_term": search_term
+        }, "m23software.client_detail", [client_name])
+    
+
+    html_list_string = "<ul>\n"
+    for package in packages:
+        install_url = reverse("m23software.package_install", args=[client_name]) + f"?packages={package}"
+        html_list_string += f"  <li>{package}  <a href='{install_url}' style='margin-left: 0.5rem;'>{_('Install')}</a></li>\n"
+    html_list_string += "</ul>\n"
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "action": _("Search Packages"),
+        "hide_buttons_top": "True",
+        "additional_content": html_list_string,
+        "heading": _("APT Package Search for: %(client_name)s") % {"client_name": client_name},
+    })
 
 
-#     return render(request, "lac/overview_x.html", {"overview": overview})
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_package_install(request, client_name):
+    """
+    View to install packages on a specific client in m23.
+    """
+    # This function should handle the package installation for a client.
+    # For now, we will just return a placeholder response.
+
+    packages = request.GET.getlist("packages", [])
+    if not packages:
+        return message(request, _("No packages selected for installation."), "m23software.client_detail", [client_name])
+    
+    try:
+        msg = m23software.utils.install_packages(client_name, packages)
+        if msg:
+            return message(request, msg, "m23software.client_detail", [client_name])
+        return message(request, _("Packages have been successfully installed on client %(client_name)s.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
+    except Exception as e:
+        return message(request, str(e), "m23software.client_detail", [client_name])
 
 
-# @staff_member_required(login_url=settings.LOGIN_URL)
-# def m23_package_install(request, client_name):
-#     """
-#     View to install a package on a specific client in m23.
-#     """
-#     # This function should handle the installation of a package on a client.
-#     # For now, we will just return a placeholder response.
-
-#     if request.method == "POST":
-#         package_name = request.POST.get("package_name", "")
-#         if not package_name:
-#             return message(request, _("Package name is required."), reverse("m23software.package_management", args=[client_name]))
-        
-#         msg = m23software.utils.install_packages(client_name, [package_name])
-#         if msg:
-#             return message(request, msg, reverse("m23software.package_management", args=[client_name]))
-#         return message(request, _("Package %(package_name)s has been successfully installed on client %(client_name)s.") % {"package_name": package_name, "client_name": client_name}, reverse("m23software.package_management", args=[client_name]))
-
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_package_remove(request, client_name):
+    """
+    View to remove packages from a specific client in m23.
+    """
+    form = M23ClientRemovePackagesForm()
+    if request.method == "POST":
+        form = M23ClientRemovePackagesForm(request.POST)
+        if form.is_valid():
+            packages = form.cleaned_data.get("packages", [])
+            if not packages:
+                return message(request, _("No packages entered for removal."), "m23software.package_remove", [client_name])
+            msg = m23software.utils.deinstall_packages(client_name, packages)
+            if msg:
+                return message(request, msg, "m23software.package_remove", [client_name])
+            else:
+                return message(request, _("Packages have been successfully removed from client %(client_name)s.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "heading": _("Remove Packages from Client"),
+        "hide_buttons_top": "True",
+        "action": _("Remove Packages"),
+        "url": reverse("m23software.package_management", args=[client_name]),
+    })
+            

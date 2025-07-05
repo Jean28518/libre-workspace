@@ -320,7 +320,8 @@ def client_packages(client_name, search, status):
     response = requests.get(f"{URL_BASE}clientPackages", params=params)
     
     if response.status_code == 200:
-        return response.json()
+        packages = response.json()["packages"]
+        return packages
     else:
         raise Exception(f"Failed to fetch client packages: {response.status_code} - {response.text}")
     
@@ -338,7 +339,8 @@ def search_client_packages_apt(client_name, search):
     response = requests.get(f"{URL_BASE}searchPackages", params=params)
     
     if response.status_code == 200:
-        return response.json()
+        packages = response.json()["packages"]
+        return packages
     else:
         raise Exception(f"Failed to search client packages: {response.status_code} - {response.text}")
     
@@ -385,20 +387,17 @@ def install_packages(client_name, packages):
         raise Exception(f"Failed to install packages: {response.status_code} - {response.text}")
     
 
-def deinstall_packages(client_name, packages):
+def deinstall_packages(client_name, packages: str):
     """
     Uninstalls packages from a client in m23.
     Returns the response from the m23 API.
-    """
-    if not isinstance(packages, list):
-        raise ValueError("packages must be a list")
-    
+    """   
     params = {
         "client": client_name,
-        "packages": " ".join(packages)
+        "packages": packages
     }
     
-    response = requests.get(f"{URL_BASE}removePackages", params=params)
+    response = requests.get(f"{URL_BASE}deinstallPackages", params=params)
     
     if response.status_code == 200:
         response_json = response.json()

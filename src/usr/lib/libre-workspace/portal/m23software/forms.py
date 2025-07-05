@@ -228,3 +228,69 @@ class M23AddClientToGroupsForm(forms.Form):
         choices=[],
         widget=forms.CheckboxSelectMultiple,
     )
+
+class M23ClientPackagesFilterForm(forms.Form):
+    """
+    
+    """
+    search = forms.CharField(
+        label=_("Search"),
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": _("Search packages...")}),
+        help_text=_("Search for packages by name or description.")
+    )
+    filter_by_action = forms.ChoiceField(
+        choices=[
+            ("installed", _("Installed")),
+            ("removed", _("Removed")),
+            ("purged", _("Purged")),
+            ("all", _("All")),
+        ],
+        label=_("Filter by Action"),
+        required=False,
+        help_text=_("Filter packages by their action status."),
+    )
+
+
+class M23ClientPackageSearchForm(forms.Form):
+    """
+    Form for searching packages on a client.
+    This form is used to collect the necessary information for searching packages.
+    """
+    search = forms.CharField(
+        label=_("Search/Packages to Install"),
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": _("Search packages...")}),
+        help_text=_("Search for packages by name or description or insert all packages to install separated by space")
+    )
+    package_type = forms.ChoiceField(
+        choices=[
+            ("apt", _("APT Packages")),
+            ("flatpak", _("Flatpak Packages")),
+        ],
+        label=_("Package Type"),
+        required=True,
+        help_text=_("Select the type of packages to search for. APT packages are installed via the APT package manager, while Flatpak packages are installed via the Flatpak package manager.")
+    )
+    install = forms.BooleanField(
+        label=_("Install these packages right away"),
+        required=False, 
+        initial=True,
+        help_text=_("Check this box to install the selected packages immediately after searching.")
+    )
+    
+ 
+class M23ClientRemovePackagesForm(forms.Form):
+    """
+    Form for removing packages from a client.
+    This form is used to collect the necessary information for removing packages.
+    """
+    packages = forms.CharField(
+        label=_("Packages to Remove"),
+        max_length=1000,
+        required=False,
+        widget=forms.Textarea(attrs={"placeholder": _("package1 package2 package3")}),
+        help_text=_("Enter the names of the packages to remove, separated by space.")
+    )

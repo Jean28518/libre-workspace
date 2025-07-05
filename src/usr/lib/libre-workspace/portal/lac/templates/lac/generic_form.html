@@ -6,6 +6,10 @@
 <h2>{{ heading }}</h2>
 {% endif %}
 
+{% if content_above %}
+    {{ content_above | safe }}
+{% endif %}
+
 {% if message and message != "" %}
 <div class="grid">
     <div style="padding-bottom: 1rem;">

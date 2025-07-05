@@ -53,6 +53,9 @@ def _get_attr(obj, attr):
     return value
         
 def message(request, message : str, url_name : str = "", url_args : list = []):
+    """
+        url_name can be a url name or a direct url.
+    """
     if url_name == "":
         url_name = "index"
     # Check if url_name can be reversed or its a direct url

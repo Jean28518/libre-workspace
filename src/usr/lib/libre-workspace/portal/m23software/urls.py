@@ -17,9 +17,8 @@ urlpatterns = [
     path("shutdown_client/<str:client_name>", views.m23_shutdown_client, name="m23software.shutdown_client"),
     path("reboot_client/<str:client_name>", views.m23_reboot_client, name="m23software.reboot_client"),
 
-    # path("package_manager/<str:client_name>", views.m23_package_management, name="m23software.package_management"),
-    # path("package_install/<str:client_name>", views.m23_package_install, name="m23software.package_install"),
-    # path("package_remove/<str:client_name>", views.m23_package_remove, name="m23software.package_remove"),
-    # path("apt_package_search/<str:client_name>", views.m23_apt_package_search, name="m23software.apt_package_search"),
-    # path("flatpak_package_search/<str:client_name>", views.m23_flatpak_package_search, name="m23software.flatpak_package_search"),
+    path("package_manager/<str:client_name>", views.m23_package_management, name="m23software.package_management"),
+    path("package_search/<str:client_name>", views.m23_package_search, name="m23software.apt_package_search"),
+    path("package_install/<str:client_name>", views.m23_package_install, name="m23software.package_install"),
+    path("package_remove/<str:client_name>", views.m23_package_remove, name="m23software.package_remove"),
 ]
