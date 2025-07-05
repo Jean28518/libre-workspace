@@ -579,6 +579,11 @@ def get_module_path(module_name):
     return module_name
 
 
+def get_domain():
+    return get_env_sh_variables().get("DOMAIN", "")
+
+
+
 # Also "installs" addons
 def setup_module(module_name):
     module_path = get_module_path(module_name)

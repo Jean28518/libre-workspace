@@ -117,6 +117,9 @@ You can get the following scopes:
 * groups
 * guid
 * admin
+* lwmail
+
+(lwmail is a seperate scope which guarantees that the email address has the same domain as the libre workspace instance, e.g. ``user1@int.de``)
 
 
 API

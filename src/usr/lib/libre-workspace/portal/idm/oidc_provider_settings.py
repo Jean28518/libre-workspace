@@ -1,6 +1,7 @@
 #from django.utils.translation import ugettext_lazy as _
 from oidc_provider.lib.claims import ScopeClaims
 from oidc_provider.models import Client
+import unix.unix_scripts.unix as unix
 
 from idm.idm import get_user_information
 def userinfo(claims, user):
@@ -106,6 +107,23 @@ class CustomScopeClaims(ScopeClaims):
         dic = {
             'groups': group_names,
             'groups_ldap': userinfo['groups'],
+        }
+
+        return dic
+    
+
+    # Add a new Scope called lwmail
+    info_lwmail = (
+        (u'email'),
+        (u'Libre Workspace Email address of the user.'),
+    )
+
+    def scope_lwmail(self):
+        userinfo = get_user_information(str(self.user))
+        domain = unix.get_domain()
+        dic = {
+            'email': userinfo["username"] + '@' + domain,
+            'email_verified': True,
         }
 
         return dic
