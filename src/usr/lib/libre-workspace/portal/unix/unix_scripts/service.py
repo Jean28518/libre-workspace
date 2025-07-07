@@ -65,6 +65,12 @@ def ensure_linux_arbeitsplatz_package_is_removed():
         os.system("apt remove -y linux-arbeitsplatz")
         # Remove the package from the list of installed packages
         os.system("apt autoremove -y")
+    
+    # Check if libre-workspace-service.service is not enabled
+    if os.system("systemctl is-enabled libre-workspace-service.service") != 0:
+        # Also ensure that the services for the new libre workspace portal are running
+        os.system("systemctl enable --now libre-workspace-portal.service")
+        os.system("systemctl enable --now libre-workspace-service.service")
 
 
 def check_caddy_running_and_rescue():
