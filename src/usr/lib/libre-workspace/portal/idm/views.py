@@ -658,7 +658,11 @@ def create_api_key_view(request):
         form = ApiKeyForm(request.POST)
         if form.is_valid():
             permissions = ','.join(form.cleaned_data["permissions"])
-            expiration_date = form.cleaned_data["expiration_date"].strftime("%Y-%m-%d")
+            # Check if expiration date is provided, otherwise set it to "0" (no expiration)
+            if not form.cleaned_data["expiration_date"]:
+                expiration_date = "0"
+            else:
+                expiration_date = form.cleaned_data["expiration_date"].strftime("%Y-%m-%d")
             create_api_key(
                 user=request.user,
                 name=form.cleaned_data["name"],
@@ -685,7 +689,11 @@ def edit_api_key(request, id):
         form = ApiKeyForm(request.POST)
         if form.is_valid():
             api_key.name = form.cleaned_data["name"]
-            api_key.expiration_date = form.cleaned_data["expiration_date"]
+             # Check if expiration date is provided, otherwise set it to None (no expiration)
+            if not form.cleaned_data["expiration_date"]:
+                api_key.expiration_date = None
+            else:
+                api_key.expiration_date = form.cleaned_data["expiration_date"]
             api_key.permissions = ','.join(form.cleaned_data["permissions"])
             api_key.save()
             return redirect(api_key_overview)
