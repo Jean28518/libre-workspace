@@ -13,11 +13,17 @@ def get_all_available_addons():
     output = subprocess.run(
         ["apt", "search", "libre-workspace-module-"],
         capture_output=True,
+        env={
+            "LC_ALL": "C",  # Ensure consistent output format
+        },
         text=True,
         check=True
     ).stdout
     for line in output.splitlines():
         if "libre-workspace-module-" in line:
+            # Check if in the last part of the line "local" is mentioned, if so, skip this line
+            if "local" in line.split()[-1]:
+                continue
             addon_id = line.split()[0].replace("/stable", "")
             addon_id = addon_id.replace("libre-workspace-module-", "")
             # If a comma is in the addon_id, remove it and take the first part: e.g. "libre-workspace-module-addon,now"
