@@ -19,7 +19,7 @@ def get_profiles():
     response = requests.get(f"{URL_BASE}getProfiles")
     if response.status_code == 200:
         profile_names = response.json()
-        choices = [(name.replace(" ", ""), name) for name in profile_names]
+        choices = [(name, name) for name in profile_names]
         return choices
     else:
         raise Exception(f"Failed to fetch profiles: {response.status_code} - {response.text}")
@@ -87,7 +87,9 @@ def install_new_client(client_name, ip, netmask, gateway, dns1, dns2, mac, boott
     }
     
     response = requests.get(f"{URL_BASE}addClient", params=params)
-    # print(response.text)
+    # Print the whole url for debugging from the response object
+    print(f"Request URL: {response.url}"    )
+    print(response.text)
 
     if "error" in response.text:
         return response.text    
