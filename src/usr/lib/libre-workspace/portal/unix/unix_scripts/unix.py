@@ -746,7 +746,7 @@ def install_addon(path_to_file):
 
     # Check if .deb files are inside the addon folder (recursive) we can do this with "find"
     deb_files = os.popen(f"find /tmp/lw-addons/ -name '*.deb'").read().strip().split("\n")
-    if len(deb_files) > 0:
+    if len(deb_files) > 0 and deb_files[0].strip() != "":
         # Install the .deb file(s)
         for deb_file in deb_files:
             subprocess.Popen(["apt", "install", deb_file, "-y"])
