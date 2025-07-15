@@ -42,13 +42,15 @@
 {% endif %}
 
 
-{% if back_url_name %}
-    <center><a href="{% url back_url_name %}"role="button" class="secondary">{% translate "Back" %}</a></center>
-{% endif %}
-
 
 {% if additional_content %}
     {{ additional_content | safe }}
+{% endif %}
+
+
+{% if back_url_name %}
+    <br>
+    <center><a href="{% url back_url_name %}"role="button" class="secondary">{% translate "Back" %}</a></center>
 {% endif %}
 
     

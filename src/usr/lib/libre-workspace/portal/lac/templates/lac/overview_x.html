@@ -111,12 +111,14 @@
   </table>
 
 
+  {% if overview.hint %}
+      <center>{{ overview.hint | safe }}</center>
+  {% endif %}
+
 {% if overview.back_url_name %}
+    <br>
     <center><a href="{% url overview.back_url_name %}"role="button" class="secondary">{% translate "Back" %}</a></center>
 {% endif %}
 
 
-  {% if overview.hint %}
-      <center>{{ overview.hint | safe }}</center>
-  {% endif %}
 {% endblock %}

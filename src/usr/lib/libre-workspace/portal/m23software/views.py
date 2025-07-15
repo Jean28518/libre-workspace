@@ -9,6 +9,8 @@ from lac import templates
 from django.utils.translation import gettext as _
 from lac.templates import message, get_2column_table
 
+from unix.unix_scripts.unix import get_domain
+
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def install_client(request):
@@ -57,7 +59,7 @@ def install_client(request):
             (boot_type.replace(" ", ""), boot_type) for boot_type in network_settings_proposal.get("bootTypes", [])
         ]
     form.fields["profile"].choices = m23software.utils.get_profiles()
-    client_username = request.user.username
+    client_username = request.user.username.lower()
     form.fields["client_login"].initial = client_username
 
 
@@ -77,7 +79,7 @@ def m23_client_list(request):
     """
     View to list all m23 clients.
     """
-
+    domain = get_domain()
     # Check if get variable 'group' is set
     filter_by_group = request.GET.get("group", None)
         
@@ -126,6 +128,7 @@ def m23_client_list(request):
                 <a href={install_url} class='primary' role='button' style='margin: 0.5rem;'>{_('Install New Client')}</a>
                 <a href="{group_url}" class="secondary" role="button" style="margin: 0.5rem;">{_('Manage Groups')}</a>
                 <br>{group_content}""",
+        "hint": f"<a href='https://m23.{domain}/m23admin/index.php' target='_blank' rel='noopener noreferrer'>" + f"{_('M23 Admin Interface')}</a>",
         "back_url_name": "dashboard",
     })
 
@@ -160,6 +163,13 @@ def m23_client_detail(request, client_name):
         _("Waiting Jobs"): client["jobsWaiting"],
         _("All .deb Packages"): client["packagesDebAll"],
     })
+
+    # Get the domain for the m23 link
+    domain = get_domain()
+    client_detail_url = f"https://m23.{domain}/m23admin/index.php?page=clientdetails&client={client_name}&id={client['id']}"
+
+
+
     return render(request, "lac/generic_site.html", {
         "heading": _("Client Details"),
         "content": message_content,
@@ -170,6 +180,11 @@ def m23_client_detail(request, client_name):
                 <a href="{reverse('m23software.reboot_client', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Reboot Client')}</a>
                 <a href="{reverse('m23software.shutdown_client', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Shutdown Client')}</a>
                 """,
+        "additional_content": f"""
+            <center>
+                <a href="{client_detail_url}" target="_blank" rel="noopener noreferrer">{_('Open in M23')}</a>
+            </center>
+        """,
         "back_url_name": "m23software.client_list",
     })
 
