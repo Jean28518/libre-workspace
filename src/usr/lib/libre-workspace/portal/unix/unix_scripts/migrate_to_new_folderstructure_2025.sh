@@ -16,13 +16,6 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-# Check if we are running in a live system (like a live USB or live CD)
-# We dont want to run this script in a live system because then we are installing libre workspace freshly and dont need to migrate anything
-if [ "$(ps -p 1 -o comm=)" = "systemd" ]; then
-    touch /var/lib/libre-workspace/.migrated_to_new_folderstructure_2025
-    exit 1
-fi
-
 
 # Check if the script has been run before
 if [ -f /var/lib/libre-workspace/.migrated_to_new_folderstructure_2025 ]; then
