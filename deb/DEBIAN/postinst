@@ -6,11 +6,3 @@ fi
 
 /usr/bin/systemctl daemon-reload 
 /usr/bin/systemctl enable libre-workspace-portal.service
-
-# Start it right now if we are not in a live system
-if [ "$(ps -p 1 -o comm=)" != "systemd" ]; then
-    echo "Libre Workspace Portal has been installed."
-else
-    echo "Libre Workspace Portal has been installed and started successfully."
-    /usr/bin/systemctl start libre-workspace-portal.service
-fi
