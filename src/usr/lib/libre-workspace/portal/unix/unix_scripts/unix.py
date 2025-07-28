@@ -486,7 +486,7 @@ def desktop_add_user(username, password, admin_status):
     else:
         admin_status = "0"
     
-    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/modules/desktop/administration/add_user.sh", username, password, admin_status], cwd="desktop/", env=get_env_sh_variables())
+    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/modules/desktop/administration/add_user.sh", username, password, admin_status], cwd="/usr/lib/libre-workspace/modules/desktop/", env=get_env_sh_variables())
 
 
 def desktop_remove_user(username):
@@ -496,7 +496,7 @@ def desktop_remove_user(username):
     if not is_desktop_installed():
         return
     
-    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/modules/desktop/administration/remove_user.sh", username], cwd="desktop/", env=get_env_sh_variables())
+    subprocess.Popen(["/usr/bin/bash", "/usr/lib/libre-workspace/modules/desktop/administration/remove_user.sh", username], cwd="/usr/lib/libre-workspace/modules/desktop/", env=get_env_sh_variables())
 
 def update_module(module_id):
     """
