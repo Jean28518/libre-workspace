@@ -1,5 +1,17 @@
 arch="amd"
 
+# Remove old iso file if it exists
+if [ -f libre-workspace.iso ]; then
+    rm -f libre-workspace.iso
+fi
+# Remove the NEWISO and ORIGISO folders if they exist
+if [ -d ORIGISO ]; then
+    rm -rf ORIGISO
+fi
+if [ -d NEWISO ]; then
+    rm -rf NEWISO
+fi
+
 # Prepare working files for manipulating iso file
 mkdir ORIGISO
 mkdir NEWISO

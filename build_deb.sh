@@ -1,4 +1,7 @@
 # Copy the files to the debian package structure
+if [ -d build/deb ]; then
+    rm -rf build/deb
+fi
 mkdir -p build/
 cp -r deb/ build/deb
 
