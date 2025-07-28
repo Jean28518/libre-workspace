@@ -23,6 +23,12 @@ if [ -f /var/lib/libre-workspace/.migrated_to_new_folderstructure_2025 ]; then
     exit 0
 fi
 
+# Check if the old config files exist
+if [ ! -f /usr/share/linux-arbeitsplatz/unix/unix_scripts/unix.conf ]; then
+    echo "Old config file /usr/share/linux-arbeitsplatz/unix/unix_scripts/unix.conf does not exist. Exiting."
+    exit 0
+fi
+
 # Stop libre-workspace services
 systemctl stop libre-workspace-portal.service
 systemctl stop libre-workspace-service.service
