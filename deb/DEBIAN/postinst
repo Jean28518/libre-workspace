@@ -5,4 +5,6 @@ fi
 /bin/bash /usr/lib/libre-workspace/portal/install.sh 
 
 /usr/bin/systemctl daemon-reload 
+echo "Enabling libre-workspace-portal.service"
 /usr/bin/systemctl enable libre-workspace-portal.service
+echo "Finished postinst script for libre-workspace-portal"
