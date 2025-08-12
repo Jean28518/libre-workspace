@@ -1,0 +1,73 @@
+***************
+IPv6 only hosts
+***************
+
+.. warning::
+
+   This site is work in progress.
+
+
+Challenges
+==========
+
+- Some sites and APIs are not reachable via IPv6 only. For such cases we can use a DNS64/NAT64 gateway to translate between IPv4 and IPv6 addresses.
+- Docker does heavily rely on IPv4. But with the latest docker version and daemon settings we get the ability to integrate a container in a ipv6 only network.
+- However some specific docker containers like e.g. the synaptic (matrix) container are not ready for IPv6 only networks. For this we didn't find a solution yet.
+
+
+What works
+==========
+
+- The webserver (Caddy) supports IPv6 only hosts out of the box.
+- The Libre Workspace Portal also has no problems with IPv6 only hosts.
+- Nextcloud works with IPv6 only hosts, but the installation of Nextcloud Apps (which require the github API) is not possible without a DNS64/NAT64 gateway.
+- Collabora works flawlessly with IPv6 only hosts.
+- Also with Jitsi Meet no problems were discovered.
+- Matrix currently does NOT work at IPv6 only hosts. For that we need to find a solution/workaround.
+
+Adaptions
+=========
+
+- Make sure the latest official docker version is installed.
+
+.. code-block:: shell
+
+    # Activate IPv6 in the docker daemon
+    echo "cat /etc/docker/daemon.json 
+    {
+      \"ipv6\": true,
+      \"fixed-cidr-v6\": \"fd00:abcd:1::/64\",
+      \"dns\": [\"2001:67c:2b0::4\", \"2001:67c:2b0::6\"]
+    }" > /etc/docker/daemon.json
+
+    systemctl restart docker
+
+
+    # Adjust all Upstream Nameserver to a DNS64/NAT64 services. In this example we use the google public DNS64 addresses 2001:67c:2b0::4, 2001:67c:2b0::6
+    chattr +i /etc/resolv.conf
+
+    GLOBAL_IPV6_ADDRESS=$(ip -6 a | grep global | awk '{print $2}' | head -n 1)
+    # Remove the /64 in the end
+    GLOBAL_IPV6_ADDRESS=${GLOBAL_IPV6_ADDRESS%/*}
+
+    echo "nameserver $GLOBAL_IPV6_ADDRESS" > /etc/resolv.conf
+    echo "nameserver 2001:67c:2b0::4" >> /etc/resolv.conf
+    echo "nameserver 2001:67c:2b0::6" >> /etc/resolv.conf
+    chattr -i /etc/resolv.conf
+
+    # Adjust in your netplan or /etc/network/interfaces the dns servers as well.
+    # For example in /etc/netplan/01-netcfg.yaml
+    # network:
+    #   version: 2
+    #   renderer: networkd
+    #   ethernets:
+    #     ens3:
+    #       dhcp4: no
+    #       dhcp6: no
+    #       addresses:
+    #         - 2001:18d::/64
+    #       routes:
+    #         - to: default
+    #         via: 2001:18d::1
+    #       nameservers:
+    #         addresses: [2001:67c:2b0::4, 2001:67c:2b0::6]
