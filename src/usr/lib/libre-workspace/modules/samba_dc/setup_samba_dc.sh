@@ -80,6 +80,7 @@ samba-tool domain passwordsettings set --max-pwd-age=0
 
 
 # Enable LDAPS:
+mkdir -p /etc/samba/tls/
 cd /etc/samba/tls/
 
 subj="
