@@ -8,3 +8,5 @@ fi
 echo "Enabling libre-workspace-portal.service"
 /usr/bin/systemctl enable libre-workspace-portal.service
 echo "Finished postinst script for libre-workspace-portal"
+# Ensure we output a success:
+exit 0
