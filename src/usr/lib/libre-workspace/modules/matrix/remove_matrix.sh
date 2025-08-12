@@ -2,8 +2,8 @@
 # Needs the following variables:
 # DOMAIN
 
-python3 ../remove_caddy_service.py element.$DOMAIN
-python3 ../remove_caddy_service.py matrix.$DOMAIN
+libre-workspace-remove-webserver-entry element.$DOMAIN
+libre-workspace-remove-webserver-entry matrix.$DOMAIN
 
 cd /root/matrix
 docker-compose down --volumes

@@ -2,7 +2,7 @@
 # Needs the following variables:
 # DOMAIN
 
-python3 ../remove_caddy_service.py cloud.$DOMAIN
+libre-workspace-remove-webserver-entry cloud.$DOMAIN
 
 if [ -d "/data/nextcloud" ]; then
   rm -r /data/nextcloud

@@ -21,7 +21,7 @@ sed -i "/desktop.$DOMAIN/d" /etc/hosts
 samba-tool dns delete la.$DOMAIN $DOMAIN desktop A $IP -Uadministrator%$ADMIN_PASSWORD
 
 # Remove the Caddy entry
-python3 ../remove_caddy_service.py desktop.$DOMAIN
+libre-workspace-remove-webserver-entry desktop.$DOMAIN
 systemctl restart caddy
 
 ufw delete allow from 192.168.0.0/16 to any port 3389

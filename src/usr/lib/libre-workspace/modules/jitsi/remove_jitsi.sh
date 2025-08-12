@@ -2,7 +2,7 @@
 # Needs the following variables:
 # DOMAIN
 
-python3 ../remove_caddy_service.py meet.$DOMAIN
+libre-workspace-remove-webserver-entry meet.$DOMAIN
 
 cd /root/jitsi
 docker-compose down --volumes
