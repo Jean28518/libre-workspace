@@ -9,6 +9,7 @@ Libre Workspace Documentation (for Administrators)
 
    setup/introduction
    setup/installation
+   setup/ipv6_only_hosts
 
 .. toctree::
    :maxdepth: 2
