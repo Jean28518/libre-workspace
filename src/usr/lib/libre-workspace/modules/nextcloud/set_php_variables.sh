@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Get PHP-Version
+PHP_VERSION=`php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1,2`
+
+# Setup error log in /var/log/php_error.log for fpm and cli
+echo "" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "error_reporting = E_ALL" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "error_reporting = E_ALL" >> /etc/php/$PHP_VERSION/cli/php.ini
+echo "log_errors = On" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "log_errors = On" >> /etc/php/$PHP_VERSION/cli/php.ini
+echo "error_log = /var/log/php_errors.log" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "error_log = /var/log/php_errors.log" >> /etc/php/$PHP_VERSION/cli/php.ini
+touch /var/log/php_errors.log
+chown www-data:www-data /var/log/php_errors.log
+
+
+# PHP-Optimizations
+# Set the php memory limit to 1024 MB
+sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/php.ini
+# upload_max_filesize = 50 G
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
+echo "opcache.interned_strings_buffer = 128" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "opcache.memory_consumption = 2048" >> /etc/php/$PHP_VERSION/fpm/php.ini
+echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/fpm/php.ini
+# We need this for the automatic updates and the cronjob
+echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/cli/php.ini
+
+# Uncomment the environment variables in /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+sed -i "s/;env\[HOSTNAME\]/env[HOSTNAME]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+sed -i "s/;env\[PATH\]/env[PATH]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+sed -i "s/;env\[TMP\]/env[TMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+sed -i "s/;env\[TMPDIR\]/env[TMPDIR]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+sed -i "s/;env\[TEMP\]/env[TEMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+
+systemctl restart php*

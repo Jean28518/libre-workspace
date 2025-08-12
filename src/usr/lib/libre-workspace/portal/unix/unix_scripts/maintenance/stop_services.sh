@@ -1,4 +1,4 @@
-. umount_backups.sh
+. /usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/umount_backups.sh
 
 # Turn off maintenance mode of Nextcloud
 if [ -f /var/www/nextcloud/occ ]; then

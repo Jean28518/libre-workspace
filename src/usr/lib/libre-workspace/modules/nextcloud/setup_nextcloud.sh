@@ -86,26 +86,7 @@ sudo -u www-data php /var/www/nextcloud/occ app:install groupfolders
 # Update the database because nextcloud 29.0.0 doen't add the missing indices?!
 sudo -u www-data php /var/www/nextcloud/occ db:add-missing-indices
 
-
-# PHP-Optimizations
-# Set the php memory limit to 1024 MB
-sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/php.ini
-# upload_max_filesize = 50 G
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
-echo "opcache.interned_strings_buffer = 128" >> /etc/php/$PHP_VERSION/fpm/php.ini
-echo "opcache.memory_consumption = 2048" >> /etc/php/$PHP_VERSION/fpm/php.ini
-echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/fpm/php.ini
-# We need this for the automatic updates and the cronjob
-echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/cli/php.ini
-
-# Uncomment the environment variables in /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-sed -i "s/;env\[HOSTNAME\]/env[HOSTNAME]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-sed -i "s/;env\[PATH\]/env[PATH]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-sed -i "s/;env\[TMP\]/env[TMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-sed -i "s/;env\[TMPDIR\]/env[TMPDIR]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-sed -i "s/;env\[TEMP\]/env[TEMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
-
-systemctl restart php*
+. /usr/lib/libre-workspace/modules/nextcloud/set_php_variables.sh
 
 
 # Setup cronjob
@@ -180,15 +161,39 @@ libre-workspace-add-oidc-client "Nextcloud" "$CLIENT_ID" "$CLIENT_SECRET" "https
 sudo -u www-data php /var/www/nextcloud/occ config:system:set htaccess.RewriteBase --value="/"
 sudo -u www-data php /var/www/nextcloud/occ maintenance:update:htaccess
 
-# Setup error log in /var/log/php_error.log for fpm and cli
-echo "" >> /etc/php/$PHP_VERSION/fpm/php.ini
-echo "error_reporting = E_ALL" >> /etc/php/$PHP_VERSION/fpm/php.ini
-echo "error_reporting = E_ALL" >> /etc/php/$PHP_VERSION/cli/php.ini
-echo "log_errors = On" >> /etc/php/$PHP_VERSION/fpm/php.ini
-echo "log_errors = On" >> /etc/php/$PHP_VERSION/cli/php.ini
-echo "error_log = /var/log/php_errors.log" >> /etc/php/$PHP_VERSION/fpm/php.ini
-echo "error_log = /var/log/php_errors.log" >> /etc/php/$PHP_VERSION/cli/php.ini
-touch /var/log/php_errors.log
-chown www-data:www-data /var/log/php_errors.log
+## Install Redis:
 
+# Install redis and php packages
+apt-get install redis php-redis php-apcu php-memcache pwgen -y
+
+# Set redis password
+REDIS_PASSWORD=$(pwgen -n 20 1)
+echo "" >> /etc/redis/redis.conf
+echo "requirepass $REDIS_PASSWORD" >> /etc/redis/redis.conf
+
+# Enable redis and restart it
+systemctl enable redis-server
+systemctl restart redis-server
+
+# Configure nextcloud to use redis
+# Disable all caches that nextcloud doesn't fail while we are changing the cache settings
+sudo -u www-data php /var/www/nextcloud/occ config:system:delete memcache.local
+sudo -u www-data php /var/www/nextcloud/occ config:system:delete memcache.distributed
+sudo -u www-data php /var/www/nextcloud/occ config:system:delete memcache.locking
+
+sudo -u www-data php /var/www/nextcloud/occ config:system:set redis host --value localhost
+sudo -u www-data php /var/www/nextcloud/occ config:system:set redis port --value 6379
+sudo -u www-data php /var/www/nextcloud/occ config:system:set redis dbindex --value 0
+sudo -u www-data php /var/www/nextcloud/occ config:system:set redis password --value "$REDIS_PASSWORD"
+sudo -u www-data php /var/www/nextcloud/occ config:system:set memcache.locking --value '\OC\Memcache\Redis'
+sudo -u www-data php /var/www/nextcloud/occ config:system:set memcache.distributed --value '\OC\Memcache\Redis'
+# We set the local cache to APCu, because it is faster than redis for local cache
+sudo -u www-data php /var/www/nextcloud/occ config:system:set memcache.local --value '\OC\Memcache\APCu'
+
+# Restart php
 systemctl restart php*
+
+
+
+# Fix MIME types and other issues
+sudo -u www-data php /var/www/nextcloud/occ maintenance:repair --include-expensive
