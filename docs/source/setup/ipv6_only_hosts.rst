@@ -1,11 +1,21 @@
-*********************
-IPv6 only hosts (WIP)
-*********************
+***************
+IPv6 only hosts
+***************
 
-.. warning::
+TLDR;
+=====
 
-   This site is work in progress.
+Technically, this is feasible for many applications, such as Matrix (Synapse).
+To provide a full experience, we "built" an IPv4 reverse proxy on another host that handles all IPv4 traffic and forwards it to the IPv6-only host. 
+The IPv6 addresses are enforced through the `/etc/hosts` file on the IPv4 reverse proxy so that it can reach the IPv6 host. 
+We need this for Matrix federation (and Matrix OIDC) because Synapse servers currently cannot reach IPv6-only hosts.
 
+Since Docker heavily relies on IPv4, we need to tunnel IPv4 traffic through IPv4 to an IPv4 'exit node'.
+WireGuard is a good solution for this because plain IPv4 tunneling through IPv6 is not well-supported. 
+(We can force Docker to use IPv6 only, but many containers are not ready for IPv6-only networks, so this approach is currently not feasible.)
+
+Overall, after two days of research and retries, we are sticking with this hybrid solution. 
+The Libre Workspace Software itself is well-prepared for full IPv6 hosts, but it turns out that some other dependencies are not.
 
 Challenges
 ==========
@@ -23,7 +33,7 @@ What works
 - Nextcloud works with IPv6 only hosts, but the installation of Nextcloud Apps (which require the github API) is not possible without a DNS64/NAT64 gateway.
 - Collabora works flawlessly with IPv6 only hosts.
 - Also with Jitsi Meet no problems were discovered.
-- Matrix federation currently does NOT work at IPv6 only hosts. For that we need to find a solution/workaround.
+- Matrix federation currently does NOT work at IPv6 only hosts. Our solution: Configure a ipv4 reverseproxy at another host to provide a ipv4 for others in federation. And for ipv4 traffic from the 
 
 Adaptions
 =========
@@ -33,8 +43,7 @@ Adaptions
 .. code-block:: shell
 
     # Activate IPv6 in the docker daemon
-    echo "cat /etc/docker/daemon.json 
-    {
+    echo "
       \"ipv6\": true,
       \"fixed-cidr-v6\": \"fd00:abcd:1::/64\",
       \"dns\": [\"2001:67c:2b0::4\", \"2001:67c:2b0::6\"]
