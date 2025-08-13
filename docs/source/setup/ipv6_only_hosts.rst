@@ -53,7 +53,7 @@ Adaptions
 
 
     # Adjust all upstream nameservers to a DNS64/NAT64 services. In this example we use the google public DNS64 addresses 2001:67c:2b0::4, 2001:67c:2b0::6
-    chattr +i /etc/resolv.conf
+    chattr -i /etc/resolv.conf
 
     GLOBAL_IPV6_ADDRESS=$(ip -6 a | grep global | awk '{print $2}' | head -n 1)
     # Remove the /64 in the end
@@ -62,7 +62,7 @@ Adaptions
     echo "nameserver $GLOBAL_IPV6_ADDRESS" > /etc/resolv.conf
     echo "nameserver 2001:67c:2b0::4" >> /etc/resolv.conf
     echo "nameserver 2001:67c:2b0::6" >> /etc/resolv.conf
-    chattr -i /etc/resolv.conf
+    chattr +i /etc/resolv.conf
 
     # Adjust in your netplan or /etc/network/interfaces the dns servers as well.
     # For example in /etc/netplan/01-netcfg.yaml
