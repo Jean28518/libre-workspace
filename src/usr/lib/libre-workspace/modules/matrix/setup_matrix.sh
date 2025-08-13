@@ -109,6 +109,11 @@ echo "{
 
 " > /var/www/matrix/.well-known/matrix/client
 
+# Activate Federation:
+echo "{
+  \"m.server\": \"matrix.$DOMAIN:443\"
+}" > /var/www/matrix/.well-known/matrix/server
+
 chown -R www-data:www-data /var/www/matrix
 
 
