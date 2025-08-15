@@ -111,4 +111,7 @@ chmod 700 /etc/libre-workspace/
 rm /var/lib/libre-workspace/portal/installation_running
 
 # After everything is configured, we need to restart the whole server
-reboot
+# Check if DISABLE_REBOOT is set:
+if [ -z "$DISABLE_REBOOT" ]; then
+  reboot
+fi
