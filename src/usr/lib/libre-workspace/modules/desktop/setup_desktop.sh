@@ -40,6 +40,9 @@ sed -i "s/SED_OPENID_MAX_TOKEN_VALIDITY/200/g" /root/desktop/docker-compose.yml
 
 docker run --rm guacamole/guacamole:$GUACAMOLE_VERSION /opt/guacamole/bin/initdb.sh --mysql > /root/desktop/initdb.sql
 docker-compose -f /root/desktop/docker-compose.yml up -d
+
+sleep 10
+
 docker cp /root/desktop/initdb.sql desktop_mysql_1:/initdb.sql
 docker exec -it desktop_mysql_1 bash -c "mysql -u root -pFei1woo9 guacamole < /initdb.sql"
 
