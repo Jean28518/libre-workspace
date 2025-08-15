@@ -43,11 +43,11 @@ Adaptions
 .. code-block:: shell
 
     # Activate IPv6 in the docker daemon
-    echo "
-      \"ipv6\": true,
-      \"fixed-cidr-v6\": \"fd00:abcd:1::/64\",
-      \"dns\": [\"2001:67c:2b0::4\", \"2001:67c:2b0::6\"]
-    }" > /etc/docker/daemon.json
+    echo "{
+  \"ipv6\": true,
+  \"fixed-cidr-v6\": \"fd00:abcd:1::/64\",
+  \"dns\": [\"2001:67c:2b0::4\", \"2001:67c:2b0::6\"]
+}" > /etc/docker/daemon.json
 
     systemctl restart docker
 

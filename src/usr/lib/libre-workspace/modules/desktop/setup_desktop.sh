@@ -43,8 +43,8 @@ docker-compose -f /root/desktop/docker-compose.yml up -d
 
 sleep 10
 
-docker cp /root/desktop/initdb.sql desktop_mysql_1:/initdb.sql
-docker exec -it desktop_mysql_1 bash -c "mysql -u root -pFei1woo9 guacamole < /initdb.sql"
+# Currently this is not working. Why do we need this line?
+mysql -u root -pFei1woo9 -h 127.0.0.1 -P 3307 guacamole < /root/desktop/initdb.sql
 
 # Wait for the guacamole container and the mysql container to setup properly
 sleep 15
@@ -62,7 +62,7 @@ if [ -d /var/www/cert ]; then
 fi
 
 
-echo "desktop.$DOMAIN" >> /etc/hosts
+echo "desktop.$DOMAIN $IP" >> /etc/hosts
 samba-tool dns add la.$DOMAIN $DOMAIN desktop A $IP -Uadministrator%$ADMIN_PASSWORD
 
 echo "
