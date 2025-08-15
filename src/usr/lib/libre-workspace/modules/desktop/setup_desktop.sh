@@ -62,7 +62,7 @@ if [ -d /var/www/cert ]; then
 fi
 
 
-echo "desktop.$DOMAIN $IP" >> /etc/hosts
+echo "$IP desktop.$DOMAIN" >> /etc/hosts
 samba-tool dns add la.$DOMAIN $DOMAIN desktop A $IP -Uadministrator%$ADMIN_PASSWORD
 
 echo "
