@@ -41,7 +41,7 @@ services:
       - mariadb_data:/var/lib/mysql
       - /root/desktop/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     ports:
-      - "3307:3306"
+      - "127.0.0.1:3307:3306"
     restart: unless-stopped
 
 volumes:
