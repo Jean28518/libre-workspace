@@ -79,7 +79,7 @@ fi
 
 
 # Setup apt repository if not already done
-if [ -f /etc/apt/sources.list.d/libre-workspace-stable.list ]; then
+if [ -f /etc/apt/sources.list.d/libre-workspace-stable.list ] || [ -f /etc/apt/sources.list.d/libre-workspace-nightly.list ]; then
     echo "Libre Workspace repository already set up."
 else
     echo "Setting up Libre Workspace repository..."
