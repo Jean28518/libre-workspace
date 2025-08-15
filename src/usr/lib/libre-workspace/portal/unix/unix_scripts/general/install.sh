@@ -3,6 +3,8 @@
 touch /var/lib/libre-workspace/portal/installation_running
 echo "Starting installation..."
 
+. /etc/libre-workspace/libre-workspace.env
+
 # This script installs the whole libre-workspace how defined in the environment variables.
 cd /usr/lib/libre-workspace/portal/unix/unix_scripts/general
 echo "Doing installations basics..."
