@@ -10,9 +10,6 @@
 
 # Install Cinnamon, Xrdp and recommended software and mysql-client
 export DEBIAN_FRONTEND=noninteractive
-# For servers (cloud images) which dont have a keyboard setting yet.
-echo "keyboard-configuration keyboard-configuration/layoutcode string us" | sudo debconf-set-selections
-echo "keyboard-configuration keyboard-configuration/modelcode string pc105" | sudo debconf-set-selections
 sudo apt install default-mysql-client task-cinnamon-desktop cinnamon-l10n xrdp chromium yaru-theme-icon yaru-theme-gtk arc-theme libreoffice-l10n-de hunspell hunspell-de-de hyphen-de remmina keepassxc remmina-plugin-rdp remmina-plugin-vnc gimp inkscape flameshot gnome-calendar filezilla pdfarranger xournalpp gdebi -y
 wget https://github.com/Jean28518/linux-assistant/releases/latest/download/linux-assistant.deb
 sudo apt install ./linux-assistant.deb -y
