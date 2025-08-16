@@ -85,3 +85,12 @@ fi
 echo "Setting up the rest of the libre-workspace..."
 cd /usr/lib/libre-workspace/portal/unix/unix_scripts/general
 . /usr/lib/libre-workspace/portal/unix/unix_scripts/general/setup_rest_of_libre-workspace.sh
+
+# Finish installation:
+rm /var/lib/libre-workspace/portal/installation_running
+echo "End of Libre Workspace installation"
+
+# Check if DISABLE_REBOOT is set:
+if [ ! -z "$DISABLE_REBOOT" ]; then
+  reboot
+fi
