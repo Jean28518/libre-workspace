@@ -22,6 +22,13 @@ sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.interned_strings_buffer = 128" >> /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.memory_consumption = 2048" >> /etc/php/$PHP_VERSION/fpm/php.ini
+
+# If RAM is under 3G then we change the opcache.memory_consumption
+if [ $(free -m | awk '/^Mem:/{print $2}') -lt 3072 ]; then
+    echo "Reducing opcache.memory_consumption to 1024 because low RAM detected"
+    sed -i "s/opcache.memory_consumption = 2048/opcache.memory_consumption = 1024/g" /etc/php/$PHP_VERSION/fpm/php.ini
+fi
+
 echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/fpm/php.ini
 # We need this for the automatic updates and the cronjob
 echo "apc.enable_cli=1" >> /etc/php/$PHP_VERSION/cli/php.ini
