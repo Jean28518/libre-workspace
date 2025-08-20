@@ -104,7 +104,7 @@ If you want to rebuild the addon, you can use the following command:
 
 ```bash
 # Start inside this directory
-dpkg-deb --build deb libre-workspace-module-{addon['id']}.deb
+dpkg-deb --root-owner-group --build deb libre-workspace-module-{addon['id']}.deb
 ```
     """
 
