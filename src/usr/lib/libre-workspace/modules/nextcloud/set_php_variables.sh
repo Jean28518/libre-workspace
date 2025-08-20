@@ -20,6 +20,7 @@ chown www-data:www-data /var/log/php_errors.log
 sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/php.ini
 # upload_max_filesize = 50 G
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
+sed -i "s/post_max_size = 2M/post_max_size = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.interned_strings_buffer = 128" >> /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.memory_consumption = 2048" >> /etc/php/$PHP_VERSION/fpm/php.ini
 
