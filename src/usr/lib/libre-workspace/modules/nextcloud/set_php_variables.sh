@@ -42,6 +42,10 @@ sed -i "s/;env\[TMPDIR\]/env[TMPDIR]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.con
 sed -i "s/;env\[TEMP\]/env[TEMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 
 # Set the pm.max_children to 50
-sed -i "s/pm.max_children = 5/pm.max_children = 50/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+# Available RAM:
+AVAILABLE_RAM=$(free -m | awk '/^Mem:/{print $2}')
+# PM_MAX_CHILDREN = Memory / 100 MB * 0.8
+PM_MAX_CHILDREN=$((AVAILABLE_RAM / 100 * 4/5))
+sed -i "s/^pm.max_children = .*/pm.max_children = $PM_MAX_CHILDREN/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 
 systemctl restart php*
