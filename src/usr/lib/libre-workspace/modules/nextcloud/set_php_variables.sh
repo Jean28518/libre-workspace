@@ -17,10 +17,10 @@ chown www-data:www-data /var/log/php_errors.log
 
 # PHP-Optimizations
 # Set the php memory limit to 1024 MB
-sed -i "s/memory_limit = 128M/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/php.ini
+sed -i "s/^memory_limit = .*/memory_limit = 1024M/g" /etc/php/$PHP_VERSION/fpm/php.ini
 # upload_max_filesize = 50 G
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
-sed -i "s/post_max_size = 2M/post_max_size = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
+sed -i "s/^upload_max_filesize = .*/upload_max_filesize = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
+sed -i "s/^post_max_size = .*/post_max_size = 50G/g" /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.interned_strings_buffer = 128" >> /etc/php/$PHP_VERSION/fpm/php.ini
 echo "opcache.memory_consumption = 2048" >> /etc/php/$PHP_VERSION/fpm/php.ini
 
@@ -41,7 +41,7 @@ sed -i "s/;env\[TMP\]/env[TMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 sed -i "s/;env\[TMPDIR\]/env[TMPDIR]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 sed -i "s/;env\[TEMP\]/env[TEMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 
-# Set the pm.max_children to 50
+# Update pm.max_children
 # Available RAM:
 AVAILABLE_RAM=$(free -m | awk '/^Mem:/{print $2}')
 # PM_MAX_CHILDREN = Memory / 100 MB * 0.8
