@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LC_ALL=C
+
 # Get PHP-Version
 PHP_VERSION=`php -v | head -n 1 | cut -d " " -f 2 | cut -d "." -f 1,2`
 
