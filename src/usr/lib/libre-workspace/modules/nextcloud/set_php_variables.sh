@@ -41,4 +41,7 @@ sed -i "s/;env\[TMP\]/env[TMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 sed -i "s/;env\[TMPDIR\]/env[TMPDIR]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 sed -i "s/;env\[TEMP\]/env[TEMP]/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
 
+# Set the pm.max_children to 50
+sed -i "s/pm.max_children = 5/pm.max_children = 50/g" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+
 systemctl restart php*
