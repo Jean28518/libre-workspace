@@ -2,8 +2,8 @@
 
 # Check if we are currently on bookworm
 if ! grep -q 'bookworm' /etc/apt/sources.list; then
-  echo "Not on bookworm"
-  exit 1
+  echo "Not on bookworm. Skipping Debian Upgrade."
+  exit 0
 fi
 
 # Check if we are root
@@ -33,4 +33,9 @@ DEBIAN_FRONTEND=noninteractive apt install --reinstall libre-workspace-portal -y
 # Set PHP variables
 . /usr/lib/libre-workspace/modules/nextcloud/set_php_variables.sh
 
-reboot
+
+# Launch a process in the background sleeping for 1h, then reboot
+echo "Finished Debian Upgrade. Rebooting in 1 hour..."
+( sleep 1h && reboot ) &
+
+libre-workspace-send-mail "Debian Upgrade Finished. Reboot in one hour" "The Debian upgrade has been completed successfully. The system will reboot in one hour to finish the upgrade."
