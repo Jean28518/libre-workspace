@@ -20,6 +20,9 @@ fi
 # Change everything from bookworm to trixie
 sed -i 's/bookworm/trixie/g' /etc/apt/sources.list
 
+# Also change everything from bookworm to trixie in all files in /etc/apt/sources.list.d/
+sed -i 's/bookworm/trixie/g' /etc/apt/sources.list.d/*
+
 apt update
 
 DEBIAN_FRONTEND=noninteractive apt full-upgrade -y
