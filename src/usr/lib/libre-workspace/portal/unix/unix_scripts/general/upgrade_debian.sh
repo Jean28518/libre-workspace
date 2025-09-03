@@ -6,6 +6,10 @@ if ! grep -q 'bookworm' /etc/os-release; then
   exit 0
 fi
 
+# Remove fail2ban, redis and redis-server, Because they tend to cause issues during upgrades
+DEBIAN_FRONTEND=noninteractive sudo apt remove redis redis-server -y
+DEBIAN_FRONTEND=noninteractive sudo apt purge fail2ban -y
+
 # Check if we are root
 if [ "$(id -u)" -ne 0 ]; then
   echo "Not running as root"
@@ -50,12 +54,21 @@ if [ -d /var/www/nextcloud ]; then
   sudo -u www-data php /var/www/nextcloud/occ upgrade
   sudo -u www-data php /var/www/nextcloud/occ app:update --all
   sudo -u www-data php /var/www/nextcloud/occ maintenance:mode --off
+  DEBIAN_FRONTEND=noninteractive sudo apt install libmagickcore-7.q16-10-extra -y
 fi
 
 # If samba_dc should be installed, make sure it is still installed
-if [ -f /root/samba_dc ]; then
+if [ -d /root/samba_dc ]; then
   DEBIAN_FRONTEND=noninteractive sudo apt install samba-ad-dc -y
 fi
+
+# Ensure docker is installed if no official docker list exists
+if [ ! -f /etc/apt/sources.list.d/docker.list ]; then
+  DEBIAN_FRONTEND=noninteractive sudo apt install apparmor docker.io docker-compose docker-cli -y
+fi
+
+# Install fail2ban, redis and redis-server
+DEBIAN_FRONTEND=noninteractive sudo apt install fail2ban redis redis-server -y
 
 # Launch a process in the background sleeping for 1h, then reboot
 echo "Finished Debian Upgrade. Rebooting in 1 hour..."
