@@ -92,5 +92,8 @@ echo "End of Libre Workspace installation"
 
 # Check if DISABLE_REBOOT is set:
 if [ ! -z "$DISABLE_REBOOT" ]; then
+  echo "Reboot is disabled. Will not reboot."
+else
+  echo "Rebooting..."
   reboot
 fi
