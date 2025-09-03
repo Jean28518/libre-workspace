@@ -29,7 +29,7 @@ sed -i 's/bookworm/trixie/g' /etc/apt/sources.list.d/*
 
 apt update
 
-DEBIAN_FRONTEND=noninteractive apt full-upgrade -y
+DEBIAN_FRONTEND=noninteractive apt full-upgrade -y -o Dpkg::Options::="--force-confold"
 
 # Autoremove
 DEBIAN_FRONTEND=noninteractive apt autoremove -y
@@ -68,7 +68,7 @@ if [ ! -f /etc/apt/sources.list.d/docker.list ]; then
 fi
 
 # Install fail2ban, redis and redis-server
-DEBIAN_FRONTEND=noninteractive sudo apt install fail2ban redis redis-server -y
+DEBIAN_FRONTEND=noninteractive sudo apt install  fail2ban redis redis-server -y -o Dpkg::Options::="--force-confold"
 
 # Launch a process in the background sleeping for 1h, then reboot
 echo "Finished Debian Upgrade. Rebooting in 1 hour..."
