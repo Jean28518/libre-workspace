@@ -16,6 +16,11 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
+# Make sure we are up to date
+DEBIAN_FRONTEND=noninteractive apt update
+DEBIAN_FRONTEND=noninteractive apt full-upgrade -y -o Dpkg::Options::="--force-confold"
+DEBIAN_FRONTEND=noninteractive apt autoremove -y
+
 # Stop all services:
 . /usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/stop_services.sh
 
