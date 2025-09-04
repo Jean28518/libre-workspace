@@ -449,14 +449,14 @@ def is_desktop_installed():
 
 def get_software_modules():
     modules = []
-    modules.append({ "id": "samba_dc", "name": _("Samba DC (Central User Management)"), "automaticUpdates": get_value("SAMBA_DC_AUTOMATIC_UPDATES", "False") == "True", "installed": is_samba_dc_installed() })
-    modules.append({ "id": "nextcloud", "name": _("Nextcloud"), "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "False") == "True", "installed": is_nextcloud_installed() })
-    modules.append({ "id": "matrix", "name": _("Matrix"), "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "False") == "True", "installed": is_matrix_installed() })
-    modules.append({ "id": "jitsi", "name": _("Jitsi"), "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "False") == "True", "installed": is_jitsi_installed() })
-    modules.append({ "id": "collabora", "name": _("Collabora"), "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "False") == "True", "installed": is_collabora_installed() })
-    modules.append({ "id": "onlyoffice", "name": _("OnlyOffice"), "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_onlyoffice_installed() })
-    modules.append({ "id": "desktop", "name": _("Cloud Desktop"), "automaticUpdates": get_value("DESKTOP_AUTOMATIC_UPDATES", "False") == "True", "installed": is_desktop_installed() })
-    modules.append({ "id": "xfce", "name": _("XFCE"), "automaticUpdates": get_value("XFCE_AUTOMATIC_UPDATES", "False") == "True", "installed": is_xfce_installed() })
+    modules.append({ "id": "samba_dc", "name": _("Samba DC (Central User Management)"), "automaticUpdates": get_value("SAMBA_DC_AUTOMATIC_UPDATES", "True") == "True", "installed": is_samba_dc_installed() })
+    modules.append({ "id": "nextcloud", "name": _("Nextcloud"), "automaticUpdates": get_value("NEXTCLOUD_AUTOMATIC_UPDATES", "True") == "True", "installed": is_nextcloud_installed() })
+    modules.append({ "id": "matrix", "name": _("Matrix"), "automaticUpdates": get_value("MATRIX_AUTOMATIC_UPDATES", "True") == "True", "installed": is_matrix_installed() })
+    modules.append({ "id": "jitsi", "name": _("Jitsi"), "automaticUpdates": get_value("JITSI_AUTOMATIC_UPDATES", "True") == "True", "installed": is_jitsi_installed() })
+    modules.append({ "id": "collabora", "name": _("Collabora"), "automaticUpdates": get_value("COLLABORA_AUTOMATIC_UPDATES", "True") == "True", "installed": is_collabora_installed() })
+    modules.append({ "id": "onlyoffice", "name": _("OnlyOffice"), "automaticUpdates": get_value("ONLYOFFICE_AUTOMATIC_UPDATES", "True") == "True", "installed": is_onlyoffice_installed() })
+    modules.append({ "id": "desktop", "name": _("Cloud Desktop"), "automaticUpdates": get_value("DESKTOP_AUTOMATIC_UPDATES", "True") == "True", "installed": is_desktop_installed() })
+    modules.append({ "id": "xfce", "name": _("XFCE"), "automaticUpdates": get_value("XFCE_AUTOMATIC_UPDATES", "True") == "True", "installed": is_xfce_installed() })
     
     for module in modules:
         module["scriptsFolder"] = f"{module['id']}"
@@ -465,7 +465,7 @@ def get_software_modules():
     addons = get_all_addon_modules()
     for addon in addons:
         addon["installed"] = is_module_installed(addon["id"])
-        addon["automaticUpdates"] = get_value(f"{addon['id'].upper().replace('-', '_')}_AUTOMATIC_UPDATES", "False") == "True"
+        addon["automaticUpdates"] = get_value(f"{addon['id'].upper().replace('-', '_')}_AUTOMATIC_UPDATES", "True") == "True"
         addon["scriptsFolder"] = f"/usr/lib/libre-workspace/modules/{addon['id']}"
         modules.append(addon)
 
