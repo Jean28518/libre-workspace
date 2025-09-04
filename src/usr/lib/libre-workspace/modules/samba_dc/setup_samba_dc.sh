@@ -34,9 +34,9 @@ touch /etc/resolv.conf
 echo "nameserver $IP" >> /etc/resolv.conf # This is the IP of the server itself. Needed for docker containers e.g.
 # Check if IP is IPv6 and add appropriate entry to resolv.conf
 if [[ $IP =~ : ]]; then
-    echo "nameserver 2606:4700:4700::1111" >> /etc/resolv.conf # Google DNS IPv6
+    echo "nameserver 2620:fe::fe" >> /etc/resolv.conf # Quad9 IPv6
 else
-    echo "nameserver 208.67.222.222" >> /etc/resolv.conf # OpenDNS
+    echo "nameserver 9.9.9.9" >> /etc/resolv.conf # Quad9 IPv4
 fi
 chattr +i +a /etc/resolv.conf
 
@@ -108,7 +108,7 @@ cd -
 
 echo "[global]" >> /etc/samba/smb.conf
 sed -i "s/dns forwarder/#dns forwarder/g" /etc/samba/smb.conf
-echo "dns forwarder = 208.67.222.222" >> /etc/samba/smb.conf
+echo "dns forwarder = 9.9.9.9" >> /etc/samba/smb.conf
 echo "tls enabled  = yes" >> /etc/samba/smb.conf
 echo "tls keyfile  = /etc/samba/tls/myKey.pem" >> /etc/samba/smb.conf
 echo "tls certfile = /etc/samba/tls/myCert.pem" >> /etc/samba/smb.conf
