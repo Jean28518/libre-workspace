@@ -48,6 +48,13 @@ An example of the structure of the addon nocodb would be:
         - nocodb.png
         - LICENSE
 
+Create the structure for your addon
+===================================
+
+- To get your addon template you can use the addon creator in the web interface at Systemkonfiguration -> Addons-Center -> Create Addon.
+- If you are using no docker you can simply insert a ``#`` in to the field and fill in the other fields.
+- Unpack the generated .zip file and edit all files to your needs.
+
 
 [NAME].conf
 -----------
@@ -84,12 +91,13 @@ setup_[NAME].sh
 ---------------
 
 This file is a simple shell script which is executed when the administrator installs the service (or module) in the system configuration.
-It is automatically executed as root. Three variables are passed to the script:
+It is automatically executed as root. These variables are passed to the script:
 
 - $DOMAIN: The domain name of the service example: ``int.de``
 - $ADMIN_PASSWORD: The password of the administrator which is used for the ldap instance or the system user "systemv" which has also admin rights with sudo
 - $IP: The IP address of the server
 - $LDAP_DC: The domain component of the ldap instance
+- $LANGUAGE_CODE: The language code of the system. Like "de" or "en"
 
 It is a good practice to store the config of the service in the ``/root/[NAME]`` directory, for example the docker-compose.yml file. 
 **The addon detection is based on the existence of this folder.** For example even patches are not run, if this folder ``/root/[NAME]`` does not exist. And it will be easier for system administrators to find the config of the service in the future.
@@ -106,7 +114,7 @@ An example of setup_nocodb.sh would be:
   # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC, $LANGUAGE_CODE
   mkdir -p /root/nocodb
   # Dont forget to escape " with a backslash:
-  echo "version: \"2.1\"
+  echo "
   services: 
     nocodb: 
       depends_on: 
@@ -141,7 +149,7 @@ An example of setup_nocodb.sh would be:
         - \"./db_data:/var/lib/mysql\"
   " > /root/nocodb/docker-compose.yml
 
-  docker-compose -f /root/nocodb/docker-compose.yml up -d
+  docker compose -f /root/nocodb/docker-compose.yml up -d
   
   echo "db.$DOMAIN {
       #tls internal
@@ -159,7 +167,7 @@ An example of setup_nocodb.sh would be:
 
   systemctl restart caddy
 
-You can get inspiration of more complicated setups here: https://github.com/Jean28518/libre-workspace/tree/main/src/lac/unix/unix_scripts (Don't mind the addons folder there. Have a look to the other folders like matrix, nextcloud, ... . They have almost the same structure as the addons)
+You can get inspiration of more complicated setups here: https://github.com/Jean28518/libre-workspace/tree/main/src/usr/lib/libre-workspace/modules
 
 update_[NAME].sh
 ----------------
@@ -173,8 +181,8 @@ An example of update_nocodb.sh would be:
 .. code-block:: bash
 
     #!/bin/bash
-    docker-compose -f /root/nocodb/docker-compose.yml pull
-    docker-compose -f /root/nocodb/docker-compose.yml up -d
+    docker compose -f /root/nocodb/docker-compose.yml pull
+    docker compose -f /root/nocodb/docker-compose.yml up -d
 
 remove_[NAME].sh
 ----------------
@@ -193,14 +201,12 @@ An example of remove_nocodb.sh would be:
 
     #!/bin/bash
     # This script gets three variables passed: $DOMAIN, $ADMIN_PASSWORD, $IP, $LDAP_DC
-    docker-compose -f /root/nocodb/docker-compose.yml down --volumes
+    docker compose -f /root/nocodb/docker-compose.yml down --volumes
     rm -rf /root/nocodb
 
 
     # Remove the entry from the Caddyfile
-    sed -i "/db.$DOMAIN {/,/}/d" /etc/caddy/Caddyfile
-    # On more complicated entries you can also use:
-    # libre-workspace-remove-webserver-entry db.$DOMAIN
+    libre-workspace-remove-webserver-entry db.$DOMAIN
     
     systemctl restart caddy
 
@@ -262,8 +268,79 @@ Here you can see an example of a redis patch for nextloud:
     # ... do the rest 
 
 
+Libre Workspace Commands
+========================
+
+To make the addon development easier and more consistent libre-workspace comes with some helper commands you can/should use in your scripts.
+
+libre-workspace-add-api-key
+---------------------------
+
+This command adds an api key to the libre workspace portal. It is useful if your addon needs to access the libre workspace portal api.
+
+.. code-block:: bash
+
+    Usage: libre-workspace-add-api-key <name> <permissions> <expire_date>
+    Example: API_KEY=$(libre-workspace-add-api-key 'My API Key' 'linux_client,administrator' '2025-12-31')
+    If you want to set no expire date, use '0' as value
+
+libre-workspace-add-oidc-client
+-------------------------------
+
+This command adds an oidc client to the libre workspace portal. It is useful if your addon needs to access the libre workspace portal via oidc. 
+
+.. code-block:: bash
+
+    Usage: libre-workspace-add-oidc-client <name> <client_id> <client_secret> <redirect_uri>
+    Example: libre-workspace-add-oidc-client 'MyOIDCClient' 'my-client-id' 'my-client-secret' 'https://my-addon.$DOMAIN/callback'
+
+libre-workspace-remove-oidc-client
+----------------------------------
+
+With this command you can remove an oidc client from the libre workspace portal.
+
+.. code-block:: bash
+
+    Usage: /usr/bin/libre-workspace-remove-oidc-client <name>
+    Example: libre-workspace-remove-oidc-client 'MyOIDCClient'
+
+libre-workspace-generate-secret
+-------------------------------
+
+Like pwgen this command generates a random secret. It is useful if your addon needs a random password or secret.
+
+.. code-block:: bash
+
+    Usage: libre-workspace-generate-secret [length]
+    Example: MY_PASSWORD=$(libre-workspace-generate-secret 32)
+    If no length is given, the default length is 32
+
+libre-workspace-remove-webserver-entry
+---------------------------------------
+
+With this command you can remove a webserver entry from the caddy webserver configuration.
+
+.. code-block:: bash
+
+    Usage: libre-workspace-remove-webserver-entry <url>
+    Example: libre-workspace-remove-webserver-entry my-addon.$DOMAIN
+
+
+libre-wprlspace-send-mail
+-------------------------
+
+With this command you can send an email via the libre workspace portal email configuration to the Administrator if he set it up.
+
+.. code-block:: bash
+
+    Usage: libre-workspace-send-mail <subject> <message> [attachment_path (optional)]
+    Example: libre-workspace-send-mail "My Addon" "My Addon was installed successfully with this password: $MY_PASSWORD"
+    Example: libre-workspace-send-mail "My Addon" "My Addon was installed successfully" "/path/to/attachment.txt"
+
+
 General Tips
 ============
 
 - Never experiment on production systems. Always test your scripts on a test system first.
 - It is a good practice by running the commands line by line manually on a test system to see if everything works as expected.
+- Please don't use the ``$ADMIN_PASSWORD`` variable anymore. Instead you can get a password with ``libre-workspace-generate-secret``
