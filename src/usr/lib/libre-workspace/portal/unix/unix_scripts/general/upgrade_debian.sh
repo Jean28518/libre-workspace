@@ -6,9 +6,7 @@ if ! grep -q 'bookworm' /etc/os-release; then
   exit 0
 fi
 
-# Remove fail2ban, redis and redis-server, Because they tend to cause issues during upgrades
-DEBIAN_FRONTEND=noninteractive sudo apt remove redis redis-server -y
-DEBIAN_FRONTEND=noninteractive sudo apt purge fail2ban -y
+
 
 # Check if we are root
 if [ "$(id -u)" -ne 0 ]; then
@@ -16,13 +14,19 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
+# Stop all services:
+. /usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/stop_services.sh
+
+# Remove fail2ban, redis and redis-server, Because they tend to cause issues during upgrades
+DEBIAN_FRONTEND=noninteractive sudo apt remove redis redis-server -y
+DEBIAN_FRONTEND=noninteractive sudo apt purge fail2ban -y
+
 # Make sure we are up to date
 DEBIAN_FRONTEND=noninteractive apt update
 DEBIAN_FRONTEND=noninteractive apt full-upgrade -y -o Dpkg::Options::="--force-confold"
 DEBIAN_FRONTEND=noninteractive apt autoremove -y
 
-# Stop all services:
-. /usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/stop_services.sh
+
 
 # Upgrade from bookworm to trixie
 
