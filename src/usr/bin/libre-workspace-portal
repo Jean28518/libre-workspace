@@ -52,5 +52,6 @@ python3 manage.py compilemessages
 NUMBER_OF_WORKERS=$(( $(nproc) / 2 + 1 ))
 echo "Setting number of workers to $NUMBER_OF_WORKERS"
 
-gunicorn lac.wsgi:application --bind localhost:11123 --workers $NUMBER_OF_WORKERS
-
+# gunicorn lac.wsgi:application --bind localhost:11123 --workers $NUMBER_OF_WORKERS
+# We need to establish redis connection before running with $NUMBER_OF_WORKERS > 1 because otherwise we will get parallel access issues
+gunicorn lac.wsgi:application --bind localhost:11123
