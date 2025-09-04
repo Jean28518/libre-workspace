@@ -275,7 +275,8 @@ def _clear_old_login_tries_and_banned_ips():
     for ip in banned_ips.keys():
         if datetime.datetime.now() - banned_ips[ip] > datetime.timedelta(minutes=30):
             banned_ips.pop(ip)
-    for session_key in totp_challenge.keys():
+    session_keys = list(totp_challenge.keys())
+    for session_key in session_keys:
         (timestamp, user) = totp_challenge[session_key]
         if datetime.datetime.now() - timestamp > datetime.timedelta(minutes=5):
             totp_challenge.pop(session_key)
