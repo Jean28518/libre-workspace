@@ -164,7 +164,7 @@ while True:
         p = subprocess.Popen(["bash", "do_update.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/")
 
     # All other updates:
-    update_time = unix_config.get_value("UPDATE_TIME")
+    update_time = unix_config.get_value("UPDATE_TIME", "02:00")
     if time.strftime("%H:%M") > update_time and not os.path.isfile("/var/lib/libre-workspace/portal/update_running") and not os.path.isfile(f"/var/lib/libre-workspace/portal/history/update-{current_date}.log"):
         print("Starting automatic updates")
         p = subprocess.Popen(["bash", "update_everything.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/")
