@@ -2,11 +2,11 @@
 Installation
 ************
 
-You can either install libre workspace as a .deb file on an existing Debian or Ubuntu server, 
-or you can install it on a bare metal system using the provided ISO image (recommended).
+You can either install libre workspace as a .deb file on an existing Debian server,
+or you can install it on a bare metal system using the provided ISO image.
 
-Installation using the ISO image (recommended)
-==============================================
+Installation using the ISO image
+================================
 
 .. tip::
 
@@ -41,7 +41,7 @@ Installation using the ISO image (recommended)
 
     From now you can also access the server via SSH. The default user is 'systemv' and the password is currently 'LibreWorkspace'.
 
-6. At the webpage an installer opens. You will be asked to set a password for the admin user. This has to be very secure, because it is also used as administrative password for the other components like nextcloud or samba-dc. **At the current time you can't change your password later.**
+6. At the webpage an installer opens. You will be asked to set a password for the admin user. This has to be very secure, because it is also used as administrative password for the other components like nextcloud or samba-dc.
 7. In the next step you can choose which components you want to install. At the moment this can't be changed later automatically. Samba-DC (central user management) is always automatically installed.
 8. In the Domain Settings you can choose if the libre workspace server should be externally accessible. This can't be changed later automatically. An external access is highly recommended if you want easy access to your data from outside your home network and don't want to handle DNS-Settings on your own. But for that you need a domain name.
 
@@ -53,7 +53,7 @@ Installation using the ISO image (recommended)
 
 .. note::
 
-    The server needs access to the internet to download the necessary packages. As DNS-Server `OpenDNS <https://www.opendns.com/>`_  is used.
+    The server needs access to the internet to download the necessary packages. As DNS-Server `Quad9 <https://www.quad9.net/>`_  is used.
 
 
 10.  Your login at the web interface is "Administrator" with the password you set in step 6.
@@ -63,8 +63,9 @@ Installation using the ISO image (recommended)
     If your server is accessible from the internet, consieder to disable the password login and only allow ssh login via ssh key. 
     You can find instructions for this `here <https://www.thomas-krenn.com/en/wiki/SSH_public_key_authentication_under_Ubuntu>`_.
 
-Installation on an existing Debian or Ubuntu system
-===================================================
+
+Installation on an existing Debian system
+=========================================
 
 .. note::
 
@@ -84,7 +85,7 @@ You can download and install the .deb file with the following commands:
     sudo apt install libre-workspace-portal
     # This message can be ignored:
     # N: Download is performed unsandboxed as root as file '/root/libre-workspace-portal.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
-    # If you don't run the welcome assistant:
+    # If you don't run the graphical welcome assistant:
     sudo systemctl enable libre-workspace-service --now
 
 This will install the the webserver caddy and the management portal which listens on port 443.
@@ -92,7 +93,7 @@ This will install the the webserver caddy and the management portal which listen
 .. note::
 
     If you are using another webserver/reverse proxy you can ignore the caddy installation and disable it by running ``sudo systemctl disable caddy --now``.
-
+    But with this you have to configure all reverse-proxies on your own. You can always see the current configuration of caddy in ``/etc/caddy/Caddyfile``.
 
 Now you can decide if you want to run the libre workspace automated install script or if you want to configure it manually.
 
@@ -146,6 +147,7 @@ The following variables are mandatory to be set. An example would be:
     export ADMIN_PASSWORD="AdminPasswordOfTheLDAPDomainOtherwiseSetItToAnEmptyString"
     export DOMAIN="int.de"
     export LDAP_DC="dc=int,dc=de" # Keep it empty if you don't use LDAP
+    export LANGUAGE="en" # or "de"
 
 
 Libre Workspace Lite

@@ -5,7 +5,7 @@ IPv6 only hosts
 TLDR;
 =====
 
-Technically, this is feasible for many applications, such as Matrix (Synapse).
+Technically, this is feasible for many applications. However, some dependencies are not ready for IPv6-only networks.
 To provide a full experience, we "built" an IPv4 reverse proxy on another host that handles all IPv4 traffic and forwards it to the IPv6-only host. 
 The IPv6 addresses are enforced through the `/etc/hosts` file on the IPv4 reverse proxy so that it can reach the IPv6 host. 
 We need this for Matrix federation (and Matrix OIDC) because Synapse servers currently cannot reach IPv6-only hosts.
@@ -44,10 +44,10 @@ Adaptions
 
     # Activate IPv6 in the docker daemon
     echo "{
-  \"ipv6\": true,
-  \"fixed-cidr-v6\": \"fd00:abcd:1::/64\",
-  \"dns\": [\"2001:67c:2b0::4\", \"2001:67c:2b0::6\"]
-}" > /etc/docker/daemon.json
+    \"ipv6\": true,
+    \"fixed-cidr-v6\": \"fd00:abcd:1::/64\",
+    \"dns\": [\"2001:67c:2b0::4\", \"2001:67c:2b0::6\"]
+    }" > /etc/docker/daemon.json
 
     systemctl restart docker
 
