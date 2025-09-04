@@ -20,9 +20,14 @@ FULL_PATH=$(find -name RSA.py 2>/dev/null | grep site-packages/Cryptodome/Public
 # If file exists replace the the line
 # return construct(der[1:6] + [Integer(der[4]).inverse(der[5])]) with
 # return construct(der[1:6] + [Integer(der[4]).inverse(der[5])], consistency_check=False)
-if [ -f "$FULL_PATH" ]; then
-    sed -i 's/return construct(der\[1:6\] + \[Integer(der\[4\]).inverse(der\[5\])\])/return construct(der\[1:6\] + \[Integer(der\[4\]).inverse(der\[5\])\], consistency_check=False)/g' $FULL_PATH
-fi
+
+# Split full path if there are multiple results (separated by space) and loop through them
+for path in $FULL_PATH; do
+    if [ -f "$path" ]; then
+        # echo "Patching $path"
+        sed -i 's/return construct(der\[1:6\] + \[Integer(der\[4\]).inverse(der\[5\])\])/return construct(der\[1:6\] + \[Integer(der\[4\]).inverse(der\[5\])\], consistency_check=False)/g' $path
+    fi
+done
 cd -
 
 # Make sure etc is only readable by owner:
