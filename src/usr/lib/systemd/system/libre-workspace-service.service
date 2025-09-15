@@ -3,10 +3,9 @@ Description=Libre Workspace Service. Runs commands which are issued from web and
 
 [Service]
 Type=simple
-RemainAfterExit=yes
 WorkingDirectory=/
 ExecStart=/usr/bin/libre-workspace-service
-Restart=on-failure
+Restart=always
 RestartSec=5
 User=root
 Group=root
