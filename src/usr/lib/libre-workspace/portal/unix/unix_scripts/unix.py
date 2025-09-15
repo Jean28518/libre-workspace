@@ -301,7 +301,7 @@ def get_partitions():
                 partition["size"] = child["size"]
                 partition["mountpoint"] = None
                 partition["under1G"] = partition["size"].lower().endswith("m") or partition["size"].lower().endswith("k")
-                if "mountpoints" in child:
+                if "mountpoints" in child and child["mountpoints"] != None and len(child["mountpoints"]) > 0:
                     partition["mountpoint"] = child["mountpoints"][0]
                 partitions.append(partition)
     return partitions
