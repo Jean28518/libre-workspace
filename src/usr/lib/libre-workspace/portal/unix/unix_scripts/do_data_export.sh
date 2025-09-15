@@ -7,7 +7,7 @@ touch export_running
 mysqldump -u root --all-databases --default-character-set=utf8mb4 > /mysql_all_databases.sql    
 
 # Disable all services
-bash ./stop_services.sh
+bash /usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/stop_services.sh
 
 echo "Starting export to $DESTINATION..."
 
@@ -15,7 +15,7 @@ echo "Starting export to $DESTINATION..."
 rsync -a --delete / $DESTINATION --exclude /dev --exclude /proc --exclude /sys --exclude /tmp --exclude /run --exclude /media --exclude /mnt --exclude /var/log > /var/lib/libre-workspace/portal/history/rsync.log
 
 # Enable all services
-bash ./start_services.sh
+bash /usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/start_services.sh
 
 rm export_running
 rm export_data
