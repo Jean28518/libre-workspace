@@ -316,7 +316,7 @@ while True:
             # Check if the domain is reachable and the code is not 200
             try:
                 response = requests.get(f"https://{domain}", verify=False)
-                if response.status_code != 200:
+                if response.status_code >= 400:
                     if not domain in last_message_sent or time.time() - last_message_sent[domain] > 3600:
                         last_message_sent[domain] = time.time()
                         with open(f"/tmp/{domain}_response.txt", "w") as f:
