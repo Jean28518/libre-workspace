@@ -3,7 +3,7 @@ from django.db import models
 # Model: dasboard_entry
 class DashboardEntry(models.Model):
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000, blank=True, default="")
     link = models.CharField(max_length=1000)
     icon = models.FileField(upload_to="dashboard_icons")
     icon_url = models.CharField(max_length=1000, default="")
