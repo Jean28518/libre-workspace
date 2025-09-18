@@ -10,6 +10,15 @@ echo "Installing module {{addon.id}}..."
 
 mkdir -p /root/{{addon.id}}
 
+# Copy icon to /var/www/libre-workspace-static/lac/icons
+FILE_ENDINGS=".png .jpg .jpeg .svg .webp"
+for ending in $FILE_ENDINGS; do
+    if [ -f "/usr/lib/libre-workspace/modules/{{addon.id}}/{{addon.id}}$ending" ]; then
+        cp "/usr/lib/libre-workspace/modules/{{addon.id}}/{{addon.id}}$ending" "/var/www/libre-workspace-static/lac/icons/{{addon.id}}$ending"
+        break
+    fi
+done
+
 . /etc/libre-workspace/libre-workspace.env
 
 cd /usr/lib/libre-workspace/modules/{{addon.id}}
