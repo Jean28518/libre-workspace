@@ -56,7 +56,7 @@ Your default account is called "Administrator".
 ```bash
 # Make sure on your dev machine no actual libre workspace component is installed.
 # Start from this directory
-sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev docker caddy
+sudo apt-get install libldap2-dev python3-venv libsasl2-dev python3-dev docker.io caddy
 sudo usermod -aG docker $USER
 sudo usermod -aG www-data $USER
 # (Reboot your computer to apply the user group changes)
