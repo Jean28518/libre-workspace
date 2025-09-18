@@ -15,6 +15,7 @@ FILE_ENDINGS=".png .jpg .jpeg .svg .webp"
 for ending in $FILE_ENDINGS; do
     if [ -f "/usr/lib/libre-workspace/modules/{{addon.id}}/{{addon.id}}$ending" ]; then
         cp "/usr/lib/libre-workspace/modules/{{addon.id}}/{{addon.id}}$ending" "/var/www/libre-workspace-static/lac/icons/{{addon.id}}$ending"
+        chown www-data:www-data "/var/www/libre-workspace-static/lac/icons/{{addon.id}}$ending"
         break
     fi
 done
