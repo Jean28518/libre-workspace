@@ -49,7 +49,7 @@ fi
 #     exit 1
 # fi
 
-docker-compose -f "$INSTANCE_PATH/docker-compose.yml" up -d
+docker compose -f "$INSTANCE_PATH/docker-compose.yml" up -d
 
 
 # Because The docker image does not provice any cli install/provision method which works we have to sadly do it manually from here.

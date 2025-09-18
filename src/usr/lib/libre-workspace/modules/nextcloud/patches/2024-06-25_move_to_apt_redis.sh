@@ -49,6 +49,6 @@ systemctl restart php*
 
 # If /root/redis-nextcloud/docker-compose.yml exists, then remove it
 if [ -f /root/redis-nextcloud/docker-compose.yml ]; then
-  docker-compose -f /root/redis-nextcloud/docker-compose.yml down --volumes
+  docker compose -f /root/redis-nextcloud/docker-compose.yml down --volumes
   rm -rf /root/redis-nextcloud
 fi

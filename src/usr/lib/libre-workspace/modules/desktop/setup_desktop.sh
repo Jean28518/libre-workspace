@@ -39,7 +39,7 @@ sed -i "s/SED_OPENID_GROUPS_CLAIM_TYPE/groups/g" /root/desktop/docker-compose.ym
 sed -i "s/SED_OPENID_MAX_TOKEN_VALIDITY/200/g" /root/desktop/docker-compose.yml
 
 docker run --rm guacamole/guacamole:$GUACAMOLE_VERSION /opt/guacamole/bin/initdb.sh --mysql > /root/desktop/initdb.sql
-docker-compose -f /root/desktop/docker-compose.yml up -d
+docker compose -f /root/desktop/docker-compose.yml up -d
 
 sleep 10
 
@@ -48,7 +48,7 @@ mysql -u root -pFei1woo9 -h 127.0.0.1 -P 3307 guacamole < /root/desktop/initdb.s
 
 # Wait for the guacamole container and the mysql container to setup properly
 sleep 15
-docker-compose -f /root/desktop/docker-compose.yml restart 
+docker compose -f /root/desktop/docker-compose.yml restart 
 sleep 15
 
 # Add the lan.crt to the guacamole container that it can trust the self signed certificate

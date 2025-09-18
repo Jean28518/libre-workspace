@@ -65,4 +65,4 @@ else
     echo "PHP values already set in .htaccess, skipping..."
 fi
 
-docker-compose -f "$INSTANCE_PATH/docker-compose.yml" restart
+docker compose -f "$INSTANCE_PATH/docker-compose.yml" restart

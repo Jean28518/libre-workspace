@@ -6,7 +6,7 @@ libre-workspace-remove-webserver-entry element.$DOMAIN
 libre-workspace-remove-webserver-entry matrix.$DOMAIN
 
 cd /root/matrix
-docker-compose down --volumes
+docker compose down --volumes
 cd -
 
 rm -r /root/matrix

@@ -6,7 +6,7 @@
 # IP
 # ADMIN_PASSWORD
 
-docker-compose -f /root/desktop/docker-compose.yml down --volumes
+docker compose -f /root/desktop/docker-compose.yml down --volumes
 
 
 DEBIAN_FRONTEND=noninteractive apt purge task-cinnamon-desktop xrdp -y

@@ -5,7 +5,7 @@
 libre-workspace-remove-webserver-entry meet.$DOMAIN
 
 cd /root/jitsi
-docker-compose down --volumes
+docker compose down --volumes
 cd -
 
 ufw delete allow 10000/udp

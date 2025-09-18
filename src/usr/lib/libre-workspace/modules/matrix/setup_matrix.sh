@@ -90,7 +90,7 @@ user_directory:
 # Run docker-compose.yml
 # We mv this signing key because otherwise synapse will complain about the signing key. I don't know why.
 mv /root/matrix/synapse-data/matrix.$DOMAIN.signing.key /root/matrix/synapse-data/matrix.$DOMAIN.signing.key.old
-docker-compose -f /root/matrix/docker-compose.yml up -d
+docker compose -f /root/matrix/docker-compose.yml up -d
 
 # If synapse is restarting and complaining about the signing key (Permission denied), then run this command:
 # mv /root/matrix/synapse-data/signing.key /root/matrix/synapse-data/signing.key.old

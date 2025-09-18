@@ -48,7 +48,7 @@ def delete_wordpress_instance(entry_id):
         return
     # Remove the instance directory
     subprocess.Popen(
-        'bash -c "docker-compose -f {}/docker-compose.yml down --volumes; sleep 1; rm -rf {}"'.format(instance_dir, instance_dir),
+        'bash -c "docker compose -f {}/docker-compose.yml down --volumes; sleep 1; rm -rf {}"'.format(instance_dir, instance_dir),
         shell=True,
     )
 
@@ -103,7 +103,7 @@ def create_wordpress_instance(name, domain):
         wordpress_instance=True,  # Use the WordPress logo for the dashboard entry
     )
 
-    # Run the docker-compose command to start the WordPress instance
+    # Run the docker compose command to start the WordPress instance
     subprocess.Popen(
         [
             "bash", 

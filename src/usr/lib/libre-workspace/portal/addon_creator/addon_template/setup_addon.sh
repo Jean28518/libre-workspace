@@ -11,7 +11,7 @@ export IP=$IP
 export LDAP_DC=$LDAP_DC
 envsubst < docker-compose.yml > /root/{{addon.id}}/docker-compose.yml
 
-docker-compose -f /root/{{addon.id}}/docker-compose.yml up -d
+docker compose -f /root/{{addon.id}}/docker-compose.yml up -d
 
 echo "{{addon.url}}.$DOMAIN {
     #tls internal

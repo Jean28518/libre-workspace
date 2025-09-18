@@ -73,7 +73,7 @@ fi
 
 # Ensure docker is installed if no official docker list exists
 if [ ! -f /etc/apt/sources.list.d/docker.list ]; then
-  DEBIAN_FRONTEND=noninteractive sudo apt install apparmor docker.io docker-compose docker-cli -y
+  DEBIAN_FRONTEND=noninteractive sudo apt install apparmor docker.io docker compose docker-cli -y
 fi
 
 # Install fail2ban, redis and redis-server

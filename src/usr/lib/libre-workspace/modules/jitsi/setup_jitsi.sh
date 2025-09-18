@@ -27,7 +27,7 @@ sed -i "s/- '127.0.0.1:\${JVB_COLIBRI_PORT:-8080'/#/" /root/jitsi/docker-compose
 cd /root/jitsi
 ./gen-passwords.sh
 mkdir -p ~/.jitsi-meet-cfg/{web,transcripts,prosody/config,prosody/prosody-plugins-custom,jicofo,jvb,jigasi,jibri}
-docker-compose up -d
+docker compose up -d
 cd -
 
 ufw allow 10000/udp
