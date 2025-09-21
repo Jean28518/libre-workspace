@@ -2,7 +2,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt update
 apt dist-upgrade -y
-apt install ufw vim docker.io docker-compose apparmor htop curl -y
+apt install ufw vim docker.io docker-compose docker-cli apparmor htop curl php-fpm mariadb-server -y
 
 # Set the password of the systemv user
 chpasswd <<<"systemv:$ADMIN_PASSWORD"
