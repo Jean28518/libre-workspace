@@ -22,4 +22,5 @@ fi
 
 echo $CLEANED_DATA
 
-python3 /usr/lib/libre-workspace/portal/manage.py shell -c "from idm.oidc_provider_settings import remove_oidc_provider_client; remove_oidc_provider_client('$1');"
+cd /usr/lib/libre-workspace/portal/
+python3 manage.py shell -c "from idm.oidc_provider_settings import remove_oidc_provider_client; remove_oidc_provider_client('$1');"

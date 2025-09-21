@@ -23,6 +23,7 @@ if [ -f /var/lib/libre-workspace/portal/venv/bin/activate ]; then
     source /var/lib/libre-workspace/portal/venv/bin/activate
 fi
 
+cd /usr/lib/libre-workspace/portal/
 python3 manage.py shell -c "from idm.idm import reset_2fa_for_username; reset_2fa_for_username('$USERNAME')"
 
 if [ $? -ne 0 ]; then

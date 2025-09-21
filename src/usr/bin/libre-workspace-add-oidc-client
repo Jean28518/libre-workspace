@@ -35,7 +35,8 @@ CLEANED_DATA="""{
 
 echo $CLEANED_DATA
 
-python3 /usr/lib/libre-workspace/portal/manage.py shell -c "from idm.oidc_provider_settings import add_oidc_provider_client; add_oidc_provider_client($CLEANED_DATA);"
+cd /usr/lib/libre-workspace/portal/
+python3 manage.py shell -c "from idm.oidc_provider_settings import add_oidc_provider_client; add_oidc_provider_client($CLEANED_DATA);"
 
 if [ $? -eq 0 ]; then
     echo "OIDC provider client has been added"
