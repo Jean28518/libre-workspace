@@ -544,7 +544,7 @@ def get_update_history():
 def get_update_information():
     update_information = {}
     update_information["software_modules"] = get_software_modules()
-    update_information["software_modules"].insert(0, {"id": "system", "name": _("System"), "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "False") == "True"})
+    update_information["software_modules"].insert(0, {"id": "system", "name": _("System"), "installed": True, "automaticUpdates": get_value("SYSTEM_AUTOMATIC_UPDATES", "True") == "True"})
 
     # Delete the software_modules xfce and samba_dc, because they are handled by system
     update_information["software_modules"] = [module for module in update_information["software_modules"] if module["id"] not in ["xfce", "samba_dc"]]
