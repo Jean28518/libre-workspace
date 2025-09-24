@@ -3,6 +3,6 @@ Description=First Boot Setup for Libre Workspace
 After=network-online.target
 [Service]
 Type=oneshot
-ExecStart=/root/install_libreworkspace.sh
+ExecStart=/root/install-libreworkspace.sh
 [Install]
 WantedBy=multi-user.target

@@ -14,5 +14,5 @@ bash /usr/lib/libre-workspace/portal/prepare_for_first_boot.sh
 # Disable this service so it doesn't run again
 systemctl disable first-boot-setup.service
 rm /etc/systemd/system/first-boot-setup.service
-rm /root/install_libreworkspace.sh
+rm /root/install-libreworkspace.sh
 reboot
