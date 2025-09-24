@@ -44,9 +44,9 @@ chmod -w -R ./NEWISO/install.$arch
 
 # Copy the custom package (which does the installation of libre-workspace in the end) to the new iso
 cp build/libre-workspace-portal.deb ./NEWISO/
-cp install_libreworkspace.sh ./NEWISO/install_libreworkspace.sh
-chmod +x ./NEWISO/install_libreworkspace.sh
-cp first_boot_installation.service ./NEWISO/first_boot_installation.service
+cp install-libreworkspace.sh ./NEWISO/install-libreworkspace.sh
+chmod +x ./NEWISO/install-libreworkspace.sh
+cp first-boot-installation.service ./NEWISO/first-boot-installation.service
 
 # Change the boot menu to automatically start the installation
 sed -i "s/timeout 300/timeout 1/g" ./NEWISO/isolinux/spkgtk.cfg
