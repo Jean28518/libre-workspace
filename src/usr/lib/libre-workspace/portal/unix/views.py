@@ -20,6 +20,7 @@ import idm.forms
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext as _
+import subprocess
 
 # Create your views here.
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -56,36 +57,39 @@ def set_update_configuration(request):
     return redirect("unix_index")
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def backup_settings(request):
+def backup_settings(request, additional_id=None):
     message = ""
+    key_addition = ""
+    if additional_id:
+        key_addition = "_" + additional_id
     current_config = {
         "enabled": unix.is_backup_enabled(),
-        "borg_repository": unix.get_value("BORG_REPOSITORY"),
-        "borg_encryption": unix.get_value("BORG_ENCRYPTION") == "true",
-        "borg_passphrase": unix.get_value("BORG_PASSPHRASE"),
-        "daily_backup_time": unix.get_value("BORG_BACKUP_TIME"),
-        "keep_daily_backups": unix.get_value("BORG_KEEP_DAILY"),
-        "keep_weekly_backups": unix.get_value("BORG_KEEP_WEEKLY"),
-        "keep_monthly_backups": unix.get_value("BORG_KEEP_MONTHLY"),
-        "borg_repo_is_on_synology": unix.get_value("REMOTEPATH") != "",
-        "trusted_fingerprint": unix.get_trusted_fingerprint(),
-        "additional_borg_options": unix.get_value("ADDITIONAL_BORG_OPTIONS", "")
+        "borg_repository": unix.get_value("BORG_REPOSITORY"+key_addition),
+        "borg_encryption": unix.get_value("BORG_ENCRYPTION"+key_addition) == "true",
+        "borg_passphrase": unix.get_value("BORG_PASSPHRASE"+key_addition),
+        "daily_backup_time": unix.get_value("BORG_BACKUP_TIME"+key_addition),
+        "keep_daily_backups": unix.get_value("BORG_KEEP_DAILY"+key_addition),
+        "keep_weekly_backups": unix.get_value("BORG_KEEP_WEEKLY"+key_addition),
+        "keep_monthly_backups": unix.get_value("BORG_KEEP_MONTHLY"+key_addition),
+        "borg_repo_is_on_synology": unix.get_value("REMOTEPATH"+key_addition) != "",
+        "trusted_fingerprint": unix.get_trusted_fingerprint(additional_id),
+        "additional_borg_options": unix.get_value("ADDITIONAL_BORG_OPTIONS"+key_addition, "")
     }
     form = forms.BackupSettings(initial=current_config)
     if request.method == "POST":
         form = forms.BackupSettings(request.POST)
         if form.is_valid():
-            unix.set_backup_enabled(form.cleaned_data["enabled"])
-            unix.set_value("BORG_REPOSITORY", form.cleaned_data["borg_repository"])
-            unix.set_value("BORG_ENCRYPTION", "true" if form.cleaned_data["borg_encryption"] else "false")
-            unix.set_value("BORG_PASSPHRASE", form.cleaned_data["borg_passphrase"].replace("$", "\$"))
-            unix.set_value("BORG_BACKUP_TIME", form.cleaned_data["daily_backup_time"])
-            unix.set_value("BORG_KEEP_DAILY", form.cleaned_data["keep_daily_backups"])
-            unix.set_value("BORG_KEEP_WEEKLY", form.cleaned_data["keep_weekly_backups"])
-            unix.set_value("BORG_KEEP_MONTHLY", form.cleaned_data["keep_monthly_backups"])
-            unix.set_value("REMOTEPATH", "/usr/local/bin/borg" if form.cleaned_data["borg_repo_is_on_synology"] else "")
-            unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"]),
-            unix.set_value("ADDITIONAL_BORG_OPTIONS", form.cleaned_data["additional_borg_options"])
+            unix.set_backup_enabled(form.cleaned_data["enabled"], additional_id)
+            unix.set_value("BORG_REPOSITORY"+key_addition, form.cleaned_data["borg_repository"])
+            unix.set_value("BORG_ENCRYPTION"+key_addition, "true" if form.cleaned_data["borg_encryption"] else "false")
+            unix.set_value("BORG_PASSPHRASE"+key_addition, form.cleaned_data["borg_passphrase"].replace("$", "\$"))
+            unix.set_value("BORG_BACKUP_TIME"+key_addition, form.cleaned_data["daily_backup_time"])
+            unix.set_value("BORG_KEEP_DAILY"+key_addition, form.cleaned_data["keep_daily_backups"])
+            unix.set_value("BORG_KEEP_WEEKLY"+key_addition, form.cleaned_data["keep_weekly_backups"])
+            unix.set_value("BORG_KEEP_MONTHLY"+key_addition, form.cleaned_data["keep_monthly_backups"])
+            unix.set_value("REMOTEPATH"+key_addition, "/usr/local/bin/borg" if form.cleaned_data["borg_repo_is_on_synology"] else "")
+            unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"], key_addition),
+            unix.set_value("ADDITIONAL_BORG_OPTIONS"+key_addition, form.cleaned_data["additional_borg_options"])
             message = _("Settings saved.")
         else:
             message = _("Settings could not be saved.")
@@ -94,8 +98,36 @@ def backup_settings(request):
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def retry_backup(request):
-    unix.retry_backup()
+def additional_backup_configurations(request):
+    additional_backup_ids = unix.get_additional_backup_ids()
+    overview = process_overview_dict({
+        "heading": _("Additional Backup Configurations"),
+        "element_name": _("Backup Configuration"),
+        "element_url_key": "id",
+        "elements": unix.get_all_addon_modules(),
+        "t_headings": [_("Name")],
+        "t_keys": ["name"],
+        "add_url_name": "add_additional_backup_configuration",
+        "delete_url_name": "remove_additional_backup_configuration"
+    })
+    return render(request, "lac/overview_x.html", {"overview": overview})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def add_additional_backup_configuration(request):
+    form = forms.AdditionalBackupConfigurationForm()
+    if request.method == "POST":
+        form = forms.AdditionalBackupConfigurationForm(request.POST)
+        if form.is_valid():
+            id = subprocess.getoutput("libre-workspace-generate-secret 10")
+            unix.set_value("ADDITIONAL_BACKUP_NAME_"+id, form.cleaned_data["name"])
+            subprocess.call("mkdir -p /var/lib/libre-workspace/portal/additional_backup_"+id)
+
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def retry_backup(request, additional_id=None):
+    unix.retry_backup(additional_id)
     time.sleep(1)
     return redirect("unix_index")
 
@@ -552,6 +584,7 @@ def change_libre_workspace_name(request):
         unix.set_value("LIBRE_WORKSPACE_NAME", name)
         return message(request, _("The name has been changed."), "unix_index")
     form = forms.ChangeLibreWorkspaceNameForm()
+    form.fields["name"].initial = unix.get_libre_workspace_name()
     return render(request, "lac/create_x.html", {"form": form, "heading": _("Change Libre Workspace Name"), "hide_buttons_top": "True", "url": reverse("unix_index")})
 
 

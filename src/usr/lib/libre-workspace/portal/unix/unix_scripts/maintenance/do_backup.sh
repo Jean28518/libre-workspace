@@ -1,5 +1,18 @@
 #!/bin/bash
-source /etc/libre-workspace/libre-workspace.conf
+
+# Check for additional key then we read these variables with the additional id
+if [ ! -z $1] ; then
+  cat /etc/libre-workspace/libre-workspace.conf | grep _$1 > /tmp/libre-workspace.conf
+  sed -i "s/_$1//g" /tmp/libre-workspace.conf
+  source /tmp/libre-workspace.conf
+  rm /tmp/libre-workspace.conf
+  HISTORY_FOLDER=/var/lib/libre-workspace/portal/additional_backup_$1/
+else
+  source /etc/libre-workspace/libre-workspace.conf
+  HISTORY_FOLDER=/var/lib/libre-workspace/portal/history/
+fi
+
+
 
 # Dump all databases
 # --default-character-set=utf8mb4: For emojis and similar, otherwise its broken 
@@ -30,9 +43,9 @@ fi
 
 # If $REMOTEPATH is set, then use this command:
 if [ -z "$REMOTEPATH" ] ; then
-  borg create --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
+  borg create --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> $HISTORY_FOLDER/borg_errors_$DATE.log
 else
-  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
+  borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-system / -e /dev -e /proc -e /sys -e /tmp -e /run -e /media -e /mnt -e /var/log -e /data $ADDITIONAL_BORG_OPTIONS 2> $HISTORY_FOLDER/borg_errors_$DATE.log
 fi
 
 # Start all services
@@ -50,9 +63,9 @@ borg prune -v --glob-archives '*-system' $BORG_REPOSITORY \
 # Also there are no databases in /data, so it is not a problem to backup it after the critical services
 if [ -d /data ]; then
   if [ -z "$REMOTEPATH" ] ; then
-    borg create --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
+    borg create --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> $HISTORY_FOLDER/borg_errors_$DATE.log
   else
-    borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> /var/lib/libre-workspace/portal/history/borg_errors_$DATE.log
+    borg create --remote-path $REMOTEPATH --exclude-caches $BORG_REPOSITORY::$DATE-data /data $ADDITIONAL_BORG_OPTIONS 2>> $HISTORY_FOLDER/borg_errors_$DATE.log
   fi
   # BORG_KEEP_DAILY=$((2*$BORG_KEEP_DAILY))
   # BORG_KEEP_WEEKLY=$((2*$BORG_KEEP_WEEKLY))
@@ -69,10 +82,10 @@ MAXIMUM_AGE_IN_DAYS=$((31*$BORG_KEEP_MONTHLY))d
 borg prune -v --keep-within=$MAXIMUM_AGE_IN_DAYS $BORG_REPOSITORY
 
 
-borg list --short $BORG_REPOSITORY > /var/lib/libre-workspace/portal/history/borg_list
+borg list --short $BORG_REPOSITORY > $HISTORY_FOLDER/borg_list
 
 if [ -z "$REMOTEPATH" ] ; then
-  borg info $BORG_REPOSITORY > /var/lib/libre-workspace/portal/history/borg_info
+  borg info $BORG_REPOSITORY > $HISTORY_FOLDER/borg_info
 else
-  borg info --remote-path $REMOTEPATH $BORG_REPOSITORY > /var/lib/libre-workspace/portal/history/borg_info
+  borg info --remote-path $REMOTEPATH $BORG_REPOSITORY > $HISTORY_FOLDER/borg_info
 fi

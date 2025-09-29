@@ -64,3 +64,7 @@ class AutomaticShutdownForm(forms.Form):
 
 class DesktopSettingsForm(forms.Form):
     set_desktop_password = forms.CharField(label=_("Set Desktop Password"), max_length=100, widget=forms.PasswordInput(attrs={"placeholder": "Password"}), required=False)
+
+
+class AdditionalBackupConfigurationForm(forms.Form):
+    name = forms.CharField(label=_("Name"), max_length=100)

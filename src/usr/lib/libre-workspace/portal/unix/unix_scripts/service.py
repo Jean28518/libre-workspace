@@ -154,6 +154,39 @@ while True:
                 # Full path of the log file:
                 log_file = os.path.abspath(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log")
                 os.system(f"curl -X POST -F 'subject=💾❌ Backup completed with errors❌' -F 'message=Today's backup was not fully successful.\nAttached you will find the error messages.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+    
+    ## ADDITIONAL_BACKUPS ###########################################################################################
+
+    for folder in os.listdir("/var/lib/libre-workspace/portal/"):
+        folder = folder.split("/")[-1]
+        if "additional_backup_" in folder:
+            additional_id = folder.replace("additional_backup_", "")
+            key_addition = ""
+            if additional_id:
+                key_addition = "_" + additional_id
+                history_folder = "/var/lib/libre-workspace/portal/" + folder
+            if unix_config.get_value("BORG_REPOSITORY"+key_addition) != "" and not os.path.exists("/var/lib/libre-workspace/portal/backup_disabled"+key_addition):
+                ensure_fingerprint_is_trusted()
+                backup_time = unix_config.get_value("BORG_BACKUP_TIME"+key_addition)
+                date = time.strftime("%Y-%m-%d")
+
+                # If current time is higher than backup time, run backup
+                if time.strftime("%H:%M") > backup_time and not utils.is_backup_running() and not os.path.isfile(f"{history_folder}/borg_errors_{date}.log"):
+                    print("Running backup")
+                    # Run do_backup.sh script with cwd in the maintenance directory
+                    p = subprocess.Popen(["bash", "do_backup.sh", additional_id], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/")
+                    p.wait()
+
+
+                    # Send email to admin if backup failed
+                    read_errors = open(f"{history_folder}/borg_errors_{date}.log").read()
+                    if read_errors.strip() != "":
+                        # Full path of the log file:
+                        log_file = os.path.abspath(f"{history_folder}/borg_errors_{date}.log")
+                        os.system(f"curl -X POST -F 'subject=💾❌ Backup completed with errors❌' -F 'message=Today's backup was not fully successful.\nAttached you will find the error messages.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+    
+            # !TODO! Fingerprints currently not working for additional backups. Maybe we can create a separate file in the additional_backup_... folder.
+
 
     ## SYSTEM UPDATE ################################################################################################
 

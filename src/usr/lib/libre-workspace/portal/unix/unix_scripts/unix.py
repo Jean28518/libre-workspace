@@ -69,32 +69,39 @@ def set_value(key, value):
 # deactivated
 # not_configured
 # no_backup_yet
-def get_borg_information_for_dashboard():
+def get_borg_information_for_dashboard(additional_id=None):
     rv = {} # return value
     rv["compressed_size_of_all_backups"] = 0
 
+    history_dir = "/var/lib/libre-workspace/portal/history/"
+    key_addition = ""
+    if additional_id:
+        history_dir = "/var/lib/libre-workspace/portal/additional_backup_" + additional_id
+        key_addition = "_" + additional_id
+
+
     # Get the compressed size of all backups
-    if os.path.isfile("/var/lib/libre-workspace/portal/history/borg_info"):
-        lines = open("/var/lib/libre-workspace/portal/history/borg_info").readlines()
+    if os.path.isfile(history_dir+"/borg_info"):
+        lines = open(history_dir+"/borg_info").readlines()
         for line in lines:
             if line.startswith("All archives:"):
                 size = line[-15:-1].strip()
                 rv["compressed_size_of_all_backups"] = size
     
-    rv["encrypted"] = get_value("BORG_ENCRYPTION") == "true"
+    rv["encrypted"] = get_value("BORG_ENCRYPTION"+key_addition) == "true"
 
     rv["backup_status"] = "ok"
 
     # Get all archives
     rv["archives"] = []
-    if os.path.isfile("/var/lib/libre-workspace/portal/history/borg_list"):
-        lines = open("/var/lib/libre-workspace/portal/history/borg_list").readlines()
+    if os.path.isfile(history_dir+"/borg_list"):
+        lines = open(history_dir+"/borg_list").readlines()
         for line in lines:
             rv["archives"].append(line.strip())
     # Sort archives by date
     rv["archives"] = sorted(rv["archives"], key=lambda k: k[0:10], reverse=True)
 
-    if os.path.ismount("/backups"):
+    if os.path.ismount("/backups"+key_addition):
         rv["backup_mounted"] = "True"
     else:
         rv["backup_mounted"] = "False"
@@ -103,13 +110,13 @@ def get_borg_information_for_dashboard():
     backup_history = []
     date_max = "1970-01-01"
     # Get all files in the history directory
-    for file in os.listdir("/var/lib/libre-workspace/portal/history/"):
+    for file in os.listdir(history_dir):
         if file.startswith("borg_errors_"):
             entry = {}
             # Get the date from the filename
             date = file[12:-4]
             # Get the error message from the file
-            error = open(f"/var/lib/libre-workspace/portal/history/{file}").read()
+            error = open(f"{history_dir}/{file}").read()
             if error.strip() == "":
                 entry["success"] = True
             else:
@@ -129,18 +136,18 @@ def get_borg_information_for_dashboard():
             if not rv["last_backup"]["success"]:
                 rv["backup_status"] = "last_backup_failed"
     
-    if utils.is_backup_running():
+    if utils.is_backup_running(additional_id):
         rv["backup_status"] = "running"
     
-    if os.path.isfile("/var/lib/libre-workspace/portal/recovery_running"):
+    if os.path.isfile("/var/lib/libre-workspace/portal/recovery_running"+key_addition):
         rv["backup_status"] = "recovery_running"
 
     # If file "deactivated" exists, set backup status to "deactivated"
-    if os.path.isfile("backup_disabled"):
+    if os.path.isfile("backup_disabled"+key_addition):
         rv["backup_status"] = "deactivated"
 
     # If the repository is not configured, set backup status to "not_configured"
-    if get_value("BORG_REPOSITORY") == "":
+    if get_value("BORG_REPOSITORY"+key_addition) == "":
         rv["backup_status"] = "not_configured"
 
     # If everything is okay but no backup has been made yet, set backup status to "no_backup_yet"
@@ -175,35 +182,46 @@ def set_trusted_fingerprint(fingerprint):
     with open("trusted_fingerprints", "w") as f:
         f.write(fingerprint)
 
-def retry_backup():
+def retry_backup(additional_id=None):
+    history_dir = "/var/lib/libre-workspace/portal/history/"
+    key_addition = ""
+    if additional_id:
+        history_dir = "/var/lib/libre-workspace/portal/additional_backup_" + additional_id
+        key_addition = "_" + additional_id
     read_config_file()
     # If the backup is currently running, exit
-    if utils.is_backup_running():
+    if utils.is_backup_running(additional_id):
         return
     # If the backup is deactivated, exit
-    if os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"):
+    if os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"+key_addition):
         return
     # If the repository is not configured, exit
-    if config["BORG_REPOSITORY"] == "":
+    if config["BORG_REPOSITORY"+key_addition] == "":
         return
     # Remove the history file of today
     date = time.strftime("%Y-%m-%d")
-    if os.path.isfile(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log"):
-        os.remove(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log")
+    if os.path.isfile(f"{history_dir}/borg_errors_{date}.log"):
+        os.remove(f"{history_dir}/borg_errors_{date}.log")
     trigger_cron_service()
 
-def is_backup_enabled():
+def is_backup_enabled(additional_id=None):
     # Return True if backup is enabled, False if backup is disabled
-    return not os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled")
+    key_addition = ""
+    if additional_id:
+        key_addition = "_" + additional_id
+    return not os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"+key_addition)
 
-def set_backup_enabled(enabled):
+def set_backup_enabled(enabled, additional_id=None):
+    key_addition = ""
+    if additional_id:
+        key_addition = "_" + additional_id
     # Enable or disable the backup
     if enabled:
-        if os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"):
-            os.remove("/var/lib/libre-workspace/portal/backup_disabled")
+        if os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"+key_addition):
+            os.remove("/var/lib/libre-workspace/portal/backup_disabled"+key_addition)
     else:
-        if not os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"):
-            os.system("touch /var/lib/libre-workspace/portal/backup_disabled")
+        if not os.path.isfile("/var/lib/libre-workspace/portal/backup_disabled"+key_addition):
+            os.system("touch /var/lib/libre-workspace/portal/backup_disabled"+key_addition)
 
 
 def get_disks_stats():
@@ -665,15 +683,21 @@ def get_online_office_module():
     return None
 
 
-def mount_backups():
-    process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
+def mount_backups(additional_id=None):
+    if additional_id:
+        process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh", additional_id], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
+    else:
+        process = subprocess.Popen(["/usr/bin/bash", "mount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
     time.sleep(5)
     if process.returncode != None and process.returncode != 0:
         return _("Error: Mounting backups failed: %(stdout)s %(stderr)s") % {"stdout": str(process.stdout), "stderr": str(process.stderr)}
 
 
-def umount_backups():
-    process = subprocess.Popen(["/usr/bin/bash", "umount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
+def umount_backups(additional_id=None):
+    if additional_id:
+        process = subprocess.Popen(["/usr/bin/bash", "umount_backups.sh", additional_id], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
+    else:
+        process = subprocess.Popen(["/usr/bin/bash", "umount_backups.sh"], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/", env=get_env_from_unix_conf())
     time.sleep(1)
     if process.returncode != None and process.returncode != 0:
         return _("Error: Unmounting backups failed: %(stdout)s %(stderr)s") % {"stdout": str(process.stdout), "stderr": str(process.stderr)}
@@ -1205,3 +1229,20 @@ def generate_local_admin_token():
     # Set the permissions for the file
     os.system("chmod 600 /var/lib/libre-workspace/local-admin-token")
     os.system("chown root:root /var/lib/libre-workspace/local-admin-token")
+
+
+def get_additional_backup_ids() -> list:
+    """
+    Returns a list of dicts containing "id" and "name"
+    """
+    read_config_file()
+    additional_ids = []
+    for folder in os.listdir("/var/lib/libre-workspace/portal/"):
+        folder = folder.split("/")[-1]
+        if "additional_backup_" in folder:
+            additional_id = folder.replace("additional_backup_", "")
+            name = config["ADDITIONAL_BACKUP_NAME_"+additional_id]
+            additional_ids.append({"name": name, "id": additional_id})
+    
+    additional_ids.sort(key="name")
+    return additional_ids
