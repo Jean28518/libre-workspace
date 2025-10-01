@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check for additional key then we read these variables with the additional id
-if [ ! -z $1] ; then
+if [ ! -z $1 ] ; then
   cat /etc/libre-workspace/libre-workspace.conf | grep _$1 > /tmp/libre-workspace.conf
   sed -i "s/_$1//g" /tmp/libre-workspace.conf
   source /tmp/libre-workspace.conf
@@ -12,6 +12,8 @@ else
   BACKUP_FOLDER=/backups
 fi
 
+echo $1
+echo "Mounting backups to $BACKUP_FOLDER"
 
 mkdir -p $BACKUP_FOLDER
 

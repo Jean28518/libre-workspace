@@ -31,7 +31,7 @@ def unix_index(request):
     system_information = unix.get_system_information()
     update_information = unix.get_update_information()
     
-    return render(request, "unix/system_management.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information, "update_information": update_information})
+    return render(request, "unix/system_management.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information, "update_information": update_information, "backup_configuration_url": reverse("backup_settings")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -94,8 +94,23 @@ def backup_settings(request, additional_id=None):
         else:
             message = _("Settings could not be saved.")
     public_key = unix.get_public_key()
-    return render(request, "unix/backup_settings.html", {"form": form, "message": message, "public_key": public_key})
+    back_url = reverse("unix_index")
+    if additional_id:
+        back_url = reverse("additional_backup_configurations")
 
+    backup_name = None
+    if additional_id:
+        backup_name = unix.get_value("ADDITIONAL_BACKUP_NAME_"+additional_id, "")
+    return render(request, "unix/backup_settings.html", {"form": form, "message": message, "public_key": public_key, "back_url": back_url, "backup_name": backup_name})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def backup_dashboard(request, additional_id):
+    backup_information = unix.get_borg_information_for_dashboard(additional_id)
+    backup_name = unix.get_value("ADDITIONAL_BACKUP_NAME_"+additional_id, "")
+    backup_configuration_url = reverse("backup_settings", args=[additional_id])
+    back_url = reverse("additional_backup_configurations")
+    return render(request, "unix/backup_dashboard_standalone.html", {"backup_information": backup_information, "backup_name": backup_name, "backup_configuration_url": backup_configuration_url, "additional_id": additional_id, "back_url": back_url})
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def additional_backup_configurations(request):
@@ -104,11 +119,13 @@ def additional_backup_configurations(request):
         "heading": _("Additional Backup Configurations"),
         "element_name": _("Backup Configuration"),
         "element_url_key": "id",
-        "elements": unix.get_all_addon_modules(),
+        "elements": additional_backup_ids,
         "t_headings": [_("Name")],
         "t_keys": ["name"],
         "add_url_name": "add_additional_backup_configuration",
-        "delete_url_name": "remove_additional_backup_configuration"
+        "info_url_name": "backup_dashboard",
+        "delete_url_name": "remove_additional_backup_configuration",
+        "back_url_name": "unix_index",
     })
     return render(request, "lac/overview_x.html", {"overview": overview})
 
@@ -119,10 +136,20 @@ def add_additional_backup_configuration(request):
     if request.method == "POST":
         form = forms.AdditionalBackupConfigurationForm(request.POST)
         if form.is_valid():
-            id = subprocess.getoutput("libre-workspace-generate-secret 10")
+            id = unix.generate_random_id(10)
             unix.set_value("ADDITIONAL_BACKUP_NAME_"+id, form.cleaned_data["name"])
-            subprocess.call("mkdir -p /var/lib/libre-workspace/portal/additional_backup_"+id)
+            subprocess.call(["mkdir", "-p", "/var/lib/libre-workspace/portal/additional_backup_"+id])
+            return redirect("backup_settings", additional_id=id)
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Add Additional Backup Configuration"), "hide_buttons_top": "True", "action": _("Add"), "url": reverse("additional_backup_configurations")})
 
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def remove_additional_backup_configuration(request, additional_id):
+    # Remove all the config keys with the additional id
+    subprocess.call(["sed", "-i", f"/_{additional_id}/d", "/etc/libre-workspace/libre-workspace.conf"])
+
+    subprocess.call(["rm", "-rf", "/var/lib/libre-workspace/portal/additional_backup_"+additional_id])
+    return redirect("additional_backup_configurations")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -458,18 +485,22 @@ def uninstall_module(request, name):
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def mount_backups(request):
-    message = unix.mount_backups()
+def mount_backups(request, additional_id=None):
+    message = unix.mount_backups(additional_id=additional_id)
     if message != None:
         return render(request, "lac/message.html", {"message": _("Error mounting: %(message)s") % {"message": message}, "url": reverse("unix_index")})
+    if additional_id:
+        return redirect("backup_dashboard", additional_id=additional_id)
     return redirect("unix_index")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def umount_backups(request):
-    message = unix.umount_backups()
+def umount_backups(request, additional_id=None):
+    message = unix.umount_backups(additional_id=additional_id)
     if message != None:
         return render(request, "lac/message.html", {"message": _("Error unmounting: %(message)s") % {"message": message}, "url": reverse("unix_index")})
+    if additional_id:
+        return redirect("backup_dashboard", additional_id=additional_id)
     return redirect("unix_index")
 
 

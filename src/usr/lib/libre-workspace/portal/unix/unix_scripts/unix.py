@@ -1,8 +1,11 @@
+import string
 from django.utils.translation import gettext as _
 import os
 import time
 import subprocess
 import json
+
+import random
 import lac.settings as settings
 import idm.ldap as ldap
 import idm.idm as idm
@@ -170,16 +173,22 @@ def get_public_key():
     else:
         return _("Error: Public key of root user not found.")
     
-def get_trusted_fingerprint():
+def get_trusted_fingerprint(additional_id=None):
+    key_addition = ""
+    if additional_id:
+        key_addition = "_" + additional_id
     # Get the trusted fingerprint
-    if os.path.isfile("trusted_fingerprints"):
-        return open("trusted_fingerprints").read()
+    if os.path.isfile("trusted_fingerprints_"+key_addition):
+        return open("trusted_fingerprints_"+key_addition).read()
     else:
         return ""
 
-def set_trusted_fingerprint(fingerprint):
+def set_trusted_fingerprint(fingerprint, additional_id=None):
     # Set the trusted fingerprint
-    with open("trusted_fingerprints", "w") as f:
+    key_addition = ""
+    if additional_id:
+        key_addition = "_" + additional_id
+    with open("trusted_fingerprints"+key_addition, "w") as f:
         f.write(fingerprint)
 
 def retry_backup(additional_id=None):
@@ -1243,6 +1252,11 @@ def get_additional_backup_ids() -> list:
             additional_id = folder.replace("additional_backup_", "")
             name = config["ADDITIONAL_BACKUP_NAME_"+additional_id]
             additional_ids.append({"name": name, "id": additional_id})
-    
-    additional_ids.sort(key="name")
+
+    additional_ids.sort(key=lambda x: x["name"])
     return additional_ids
+
+
+def generate_random_id(length=8):
+    """Generates a random id with the given length."""
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
