@@ -20,6 +20,7 @@ import idm.forms
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext as _
+import subprocess
 
 # Create your views here.
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -30,7 +31,7 @@ def unix_index(request):
     system_information = unix.get_system_information()
     update_information = unix.get_update_information()
     
-    return render(request, "unix/system_management.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information, "update_information": update_information})
+    return render(request, "unix/system_management.html", {"backup_information": backup_information, "disks_stats": disks_stats, "system_information": system_information, "update_information": update_information, "backup_configuration_url": reverse("backup_settings")})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -56,46 +57,104 @@ def set_update_configuration(request):
     return redirect("unix_index")
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def backup_settings(request):
+def backup_settings(request, additional_id=None):
     message = ""
+    key_addition = ""
+    if additional_id:
+        key_addition = "_" + additional_id
     current_config = {
         "enabled": unix.is_backup_enabled(),
-        "borg_repository": unix.get_value("BORG_REPOSITORY"),
-        "borg_encryption": unix.get_value("BORG_ENCRYPTION") == "true",
-        "borg_passphrase": unix.get_value("BORG_PASSPHRASE"),
-        "daily_backup_time": unix.get_value("BORG_BACKUP_TIME"),
-        "keep_daily_backups": unix.get_value("BORG_KEEP_DAILY"),
-        "keep_weekly_backups": unix.get_value("BORG_KEEP_WEEKLY"),
-        "keep_monthly_backups": unix.get_value("BORG_KEEP_MONTHLY"),
-        "borg_repo_is_on_synology": unix.get_value("REMOTEPATH") != "",
-        "trusted_fingerprint": unix.get_trusted_fingerprint(),
-        "additional_borg_options": unix.get_value("ADDITIONAL_BORG_OPTIONS", "")
+        "borg_repository": unix.get_value("BORG_REPOSITORY"+key_addition),
+        "borg_encryption": unix.get_value("BORG_ENCRYPTION"+key_addition) == "true",
+        "borg_passphrase": unix.get_value("BORG_PASSPHRASE"+key_addition),
+        "daily_backup_time": unix.get_value("BORG_BACKUP_TIME"+key_addition),
+        "keep_daily_backups": unix.get_value("BORG_KEEP_DAILY"+key_addition),
+        "keep_weekly_backups": unix.get_value("BORG_KEEP_WEEKLY"+key_addition),
+        "keep_monthly_backups": unix.get_value("BORG_KEEP_MONTHLY"+key_addition),
+        "borg_repo_is_on_synology": unix.get_value("REMOTEPATH"+key_addition) != "",
+        "trusted_fingerprint": unix.get_trusted_fingerprint(additional_id),
+        "additional_borg_options": unix.get_value("ADDITIONAL_BORG_OPTIONS"+key_addition, "")
     }
     form = forms.BackupSettings(initial=current_config)
     if request.method == "POST":
         form = forms.BackupSettings(request.POST)
         if form.is_valid():
-            unix.set_backup_enabled(form.cleaned_data["enabled"])
-            unix.set_value("BORG_REPOSITORY", form.cleaned_data["borg_repository"])
-            unix.set_value("BORG_ENCRYPTION", "true" if form.cleaned_data["borg_encryption"] else "false")
-            unix.set_value("BORG_PASSPHRASE", form.cleaned_data["borg_passphrase"].replace("$", "\$"))
-            unix.set_value("BORG_BACKUP_TIME", form.cleaned_data["daily_backup_time"])
-            unix.set_value("BORG_KEEP_DAILY", form.cleaned_data["keep_daily_backups"])
-            unix.set_value("BORG_KEEP_WEEKLY", form.cleaned_data["keep_weekly_backups"])
-            unix.set_value("BORG_KEEP_MONTHLY", form.cleaned_data["keep_monthly_backups"])
-            unix.set_value("REMOTEPATH", "/usr/local/bin/borg" if form.cleaned_data["borg_repo_is_on_synology"] else "")
-            unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"]),
-            unix.set_value("ADDITIONAL_BORG_OPTIONS", form.cleaned_data["additional_borg_options"])
+            unix.set_backup_enabled(form.cleaned_data["enabled"], additional_id)
+            unix.set_value("BORG_REPOSITORY"+key_addition, form.cleaned_data["borg_repository"])
+            unix.set_value("BORG_ENCRYPTION"+key_addition, "true" if form.cleaned_data["borg_encryption"] else "false")
+            unix.set_value("BORG_PASSPHRASE"+key_addition, form.cleaned_data["borg_passphrase"].replace("$", "\$"))
+            unix.set_value("BORG_BACKUP_TIME"+key_addition, form.cleaned_data["daily_backup_time"])
+            unix.set_value("BORG_KEEP_DAILY"+key_addition, form.cleaned_data["keep_daily_backups"])
+            unix.set_value("BORG_KEEP_WEEKLY"+key_addition, form.cleaned_data["keep_weekly_backups"])
+            unix.set_value("BORG_KEEP_MONTHLY"+key_addition, form.cleaned_data["keep_monthly_backups"])
+            unix.set_value("REMOTEPATH"+key_addition, "/usr/local/bin/borg" if form.cleaned_data["borg_repo_is_on_synology"] else "")
+            unix.set_trusted_fingerprint(form.cleaned_data["trusted_fingerprint"], key_addition),
+            unix.set_value("ADDITIONAL_BORG_OPTIONS"+key_addition, form.cleaned_data["additional_borg_options"])
             message = _("Settings saved.")
         else:
             message = _("Settings could not be saved.")
     public_key = unix.get_public_key()
-    return render(request, "unix/backup_settings.html", {"form": form, "message": message, "public_key": public_key})
+    back_url = reverse("unix_index")
+    if additional_id:
+        back_url = reverse("additional_backup_configurations")
+
+    backup_name = None
+    if additional_id:
+        backup_name = unix.get_value("ADDITIONAL_BACKUP_NAME_"+additional_id, "")
+    return render(request, "unix/backup_settings.html", {"form": form, "message": message, "public_key": public_key, "back_url": back_url, "backup_name": backup_name})
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def retry_backup(request):
-    unix.retry_backup()
+def backup_dashboard(request, additional_id):
+    backup_information = unix.get_borg_information_for_dashboard(additional_id)
+    backup_name = unix.get_value("ADDITIONAL_BACKUP_NAME_"+additional_id, "")
+    backup_configuration_url = reverse("backup_settings", args=[additional_id])
+    back_url = reverse("additional_backup_configurations")
+    return render(request, "unix/backup_dashboard_standalone.html", {"backup_information": backup_information, "backup_name": backup_name, "backup_configuration_url": backup_configuration_url, "additional_id": additional_id, "back_url": back_url})
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def additional_backup_configurations(request):
+    additional_backup_ids = unix.get_additional_backup_ids()
+    overview = process_overview_dict({
+        "heading": _("Additional Backup Configurations"),
+        "element_name": _("Backup Configuration"),
+        "element_url_key": "id",
+        "elements": additional_backup_ids,
+        "t_headings": [_("Name")],
+        "t_keys": ["name"],
+        "add_url_name": "add_additional_backup_configuration",
+        "info_url_name": "backup_dashboard",
+        "delete_url_name": "remove_additional_backup_configuration",
+        "back_url_name": "unix_index",
+    })
+    return render(request, "lac/overview_x.html", {"overview": overview})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def add_additional_backup_configuration(request):
+    form = forms.AdditionalBackupConfigurationForm()
+    if request.method == "POST":
+        form = forms.AdditionalBackupConfigurationForm(request.POST)
+        if form.is_valid():
+            id = unix.generate_random_id(10)
+            unix.set_value("ADDITIONAL_BACKUP_NAME_"+id, form.cleaned_data["name"])
+            subprocess.call(["mkdir", "-p", "/var/lib/libre-workspace/portal/additional_backup_"+id])
+            return redirect("backup_settings", additional_id=id)
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Add Additional Backup Configuration"), "hide_buttons_top": "True", "action": _("Add"), "url": reverse("additional_backup_configurations")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def remove_additional_backup_configuration(request, additional_id):
+    # Remove all the config keys with the additional id
+    subprocess.call(["sed", "-i", f"/_{additional_id}/d", "/etc/libre-workspace/libre-workspace.conf"])
+
+    subprocess.call(["rm", "-rf", "/var/lib/libre-workspace/portal/additional_backup_"+additional_id])
+    return redirect("additional_backup_configurations")
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def retry_backup(request, additional_id=None):
+    unix.retry_backup(additional_id)
     time.sleep(1)
     return redirect("unix_index")
 
@@ -426,18 +485,22 @@ def uninstall_module(request, name):
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def mount_backups(request):
-    message = unix.mount_backups()
+def mount_backups(request, additional_id=None):
+    message = unix.mount_backups(additional_id=additional_id)
     if message != None:
         return render(request, "lac/message.html", {"message": _("Error mounting: %(message)s") % {"message": message}, "url": reverse("unix_index")})
+    if additional_id:
+        return redirect("backup_dashboard", additional_id=additional_id)
     return redirect("unix_index")
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
-def umount_backups(request):
-    message = unix.umount_backups()
+def umount_backups(request, additional_id=None):
+    message = unix.umount_backups(additional_id=additional_id)
     if message != None:
         return render(request, "lac/message.html", {"message": _("Error unmounting: %(message)s") % {"message": message}, "url": reverse("unix_index")})
+    if additional_id:
+        return redirect("backup_dashboard", additional_id=additional_id)
     return redirect("unix_index")
 
 
@@ -552,6 +615,7 @@ def change_libre_workspace_name(request):
         unix.set_value("LIBRE_WORKSPACE_NAME", name)
         return message(request, _("The name has been changed."), "unix_index")
     form = forms.ChangeLibreWorkspaceNameForm()
+    form.fields["name"].initial = unix.get_libre_workspace_name()
     return render(request, "lac/create_x.html", {"form": form, "heading": _("Change Libre Workspace Name"), "hide_buttons_top": "True", "url": reverse("unix_index")})
 
 

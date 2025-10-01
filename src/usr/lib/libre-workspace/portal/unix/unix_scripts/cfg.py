@@ -46,3 +46,16 @@ def set_value(key, value):
     # Write all lines back to the cfg file
     with open(get_config_path(), "w") as f:
         f.writelines(lines)
+
+
+def get_all_keys():
+    keys = []
+    # Open cfg file
+    with open(get_config_path(), "r") as f:
+        # Read all lines
+        lines = f.readlines()
+        # Iterate over all lines
+        for line in lines:
+            line_parts = line.split("=")
+            keys.append(line_parts[0].replace(" ", "").replace("export", ""))
+    return keys

@@ -8,7 +8,11 @@
 
 <h2>{% translate "System Administration" %}</h2>
 
+ {% if backup_name %}
+<h3>{% translate "Backup Configuration:" %} {{ backup_name }}</h3>
+{% else %}
 <h3>{% translate "Fully Automated Backups" %}</h3>
+{% endif %}
 <h4> {% translate "Basic Information" %} </h4>
 <p>
     {% translate "The entire server, including data and all configurations, is fully automatically backed up daily via Borg to an external location." %}
@@ -32,12 +36,12 @@
     <br><br>
     <div class="grid">
         <div>
-            <a href="{% url "unix_index" %}"role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
+            <a href="{{ back_url }}" role="button" class="secondary" style="display: block;">{% translate "Back" %}</a>
         </div>
         <input type="submit" value="{% translate "Save Changes" %}">
     </div>
     <div>
-        <a href="{% url "retry_backup" %}"role="button" class="secondary" style="display: block;">{% translate "Trigger Backup Manually" %}</a>
+        <a href="{% url "retry_backup" %}" role="button" class="secondary" style="display: block;">{% translate "Trigger Backup Manually" %}</a>
     </div>
     <center>
         {% translate "Note: All services will be temporarily shut down during the backup." %}

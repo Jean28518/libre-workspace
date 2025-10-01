@@ -8,6 +8,9 @@
 
 {% include "unix/backup_dashboard.html" %}
 
+<a href="{% url "additional_backup_configurations" %}"><button>{% translate "Additional Backup Configurations" %}</button></a>
+
+
 {% include "unix/update_management.html" %}
 
 <div align="center">{% translate "Note: This page refreshes every 60 seconds." %}</div>

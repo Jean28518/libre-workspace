@@ -26,15 +26,19 @@ for line in lines:
     value = line.split("=")[1]
     env[key] = value
 
-def ensure_fingerprint_is_trusted():
+def ensure_fingerprint_is_trusted(additional_id=None):
     ## Ensure trusted SSH fingerprints are available
     # Fingerprint is located in trusted_fingerprints file
     # If the fingerprints are not in the /root/.ssh/known_hosts file, add them
+    if additional_id:
+        fingerprint_file = f"trusted_fingerprints_{additional_id}"
+    else:
+        fingerprint_file = "trusted_fingerprints"
     if not os.path.isfile("/root/.ssh/known_hosts"):
         os.system("touch /root/.ssh/known_hosts")
     known_hosts = open("/root/.ssh/known_hosts").readlines()
-    if os.path.isfile("trusted_fingerprints"):
-        trusted_fingerprints = open("trusted_fingerprints").readlines()
+    if os.path.isfile(fingerprint_file):
+        trusted_fingerprints = open(fingerprint_file).readlines()
         for fingerprint in trusted_fingerprints:
             if fingerprint not in known_hosts:
                 known_hosts.append(fingerprint)
@@ -154,6 +158,37 @@ while True:
                 # Full path of the log file:
                 log_file = os.path.abspath(f"/var/lib/libre-workspace/portal/history/borg_errors_{date}.log")
                 os.system(f"curl -X POST -F 'subject=💾❌ Backup completed with errors❌' -F 'message=Today's backup was not fully successful.\nAttached you will find the error messages.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
+    
+    ## ADDITIONAL_BACKUPS ###########################################################################################
+
+    for folder in os.listdir("/var/lib/libre-workspace/portal/"):
+        folder = folder.split("/")[-1]
+        if "additional_backup_" in folder:
+            additional_id = folder.replace("additional_backup_", "")
+            key_addition = ""
+            if additional_id:
+                key_addition = "_" + additional_id
+                history_folder = "/var/lib/libre-workspace/portal/" + folder
+            if unix_config.get_value("BORG_REPOSITORY"+key_addition) != "" and not os.path.exists("/var/lib/libre-workspace/portal/backup_disabled"+key_addition):
+                ensure_fingerprint_is_trusted(additional_id)
+                backup_time = unix_config.get_value("BORG_BACKUP_TIME"+key_addition)
+                date = time.strftime("%Y-%m-%d")
+                backup_name = unix_config.get_value("ADDITIONAL_BACKUP_NAME"+key_addition, "Additional Backup")
+
+                # If current time is higher than backup time, run backup
+                if time.strftime("%H:%M") > backup_time and not utils.is_backup_running() and not os.path.isfile(f"{history_folder}/borg_errors_{date}.log"):
+                    print("Running backup")
+                    # Run do_backup.sh script with cwd in the maintenance directory
+                    p = subprocess.Popen(["bash", "do_backup.sh", additional_id], cwd="/usr/lib/libre-workspace/portal/unix/unix_scripts/maintenance/")
+                    p.wait()
+
+
+                    # Send email to admin if backup failed
+                    read_errors = open(f"{history_folder}/borg_errors_{date}.log").read()
+                    if read_errors.strip() != "":
+                        # Full path of the log file:
+                        log_file = os.path.abspath(f"{history_folder}/borg_errors_{date}.log")
+                        os.system(f"curl -X POST -F 'subject=💾❌ Backup: {backup_name} completed with errors❌' -F 'message=Today's backup ({backup_name}) was not fully successful.\nAttached you will find the error messages.' -F 'attachment_path={log_file}' -F 'lw_admin_token={lw_admin_token}' localhost:11123/unix/send_mail")
 
     ## SYSTEM UPDATE ################################################################################################
 

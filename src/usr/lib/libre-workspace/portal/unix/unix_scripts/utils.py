@@ -1,9 +1,12 @@
 # To this file unix.py (django) and also service.py (not django) can access
 import subprocess
+import os
 
 
-def is_backup_running():
+def is_backup_running(additional_id=None):
     # Check if a process with the name backup.sh in it is running
+    if additional_id:
+        return "backup.sh " + additional_id in subprocess.getoutput("ps -aux")
     return "backup.sh" in subprocess.getoutput("ps -aux")
 
 

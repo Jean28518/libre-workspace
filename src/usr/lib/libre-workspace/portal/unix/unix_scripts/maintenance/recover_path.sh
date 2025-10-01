@@ -9,7 +9,7 @@ RECOVER_PATH=${RECOVER_PATH%/}
 # The path where we want to copy the recovered file(s) can be dereived also from the first argument
 # The first argument has the path /backups/YYYY-MM-DD/
 # Remove /backups/YYYY-MM-DD/ from the path and use the rest as the destination path
-DESTINATION_PATH=${RECOVER_PATH#/backups/*/}
+DESTINATION_PATH=${RECOVER_PATH#/backups*/*/}
 DESTINATION_PATH=/$DESTINATION_PATH
 # DESTINATION_PATH is now /path/to/recover/
 # Remove the last folder from the path

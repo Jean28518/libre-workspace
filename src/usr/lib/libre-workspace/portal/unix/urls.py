@@ -27,6 +27,11 @@ urlpatterns = [
     path("data_import_2", views.data_import_2, name="data_import_2"),
     path("pick_folder", views.pick_path, name="pick_folder"),
     path("file_explorer", views.file_explorer, name="file_explorer"),
+    path("additional_backup_configurations", views.additional_backup_configurations, name="additional_backup_configurations"),
+    path("add_additional_backup_configuration", views.add_additional_backup_configuration, name="add_additional_backup_configuration"),
+    path("remove_additional_backup_configuration/<additional_id>", views.remove_additional_backup_configuration, name="remove_additional_backup_configuration"),
+    path("backup_dashboard/<additional_id>", views.backup_dashboard, name="backup_dashboard"),
+    path("backup_settings/<additional_id>", views.backup_settings, name="backup_settings"),
 
     path("set_update_configuration", views.set_update_configuration, name="set_update_configuration"),
 
@@ -40,7 +45,9 @@ urlpatterns = [
     path("automatic_shutdown", views.automatic_shutdown, name="automatic_shutdown"),
 
     path("mount_backups", views.mount_backups, name="mount_backups"),
+    path("mount_backups/<additional_id>", views.mount_backups, name="mount_backups"),
     path("umount_backups", views.umount_backups, name="umount_backups"),
+    path("umount_backups/<additional_id>", views.umount_backups, name="umount_backups"),
     path("recover_path", views.recover_path, name="recover_path"),
     path("enter_recovery_selector", views.enter_recovery_selector, name="enter_recovery_selector"),
 

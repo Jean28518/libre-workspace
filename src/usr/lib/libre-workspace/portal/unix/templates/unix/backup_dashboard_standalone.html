@@ -1,0 +1,13 @@
+{% extends "lac/base.html" %}
+{% load i18n %}
+{% block content %}
+
+{% include "unix/backup_dashboard.html" %}
+
+{% if back_url %}
+    <div class="grid">
+        <a href="{{ back_url }}" role="button" class="secondary">{% translate "Back" %}</a>
+    </div>
+{% endif %}
+
+{% endblock %}
