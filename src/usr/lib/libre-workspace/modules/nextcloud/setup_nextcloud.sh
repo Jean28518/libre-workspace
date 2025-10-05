@@ -123,8 +123,11 @@ systemctl restart php*
 # sudo -u www-data php /var/www/nextcloud/occ ldap:set-config s01 ldapConfigurationActive 1
 
 
-# Enable SSO (OIDC) for nextcloud
-sudo -u www-data php /var/www/nextcloud/occ app:install oidc_login
+# Enable SSO (OIDC) for nextcloud (also if its not tested for the currect nextcloud version, it should work)
+sudo -u www-data php /var/www/nextcloud/occ app:install oidc_login --force
+sudo -u www-data php /var/www/nextcloud/occ app:enable oidc_login --force
+# Restart redis and php-fpm to make sure everything is fresh (oidc_login needs those restarts)
+systemctl restart redis.service php*fpm.service
 
 CLIENT_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 CLIENT_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
