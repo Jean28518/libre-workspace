@@ -149,6 +149,12 @@ def apply_group_changes(user, groups):
     Applies group changes for a user based on the provided groups.
     Adds the user to new groups and removes them from groups they are no longer part of.
     """
+    # Check if user exists
+    existing_user = os.popen(f"id -u {user} 2>/dev/null").read().strip()
+    if not existing_user:
+        print(f"User {user} does not exist, cannot apply group changes.")
+        return
+
     current_groups = os.popen(f"groups {user}").read().strip().split(': ')[1].split()
     
     # Add new groups
