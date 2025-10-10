@@ -188,7 +188,6 @@ def get_all_linux_users_with_passwords():
             user["yescrypt_hash"] = linux_client_user.yescrypt_hash
         else:
             user["yescrypt_hash"] = None
-        user["username"] = user.get("cn", "")
 
         current_group_dns_of_user = user.get("groups", [])
         # Match the real groups:
