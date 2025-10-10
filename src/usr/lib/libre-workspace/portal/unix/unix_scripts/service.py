@@ -95,6 +95,18 @@ def check_caddy_running_and_rescue():
                 os.system("systemctl restart caddy")
 
 
+def check_other_important_system_services_running():
+    important_services = ["samba-ad-dc", "caddy", "libre-workspace-portal", "mariadb", "redis-server", "tftpd-hpa"]
+    for service in important_services:
+        # Check if service exists and is not running
+        try:
+            if os.system(f"systemctl is-enabled {service}") == 0 and os.system(f"systemctl is-active {service}") != 0:
+                print(f"Service {service} is not running. Restarting...")
+                os.system(f"systemctl restart {service}")
+        except Exception as e:
+            print(f"An error occurred while checking service {service}: {e}")
+
+
 # In here the time for a last message is stored in seconds
 last_message_sent = {}
 
@@ -123,6 +135,8 @@ while True:
     ## CHECK IF LINUX ARBEITSPLATZ PACKAGE IS INSTALLED ###############################################################
     ## TODO: REMOVE IT IN 2026
     ensure_linux_arbeitsplatz_package_is_removed()
+
+    check_other_important_system_services_running()
 
     # Read config file
     unix_config.read_config_file()
