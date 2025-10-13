@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# This script deregisters a domain from /etc/hosts and samba DNS.
+# Usage: libre-workspace-deregister-domain <domain> 
+# (e.g. mydomain.int.de)
+# Because of samba limitations and this automation this works only for domains which are subdomains of the main libre workspace domain.
+
+DOMAIN="$1"
+if [ -z "$DOMAIN" ]; then
+    echo "Usage: $0 <domain>"
+    exit 1
+fi
+
+# Activate the virtual environment
+if [ -f /var/lib/libre-workspace/portal/venv/bin/activate ]; then
+    source /var/lib/libre-workspace/portal/venv/bin/activate
+fi
+
+# Get the IP address from /etc/hosts
+IP_ADDRESS=$(grep "$DOMAIN" /etc/hosts | awk '{print $1}')
+if [ -z "$IP_ADDRESS" ]; then
+    echo "Could not determine the IP address of this machine from /etc/hosts"
+    exit 1
+fi
+
+cd /usr/lib/libre-workspace/portal/
+python3 manage.py shell -c "from unix.unix_scripts.unix import remove_dns_entry_from_samba; remove_dns_entry_from_samba('$IP_ADDRESS', '$DOMAIN')"
+
+echo "Removing $DOMAIN from /etc/hosts"
+if grep -q "$DOMAIN" /etc/hosts; then
+    sed -i "/$DOMAIN/d" /etc/hosts
+else
+    echo "$DOMAIN does not exist in /etc/hosts, not removing"
+fi
+
+echo "Domain $DOMAIN has been deregistered from samba DNS and /etc/hosts"
+
+exit 0

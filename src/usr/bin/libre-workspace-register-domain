@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# This script registers a domain to /etc/hosts and samba DNS.
+# Usage: libre-workspace-register-domain <domain> 
+# (e.g. mydomain.int.de)
+# Because of samba limitations and this automation this works only for domains which are subdomains of the main libre workspace domain.
+
+
+DOMAIN="$1"
+if [ -z "$DOMAIN" ]; then
+    echo "Usage: $0 <domain>"
+    exit 1
+fi
+
+# Now we get the first IPv4 address we find from hostname -I
+# All IPv4 addresses happen to be first in this output
+IP_ADDRESS=$(hostname -I | awk '{print $1}')
+if [ -z "$IP_ADDRESS" ]; then
+    echo "Could not determine the IP address of this machine"
+    exit 1
+fi
+
+
+# Activate the virtual environment
+if [ -f /var/lib/libre-workspace/portal/venv/bin/activate ]; then
+    source /var/lib/libre-workspace/portal/venv/bin/activate
+fi
+
+cd /usr/lib/libre-workspace/portal/
+python3 manage.py shell -c "from unix.unix_scripts.unix import ensure_dns_entry_in_samba; ensure_dns_entry_in_samba('$IP_ADDRESS', '$DOMAIN')"
+
+echo "Adding $IP_ADDRESS $DOMAIN to /etc/hosts"
+if ! grep -q "$DOMAIN" /etc/hosts; then
+    echo "$IP_ADDRESS $DOMAIN" >> /etc/hosts
+else
+    echo "$DOMAIN already exists in /etc/hosts, not adding"
+fi
+
+echo "Domain $DOMAIN has been registered to samba DNS and /etc/hosts"
+
+exit 0

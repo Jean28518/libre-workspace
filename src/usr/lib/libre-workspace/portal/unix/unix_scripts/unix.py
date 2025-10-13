@@ -682,6 +682,16 @@ def remove_module(module_name):
         process = subprocess.Popen(["/usr/bin/bash", f"remove_{module_name}.sh"], cwd=f"{module_path}/", env=get_env_sh_variables())
     else:
         return _("WARNING: Remove script not found! If you are in a development environment, that's okay. If you are in a production environment, please check your installation.")
+
+
+# Used by e.g. /usr/bin/libre-workspace-deregister-domain
+def remove_dns_entry_from_samba(ip, full_domain):
+    libre_workspace_base_domain = get_env_sh_variables().get("DOMAIN", "")
+    subdomain = full_domain.replace(f".{libre_workspace_base_domain}", "")
+    if settings.AUTH_LDAP_ENABLED:
+        admin_password = get_env_sh_variables().get("ADMIN_PASSWORD", "")
+        os.system(f"samba-tool dns delete la.{libre_workspace_base_domain} {libre_workspace_base_domain} {subdomain} A {ip} -U administrator%{admin_password}")
+    return
     
 
 def get_online_office_module():
