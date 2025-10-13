@@ -4,6 +4,7 @@
 # Usage: libre-workspace-register-domain <domain> 
 # (e.g. mydomain.int.de)
 # Because of samba limitations and this automation this works only for domains which are subdomains of the main libre workspace domain.
+# Only registers the first IPv4 address of the machine.
 
 
 DOMAIN="$1"
