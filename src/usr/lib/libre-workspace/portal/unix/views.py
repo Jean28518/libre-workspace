@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from idm.idm import get_admin_user
 import unix.unix_scripts.cfg as cfg
 from unix.unix_scripts.general.update_email_settings import update_email_settings
-from .forms import EmailConfiguration, AddonForm
+from .forms import EmailConfiguration, AddonForm, IgnoredDomainsForm
 from django.urls import reverse
 import time
 import unix.unix_scripts.unix as unix
@@ -690,7 +690,11 @@ def miscellaneous_settings(request):
     form.fields["cpu_warning_threshold"].initial = unix.get_value("CPU_WARNING_THRESHOLD", "80")
     form.fields["ram_warning_threshold"].initial = unix.get_value("RAM_WARNING_THRESHOLD", "80")
     form.fields["disk_warning_threshold"].initial = unix.get_value("DISK_WARNING_THRESHOLD", "90")
-    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Miscellaneous Settings"), "action": _("Save"), "url": reverse("system_configuration"), "hide_buttons_top": "True"})
+
+    ignored_domains_url = reverse("ignored_domains")
+    content_above = f"<a href='{ignored_domains_url}' role='button'>{_('Manage Ignored Email Domains')}</a>"
+
+    return render(request, "lac/generic_form.html", {"form": form, "heading": _("Miscellaneous Settings"), "action": _("Save"), "url": reverse("system_configuration"), "hide_buttons_top": "True", "content_above": content_above})
 
 
 # API-Call
@@ -775,3 +779,37 @@ def desktop_settings(request):
     
 
     return render(request, "lac/generic_form.html", {"form": form, "heading": _("Cloud Desktop"), "action": _("Apply"), "url": reverse("dashboard"), "hide_buttons_top": "True", "description": _("Note: The password is saved in plain text. The password is only required for password queries during use, for example for administrative tasks. The password is not required for login. The password can be deactivated again in the future when changing other user parameters for security reasons.")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def ignored_domains(request):
+    overview_dict = {
+        "element_name": _("Domain"),
+        "heading": _("Ignored Domains"),
+        "t_headings": [_("Domain")],
+        "add_url_name": "add_ignored_domain",
+        "delete_url_name": "remove_ignored_domain",
+        "elements": unix.get_ignored_domains(),
+        "back_url_name": "miscellaneous_settings",
+        "content_above": "<p><strong>" + _("Ignored domains will not be checked for the online status. Therefore no warning mail will be sent if the domain is not reachable.") + "</strong></p>",
+    }
+    overview = process_overview_dict(overview_dict)
+    return render(request, "lac/overview_x.html", {"overview": overview,})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def add_ignored_domain(request):
+    form = IgnoredDomainsForm(request.POST or None)
+    if request.method == "POST":
+        form = IgnoredDomainsForm(request.POST)
+        if form.is_valid():
+            unix.add_ignored_domain(form.cleaned_data["domain"])
+            return message(request, _("The domain has been added to the ignored domains."), "ignored_domains")
+        return message(request, _("Error: Invalid input."), "add_ignored_domain")
+    return render(request, "lac/create_x.html", {"form": form, "heading": _("Add Ignored Domain"), "hide_buttons_top": "True", "url": reverse("ignored_domains")})
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def remove_ignored_domain(request, domain):
+    unix.remove_ignored_domain(domain)
+    return message(request, _("The domain has been removed from the ignored domains."), "ignored_domains")

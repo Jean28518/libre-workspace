@@ -6,13 +6,20 @@ def process_overview_dict(overview : dict) -> dict:
     """
     Process the overview dictionary and returns the processed dictionary
     """
+
+    # If the list of elements is only strings, convert them to dictionaries with the key being "id"
+    if all(isinstance(el, str) for el in overview["elements"]):
+        overview["elements"] = [{"id": el} for el in overview["elements"]]
+        overview["t_keys"] = ["id"]
+        overview["element_url_key"] = "id"
+
     if "add_url_name" in overview.keys():
         overview["add_url"] = reverse(overview["add_url_name"])
     if overview["element_url_key"] is None:
         overview["element_url_key"] = overview["t_keys"][0]
     overview["table_content"] = []
     overview["first_t_heading"] = overview["t_headings"].pop(0)
-    
+
     # We extract the first field of the normal table because then we can not center the first column in jinja
     for i in range(len(overview["elements"])):
         element = overview["elements"][i]

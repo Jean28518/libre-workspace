@@ -68,3 +68,7 @@ class DesktopSettingsForm(forms.Form):
 
 class AdditionalBackupConfigurationForm(forms.Form):
     name = forms.CharField(label=_("Name"), max_length=100)
+
+
+class IgnoredDomainsForm(forms.Form):
+    domain = forms.CharField(label=_("Domain"), max_length=100, widget=forms.TextInput(attrs={"placeholder": "cloud.int.de"}))

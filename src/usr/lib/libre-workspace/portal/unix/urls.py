@@ -44,6 +44,10 @@ urlpatterns = [
     path("miscellaneous_settings", views.miscellaneous_settings, name="miscellaneous_settings"),
     path("automatic_shutdown", views.automatic_shutdown, name="automatic_shutdown"),
 
+    path("ignored_domains", views.ignored_domains, name="ignored_domains"),
+    path("add_ignored_domain", views.add_ignored_domain, name="add_ignored_domain"),
+    path("remove_ignored_domain/<domain>", views.remove_ignored_domain, name="remove_ignored_domain"),
+
     path("mount_backups", views.mount_backups, name="mount_backups"),
     path("mount_backups/<additional_id>", views.mount_backups, name="mount_backups"),
     path("umount_backups", views.umount_backups, name="umount_backups"),

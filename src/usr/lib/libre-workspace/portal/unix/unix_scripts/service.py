@@ -361,6 +361,10 @@ while True:
         # If the first word has two dots or one : in it, it is a domain we want to check
         if len(words) > 0 and (words[0].count(".") == 2 or words[0].count(":") == 1) and line.strip().endswith("{"):
             domain = words[0]
+
+            if domain in unix_config.get_value("ONLINE_DETECTION_IGNORED_DOMAINS", "").split(","):
+                continue
+
             # print(f"Checking domain {domain}")
             # Check if the domain is reachable and the code is not 200
             try:

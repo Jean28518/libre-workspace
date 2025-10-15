@@ -1270,3 +1270,24 @@ def get_additional_backup_ids() -> list:
 def generate_random_id(length=8):
     """Generates a random id with the given length."""
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
+
+
+def get_ignored_domains() -> list:
+    """Returns a list of domains which are ignored by the online detection."""
+    return get_value("ONLINE_DETECTION_IGNORED_DOMAINS", "").split(",") if get_value("ONLINE_DETECTION_IGNORED_DOMAINS", "") != "" else []
+
+
+def remove_ignored_domain(domain):
+    """Removes a domain from the ignored domains list."""
+    ignored_domains = get_ignored_domains()
+    if domain in ignored_domains:
+        ignored_domains.remove(domain)
+        set_value("ONLINE_DETECTION_IGNORED_DOMAINS", ",".join(ignored_domains))
+
+
+def add_ignored_domain(domain):
+    """Adds a domain to the ignored domains list."""
+    ignored_domains = get_ignored_domains()
+    if domain not in ignored_domains:
+        ignored_domains.append(domain)
+        set_value("ONLINE_DETECTION_IGNORED_DOMAINS", ",".join(ignored_domains))
