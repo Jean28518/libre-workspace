@@ -59,12 +59,17 @@ mv /etc/samba/smb.conf /etc/samba/smb.conf.bak
 export SAMBA_HOST_ROLE=dc
 # DNS Backend
 export SAMBA_DNS_BACKEND=SAMBA_INTERNAL
-# DNS Forwarder (OpenDNS)
-export SAMBA_DNS_FORWARDER=$IP
+# DNS Forwarder (Quad Nine)
+export SAMBA_DNS_FORWARDER=9.9.9.9
 # Administrator password
 export SAMBA_ADMIN_PASSWORD=$ADMIN_PASSWORD
 
-samba-tool domain provision --realm=$SHORTEND_DOMAIN --domain=la.$SHORTEND_DOMAIN --adminpass=$ADMIN_PASSWORD
+
+# SAMBA_DOMAIN should be in uppercase without the TLD for the realm
+# Example: DOMAIN=libreoffice.org -> SAMBA_DOMAIN=LIBREOFFICE
+export SAMBA_DOMAIN=$(echo $SHORTEND_DOMAIN | cut -d'.' -f1 | tr '[:lower:]' '[:upper:]')
+
+samba-tool domain provision --realm=$SHORTEND_DOMAIN --domain=$SAMBA_DOMAIN --adminpass=$ADMIN_PASSWORD
 
 mv /etc/krb5.conf /etc/krb5.conf.orig
 cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
@@ -163,6 +168,11 @@ if ! grep -q "cloud.$DOMAIN" /etc/hosts; then
     echo "$IP matrix.$DOMAIN" >> /etc/hosts # Matrix
     echo "$IP $DOMAIN" >> /etc/hosts # Domain itself
 fi
+
+
+# Remove the false DNS entries of Samba. Because at provisioning it also adds the docker interface.
+samba-tool dns delete la int.de la A 172.17.0.1 -U administrator%$ADMIN_PASSWORD
+samba-tool dns delete 127.0.0.1 int.de @ A 172.17.0.1 -U administrator%$ADMIN_PASSWORD
 
 
 # Update cfg file:
