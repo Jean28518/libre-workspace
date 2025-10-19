@@ -14,6 +14,11 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 
+
+## Stop Docker because it disturbs the samba provisioning
+systemctl stop docker
+ip link delete docker0
+
 ## Setup DNS-Environment ##################################
 hostnamectl set-hostname la
 # if la.$DOMAIN is not in /etc/hosts, add it
@@ -200,3 +205,7 @@ if [ ! -f /var/lib/libre-workspace/portal/installation_running ]; then
     systemctl restart libre-workspace-service.service
     systemctl restart libre-workspace-portal.service
 fi
+
+
+# Re-enable docker
+systemctl enable --now docker
