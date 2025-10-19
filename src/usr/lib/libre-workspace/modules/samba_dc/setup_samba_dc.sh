@@ -133,13 +133,6 @@ ufw allow ldaps
 if [[ $DOMAIN == "int.de" ]]; then
     ufw allow 53
 fi
-# Allow 88 and 464 for kerberos
-ufw allow 88
-ufw allow 464
-# Allow 139 and 445 for samba
-ufw allow 139
-ufw allow 445
-
 
 # Add these subdomains to samba dns server:
 # .la .cloud .office .portal .chat .meet, .element, .matrix
