@@ -13,4 +13,4 @@ ufw allow ssh
 ufw --force enable
 
 # Remove the default caddy service if it exists
-python3 ../remove_caddy_service.py :80
+python3 libre-workspace-remove-webserver-entry :80

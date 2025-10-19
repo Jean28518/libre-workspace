@@ -14,11 +14,6 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 
-
-## Stop Docker because it disturbs the samba provisioning
-systemctl stop docker
-ip link delete docker0
-
 ## Setup DNS-Environment ##################################
 hostnamectl set-hostname la
 # if la.$DOMAIN is not in /etc/hosts, add it
@@ -175,10 +170,13 @@ if ! grep -q "cloud.$DOMAIN" /etc/hosts; then
 fi
 
 
-# Remove the false DNS entries of Samba. Because at provisioning it also adds the docker interface.
-samba-tool dns delete la int.de la A 172.17.0.1 -U administrator%$ADMIN_PASSWORD
-samba-tool dns delete 127.0.0.1 int.de @ A 172.17.0.1 -U administrator%$ADMIN_PASSWORD
-
+# Insert 
+# interfaces = 127.0.0.1 $IP
+# bind interfaces only = yes
+# to /etc/samba/smb.conf in the [global] section
+# (Because otherwise samba-ad-dc would also listen on the docker0 interface)
+sed -i "/^\[global\]/a interfaces = 127.0.0.1 $IP" /etc/samba/smb.conf
+sed -i "/^\[global\]/a bind interfaces only = yes" /etc/samba/smb.conf
 
 # Update cfg file:
 # Remove the lines with "AUTH_LDAP" in it
@@ -205,7 +203,3 @@ if [ ! -f /var/lib/libre-workspace/portal/installation_running ]; then
     systemctl restart libre-workspace-service.service
     systemctl restart libre-workspace-portal.service
 fi
-
-
-# Re-enable docker
-systemctl enable --now docker
