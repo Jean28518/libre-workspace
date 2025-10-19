@@ -32,6 +32,7 @@ Joining Linux Clients
 .. code-block:: bash
 
     sudo -i
+    hostnamectl set-hostname client1 # Set a proper hostname
     apt update
     apt install realmd sssd sssd-tools adcli krb5-user packagekit vim -y
     ping INT.DE -c 4 # Verify that the domain is reachable
@@ -66,6 +67,7 @@ Joining Windows Clients
 =======================
 
 - Make sure your clients server DNS is set to the IP of your Libre Workspace server.
+- Make sure the name of your Windows client is set properly (e.g., CLIENT1).
 - Run as Administrator in Windows PowerShell:
 
 .. code-block:: powershell
