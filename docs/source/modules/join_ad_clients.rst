@@ -8,6 +8,7 @@ In these example instructions, we assume the domain is ``int.de``. Please replac
 To enable AD joining for clients, you currently have to set the ufw rules yourself:
 
 .. code-block:: bash
+
     LOCALSUBNET="192.168.1.0/24"  # Adjust this to your local subnet where your clients are located.
     sudo ufw allow from $LOCALSUBNET to any port 53
     sudo ufw allow from $LOCALSUBNET to any port 88
