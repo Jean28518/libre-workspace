@@ -1,3 +1,4 @@
+from ast import Global
 from django.utils.translation import gettext as _
 import ldap
 import ldap.modlist as modlist
@@ -522,6 +523,10 @@ def ldap_create_group(group_information):
     attrs = {}
     attrs['objectclass'] = [b'top', b'group']
     attrs['cn'] = [group_information["cn"].encode('utf-8')]
+    # Add the groupType attribute for a Global Security Group
+    # -2147483650 - (0 + 2) - Global Group - Distribution Group
+    # (That samba-tool group list also shows this group and we can use it for permission assignments like file shares)
+    attrs['groupType'] = [b'-2147483650']
     if group_information.get("description", "") != "":
         attrs['description'] = [group_information["description"].encode('utf-8')]
     ldif = modlist.addModlist(attrs)
