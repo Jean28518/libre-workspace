@@ -526,7 +526,7 @@ def ldap_create_group(group_information):
     # Add the groupType attribute for a Global Security Group
     # -2147483650 - (0 + 2) - Global Group - Distribution Group
     # (That samba-tool group list also shows this group and we can use it for permission assignments like file shares)
-    attrs['groupType'] = [b'-2147483650']
+    attrs['groupType'] = [b'-2147483646']
     if group_information.get("description", "") != "":
         attrs['description'] = [group_information["description"].encode('utf-8')]
     ldif = modlist.addModlist(attrs)
