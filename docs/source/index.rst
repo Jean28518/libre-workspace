@@ -22,6 +22,7 @@ Libre Workspace Documentation (for Administrators)
    modules/addons
    modules/join_ad_clients
    modules/linux_client
+   modules/samba_file_shares
 
 
 
