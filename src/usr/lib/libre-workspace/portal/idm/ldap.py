@@ -523,6 +523,7 @@ def ldap_create_group(group_information):
     attrs = {}
     attrs['objectclass'] = [b'top', b'group']
     attrs['cn'] = [group_information["cn"].encode('utf-8')]
+    attrs['sAMAccountName'] = [group_information["cn"].encode('utf-8')]
     # Add the groupType attribute for a Global Security Group
     # -2147483650 - (0 + 2) - Global Group - Distribution Group
     # (That samba-tool group list also shows this group and we can use it for permission assignments like file shares)
