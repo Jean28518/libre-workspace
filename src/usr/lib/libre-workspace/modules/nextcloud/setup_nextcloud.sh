@@ -82,6 +82,7 @@ sudo -u www-data php /var/www/nextcloud/occ app:install collectives
 # sudo -u www-data php /var/www/nextcloud/occ app:install drawio
 sudo -u www-data php /var/www/nextcloud/occ app:install secrets
 sudo -u www-data php /var/www/nextcloud/occ app:install groupfolders
+#sudo -u www-data php /var/www/nextcloud/occ app:enable files_external
 
 # Update the database because nextcloud 29.0.0 doen't add the missing indices?!
 sudo -u www-data php /var/www/nextcloud/occ db:add-missing-indices
