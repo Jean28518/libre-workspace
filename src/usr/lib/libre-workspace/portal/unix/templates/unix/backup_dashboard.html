@@ -134,9 +134,9 @@
     {% else %}
         {% if additional_id %}
             <a href="{% url "umount_backups" additional_id=additional_id %}"><button>{% translate "Unmount Backups" %}</button></a>
-        {% else %}
+            {% else %}
             <a href="{% url "umount_backups" %}"><button>{% translate "Unmount Backups" %}</button></a>
-        {% endif %}
-    <a href="{% url "enter_recovery_selector" additional_id=additional_id %}"><button>{% translate "View/Restore Backup" %}</button></a>
+            {% endif %}
+            <a href="{% url "enter_recovery_selector" %}"><button>{% translate "View/Restore Backup" %}</button></a>
     {% endif %}
 </article>
