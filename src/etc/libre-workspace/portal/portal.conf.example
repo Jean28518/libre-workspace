@@ -49,3 +49,20 @@ export IGNORE_ADMIN_STATUS_FOR_NEXTCLOUD_USERS=""
 export NEXTCLOUD_INSTALLATION_DIRECTORY="/var/www/nextcloud/"
 
 export M23_API_KEY=""
+
+# Superadmin (only needed if DISABLE_DANGEROUS_ADMIN_FUNCTIONS is set to True and you want to do admin tasks which are then disabled for the normal admin user)
+# Create a argon2 hash for the superadmin password with 
+# sudo apt install argon2
+# echo -n "MySuperSecretPassword" | argon2 $(head -c 16 /dev/urandom | base64) -id -e
+# Username will be !superadmin
+# You will basically act as the normal Administrator
+#export SUPERADMIN_PASSWORD_HASH=''
+
+# Disable specific functions for the normal administrator user which could give root access to the shell or could potentially break the system.
+#export DISABLE_DANGEROUS_ADMIN_FUNCTIONS=True
+# These functions will be disabled:
+# - Installing 3rd party libre workspace addons 
+# - Setting the desktop password (for admins with sudo rights)
+# - IP Address change
+# - "Additional Services" (start_services.sh, stop_services.sh)
+# - Installing the Addon "portainer"

@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponse
@@ -13,6 +14,11 @@ from rest_framework.renderers import JSONRenderer
 from django.utils.translation import gettext as _
 from idm.api_permissions import AdministratorPermission
 
+DISABLE_DANGEROUS_ADMIN_FUNCTIONS = os.environ.get("DISABLE_DANGEROUS_ADMIN_FUNCTIONS", "False") == "True"
+
+DANGEROUS_ADDON_IDS = [
+    "portainer",
+]
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -24,6 +30,8 @@ def addon_center(request):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def addon_center_install_addon(request, addon_id):
+    if DISABLE_DANGEROUS_ADMIN_FUNCTIONS and request.user.username != "!superadmin" and addon_id in DANGEROUS_ADDON_IDS:
+        return message(request, _("This addon has been disabled by the system administrator."), "addon_center")
     all_available_addons = get_all_available_addons()
     addon = None
     for addon_s in all_available_addons:

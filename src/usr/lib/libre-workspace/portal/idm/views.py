@@ -2,7 +2,7 @@ import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.http import HttpResponseRedirect
 import django_auth_ldap.backend
 from django_auth_ldap.backend import LDAPBackend
@@ -109,6 +109,32 @@ def user_login(request):
             username = ldap_get_cn_of_dn(userdn)
 
         user = authenticate(username=username, password=request.POST['password'])
+
+        # Check if it is a !superadmin login
+        SUPERADMIN_PASSWORD_HASH = os.environ.get("SUPERADMIN_PASSWORD_HASH", "")
+        if SUPERADMIN_PASSWORD_HASH != "" and username == "!superadmin":
+            # Its a argon2 hash
+            # Chack the password
+            from passlib.hash import argon2
+            if argon2.verify(request.POST['password'], SUPERADMIN_PASSWORD_HASH):
+                # Check if the user exists
+                User = get_user_model()
+                try:
+                    user = User.objects.get(username="!superadmin")
+                except User.DoesNotExist:
+                    user = None
+                if user == None:
+                    # Create the user
+                    user = User.objects.create_user(username="!superadmin", is_superuser=True, is_staff=True)
+                    user.set_unusable_password()
+                    user.save()
+                login(request, user)
+                if request.GET.get("next", "") != "":
+                    return HttpResponseRedirect(request.GET['next'])
+                else: 
+                    return redirect("index")
+                    
+
         if user and user.is_authenticated:
             print(_("User is authenticated."))
 

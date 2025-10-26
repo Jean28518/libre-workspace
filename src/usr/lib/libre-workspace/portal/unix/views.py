@@ -21,6 +21,9 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext as _
 import subprocess
+import os
+
+DISABLE_DANGEROUS_ADMIN_FUNCTIONS = os.environ.get("DISABLE_DANGEROUS_ADMIN_FUNCTIONS", "False") == "True"
 
 # Create your views here.
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -577,6 +580,9 @@ def addons(request):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def add_addon(request):
+    if DISABLE_DANGEROUS_ADMIN_FUNCTIONS and request.user.username != "!superadmin":
+        return message(request, _("This function has been disabled by the system administrator."), "addons")
+
     if request.method == "POST":
         file = request.FILES["file"]
         # Move the file to /tmp folder
@@ -626,6 +632,8 @@ def critical_system_configuration(request):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def change_ip_address(request):
+    if DISABLE_DANGEROUS_ADMIN_FUNCTIONS and request.user.username != "!superadmin":
+        return message(request, _("This function has been disabled by the system administrator."), "critical_system_configuration")
     if request.method == "POST":
         ip = request.POST.get("ip", "")
         # Check if the ip is valid
@@ -692,7 +700,7 @@ def miscellaneous_settings(request):
     form.fields["disk_warning_threshold"].initial = unix.get_value("DISK_WARNING_THRESHOLD", "90")
 
     ignored_domains_url = reverse("ignored_domains")
-    content_above = f"<a href='{ignored_domains_url}' role='button'>{_('Manage Ignored Email Domains')}</a>"
+    content_above = f"<a href='{ignored_domains_url}' role='button'>{_('Manage ignored domains (E-Mail notifications)')}</a>"
 
     return render(request, "lac/generic_form.html", {"form": form, "heading": _("Miscellaneous Settings"), "action": _("Save"), "url": reverse("system_configuration"), "hide_buttons_top": "True", "content_above": content_above})
 
@@ -706,6 +714,8 @@ def system_information(request):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def additional_services(request):
+    if DISABLE_DANGEROUS_ADMIN_FUNCTIONS and request.user.username != "!superadmin":
+        return message(request, _("This function has been disabled by the system administrator."), "system_configuration")
     if request.method == "POST":
         form = forms.AdditionalServicesForm(request.POST)
         if form.is_valid():
@@ -768,13 +778,15 @@ def update_module_now(request, module):
 
 @staff_member_required(login_url=settings.LOGIN_URL)
 def desktop_settings(request):
+    if DISABLE_DANGEROUS_ADMIN_FUNCTIONS and request.user.username != "!superadmin":
+        return message(request, _("This function has been disabled by the system administrator."), "dashboard")
     form = forms.DesktopSettingsForm()
     if request.method == "POST":
         form = forms.DesktopSettingsForm(request.POST)
         if form.is_valid():
             new_password = form.cleaned_data["set_desktop_password"]
             unix.desktop_add_user(request.user.username, new_password, request.user.is_superuser)
-            return message(request, _("Settings saved."), "system_configuration")
+            return message(request, _("Settings saved."), "dashboard")
         return message(request, _("Error: Invalid input."), "desktop_settings")
     
 

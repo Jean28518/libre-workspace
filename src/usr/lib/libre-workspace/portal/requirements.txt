@@ -12,3 +12,5 @@ djangorestframework
 drf-spectacular
 # For not be dependend on cdn:
 drf-spectacular-sidecar 
+passlib
+argon2-cffi
