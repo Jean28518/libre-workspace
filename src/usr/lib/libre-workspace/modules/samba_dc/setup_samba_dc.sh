@@ -47,7 +47,7 @@ export REALM=$SHORTEND_DOMAIN
 export KDC=la.$DOMAIN
 export ADMIN_SERVER=la.$DOMAIN
 apt update 
-apt install -y acl attr samba samba-dsdb-modules samba-vfs-modules smbclient winbind libpam-winbind libnss-winbind libpam-krb5 krb5-config krb5-user dnsutils chrony net-tools samba-ad-provision
+apt install -y acl attr samba samba-ad-dc samba-dsdb-modules samba-vfs-modules smbclient winbind libpam-winbind libnss-winbind libpam-krb5 krb5-config krb5-user dnsutils chrony net-tools samba-ad-provision
 
 systemctl disable --now smbd nmbd winbind
 systemctl unmask samba-ad-dc
