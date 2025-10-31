@@ -178,7 +178,7 @@ sed -i "/AUTH_LDAP/d" /etc/libre-workspace/portal/portal.conf
 # Add the Samba AD settings to the cfg file
 # Ensure that we put in a new line
 echo "" >> /etc/libre-workspace/portal/portal.conf
-echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_SERVER_URI=\"ldaps://localhost\"" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_BIND_PASSWORD='$ADMIN_PASSWORD'" >>/etc/libre-workspace/portal/portal.conf
