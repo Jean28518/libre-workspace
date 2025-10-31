@@ -1026,7 +1026,7 @@ def password_challenge(password):
     if not any(char.isalpha() for char in password):
         message = _("Password must contain at least one letter.")
     # Check if password contains at least one special character
-    special_characters = "!%&'()*+,-./:;<=>?@[]_{|}~"
+    special_characters = "!%&()*+,-./:;<=>?@[]_{|}~"
     if not any(char in special_characters for char in password):
         message = _("Password must contain at least one special character.")
     

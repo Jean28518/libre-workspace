@@ -181,7 +181,7 @@ echo "" >> /etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_SERVER_URI=\"ldaps://la.$DOMAIN\"" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_DC=\"$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_BIND_DN=\"cn=Administrator,cn=users,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
-echo "export AUTH_LDAP_BIND_PASSWORD=\"$ADMIN_PASSWORD\"" >>/etc/libre-workspace/portal/portal.conf
+echo "export AUTH_LDAP_BIND_PASSWORD='$ADMIN_PASSWORD'" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_USER_DN_TEMPLATE=\"cn=%(user)s,cn=users,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_GROUP_SEARCH_BASE=\"cn=Groups,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf
 echo "export AUTH_LDAP_GROUP_ADMIN_DN=\"CN=Administrators,CN=Builtin,$LDAP_DC\"" >>/etc/libre-workspace/portal/portal.conf

@@ -29,7 +29,7 @@ Installation using the ISO image
 
     If you want to create a RAID or set the data directory to another disk, you can do so by selecting "Manual" and following the instructions. If you choose '/data' as a mount point, Libre Workspace will use this directory as the data directory and store all Nextcloud data there.
 
-5. After the installation is complete, the system will reboot. Discover the IP address of the system and open it in your browser. Otherwise, you can just follow the instructions on the server display.
+5. After the system installation is complete, the system will reboot and install the portal. This takes about 5 to 10 minutes, during which the screen may remain black. Find the system's IP address and open it in your browser; otherwise, follow the instructions on the server display.
 
 .. note::
 

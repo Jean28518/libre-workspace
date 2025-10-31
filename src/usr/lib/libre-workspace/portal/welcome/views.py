@@ -182,7 +182,7 @@ def installation_running(request):
         with open("/etc/libre-workspace/libre-workspace.env", "w") as f:
             f.write(f"export DOMAIN={os.environ['DOMAIN']}\n")
             f.write(f"export IP={os.environ['IP']}\n")
-            f.write(f"export ADMIN_PASSWORD=\"{os.environ['ADMIN_PASSWORD']}\"\n")
+            f.write(f"export ADMIN_PASSWORD='{os.environ['ADMIN_PASSWORD']}'\n")
             f.write(f"export LDAP_DC={os.environ['LDAP_DC']}\n")
             f.write(f"export LANGUAGE_CODE={os.environ['LANGUAGE_CODE']}\n")
     except Exception as e:
