@@ -53,12 +53,12 @@ sleep 15
 
 # Add the lan.crt to the guacamole container that it can trust the self signed certificate
 if [ -d /var/www/cert ]; then
-    docker cp /var/www/cert/lan.crt desktop_guacamole_1:/usr/local/share/ca-certificates/lan.crt
+    docker cp /var/www/cert/lan.crt desktop-guacamole-1:/usr/local/share/ca-certificates/lan.crt
     # Also copy it to /opt/java/openjdk/jre/lib/security/cacerts inside the guacamole container
-    docker cp /var/www/cert/lan.crt desktop_guacamole_1:/tmp/lan.crt
-    docker exec -u 0 -it desktop_guacamole_1 update-ca-certificates
+    docker cp /var/www/cert/lan.crt desktop-guacamole-1:/tmp/lan.crt
+    docker exec -u 0 -it desktop-guacamole-1 update-ca-certificates
     # Trust the certificate in the java keystore
-    docker exec -u 0 -it desktop_guacamole_1 bash -c "keytool -import -trustcacerts -keystore /opt/java/openjdk/jre/lib/security/cacerts -storepass changeit -noprompt -alias lan -file /tmp/lan.crt"
+    docker exec -u 0 -it desktop-guacamole-1 bash -c "keytool -import -trustcacerts -keystore /opt/java/openjdk/jre/lib/security/cacerts -storepass changeit -noprompt -alias lan -file /tmp/lan.crt"
 fi
 
 
