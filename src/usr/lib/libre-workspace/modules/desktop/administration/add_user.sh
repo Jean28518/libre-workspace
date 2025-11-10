@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# We need the domain:
+. /etc/libre-workspace/libre-workspace.env
+
 # This script adds a user to this linux-server and to the guacamole database.
 # If the user already exists, the script is able to handle this case.
 
@@ -205,6 +208,30 @@ for SCRIPT in /home/lw.$USERNAME/.scripts/*; do
     SCRIPT_NAME=$(basename $SCRIPT)
     create_autostart $USERNAME $SCRIPT_NAME
 done
+
+tee /home/lw.$USERNAME/.local/share/applications/libre-workspace-portal.desktop << EOF
+[Desktop Entry]
+Version=1.0
+Name=Libre Workspace Portal
+Comment=portal.$DOMAIN
+Exec=chromium --class=WebApp-LibreWorkspacePortal --name=WebApp-LibreWorkspacePortal --user-data-dir=/home/lw.$USERNAME/.local/share/ice/profiles/LibreWorkspacePortal --app="https://portal.$DOMAIN/"
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=libre-workspace
+Categories=GTK;WebApps;
+MimeType=text/html;text/xml;application/xhtml_xml;
+StartupWMClass=WebApp-LibreWorkspacePortal
+StartupNotify=true
+X-WebApp-Browser=Chromium
+X-WebApp-URL=https://portal.$DOMAIN/
+X-WebApp-CustomParameters=
+X-WebApp-Navbar=true
+X-WebApp-PrivateWindow=false
+X-WebApp-Isolated=true
+EOF
+
+
 chmod 770 /home/lw.$USERNAME/
 chown -R lw.$USERNAME:lw.$USERNAME /home/lw.$USERNAME/
 
