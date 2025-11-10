@@ -209,12 +209,13 @@ for SCRIPT in /home/lw.$USERNAME/.scripts/*; do
     create_autostart $USERNAME $SCRIPT_NAME
 done
 
+mkdir -p /home/lw.$USERNAME/.local/share/applications
 tee /home/lw.$USERNAME/.local/share/applications/libre-workspace-portal.desktop << EOF
 [Desktop Entry]
 Version=1.0
 Name=Libre Workspace Portal
 Comment=portal.$DOMAIN
-Exec=chromium --class=WebApp-LibreWorkspacePortal --name=WebApp-LibreWorkspacePortal --user-data-dir=/home/lw.$USERNAME/.local/share/ice/profiles/LibreWorkspacePortal --app="https://portal.$DOMAIN/"
+Exec=chromium --class=WebApp-LibreWorkspacePortal --name=WebApp-LibreWorkspacePortal --user-data-dir=/home/lw.$USERNAME/.local/share/ice/profiles/LibreWorkspacePortal "https://portal.$DOMAIN/"
 Terminal=false
 X-MultipleArgs=false
 Type=Application
@@ -230,6 +231,45 @@ X-WebApp-Navbar=true
 X-WebApp-PrivateWindow=false
 X-WebApp-Isolated=true
 EOF
+
+
+
+## SETUP NEXTCLOUD MOUNT VIA RCLONE ##
+sudo apt install rclone -y
+
+# Add a Nextcloud auth token for the user
+NC_PASS=$(openssl rand -base64 32)
+OUTPUT=$(sudo -u www-data env NC_PASS="$NC_PASS" php /var/www/nextcloud/occ user:auth-tokens:add --password-from-env "$USERNAME")
+# Extract the token from the output (replace "app password: " with nothing)
+TOKEN=$(echo $OUTPUT | sed 's/.*app password: //')
+mkdir -p /home/lw.$USERNAME/Nextcloud
+
+# Add a rclone config for the user
+RCLONE_CONFIG="/home/lw.$USERNAME/.config/rclone/rclone.conf"
+mkdir -p /home/lw.$USERNAME/.config/rclone
+
+# Obscure the Nextcloud password so rclone can reveal it later
+OBSCURED_PASS=$(rclone obscure "$TOKEN")
+
+cat > "$RCLONE_CONFIG" << EOF
+[nextcloud]
+type = webdav
+url = https://cloud.$DOMAIN/remote.php/dav/files/$USERNAME/
+vendor = nextcloud
+user = $USERNAME
+pass = $OBSCURED_PASS
+EOF
+
+chmod 600 $RCLONE_CONFIG
+chmod 700 /home/lw.$USERNAME/.config/rclone
+
+# Add script to autostart to mount nextcloud via rclone
+tee /home/lw.$USERNAME/.scripts/mount_nextcloud.sh << EOF
+#!/bin/bash
+rclone --config /home/lw.$USERNAME/.config/rclone/rclone.conf mount nextcloud: /home/lw.$USERNAME/Nextcloud --vfs-cache-mode writes --daemon
+EOF
+chmod +x /home/lw.$USERNAME/.scripts/mount_nextcloud.sh
+create_autostart $USERNAME "mount_nextcloud.sh"
 
 
 chmod 770 /home/lw.$USERNAME/
