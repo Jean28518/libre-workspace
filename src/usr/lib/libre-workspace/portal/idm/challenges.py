@@ -22,7 +22,7 @@ def get_all_libre_workspace_challenges(user):
             challenges.append({"text": _("You are currently the only user here. Let's create new users!"), "link": reverse("create_user")})
 
         # Challenge 2: Do all variables exist in /etc/libre-workspace/libre-workspace.env?
-        if len(unix.get_env_sh_variables().keys()) != 4:
+        if len(unix.get_env_sh_variables().keys()) < 4:
             current_keys = list(unix.get_env_sh_variables().keys())
             challenges.append({"text": _("Variables are still missing in the /etc/libre-workspace/libre-workspace.env file. This must be adjusted manually.<br>Found variables: %(current_keys)s") % {"current_keys": current_keys}, "link": "https://docs.libre-workspace.org/setup/installation.html#manual-configuration"})
 
