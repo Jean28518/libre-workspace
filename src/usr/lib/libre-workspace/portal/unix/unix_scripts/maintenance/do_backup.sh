@@ -57,6 +57,8 @@ borg prune -v --glob-archives '*-system' $BORG_REPOSITORY \
     --keep-weekly=$BORG_KEEP_WEEKLY \
     --keep-monthly=$BORG_KEEP_MONTHLY
 
+# Delete the "Permission denied: 'Nextcloud'" lines from borg error log, because these are normal for the rclone mounted folders and we dont want to backup these folders
+sed -i "/Permission denied: 'Nextcloud'/d" $HISTORY_FOLDER/borg_errors_$DATE.log
 
 
 # Then backup the /data directory while the services are running, because it is a big directory and takes a long time to backup
