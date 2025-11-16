@@ -1,0 +1,309 @@
+#!/bin/python3
+import os
+import sys
+import argparse
+
+FILE_TYPES = {
+    # "Default" configuration files with lines like VAR=VALUE
+    'conf': {
+        'comment_char': '#',
+        'assignment_char': '=',
+        'prefix': '',
+    },
+    # like "conf" but "export" is in front of variable:
+    'rc' : {
+        'comment_char': '#',
+        'assignment_char': '=',
+        'prefix': 'export ', # Added prefix for easier building
+    },
+    # More file types can be added here
+}
+
+# This will be set by argparse in main
+current_file_type = 'conf'
+
+def parse_line_key(line_tuple, file_type_info):
+    """
+    Parses a line tuple and returns its variable key, if it has one.
+    This is the core of the bug fix: it checks for an exact key match.
+    """
+    _original_line, stripped_line, is_commented, _current_section = line_tuple
+    
+    effective_line = stripped_line
+    
+    # Handle prefixes like 'export '
+    prefix = file_type_info.get('prefix', '')
+    if prefix and effective_line.startswith(prefix):
+        effective_line = effective_line[len(prefix):].lstrip()
+
+    assign_char = file_type_info['assignment_char']
+    
+    # This check prevents partial matches (e.g., "VAR" matching "VAR_EXTRA")
+    if assign_char in effective_line:
+        key, _value = effective_line.split(assign_char, 1)
+        key = key.strip() # Handle 'VAR = VAL'
+        return key
+        
+    return None # Not a variable line
+
+def build_variable_line(variable_name, value):
+    """Builds a new, properly formatted line for a variable."""
+    file_type_info = FILE_TYPES[current_file_type]
+    prefix = file_type_info.get('prefix', '')
+    assign_char = file_type_info['assignment_char']
+
+    # Check if there are more than alphanumeric characters in value
+    if not value.isalnum():
+        # If so, we quote it
+        value = f'"{value}"'
+    
+    # We don't add quotes, to match original behavior
+    return f"{prefix}{variable_name}{assign_char}{value}\n"
+
+def write_lines_to_file(file_path, line_tuples):
+    """Writes the list of line tuples back to the file."""
+    dir_name = os.path.dirname(file_path)
+    if dir_name: # Handle case where file is in current dir ('')
+        os.makedirs(dir_name, exist_ok=True)
+    
+    with open(file_path, 'w') as f:
+        for line, _, _, _ in line_tuples:
+            f.write(line)
+
+# --- Core Functions ---
+
+# A line tuple is (original_line: str, stripped_line: str, is_commented: bool, current_section: str or None)
+def get_file_lines(file_path):
+    """Reads a file and returns a list of parsed line tuples."""
+    if not os.path.exists(file_path):
+        return []
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+
+    return_value = []
+    current_section = None
+    comment_char = FILE_TYPES[current_file_type]['comment_char']
+    
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith('[') and stripped.endswith(']'):
+            current_section = stripped[1:-1]
+            return_value.append((line, stripped, False, current_section))
+            continue
+        
+        is_commented = False
+        effective_line = stripped
+        
+        if stripped.startswith(comment_char):
+            is_commented = True
+            effective_line = stripped[len(comment_char):].lstrip()
+            
+        return_value.append((line, effective_line, is_commented, current_section))
+
+    return return_value
+
+def set_value(file_path, variable_name, value, section=None, after=None):
+    lines = get_file_lines(file_path)
+    file_type_info = FILE_TYPES[current_file_type]
+    
+    new_lines = []
+    setting_set = False
+    
+    new_line_str = build_variable_line(variable_name, value)
+    new_line_tuple = (new_line_str, new_line_str.strip(), False, section)
+
+    if after:
+        # If 'after' is used, we only insert. We don't update existing.
+        if after.endswith('*'):
+            after_pattern = after[:-1]
+            check = lambda line: line.startswith(after_pattern)
+        else:
+            after_pattern = after
+            check = lambda line: line.strip() == after_pattern
+
+        for line_tuple in lines:
+            new_lines.append(line_tuple)
+            if (section is None or line_tuple[3] == section) and check(line_tuple[0]):
+                new_lines.append(new_line_tuple)
+                setting_set = True
+    else:
+        # If no 'after', we update in place or append
+        for line_tuple in lines:
+            key = parse_line_key(line_tuple, file_type_info)
+            
+            # Check for a match
+            if (not setting_set and
+                (section is None or line_tuple[3] == section) and
+                key == variable_name):
+                
+                new_lines.append(new_line_tuple) # Add the new line
+                setting_set = True
+            else:
+                new_lines.append(line_tuple) # Add the original line
+
+    if not setting_set:
+        new_lines.append(new_line_tuple)
+            
+    write_lines_to_file(file_path, new_lines)
+
+
+def get_value(file_path, variable_name, default=None, section=None):
+    lines = get_file_lines(file_path)
+    file_type_info = FILE_TYPES[current_file_type]
+
+    for line_tuple in lines:
+        _original_line, stripped_line, is_commented, current_section = line_tuple
+        
+        if (section and current_section != section) or is_commented:
+            continue
+            
+        key = parse_line_key(line_tuple, file_type_info)
+
+        if key == variable_name:
+            # Re-parse to get value (this is simple and effective)
+            prefix = file_type_info.get('prefix', '')
+            if prefix and stripped_line.startswith(prefix):
+                stripped_line = stripped_line[len(prefix):].lstrip()
+                
+            parts = stripped_line.split(file_type_info['assignment_char'], 1)
+            if len(parts) == 2:
+                return parts[1].strip(" \"'")
+                
+    return default
+
+def comment_variable(file_path, variable_name, section=None):
+    lines = get_file_lines(file_path)
+    file_type_info = FILE_TYPES[current_file_type]
+    comment_char = file_type_info['comment_char']
+    
+    new_lines = []
+    commented = False
+    
+    for line_tuple in lines:
+        original_line, _stripped, is_commented, current_section = line_tuple
+        key = parse_line_key(line_tuple, file_type_info)
+
+        if (not commented and not is_commented and
+            (section is None or current_section == section) and
+            key == variable_name):
+            
+            new_line = f"{comment_char} {original_line}"
+            # Re-parse the new line tuple (or create a simplified one)
+            new_lines.append((new_line, new_line.strip(), True, current_section))
+            commented = True
+        else:
+            new_lines.append(line_tuple)
+
+    write_lines_to_file(file_path, new_lines)
+
+def uncomment_variable(file_path, variable_name, section=None):
+    lines = get_file_lines(file_path)
+    file_type_info = FILE_TYPES[current_file_type]
+    comment_char = file_type_info['comment_char']
+
+    new_lines = []
+    uncommented = False
+
+    for line_tuple in lines:
+        original_line, _stripped, is_commented, current_section = line_tuple
+        key = parse_line_key(line_tuple, file_type_info)
+        
+        if (not uncommented and is_commented and
+            (section is None or current_section == section) and
+            key == variable_name):
+            
+            new_line = original_line.lstrip(comment_char).lstrip()
+            # We must re-add the newline that lstrip might remove if line was just '#\n'
+            if not new_line.endswith('\n') and original_line.endswith('\n'):
+                 new_line += '\n'
+
+            new_lines.append((new_line, new_line.strip(), False, current_section))
+            uncommented = True
+        else:
+            new_lines.append(line_tuple)
+
+    write_lines_to_file(file_path, new_lines)
+
+def delete_variable(file_path, variable_name, section=None):
+    lines = get_file_lines(file_path)
+    file_type_info = FILE_TYPES[current_file_type]
+    
+    new_lines = []
+    for line_tuple in lines:
+        key = parse_line_key(line_tuple, file_type_info)
+        current_section = line_tuple[3]
+        
+        # Condition to *keep* the line
+        if (section and current_section != section) or key != variable_name:
+            new_lines.append(line_tuple)
+        
+        # (If section matches and key matches, the line is simply not added)
+    
+    write_lines_to_file(file_path, new_lines)
+
+# --- Main Execution ---
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="A tool to manage variables in configuration files.",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+    
+    # --- Options (apply to all commands) ---
+    parser.add_argument('--section', help='Specify section in the file (e.g., "MySection")')
+    parser.add_argument('--file-type', default='conf', choices=FILE_TYPES.keys(), 
+                        help='Specify the file type (default: conf)')
+    parser.add_argument('--after', help='Used with "set": inserts after a line (supports * at end as wildcard)')
+
+    subparsers = parser.add_subparsers(dest='command', required=True, help='Available commands')
+
+    # --- set command ---
+    parser_set = subparsers.add_parser('set', help='Set a variable to a value (updates or appends)')
+    parser_set.add_argument('file', help='Path to the configuration file')
+    parser_set.add_argument('variable', help='Name of the variable')
+    parser_set.add_argument('value', help='Value to set for the variable')
+
+    # --- get command ---
+    parser_get = subparsers.add_parser('get', help='Get the value of a variable')
+    parser_get.add_argument('file', help='Path to the configuration file')
+    parser_get.add_argument('variable', help='Name of the variable')
+    parser_get.add_argument('default', nargs='?', default=None, 
+                            help='Default value if the variable is not found (optional)')
+
+    # --- comment command ---
+    parser_comment = subparsers.add_parser('comment', help='Comment out a variable')
+    parser_comment.add_argument('file', help='Path to the configuration file')
+    parser_comment.add_argument('variable', help='Name of the variable to comment')
+
+    # --- uncomment command ---
+    parser_uncomment = subparsers.add_parser('uncomment', help='Uncomment a variable')
+    parser_uncomment.add_argument('file', help='Path to the configuration file')
+    parser_uncomment.add_argument('variable', help='Name of the variable to uncomment')
+
+    # --- delete command ---
+    parser_delete = subparsers.add_parser('delete', help='Delete a variable')
+    parser_delete.add_argument('file', help='Path to the configuration file')
+    parser_delete.add_argument('variable', help='Name of the variable to delete')
+
+    args = parser.parse_args()
+
+    # Set the global file type (helpers will use this)
+    current_file_type = args.file_type
+    
+    # Sanitize section name (remove brackets if user added them)
+    if args.section:
+        args.section = args.section.replace('[', '').replace(']', '')
+
+    # --- Command Dispatch ---
+    if args.command == 'set':
+        set_value(args.file, args.variable, args.value, section=args.section, after=args.after)
+    elif args.command == 'get':
+        value = get_value(args.file, args.variable, default=args.default, section=args.section)
+        if value is not None:
+            print(value)
+    elif args.command == 'comment':
+        comment_variable(args.file, args.variable, section=args.section)
+    elif args.command == 'uncomment':
+        uncomment_variable(args.file, args.variable, section=args.section)
+    elif args.command == 'delete':
+        delete_variable(args.file, args.variable, section=args.section)

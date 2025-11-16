@@ -307,3 +307,17 @@ SPECTACULAR_SETTINGS = {
         'deepLinking': True,
     },
 }
+
+if os.getenv("REDIS_PASSWORD", "") != "":
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': os.getenv("REDIS_ADDRESS", "redis://127.0.0.1:6379/1"),
+            'OPTIONS': {
+                'PASSWORD': os.getenv("REDIS_PASSWORD", ""),
+            },
+            "KEY_PREFIX": "libreworkspace_"
+        }
+    }
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_CACHE_ALIAS = "default"

@@ -66,3 +66,8 @@ export M23_API_KEY=""
 # - IP Address change
 # - "Additional Services" (start_services.sh, stop_services.sh)
 # - Installing the Addon "portainer"
+
+# Redis Password:
+export REDIS_PASSWORD=""
+# If you want you can also set a custom redis address:
+#export REDIS_ADDRESS="redis://127.0.0.1:6379/1"

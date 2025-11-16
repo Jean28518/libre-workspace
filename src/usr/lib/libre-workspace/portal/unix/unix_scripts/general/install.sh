@@ -10,6 +10,10 @@ cd /usr/lib/libre-workspace/portal/unix/unix_scripts/general
 echo "Doing installations basics..."
 . basics.sh
 
+# Setup Redis
+echo "Setting up redis..."
+. setup_redis.sh
+
 # Install SAMBA DC if the environment variable SAMBA_DC is not empty
 if [ ! -z "$SAMBA_DC" ]; then
     echo "Doing samba dc installation..."
