@@ -7,4 +7,4 @@ libre-workspace-config-tool --file-type space set /etc/redis/redis.conf requirep
 systemctl enable redis-server
 systemctl restart redis-server
 
-libre-workspace-config-tool --file-type rc set /etc/libre-workspace/portal/portal.conf REDIS_PASSWORD "$REDIS_PASSWORD" 
+libre-workspace-config-tool --file-type rc set /etc/libre-workspace/portal/portal.conf REDIS_ADDRESS "redis://:$REDIS_PASSWORD@127.0.0.1:6379/1" 

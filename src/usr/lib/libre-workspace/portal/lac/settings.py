@@ -308,14 +308,11 @@ SPECTACULAR_SETTINGS = {
     },
 }
 
-if os.getenv("REDIS_PASSWORD", "") != "":
+if os.getenv("REDIS_ADDRESS", "") != "":
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': os.getenv("REDIS_ADDRESS", "redis://127.0.0.1:6379/1"),
-            'OPTIONS': {
-                'PASSWORD': os.getenv("REDIS_PASSWORD", ""),
-            },
+            'LOCATION': os.getenv("REDIS_ADDRESS"),
             "KEY_PREFIX": "libreworkspace_"
         }
     }
