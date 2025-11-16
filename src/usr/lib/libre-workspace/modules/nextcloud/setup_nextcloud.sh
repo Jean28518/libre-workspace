@@ -172,13 +172,13 @@ apt-get install redis php-redis php-apcu php-memcache pwgen -y
 
 # Set redis password
 # Check if requirepass is already set, then we dont need to set it again
-REDIS_PASSWORD=$(libre-workspace-config-tool get /etc/redis/redis.conf requirepass)
+REDIS_PASSWORD=$(libre-workspace-config-tool --file-type space get /etc/redis/redis.conf requirepass)
 if [ "$REDIS_PASSWORD" ]; then
   echo "Redis password already set, skipping..."
 else
   echo "Setting redis password..."
   REDIS_PASSWORD=$(pwgen -n 20 1)
-  libre-workspace-config-tool set /etc/redis/redis.conf requirepass "$REDIS_PASSWORD"
+  libre-workspace-config-tool --file-type space set /etc/redis/redis.conf requirepass "$REDIS_PASSWORD"
 fi
 
 # Enable redis and restart it

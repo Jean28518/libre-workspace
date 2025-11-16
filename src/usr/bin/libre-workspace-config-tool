@@ -17,6 +17,11 @@ FILE_TYPES = {
         'prefix': 'export ', # Added prefix for easier building
     },
     # More file types can be added here
+    'space' : {
+        'comment_char': '#',
+        'assignment_char': ' ',
+        'prefix': '',
+    },
 }
 
 # This will be set by argparse in main
