@@ -66,9 +66,12 @@ You can download and install the .deb file with the following commands:
 .. code-block:: bash
     
     # Setup Repository
+    sudo apt update
     sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
     curl -1sLf 'https://repo.libre-workspace.org/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/libre-workspace-archive-keyring.gpg
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/libre-workspace-archive-keyring.gpg] https://repo.libre-workspace.org stable main" | sudo tee /etc/apt/sources.list.d/libre-workspace-stable.list > /dev/null
+    # If you want to use nightly:
+    # echo "deb [arch=amd64 signed-by=/usr/share/keyrings/libre-workspace-archive-keyring.gpg] https://repo.libre-workspace.org nightly main" | sudo tee /etc/apt/sources.list.d/libre-workspace-nightly.list > /dev/null
     sudo apt update
 
     # Install Libre Workspace Portal
