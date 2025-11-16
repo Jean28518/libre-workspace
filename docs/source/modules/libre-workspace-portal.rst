@@ -122,6 +122,21 @@ You can get the following scopes:
 (lwmail is a seperate scope which guarantees that the email address has the same domain as the libre workspace instance, e.g. ``user1@int.de``)
 
 
+Bruteforce Protection
+---------------------
+
+The portal provides a simple bruteforce protection mechanism.
+If there are more than 5 failed login attempts from the same IP adress within 5 minutes, the IP adress will be blocked for 30 minutes.
+To reset this blocking you have to restart the libre-workspace-portal service and clear the redis cache:
+
+.. code-block:: bash
+
+    sudo systemctl restart libre-workspace-portal
+    systemctl stop redis
+    rm /var/lib/redis/dump.rdb
+    systemctl start redis
+
+
 API
 ---
 

@@ -41,7 +41,10 @@ from rest_framework.decorators import action
 from django.utils.translation import gettext as _
 from .utils import create_api_key
 from m23software.utils import is_m23_installed
+import redis
+from lac.utils.cache import get_value_from_cache, set_value_in_cache, append_to_list_in_cache, get_list_from_cache, remove_from_list_in_cache, clear_cache_key
 
+BAN_TIME_SECONDS = 1800  # 30 minutes
 
 def signal_handler(context, user, request, exception, **kwargs):
     print(_("Context: %(context)s\nUser: %(user)s\nRequest: %(request)s\nException: %(exception)s.") % {"context": str(context), "user": str(user), "request": str(request), "exception": str(exception)})
@@ -61,18 +64,40 @@ def dashboard(request):
         challenges = challenges[-3:]
     return render(request, "idm/dashboard.html", {"request": request, "user_information": user_information, "ldap_enabled": settings.AUTH_LDAP_ENABLED, "challenges": challenges, "desktop_module_active": desktop_module_active, "m23_installed": m23_installed})
 
+def _manage_failed_logins_and_bans():
+    # Clear expired login tries
+    banned_ips = get_list_from_cache("banned_ips")
+    for ip, timestamp in banned_ips:
+        ban_time = datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+        if (datetime.datetime.now() - ban_time).total_seconds() > BAN_TIME_SECONDS:
+            remove_from_list_in_cache("banned_ips", (ip, timestamp))
+
+    login_tries = get_list_from_cache("login_tries")
+    for ip, timestamp in login_tries:
+        try:
+            ban_time = datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            if (datetime.datetime.now() - ban_time).total_seconds() > 300:
+                remove_from_list_in_cache("login_tries", (ip, timestamp))
+        except:
+            continue
+
+    # Ban IPs that have tried to login more than 5 times for 5 minutes
+    counted_ips = {}
+    for ip, timestamp in get_list_from_cache("login_tries"):
+        if ip not in counted_ips:
+            counted_ips[ip] = 0
+        counted_ips[ip] += 1
+        if counted_ips[ip] > 5 and not ip in [ip[0] for ip in get_list_from_cache("banned_ips")]:
+            append_to_list_in_cache("banned_ips", (ip, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+
 
 # We have to set login_page=True to prevent the base template from displaying the login button
-login_tries = []
-banned_ips = {}
-totp_challenge = {}
 def user_login(request):
     # Ban IPs that have tried to login more than 5 times for 30 minutes
-    _clear_old_login_tries_and_banned_ips()
+    _manage_failed_logins_and_bans()
     ip_adress = request.META.get('REMOTE_ADDR')
-    if _get_login_tries(ip_adress) > 5 and not ip_adress in banned_ips.keys():
-        banned_ips[ip_adress] = datetime.datetime.now()
-    if ip_adress in banned_ips.keys():
+    banned_ips = get_list_from_cache("banned_ips")
+    if ip_adress in [ip[0] for ip in banned_ips]:
         return render(request, 'idm/login.html', {'message': _("Too many login attempts! Please try again later."), "hide_login_button": True})
     
     if request.user.is_authenticated:
@@ -80,15 +105,23 @@ def user_login(request):
     if request.method == 'POST':
         # If the request is a totp challenge from the last 5 minutes
         # And also make sure that this is definitely not the user login with username password field
-        (timestamp, user) = totp_challenge.get(request.session.session_key, ((datetime.datetime.now() - datetime.timedelta(minutes=10) ), request.user))
-        if timestamp.timestamp() > (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp() and request.POST.get("username", "") == "":
-            totp_challenge.pop(request.session.session_key)
+        timestamp = get_value_from_cache(f"totp_challenge_{request.session.session_key}", datetime.datetime.now() - datetime.timedelta(minutes=10))
+        if type(timestamp) == str:
+            timestamp = datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+        print("!111")
+        print(request.POST.keys())
+        print(f"totp_challenge_{request.session.session_key}")
+        print(timestamp)
+
+        if timestamp.timestamp() >= (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp() and request.POST.get("username", "") == "":
+            print("!112")
+            clear_cache_key(f"totp_challenge_{request.session.session_key}")
             form = TOTPChallengeForm(request.POST)
             device = TOTPDevice.objects.get(id=request.POST.get("totp_device", ""))
             print(_("Request POST: %(post)s") % {"post": str(request.POST)})
             if device.verify_token(request.POST.get("totp_code", "")):
                 print(_("TOTP code is correct"))
-                login(request, user)
+                login(request, request.session["user"])
                 if request.GET.get("next", "") != "":
                     return HttpResponseRedirect(request.GET['next'])
                 else: 
@@ -96,15 +129,18 @@ def user_login(request):
             else:
                 print(_("TOTP code is not correct: %(code)s") % {"code": request.POST.get("totp_code", "")})
                 # return lac.templates.message(request, "Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.", "login")
-                return get_totp_challenge_site(request, user, _("Error: The TOTP code is not correct! Please try again."))
+                return get_totp_challenge_site(request, request.session["user"], _("Error: The TOTP code is not correct! Please try again."))
+        print("!127")
+        username = request.POST.get('username', '')
+        if username == "":
+            return redirect("user_login")
 
-        username = request.POST['username']
 
         # Check if user entered email address, if so, convert to username
         if "@" in username and "." in username:
             userdn = get_user_dn_by_email(username)
             if userdn == None:
-                login_tries.append((ip_adress, datetime.datetime.now()))
+                append_to_list_in_cache(f"login_tries", (ip_adress, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
                 return render(request, 'idm/login.html', {'message': _("Login failed! Please try with your username."), "login_page": True, "username": username})
             username = ldap_get_cn_of_dn(userdn)
 
@@ -154,7 +190,7 @@ def user_login(request):
             else: 
                 return redirect("index")
         else:
-            login_tries.append((ip_adress, datetime.datetime.now()))
+            append_to_list_in_cache(f"login_tries", (ip_adress, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
             print(_("User is not authenticated"))
             return render(request, 'idm/login.html', {'message': _("Login failed! Please try again."), "login_page": True, "username": username})
         
@@ -169,7 +205,13 @@ def user_login(request):
     return render(request, "idm/login.html", {"request": request, "hide_login_button": True, "message": message, "username": username})
 
 def get_totp_challenge_site(request, user, message=""):
-    totp_challenge[request.session.session_key] = (datetime.datetime.now(), user)
+    if request.session.session_key == None:
+        request.session.create()
+    print("SETTING TOTP CHALLENGE")
+    set_value_in_cache(f"totp_challenge_{request.session.session_key}", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), expiration_seconds=300)
+    print(f"totp_challenge_{request.session.session_key}")
+    print(get_value_from_cache(f"totp_challenge_{request.session.session_key}"))
+    request.session["user"] = user
     form = TOTPChallengeForm()
     # Populate choice field with all totp devices of the user
     form.fields["totp_device"].choices = [(device.id, device.name) for device in user.totpdevice_set.all()]
@@ -292,29 +334,7 @@ def delete_totp_device(request, id):
             os.remove(settings.MEDIA_ROOT + "/" + file)
     return redirect(otp_settings)
 
-def _clear_old_login_tries_and_banned_ips():
-    """Clears login tries that are older than 5 minutes, and banned IPs that are older than 30 minutes."""
-    for i in range(len(login_tries)):
-        if datetime.datetime.now() - login_tries[i][1] > datetime.timedelta(minutes=5):
-            login_tries.pop(i)
-            i -= 1
-    for ip in banned_ips.keys():
-        if datetime.datetime.now() - banned_ips[ip] > datetime.timedelta(minutes=30):
-            banned_ips.pop(ip)
-    session_keys = list(totp_challenge.keys())
-    for session_key in session_keys:
-        (timestamp, user) = totp_challenge[session_key]
-        if datetime.datetime.now() - timestamp > datetime.timedelta(minutes=5):
-            totp_challenge.pop(session_key)
-
-
-def _get_login_tries(ip):
-    count = 0
-    for i in range(len(login_tries)):
-        if login_tries[i][0] == ip:
-            count += 1
-    return count
-
+@login_required
 def user_logout(request):
     logout(request)
     return redirect("index")
