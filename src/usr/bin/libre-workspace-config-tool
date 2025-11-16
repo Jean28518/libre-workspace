@@ -147,6 +147,7 @@ def set_value(file_path, variable_name, value, section=None, after=None):
                 new_lines.append(line_tuple) # Add the original line
 
     if not setting_set:
+        new_lines.append(("\n", "\n", False, section)) # Ensure there's a newline before appending
         new_lines.append(new_line_tuple)
             
     write_lines_to_file(file_path, new_lines)

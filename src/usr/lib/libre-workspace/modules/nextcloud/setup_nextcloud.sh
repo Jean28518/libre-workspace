@@ -177,7 +177,7 @@ if [ "$REDIS_PASSWORD" ]; then
   echo "Redis password already set, skipping..."
 else
   echo "Setting redis password..."
-  REDIS_PASSWORD=$(pwgen -n 20 1)
+  REDIS_PASSWORD=$(libre-workspace-generate-secret 32)
   libre-workspace-config-tool --file-type space set /etc/redis/redis.conf requirepass "$REDIS_PASSWORD"
 fi
 
