@@ -1376,7 +1376,8 @@ def get_system_status():
             if domain not in get_ignored_domains():
                 issues.append((f"Domain {domain} is not online.", -10))
     # For every upgradable package, subtract 1
-    issues.append((f"{status['upgradable_packages']} upgradable packages found.", -status["upgradable_packages"]))
+    if status["upgradable_packages"] > 0:
+        issues.append((f"{status['upgradable_packages']} upgradable packages found.", -status["upgradable_packages"]))
     # For every day over 30 days of uptime, subtract 1
     uptime_days = int(uptime_seconds / 86400)
     if uptime_days > 30:
