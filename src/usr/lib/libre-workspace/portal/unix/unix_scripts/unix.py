@@ -1314,18 +1314,9 @@ def get_system_status():
     status = {}
     # Check if samba-ad-dc is running
     status["samba_ad_dc_running"] = is_samba_ad_dc_running()
-    status["samba_dc_installed"] = is_samba_dc_installed()
-    # Check if unix service is running
+        # Check if unix service is running
     status["unix_service_running"] = is_unix_service_running()
-    # Check if nextcloud is installed
-    status["nextcloud_installed"] = is_nextcloud_installed()
-    # Check if matrix is installed
-    status["matrix_installed"] = is_matrix_installed()
-    # Check if collabora is installed
-    status["collabora_installed"] = is_collabora_installed()
-    # Check if onlyoffice is installed
-    status["onlyoffice_installed"] = is_onlyoffice_installed()
-    # Get the server ip
+
     status["server_ip"] = get_server_ip()
 
     # How long is the system online (uptime)
@@ -1370,7 +1361,7 @@ def get_system_status():
     # Now we calculate a health score from 0 to 100
     issues = []
     # If samba-ad-dc is not running, subtract 50
-    if not status["samba_ad_dc_running"] and status["samba_dc_installed"]:
+    if not status["samba_ad_dc_running"] and is_samba_dc_installed():
         issues.append(("Samba AD DC service is not running.", -50))
     # If unix service is not running, subtract 50
     if not status["unix_service_running"]:
