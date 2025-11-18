@@ -22,6 +22,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import gettext as _
 import subprocess
 import os
+from idm.api_permissions import ReadOnlyPermission
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
+from rest_framework import permissions
+from rest_framework.decorators import action
+from django.views.decorators.cache import cache_page
 
 DISABLE_DANGEROUS_ADMIN_FUNCTIONS = os.environ.get("DISABLE_DANGEROUS_ADMIN_FUNCTIONS", "False") == "True"
 
@@ -825,3 +832,19 @@ def add_ignored_domain(request):
 def remove_ignored_domain(request, domain):
     unix.remove_ignored_domain(domain)
     return message(request, _("The domain has been removed from the ignored domains."), "ignored_domains")
+
+
+# API Call for getting status:
+class SystemStatusViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.AllowAny]
+
+    def list(self, request):
+        data = unix.get_system_status()
+        return HttpResponse(json.dumps(data), content_type="application/json")
+       
+
+# We cache the health score for 60 seconds because it takes some time to calculate it
+@cache_page(60)
+def health_score(request):
+    data = unix.get_system_status()["health_score"]
+    return HttpResponse(json.dumps(data), content_type="application/json")

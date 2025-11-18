@@ -1,4 +1,6 @@
+import datetime
 import string
+import threading
 from django.utils.translation import gettext as _
 import os
 import time
@@ -14,6 +16,9 @@ from app_dashboard.models import DashboardEntry
 from django.urls import reverse
 import requests
 import unix.unix_scripts.utils as utils
+from caddy_configuration.utils import get_all_caddy_entries
+import subprocess
+from django.views.decorators.cache import cache_page
 
 # Change current directory to the directory of this script
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -1291,3 +1296,114 @@ def add_ignored_domain(domain):
     if domain not in ignored_domains:
         ignored_domains.append(domain)
         set_value("ONLINE_DETECTION_IGNORED_DOMAINS", ",".join(ignored_domains))
+
+
+def get_system_status():
+    """Returns a dict with the system status."""
+    # For every domain in caddyfile, check if the http error code is lower than 400
+    all_caddy_entries = get_all_caddy_entries()
+    # Start new threads to check the online status of the domains
+    return_values = [None] * len(all_caddy_entries)
+    all_threads = []
+    for i in range(len(all_caddy_entries)):
+        thread = threading.Thread(target=utils.check_domain_online_status, args=(all_caddy_entries[i]["first_domain"], return_values, i))
+        thread.start()
+        all_threads.append(thread)
+
+
+    status = {}
+    # Check if samba-ad-dc is running
+    status["samba_ad_dc_running"] = is_samba_ad_dc_running()
+    # Check if unix service is running
+    status["unix_service_running"] = is_unix_service_running()
+    # Check if nextcloud is installed
+    status["nextcloud_installed"] = is_nextcloud_installed()
+    # Check if matrix is installed
+    status["matrix_installed"] = is_matrix_installed()
+    # Check if collabora is installed
+    status["collabora_installed"] = is_collabora_installed()
+    # Check if onlyoffice is installed
+    status["onlyoffice_installed"] = is_onlyoffice_installed()
+    # Get the server ip
+    status["server_ip"] = get_server_ip()
+
+    # How long is the system online (uptime)
+    uptime_seconds = float(os.popen("cat /proc/uptime").read().split(" ")[0])
+    uptime_string = str(datetime.timedelta(seconds=uptime_seconds)).split(".")[0]
+    status["uptime_seconds"] = int(uptime_seconds)
+    status["uptime"] = uptime_string
+
+    # Get all file system disk usage in percent
+    status["disk_stats"] = get_disks_stats()
+
+    # CPU Usage and Memory Usage
+    status["cpu_usage_percent"] = utils.get_cpu_usage()
+    v = utils.get_ram_usage()
+    status["total_ram"] = v["total_ram"]
+    status["ram_usage"] = v["ram_usage"]
+    status["ram_percent"] = v["ram_percent"]
+
+    status["libre_workspace_version"] = get_libre_workspace_version()
+    status["name"] = get_libre_workspace_name()
+    status["os_version"] = subprocess.getoutput("cat /etc/os-release").split("\n")[0].split("=")[1].strip('"')
+
+    status["upgradable_packages"] = get_upgradable_packages()
+
+    status["currently_backup_running"] = utils.is_backup_running()
+    status["last_seven_backups"] = utils.get_last_n_backups(7)
+
+    # Collect the online status results from the threads
+    status["domains_status"] = {}
+    for i in range(len(all_threads)):
+        thread = all_threads[i]
+        thread.join()
+        t = return_values[i]
+        result = t
+        status["domains_status"][result["domain"]] = result["status_code"]
+
+    
+    # Now we calculate a health score from 0 to 100
+    # Start with 100
+    health_score = 100
+    # If samba-ad-dc is not running, subtract 50
+    if not status["samba_ad_dc_running"]:
+        health_score -= 50
+    # If unix service is not running, subtract 50
+    if not status["unix_service_running"]:
+        health_score -= 50
+    # For every domain which is not online, subtract 10
+    for domain, status_code in status["domains_status"].items():
+        if status_code is None or status_code >= 400:
+            if domain not in get_ignored_domains():
+                health_score -= 10
+    # For every upgradable package, subtract 1
+    health_score -= status["upgradable_packages"]
+    # For every day over 30 days of uptime, subtract 1
+    uptime_days = int(uptime_seconds / 86400)
+    if uptime_days > 30:
+        health_score -= (uptime_days - 30)
+    # For ram percent over 85%, subtract 1 percent for every percent over 85%
+    if status["ram_percent"] > 85:
+        health_score -= (status["ram_percent"] - 85)
+    # If CPU usage is over 85%, subtract 1 percent for every percent over 85%
+    if status["cpu_usage_percent"] > 85:
+        health_score -= (status["cpu_usage_percent"] - 85)
+    # For every disk which is over 90% usage, subtract 5 percent
+    for disk in status["disk_stats"]:
+        if int(disk["used_percent"]) > 90:
+            health_score -= 5
+    # If any disk is over 98% usage, subtract 15 more percent
+        if int(disk["used_percent"]) > 98:
+            health_score -= 15
+    # If the last backup has an error, subtract 10 percent
+    if len(status["last_seven_backups"]) > 0:
+        if status["last_seven_backups"][0]["status"] == "error":
+            health_score -= 10
+    else:
+        health_score -= 20  # No backups found at all
+
+    status["health_score"] = health_score
+
+    return status
+
+

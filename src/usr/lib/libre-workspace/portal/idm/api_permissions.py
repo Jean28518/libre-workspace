@@ -39,3 +39,22 @@ class AdministratorPermission(permissions.BasePermission):
         if 'administrator' in permissions:
             return True
         return False
+    
+
+class ReadOnlyPermission(permissions.BasePermission):
+    """
+    Global permission check for read-only access.
+    """
+
+    def has_permission(self, request, view):
+        # Allow access for staff users (administrators)
+        if request.user and request.user.is_authenticated and request.user.is_staff:
+            return True
+        api_key_string = request.META.get('HTTP_API_KEY')
+        api_key = ApiKey.objects.filter(key=api_key_string).first()
+        if not api_key:
+            return False
+        permissions = api_key.permissions.split(',')
+        if 'read_only' in permissions:
+            return True
+        return False

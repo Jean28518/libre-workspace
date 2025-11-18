@@ -40,14 +40,14 @@ def get_all_caddy_entries():
             # We are starting a new block
             if last_comment_line is not None:
                 # Give it the name of the last comment line
-                entries.append({"name": last_comment_line.replace("#", "").strip(), "block": [caddy_entries[i]], "id": id_counter, "urls_unsafe": caddy_entries[i].replace("{", "")})
+                entries.append({"name": last_comment_line.replace("#", "").strip(), "first_domain": last_comment_line.replace("#", "").strip(), "block": [caddy_entries[i]], "id": id_counter, "urls_unsafe": caddy_entries[i].replace("{", "")})
                 id_counter += 1
             else:
                 # Generate the name from the first domain in the block
                 domain_parts = caddy_entries[i].split()
                 if domain_parts:
                     domain_name = domain_parts[0].strip()
-                    entries.append({"name": domain_name, "block": [caddy_entries[i]], "id": id_counter, "urls_unsafe": caddy_entries[i].replace("{", "")})
+                    entries.append({"name": domain_name, "first_domain": domain_name, "block": [caddy_entries[i]], "id": id_counter, "urls_unsafe": caddy_entries[i].replace("{", "")})
                     id_counter += 1
                 else: 
                     entries.append({"name": "Line " + str(i), "block": [caddy_entries[i]]})

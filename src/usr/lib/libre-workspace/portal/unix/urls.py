@@ -67,4 +67,5 @@ urlpatterns = [
     path("get_system_data_for_support", views.get_system_data_for_support, name="get_system_data_for_support"),
 
     path("desktop_settings", views.desktop_settings, name="desktop_settings"),
+    path("health_score", views.health_score, name="health_score"),
 ]

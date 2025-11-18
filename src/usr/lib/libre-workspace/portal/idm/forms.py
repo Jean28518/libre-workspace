@@ -88,6 +88,7 @@ class ApiKeyForm(forms.Form):
         choices=[
             ("linux_client", _("Linux Client Access")),
             ("administrator", _("Administrator Access")),
+            ("read_only", _("Read-Only Access")),
         ],
         widget=forms.CheckboxSelectMultiple
     )
