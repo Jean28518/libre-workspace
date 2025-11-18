@@ -1363,45 +1363,49 @@ def get_system_status():
 
     
     # Now we calculate a health score from 0 to 100
-    # Start with 100
-    health_score = 100
+    issues = []
     # If samba-ad-dc is not running, subtract 50
     if not status["samba_ad_dc_running"]:
-        health_score -= 50
+        issues.append(("Samba AD DC service is not running.", -50))
     # If unix service is not running, subtract 50
     if not status["unix_service_running"]:
-        health_score -= 50
+        issues.append(("Unix service is not running.", -50))
     # For every domain which is not online, subtract 10
     for domain, status_code in status["domains_status"].items():
         if status_code is None or status_code >= 400:
             if domain not in get_ignored_domains():
-                health_score -= 10
+                issues.append((f"Domain {domain} is not online.", -10))
     # For every upgradable package, subtract 1
-    health_score -= status["upgradable_packages"]
+    issues.append((f"{status['upgradable_packages']} upgradable packages found.", -status["upgradable_packages"]))
     # For every day over 30 days of uptime, subtract 1
     uptime_days = int(uptime_seconds / 86400)
     if uptime_days > 30:
-        health_score -= (uptime_days - 30)
+        issues.append((f"System uptime is {uptime_days} days.", -(uptime_days - 30)))
     # For ram percent over 85%, subtract 1 percent for every percent over 85%
     if status["ram_percent"] > 85:
-        health_score -= (status["ram_percent"] - 85)
+        issues.append((f"RAM usage is {status['ram_percent']}%, which is over 85%.", -(status["ram_percent"] - 85)))
     # If CPU usage is over 85%, subtract 1 percent for every percent over 85%
     if status["cpu_usage_percent"] > 85:
-        health_score -= (status["cpu_usage_percent"] - 85)
+        issues.append((f"CPU usage is {status['cpu_usage_percent']}%, which is over 85%.", -(status["cpu_usage_percent"] - 85)))
     # For every disk which is over 90% usage, subtract 5 percent
     for disk in status["disk_stats"]:
         if int(disk["used_percent"]) > 90:
-            health_score -= 5
+            issues.append((f"Disk {disk['mount_point']} usage is {disk['used_percent']}%, which is over 90%.", -5))
     # If any disk is over 98% usage, subtract 15 more percent
         if int(disk["used_percent"]) > 98:
-            health_score -= 15
+            issues.append((f"Disk {disk['mount_point']} usage is {disk['used_percent']}%, which is over 98%.", -15))
     # If the last backup has an error, subtract 10 percent
     if len(status["last_seven_backups"]) > 0:
         if status["last_seven_backups"][0]["status"] == "error":
-            health_score -= 10
+            issues.append(("Last backup has an error.", -10))
     else:
-        health_score -= 20  # No backups found at all
+        issues.append(("No backups found at all.", -20))
 
+    health_score = 100
+    for issue in issues:
+        health_score += issue[1]
+    issues.sort(key=lambda x: x[1])
+    status["issues"] = issues
     status["health_score"] = health_score
 
     return status
