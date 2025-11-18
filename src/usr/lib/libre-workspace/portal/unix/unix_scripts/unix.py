@@ -1362,6 +1362,10 @@ def get_system_status():
         result = t
         status["domains_status"][result["domain"]] = result["status_code"]
 
+    # Get all installed modules and if automatic updates are enabled for them
+    installed_modules = get_software_modules()
+    status["installed_modules"] = installed_modules
+
     
     # Now we calculate a health score from 0 to 100
     issues = []
