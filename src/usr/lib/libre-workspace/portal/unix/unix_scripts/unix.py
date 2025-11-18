@@ -1373,9 +1373,12 @@ def get_system_status():
         issues.append(("Unix service is not running.", -50))
     # For every domain which is not online, subtract 10
     for domain, status_code in status["domains_status"].items():
-        if status_code is None or status_code >= 400:
+        if status_code >= 400 and status_code < 500:
             if domain not in get_ignored_domains():
-                issues.append((f"Domain {domain} is not online.", -10))
+                issues.append((f"Domain {domain} has errors.", -5))
+        elif status_code >= 500:
+            if domain not in get_ignored_domains():
+                issues.append((f"Domain {domain} is down.", -10))
     # For every upgradable package, subtract 1
     if status["upgradable_packages"] > 0:
         issues.append((f"{status['upgradable_packages']} upgradable packages found.", -status["upgradable_packages"]))

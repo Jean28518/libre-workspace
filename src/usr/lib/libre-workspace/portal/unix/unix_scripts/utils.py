@@ -51,9 +51,9 @@ def check_domain_online_status(domain, result_list=[""], index=0):
         print(result_list)
         print("-------------------")
         return {"domain": domain, "status_code": response.status_code}
-    except:
-        result_list[index] = {"domain": domain, "status_code": 504}  # Gateway Timeout
-        return {"domain": domain, "status_code": 504}  # Gateway Timeout
+    except requests.exceptions.RequestException as e:
+        result_list[index] = {"domain": domain, "status_code": 500, "error": str(e)}
+        return {"domain": domain, "status_code": 500, "error": str(e)}
 
 
 def get_ram_usage():
