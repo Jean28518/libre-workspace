@@ -44,7 +44,7 @@ def get_last_n_backups(n=5, additional_id=None):
 def check_domain_online_status(domain, result_list=[""], index=0):
     """Returns http status code of the domain. If lower than 400, the domain is online."""
     try:
-        response = requests.get("http://" + domain, timeout=10)
+        response = requests.get("https://" + domain, timeout=10, verify=False)
         result_list[index] = {"domain": domain, "status_code": response.status_code}
         print(f"Checked domain {domain}, status code: {response.status_code}")
         print(index)
