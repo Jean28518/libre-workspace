@@ -846,5 +846,5 @@ class SystemStatusViewSet(viewsets.ViewSet):
 # We cache the health score for 60 seconds because it takes some time to calculate it
 @cache_page(60)
 def health_score(request):
-    data = unix.get_system_status()["health_score"]
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    score = unix.get_system_status()["health_score"]
+    return HttpResponse(score, content_type="text/plain")
