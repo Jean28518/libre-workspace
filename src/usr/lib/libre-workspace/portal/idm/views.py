@@ -121,15 +121,17 @@ def user_login(request):
             print(_("Request POST: %(post)s") % {"post": str(request.POST)})
             if device.verify_token(request.POST.get("totp_code", "")):
                 print(_("TOTP code is correct"))
-                login(request, request.session["user"])
+                user = get_user_model().objects.get(id=request.session["pending_user_id"])
+                login(request, user)
                 if request.GET.get("next", "") != "":
                     return HttpResponseRedirect(request.GET['next'])
                 else: 
                     return redirect("index")
             else:
                 print(_("TOTP code is not correct: %(code)s") % {"code": request.POST.get("totp_code", "")})
+                user = get_user_model().objects.get(id=request.session["pending_user_id"])
                 # return lac.templates.message(request, "Der TOTP-Code ist nicht korrekt! Versuchen Sie es erneut.", "login")
-                return get_totp_challenge_site(request, request.session["user"], _("Error: The TOTP code is not correct! Please try again."))
+                return get_totp_challenge_site(request, user, _("Error: The TOTP code is not correct! Please try again."))
         print("!127")
         username = request.POST.get('username', '')
         if username == "":
@@ -211,7 +213,7 @@ def get_totp_challenge_site(request, user, message=""):
     set_value_in_cache(f"totp_challenge_{request.session.session_key}", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), expiration_seconds=300)
     print(f"totp_challenge_{request.session.session_key}")
     print(get_value_from_cache(f"totp_challenge_{request.session.session_key}"))
-    request.session["user"] = user
+    request.session["pending_user_id"] = user.id
     form = TOTPChallengeForm()
     # Populate choice field with all totp devices of the user
     form.fields["totp_device"].choices = [(device.id, device.name) for device in user.totpdevice_set.all()]
