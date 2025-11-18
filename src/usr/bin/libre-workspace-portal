@@ -51,6 +51,10 @@ python3 manage.py compilemessages
 # Check if we have REDIS_ADDRESS set in portal.conf
 if [ ! -z "$REDIS_ADDRESS" ]; then
     NUMBER_OF_WORKERS=$(( $(nproc) ))
+    # Set the minimum number of workers to 2
+    if [ "$NUMBER_OF_WORKERS" -lt 2 ]; then
+        NUMBER_OF_WORKERS=2
+    fi
     echo "Setting number of workers to $NUMBER_OF_WORKERS"
     gunicorn lac.wsgi:application --bind localhost:11123 --workers $NUMBER_OF_WORKERS
 else
