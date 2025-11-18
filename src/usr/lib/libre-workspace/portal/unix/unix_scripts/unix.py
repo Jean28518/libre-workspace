@@ -1314,6 +1314,7 @@ def get_system_status():
     status = {}
     # Check if samba-ad-dc is running
     status["samba_ad_dc_running"] = is_samba_ad_dc_running()
+    status["samba_dc_installed"] = is_samba_dc_installed()
     # Check if unix service is running
     status["unix_service_running"] = is_unix_service_running()
     # Check if nextcloud is installed
@@ -1365,7 +1366,7 @@ def get_system_status():
     # Now we calculate a health score from 0 to 100
     issues = []
     # If samba-ad-dc is not running, subtract 50
-    if not status["samba_ad_dc_running"]:
+    if not status["samba_ad_dc_running"] and status["samba_dc_installed"]:
         issues.append(("Samba AD DC service is not running.", -50))
     # If unix service is not running, subtract 50
     if not status["unix_service_running"]:
@@ -1391,10 +1392,10 @@ def get_system_status():
     # For every disk which is over 90% usage, subtract 5 percent
     for disk in status["disk_stats"]:
         if int(disk["used_percent"]) > 90:
-            issues.append((f"Disk {disk['mount_point']} usage is {disk['used_percent']}%, which is over 90%.", -5))
+            issues.append((f"Disk {disk['mountpoint']} usage is {disk['used_percent']}%, which is over 90%.", -5))
     # If any disk is over 98% usage, subtract 15 more percent
         if int(disk["used_percent"]) > 98:
-            issues.append((f"Disk {disk['mount_point']} usage is {disk['used_percent']}%, which is over 98%.", -15))
+            issues.append((f"Disk {disk['mountpoint']} usage is {disk['used_percent']}%, which is over 98%.", -15))
     # If the last backup has an error, subtract 10 percent
     if len(status["last_seven_backups"]) > 0:
         if status["last_seven_backups"][0]["status"] == "error":
