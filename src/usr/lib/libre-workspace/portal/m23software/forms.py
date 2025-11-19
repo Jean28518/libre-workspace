@@ -294,3 +294,31 @@ class M23ClientRemovePackagesForm(forms.Form):
         widget=forms.Textarea(attrs={"placeholder": _("package1 package2 package3")}),
         help_text=_("Enter the names of the packages to remove, separated by space.")
     )
+
+
+class M23BashCodeForm(forms.Form):
+    """
+    Form for executing bash code on a client.
+    This form is used to collect the necessary information for executing bash code.
+    """
+    bash_code = forms.CharField(
+        label=_("Bash Code"),
+        max_length=10000,
+        required=True,
+        widget=forms.Textarea(attrs={"placeholder": "#!/bin/bash\necho \"Hello World\""}),
+        help_text=_("Enter the bash code to execute on the client.")
+    )
+
+
+class M23SSHKeyForm(forms.Form):
+    """
+    Form for adding an SSH key to a client.
+    This form is used to collect the necessary information for adding an SSH key.
+    """
+    ssh_key = forms.CharField(
+        label=_("SSH Public Key"),
+        max_length=5000,
+        required=True,
+        widget=forms.Textarea(attrs={"placeholder": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAr... user@host"}),
+        help_text=_("Enter the SSH public key to add to the client.")
+    )

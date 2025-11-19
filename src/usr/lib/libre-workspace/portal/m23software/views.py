@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .forms import M23SoftwareInstallClientForm, M23SoftwareAddClientForm, M23SoftwareAddGroupForm, M23AddClientToGroupsForm, M23ClientPackagesFilterForm, M23ClientPackageSearchForm, M23ClientRemovePackagesForm
+from .forms import M23SoftwareInstallClientForm, M23SoftwareAddClientForm, M23SoftwareAddGroupForm, M23AddClientToGroupsForm, M23ClientPackagesFilterForm, M23ClientPackageSearchForm, M23ClientRemovePackagesForm, M23BashCodeForm, M23SSHKeyForm
 import m23software.utils
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
@@ -46,8 +46,8 @@ def install_client(request):
                 profile=cleaned_form["profile"]
             )
             if msg:
-                return message(request, msg, reverse("m23software.client_list"))
-            return message(request, _("Client %(client_name)s has been successfully created.") % {"client_name": cleaned_form["client_name"]}, reverse("m23software.client_list"))
+                return message(request, msg, "m23software.client_list")
+            return message(request, _("Client %(client_name)s has been successfully created. You can now boot the client in PXE-Mode. The client has to be in the same network as the libre workspace server. Make sure no other dhcp servers are running in the network.") % {"client_name": cleaned_form["client_name"]}, "m23software.client_list")
     
     if network_settings_proposal:
         form.fields["client_ip"].initial = network_settings_proposal.get("ip", "")
@@ -104,10 +104,17 @@ def m23_client_list(request):
     group_url = reverse("m23software.group_list")
     groups = m23software.utils.get_groups()
     group_content = ""
+    additional_get_variables = "?"
+    if request.GET.get("sort_by", "") != "":
+        additional_get_variables += f"sort_by={request.GET.get('sort_by','')}" + f"&sort_order={request.GET.get('sort_order','')}"
+    if filter_by_group:
+        group_content += f"<a href='{reverse('m23software.client_list')}?{additional_get_variables}' class='secondary' style='margin-left: 0.5rem;'>" + f"{_('Reset filter')}</a>"
     for group in groups:
         if int(group['count']) > 0:
-            group['link'] = f"<a href='{reverse('m23software.client_list')}?group={group['groupname']}' class='secondary' style='margin-left: 0.5rem;'>" + f"{_('Filter by %(groupname)s (%(count)s)') % {'groupname': group['groupname'], 'count': group['count']}}</a>"
-            group_content += group['link']
+            group['link'] = f"<a href='{reverse('m23software.client_list')}?{additional_get_variables}&group={group['groupname']}' class='secondary' style='margin-left: 0.5rem;'>" + f"{_('Filter by %(groupname)s (%(count)s)') % {'groupname': group['groupname'], 'count': group['count']}}</a>"
+            # Only add link if we are currently not filtering by this group
+            if not filter_by_group or filter_by_group != group['groupname']:
+                group_content += group['link']
     # print("Group content:", group_content)
     overview = templates.process_overview_dict({
         # "elements": [{
@@ -126,11 +133,11 @@ def m23_client_list(request):
         "delete_url_name": "m23software.client_delete",
         "content_above": f"""<a href={add_url} class='primary' role='button' style='margin: 0.5rem;'>{_('Add existing Client')}</a>
                 <a href={install_url} class='primary' role='button' style='margin: 0.5rem;'>{_('Install New Client')}</a>
-                <a href="{group_url}" class="secondary" role="button" style="margin: 0.5rem;">{_('Manage Groups')}</a>
+                <a href="{group_url}" class="secondary" role="button" style="margin: 0.5rem;">{_('Groups')}</a>
                 <br>{group_content}""",
         "hint": f"<a href='https://m23.{domain}/m23admin/index.php' target='_blank' rel='noopener noreferrer'>" + f"{_('M23 Admin Interface')}</a>",
         "back_url_name": "dashboard",
-    })
+    }, request)
 
     return render(request, "lac/overview_x.html", {"overview": overview})
 
@@ -146,7 +153,7 @@ def m23_client_detail(request, client_name):
     all_clients = m23software.utils.get_client_list()
     client = next((c for c in all_clients if c["client"] == client_name), None)
     if not client:
-        return message(request, _("Client %(client_name)s not found.") % {"client_name": client_name}, reverse("m23software.client_list"))
+        return message(request, _("Client %(client_name)s not found.") % {"client_name": client_name}, "m23software.client_list")
     
     message_content = get_2column_table({
         _("Client Name"): client["client"],
@@ -176,9 +183,14 @@ def m23_client_detail(request, client_name):
         "hide_buttons_top": "True",
         "content_above": f"""
                 <a href="{reverse('m23software.package_management', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Manage Packages')}</a>
+                <a href="{reverse('m23software.run_bash_script', args=['client', client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Execute Bash Code')}</a>
                 <a href="{reverse('m23software.add_groups_to_client', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Add Groups to Client')}</a>
+                <a href="{reverse('m23software.remove_groups_from_client', args=[client_name])}" class="primary" role="button" style="margin: 0.5rem;">{_('Remove Groups from Client')}</a>
+                <br>
                 <a href="{reverse('m23software.reboot_client', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Reboot Client')}</a>
                 <a href="{reverse('m23software.shutdown_client', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Shutdown Client')}</a>
+                <a href="{reverse('m23software.add_ssh_key', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Add SSH Key')}</a>
+                <a href="{reverse('m23software.remove_ssh_key', args=[client_name])}" class="secondary" role="button" style="margin: 0.5rem;">{_('Remove SSH Key')}</a>
                 """,
         "additional_content": f"""
             <center>
@@ -196,9 +208,9 @@ def m23_client_delete(request, client_name):
     """
     try:
         m23software.utils.delete_client(client_name)
-        return message(request, _("Client %(client_name)s has been successfully deleted.") % {"client_name": client_name}, reverse("m23software.client_list"))
+        return message(request, _("Client %(client_name)s has been successfully deleted.") % {"client_name": client_name}, "m23software.client_list")
     except Exception as e:
-        return message(request, str(e), reverse("m23software.client_list"))
+        return message(request, str(e), "m23software.client_list")
     
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -222,7 +234,7 @@ def m23_add_client(request):
                 )
                 if msg:
                     return message(request, msg, reverse("m23software.client_list"))
-                return message(request, _("Client %(client_name)s has been successfully added.") % {"client_name": cleaned_form["client_name"]}, reverse("m23software.client_list"))
+                return message(request, _("Client %(client_name)s has been successfully added. Please make sure openssh-server is installed on the client and the server can directly reach the client.") % {"client_name": cleaned_form["client_name"]}, reverse("m23software.client_list"))
             except Exception as e:
                 return message(request, str(e), reverse("m23software.client_list"))
             
@@ -236,6 +248,7 @@ def m23_add_client(request):
     })
 
 
+@staff_member_required(login_url=settings.LOGIN_URL)
 def m23_group_list(request):
     """
     View to show an overview of m23 groups.
@@ -252,7 +265,7 @@ def m23_group_list(request):
         "add_url_name": "m23software.add_group",
         "element_url_key": "groupname",
         "element_name": _("Group"),
-        "info_url_name": None,
+        "info_url_name": "m23software.group_detail",
         "delete_url_name": "m23software.delete_group",
         "back_url_name": "m23software.client_list",
     })
@@ -295,7 +308,7 @@ def m23_delete_group(request, group_name):
     # For now, we will just return a placeholder response.
 
     try:
-        m23software.utils.detele_group(group_name)
+        m23software.utils.delete_group(group_name)
         return message(request, _("Group %(groupname)s has been successfully deleted.") % {"groupname": group_name}, reverse("m23software.group_list"))
     except Exception as e:
         return message(request, str(e), reverse("m23software.group_list"))
@@ -320,11 +333,11 @@ def m23_add_groups_to_client(request, client_name):
             groups = cleaned_form["groups"]
             # print("Selected groups:", groups)
             if not groups:
-                return message(request, _("No groups selected."), reverse("m23software.client_list"))
+                return message(request, _("No groups selected."), "m23software.client_detail", [client_name])
             msg = m23software.utils.add_client_to_groups(client_name, groups)
             if msg:
-                return message(request, msg, reverse("m23software.client_list"))
-            return message(request, _("Groups have been successfully added to client %(client_name)s.") % {"client_name": client_name}, reverse("m23software.client_list"))
+                return message(request, msg, "m23software.client_detail", [client_name])
+            return message(request, _("Groups have been successfully added to client %(client_name)s.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
         
     return render(request, "lac/generic_form.html", {
         "form": form,
@@ -333,6 +346,71 @@ def m23_add_groups_to_client(request, client_name):
         "action": _("Add Groups"),
         "url": reverse("m23software.client_list")
     })
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_remove_groups_from_client(request, client_name):
+    """
+    View to remove groups from a specific client in m23.
+    """
+    # Get all current groups from the client
+    all_clients = m23software.utils.get_client_list()
+    client = next((c for c in all_clients if c["client"] == client_name), None)
+    if not client:
+        return message(request, _("Client %(client_name)s not found.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
+    current_groups = client.get("groups", [])
+    
+    form = M23AddClientToGroupsForm()
+    form.fields["groups"].choices = [(group, group) for group in current_groups]
+    if request.method == "POST":
+        form = M23AddClientToGroupsForm(request.POST)
+        form.fields["groups"].choices = [(group, group) for group in current_groups]
+        if form.is_valid():
+            cleaned_form = form.cleaned_data
+            groups = cleaned_form["groups"]
+            if not groups:
+                return message(request, _("No groups selected."), "m23software.client_detail", [client_name])
+            msg = ""
+            for group in groups:
+                new_msg = m23software.utils.remove_client_from_group(client_name, group)
+                if new_msg:
+                    msg += new_msg + "\n"
+            if msg:
+                return message(request, msg, "m23software.client_detail", [client_name])
+            return message(request, _("Groups have been successfully removed from client %(client_name)s.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
+    
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "heading": _("Remove Groups from Client"),
+        "hide_buttons_top": "True",
+        "action": _("Remove Groups"),
+        "url": reverse("m23software.client_detail", args=[client_name])
+    })
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_group_detail(request, group_name):
+    """
+    View to show detailed information about a specific m23 group.
+    """
+    all_groups = m23software.utils.get_groups()
+    group = next((g for g in all_groups if g["groupname"] == group_name), None)
+    if not group:
+        return message(request, _("Group %(group_name)s not found.") % {"group_name": group_name}, reverse("m23software.group_list"))
+    message_content = get_2column_table({
+        _("Group Name"): group["groupname"],
+        _("Description"): group["description"],
+        _("Count"): group["count"],
+    })
+    return render(request, "lac/generic_site.html", {
+        "heading": _("Group Details"),
+        "content_above": 
+                "<a href='" + reverse("m23software.package_management", args=[group_name]) + "' class='primary' role='button' style='margin: 0.5rem;'>" + _("Manage Packages") + "</a>"
+                + "<a href='" + reverse("m23software.run_bash_script", args=["group", group_name]) + "' class='secondary' role='button' style='margin: 0.5rem;'>" + _("Execute Bash Code") + "</a>",
+        "content": message_content,
+        "hide_buttons_top": "True",
+        "back_url_name": "m23software.group_list",
+    })
+
 
 
 @staff_member_required(login_url=settings.LOGIN_URL)
@@ -387,7 +465,7 @@ def m23_package_management(request, client_name):
     
     
     if filter_type not in ["installed", "removed", "purged", "all"]:
-        return message(request, _("Invalid filter type."), "m23software.client_detail", [client_name])
+        return message(request, _("Invalid filter type."), "m23software.package_management", [client_name])
     
     packages = m23software.utils.client_packages(client_name, search_term, filter_type)
 
@@ -416,6 +494,7 @@ def m23_package_management(request, client_name):
         """,
         "additional_content": html_list_string,
         "heading": _("Package Management for: %(client_name)s") % {"client_name": client_name},
+        "url": reverse("m23software.client_list"),
         })
 
     
@@ -451,7 +530,7 @@ def m23_package_search(request, client_name):
         return message(request, _("No packages found for client %(client_name)s for search term '%(search_term)s'.") % {
             "client_name": client_name,
             "search_term": search_term
-        }, "m23software.client_detail", [client_name])
+        }, "m23software.package_management", [client_name])
     
 
     html_list_string = "<ul>\n"
@@ -472,18 +551,19 @@ def m23_package_search(request, client_name):
 def m23_package_install(request, client_name):
     """
     View to install packages on a specific client in m23.
+    Works also for a group if a group name is given instead of a client name.
     """
     # This function should handle the package installation for a client.
     # For now, we will just return a placeholder response.
 
     packages = request.GET.getlist("packages", [])
     if not packages:
-        return message(request, _("No packages selected for installation."), "m23software.client_detail", [client_name])
+        return message(request, _("No packages selected for installation."), "m23software.package_management", [client_name])
     
     try:
         msg = m23software.utils.install_packages(client_name, packages)
         if msg:
-            return message(request, msg, "m23software.client_detail", [client_name])
+            return message(request, msg, "m23software.package_management", [client_name])
         return message(request, _("Packages have been successfully installed on client %(client_name)s.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
     except Exception as e:
         return message(request, str(e), "m23software.client_detail", [client_name])
@@ -514,3 +594,79 @@ def m23_package_remove(request, client_name):
         "url": reverse("m23software.package_management", args=[client_name]),
     })
             
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_run_bash_script(request, entity_type, entity_name):
+    """
+    View to run a bash script on a specific client or group in m23.
+    """
+    form = M23BashCodeForm()
+    if request.method == "POST":
+        form = M23BashCodeForm(request.POST)
+        if form.is_valid():
+            bash_code = form.cleaned_data.get("bash_code", "")
+            if not bash_code:
+                return message(request, _("No bash code entered."), "m23software.run_bash_script", [entity_type, entity_name])
+            msg = m23software.utils.execute_bash(bash_code, entity_name, entity_type)
+            if msg:
+                return message(request, msg, "m23software.run_bash_script", [entity_type, entity_name])
+            else:
+                return message(request, _("Bash script has been successfully executed on %(entity_name)s.") % {"entity_name": entity_name}, "m23software.run_bash_script", [entity_type, entity_name])
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "heading": _("Run Bash Script on %(entity_name)s") % {"entity_name": entity_name},
+        "hide_buttons_top": "True",
+        "action": _("Execute Script"),
+        "url": reverse("m23software.client_detail", args=[entity_name]) if entity_type == "client" else reverse("m23software.group_detail", args=[entity_name]),
+    })
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_add_root_ssh_key(request, client_name):
+    """
+    View to add the server's root SSH key to m23.
+    """
+    form = M23SSHKeyForm()
+    if request.method == "POST":
+        form = M23SSHKeyForm(request.POST)
+        if form.is_valid():
+            ssh_key = form.cleaned_data.get("ssh_key", "")
+            if not ssh_key:
+                return message(request, _("No SSH key entered."), "m23software.add_ssh_key", [client_name])
+            msg = m23software.utils.add_root_ssh_key(client_name, ssh_key)
+            if msg:
+                return message(request, msg, "m23software.client_detail", [client_name])
+            else:
+                return message(request, _("Request successfully sent to client %(client_name)s.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "heading": _("Add Root SSH Key to %(client_name)s") % {"client_name": client_name},
+        "hide_buttons_top": "True",
+        "action": _("Add SSH Key"),
+        "url": reverse("m23software.client_detail", args=[client_name]),
+    })
+
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def m23_remove_root_ssh_key(request, client_name):
+    """
+    View to remove the server's root SSH key from m23.
+    """
+    form = M23SSHKeyForm()
+    if request.method == "POST":
+        form = M23SSHKeyForm(request.POST)
+        if form.is_valid():
+            ssh_key = form.cleaned_data.get("ssh_key", "")
+            if not ssh_key:
+                return message(request, _("No SSH key entered."), "m23software.remove_ssh_key", [client_name])
+            msg = m23software.utils.delete_root_ssh_key(client_name, ssh_key)
+            if msg:
+                return message(request, msg, "m23software.client_detail", [client_name])
+            else:
+                return message(request, _("Request successfully sent to client %(client_name)s.") % {"client_name": client_name}, "m23software.client_detail", [client_name])
+    return render(request, "lac/generic_form.html", {
+        "form": form,
+        "heading": _("Remove Root SSH Key from %(client_name)s") % {"client_name": client_name},
+        "hide_buttons_top": "True",
+        "action": _("Remove SSH Key"),
+        "url": reverse("m23software.client_detail", args=[client_name]),
+    })

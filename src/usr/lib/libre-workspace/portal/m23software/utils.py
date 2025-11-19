@@ -50,7 +50,7 @@ def is_m23_installed():
     Checks if m23 is installed by verifying the existence of the m23 API key file.
     Returns True if m23 is installed, otherwise False.
     """
-    return os.path.exists("/m23/etc/apiKey")
+    return M23_API_KEY != ""
 
 
 def get_network_settings_proposal():
@@ -123,6 +123,10 @@ def get_client_list(group=None):
             client = json_dict[key]
             clients.append(client)
         # print(clients)
+        # Remove empty elements from the list
+        for client in clients:
+            if client == "":
+                clients.remove(client)
         return clients
     else:
         raise Exception(f"Failed to fetch client list: {response.status_code} - {response.text}")
@@ -210,7 +214,7 @@ def create_group(group_name, description=""):
         raise Exception(f"Failed to add group: {response.status_code} - {response.text}")
     
 
-def detele_group(group_name):
+def delete_group(group_name):
     """
     Deletes a group from m23.
     Returns the response from the m23 API.
@@ -249,7 +253,27 @@ def add_client_to_group(client_name, group_name):
         
     else:
         raise Exception(f"Failed to add client to group: {response.status_code} - {response.text}")
+
+
+def remove_client_from_group(client_name, group_name):
+    """
+    Removes a client from a group in m23.
+    Returns the response from the m23 API.
+    """
+    params = {
+        "client": client_name,
+        "group": group_name
+    }
     
+    response = requests.get(f"{URL_BASE}delClientFromGroup", params=params)
+    
+    if response.status_code == 200:
+        if "error" in response.text:
+            return response.text
+        return
+        
+    else:
+        raise Exception(f"Failed to remove client from group: {response.status_code} - {response.text}")
 
 
 def add_client_to_groups(client_name, groups):
@@ -313,6 +337,7 @@ def client_packages(client_name, search, status):
     Fetches the list of packages for a client in m23.
     Returns a list of packages. Does not return packages that are not installed. Use search_client_packages_apt for searching packages e.g..
     """
+    client_name = _check_if_a_client_name_is_a_group_name(client_name)
     params = {
         "client": client_name,
         "search": search,
@@ -322,17 +347,55 @@ def client_packages(client_name, search, status):
     response = requests.get(f"{URL_BASE}clientPackages", params=params)
     
     if response.status_code == 200:
+        if "packages" not in response.json():
+            return []
         packages = response.json()["packages"]
         return packages
     else:
         raise Exception(f"Failed to fetch client packages: {response.status_code} - {response.text}")
-    
+
+
+def _check_if_a_client_name_is_a_group_name(client_name):
+    """
+    Returns definitively a client name, even if a group name is given.
+    """
+    # Check if client_name really exists.
+    # If not, try to find a client which has the same named group as client_name
+    client_list = get_client_list()
+    client_names = [client["client"] for client in client_list]
+    if client_name not in client_names: 
+        # Get the first client which has the same named group as client_name
+        for client in client_list:
+            if client_name in client.get("groups", []):
+                client_name = client["client"]
+                break
+    return client_name
+
+
+def is_entity_group_or_client(entity_name):
+    """
+    Checks if the given entity name is a group or a client.
+    Returns "group" if it is a group, "client" if it is a client, otherwise None.
+    """
+    client_list = get_client_list()
+    client_names = [client["client"] for client in client_list]
+    if entity_name in client_names:
+        return "client"
+    for client in client_list:
+        if entity_name in client.get("groups", []):
+            return "group"
+    return None
+
 
 def search_client_packages_apt(client_name, search):
     """
     Searches for packages in the APT repository for a client in m23.
+    Works also for a group name.
     Returns a list of packages.
     """
+    client_name = _check_if_a_client_name_is_a_group_name(client_name)
+        
+
     params = {
         "client": client_name,
         "search": search
@@ -341,6 +404,8 @@ def search_client_packages_apt(client_name, search):
     response = requests.get(f"{URL_BASE}searchPackages", params=params)
     
     if response.status_code == 200:
+        if "packages" not in response.json():
+            return []
         packages = response.json()["packages"]
         return packages
     else:
@@ -408,3 +473,72 @@ def deinstall_packages(client_name, packages: str):
         return "Packages uninstalled successfully"
     else:
         raise Exception(f"Failed to uninstall packages: {response.status_code} - {response.text}")
+
+
+
+
+
+def execute_bash(script: str, entity_name, entity_type=None):
+    """
+    Executes a bash script on a client in m23.
+    Also accepts group names.
+    Returns the response from the m23 API.
+    """   
+    post_params = {
+        "bashCode": script
+    }
+
+    if entity_type is None:
+        entity_type = is_entity_group_or_client(entity_name)
+
+    get_param = f"&{entity_type}={entity_name}"
+   
+    response = requests.post(f"{URL_BASE}executeBASH{get_param}", params=post_params)
+    print(f"{URL_BASE}executeBASH{get_param}", post_params)
+    
+    if response.status_code == 200:
+        if "error" in response.text:
+            return response.text
+        return "Script sent successfully"
+    else:
+        raise Exception(f"Failed to execute script: {response.status_code} - {response.text}")
+    
+
+def add_root_ssh_key(client_name, ssh_key):
+    """
+    Adds a root SSH key to a client in m23.
+    Returns the response from the m23 API.
+    """   
+    params = {
+        "client": client_name,
+        "sshkey": ssh_key
+    }
+    
+    response = requests.get(f"{URL_BASE}addRootSSHAuthorizedKey", params=params)
+    
+    if response.status_code == 200:
+        if "error" in response.text:
+            return response.text
+        return "SSH key added successfully"
+    else:
+        raise Exception(f"Failed to add SSH key: {response.status_code} - {response.text}")
+    
+
+def delete_root_ssh_key(client_name, ssh_key):
+    """
+    Deletes a root SSH key from a client in m23.
+    Returns the response from the m23 API.
+    """   
+    params = {
+        "client": client_name,
+        "sshkey": ssh_key
+    }
+    
+    response = requests.get(f"{URL_BASE}delRootSSHAuthorizedKey", params=params)
+    
+    if response.status_code == 200:
+        if "error" in response.text:
+            return response.text
+        return "SSH key deleted successfully"
+    else:
+        raise Exception(f"Failed to delete SSH key: {response.status_code} - {response.text}")
