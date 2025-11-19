@@ -2,37 +2,53 @@
 {% load i18n %}
 {% block content %}
 
-<h2>{% translate overview.heading %}</h2>
+<h2>{{ overview.heading }}</h2>
 
 {% if overview.content_above %}
+   <div>
     {{ overview.content_above | safe }}
+   </div>
 {% endif %}
 
 {% if overview.add_url %}
-<a href="{{ overview.add_url }}" role="button" class="primary">{% blocktranslate with name=overview.element_name %}Add {{ name }}{% endblocktranslate %}</a>
+<a href="{{ overview.add_url }}" role="button" class="primary">{% translate "Create" %}</a>
 {% endif %}
 
-{% if overview.message and overview.message != "" %}
-<div class="grid">
-    <div style="padding-bottom: 1rem;">
-        <a role="button" class="contrast" style="display: block; opacity: 1;
-            {% if "Error" in overview.message or "Fehler" in overview.message %}
-             background-color: orange; border-color: orange;
-            {% endif %}
-        
-        "><strong>{{ overview.message | safe }}</strong></a>
-    </div>
-</div>
+{% if overview.message != "" %}
+<br><br>
+<p><strong>{{ overview.message | safe }}</strong></p>
 {% endif %}
-
 <hr>
 
 <table>
     <thead>
         <tr>
-        <th scope="col">{% translate overview.first_t_heading %}</th>
-        {% for t_heading in overview.t_headings %}
-        <th scope="col"><center>{% translate t_heading %} </center></th>
+        <th scope="col">
+            <a href="{{ overview.first_t_heading_dict.sort_url }}" class="contrast">
+                {{overview.first_t_heading_dict.heading}}
+            </a>
+            {% if overview.first_t_heading_dict.is_sorted %}
+                {% if overview.first_t_heading_dict.sort_order == "asc" %}
+                <span class="material-icons md-16">arrow_downward</span>
+                {% else %}
+                <span class="material-icons md-16">arrow_upward</span>
+                {% endif %}
+            {% endif %}
+        </th>
+        {% for heading_dict in overview.heading_dicts %}
+        <th scope="col">
+            <center>
+                <a href="{{ heading_dict.sort_url }}" class="contrast">{{heading_dict.heading}}</a>
+                {% if heading_dict.is_sorted %}
+                    {% if heading_dict.sort_order == "asc" %}
+                    <span class="material-icons md-16">arrow_downward</span>
+                    {% else %}
+                    <span class="material-icons md-16">arrow_upward</span>
+                    {% endif %}
+                {% endif %}
+            </center>
+        </th>
+
         {% endfor %}
         {% if overview.info_url_name %}
             <th scope="col"><center>{% translate "Information" %}</center></th>
@@ -62,7 +78,7 @@
             {% if t_row.edit_url %}
                 <td>
                     <center>
-                        <a href="{{t_row.edit_url}}" title="{% translate "Edit" %}" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a>
+                        <a href="{{t_row.edit_url}}" title="Bearbeiten" role="button" class="secondary outline"><span class="material-icons md-16">edit</span></a>
                     </center>
                 </td>
             {% endif %}
@@ -73,7 +89,7 @@
                         data-target="modal-{{t_row.delete_url}}"
                         onClick="toggleModal(event)"
                         style="width: 3.5rem; margin-bottom: 0;"
-                        title="{% translate "Delete" %}">
+                        title="Löschen">
                         <span class="material-icons md-16">delete</span>
                     </button>
                 </center>
@@ -84,14 +100,14 @@
         <dialog id="modal-{{t_row.delete_url}}">
             <article>
                 <a href="#close"
-                aria-label="{% translate "Close" %}"
+                aria-label="Close"
                 class="close"
                 data-target="modal-{{t_row.delete_url}}"
                 onClick="toggleModal(event)">
                 </a>
-                <h3>{% blocktranslate with field=t_row.first_field %}{{ field }} really delete?{% endblocktranslate %}</h3>
+                <h3>{% translate "Confirmation" %}</h3>
                 <p>
-                {% translate "This operation cannot be undone!" %}
+                {% translate "This action cannot be undone!" %}
                 </p>
                 <footer>
                 <a href="#cancel"
@@ -101,7 +117,7 @@
                     onClick="toggleModal(event)">
                     {% translate "Cancel" %}
                 </a>
-                <a href="{{t_row.delete_url}}"role="button" class="contrast">{% translate "DELETE" %}</a>
+                <a href="{{t_row.delete_url}}" role="button" class="contrast">{% translate "DELETE" %}</a>
                 </footer>
             </article>
         </dialog>
@@ -110,15 +126,16 @@
     </tbody>
   </table>
 
-
   {% if overview.hint %}
       <center>{{ overview.hint | safe }}</center>
   {% endif %}
-
-{% if overview.back_url_name %}
-    <br>
-    <center><a href="{% url overview.back_url_name %}"role="button" class="secondary">{% translate "Back" %}</a></center>
+  
+  {% if back_url %}
+    <center>
+        <div>
+            <a href="{{back_url}}" role="button" class="secondary">{%translate "Back" %}</a>
+        </div>
+    </center>
 {% endif %}
-
 
 {% endblock %}
