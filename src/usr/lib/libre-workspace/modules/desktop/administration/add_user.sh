@@ -148,6 +148,10 @@ fi
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'hostname', '172.17.0.1'); # The IP of the docker host
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'port', '3389');
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'username', '$USERNAME');
+
+# We need to get the ip if the interface docker0
+DOCKER_HOST_IP=$(ip addr show docker0 | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1)
+
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'password', '$PASSWORD');
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'security', 'any');
 # INSERT INTO guacamole_connection_parameter VALUES ($CONNEXTION_ID, 'ignore-cert', 'true');
@@ -160,7 +164,7 @@ else
     # Add the connection
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection (connection_name, protocol) VALUES ('Cloud Desktop $USERNAME', 'rdp')"
     CONNECTION_ID=$(mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "SELECT connection_id FROM guacamole_connection WHERE connection_name='Cloud Desktop $USERNAME' AND parent_id IS NULL" | tail -n 1)
-    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'hostname', '172.17.0.1')"
+    mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'hostname', '$DOCKER_HOST_IP')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'port', '3389')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'username', 'lw.$USERNAME')"
     mysql -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE -e "INSERT INTO guacamole_connection_parameter VALUES ($CONNECTION_ID, 'password', '$PASSWORD')"
