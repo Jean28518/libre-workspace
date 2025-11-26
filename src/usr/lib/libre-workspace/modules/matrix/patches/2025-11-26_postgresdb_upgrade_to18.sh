@@ -35,4 +35,8 @@ cat ./upgrade_backup.sql | docker exec -i matrix-db-1 psql -U synapse -d synapse
 docker exec matrix-db-1 psql -U synapse -d synapse -c "ALTER USER synapse WITH PASSWORD 'OoRei7oh';"
 docker compose up -d
 
+sleep 10
 
+# Make sure element config is updated
+. /etc/libre-workspace/libre-workspace.env
+. /usr/lib/libre-workspace/modules/matrix/update_element_config.sh
