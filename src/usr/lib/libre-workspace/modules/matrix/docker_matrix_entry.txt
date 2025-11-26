@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   db:
-    image: postgres:13
+    image: postgres:18
     restart: unless-stopped
     environment:
       - POSTGRES_USER=synapse
@@ -10,7 +10,7 @@ services:
       - POSTGRES_DB=synapse
       - POSTGRES_INITDB_ARGS=--encoding='UTF8' --lc-collate='C' --lc-ctype='C'
     volumes: 
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql
   synapse:
     image: matrixdotorg/synapse:latest
     restart: unless-stopped
