@@ -224,8 +224,23 @@ def installation_running(request):
 
 
 def access(request):
-    return render(request, "welcome/access_rendered.html", {"hide_login_button": True})
+    # Get the environment variables
+    unix_env = unix.get_env_sh_variables()
+    domain = unix_env.get("DOMAIN", "")
+    ip = unix_env.get("IP", "")
+    
+    portal_domain = ""
+    all_domains = []
 
+    # Get all caddy entries
+    from caddy_configuration.utils import get_all_caddy_entries
+    caddy_entries = get_all_caddy_entries()
+    for entry in caddy_entries:
+        all_domains.append(entry.get("first_domain", ""))
+        if entry.get("name", "") == "Libre Workspace Portal Entry":
+            portal_domain = entry.get("first_domain", "")
+    
+    return render(request, "welcome/access_new.html", {"hide_login_button": True, "all_domains": all_domains, "portal_domain": portal_domain, "domain": domain, "ip": ip})
 
 def etc_hosts(request):
     env = unix.get_env_sh_variables()

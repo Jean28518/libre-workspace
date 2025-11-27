@@ -1,0 +1,150 @@
+{% load i18n %}
+
+{% comment %} {% if custom_access != "" %}
+    <p><strong>
+    {% translate "You can reach Libre Workspace Lite after installation at" %} <a href="https://{{ custom_access }}">{{ custom_access }}</a>
+    </strong></p>
+{% endif %} {% endcomment %}
+
+{% if domain == "int.de" %}
+    {% translate "On your router (and preferably on your devices), ensure the following DNS entry is set:" %} <strong>{{ ip }}</strong>
+    {% translate "In practice, it sometimes happens that despite correct DNS configuration, connections do not work properly due to caches." %}
+    {% translate "To prevent such connection problems, you can ensure the following entry in the" %} <strong>/etc/hosts</strong> {% translate "file on Linux devices:" %}
+    <pre>
+
+    {{ ip }}{% for _domain in all_domains %} {{ _domain }}{% endfor %}
+    </pre>
+
+    <small id="copy">{% translate "Click here to copy text" %}</small><br><br>
+
+
+    <p>
+        {% translate "You can download the certificate for https connections" %} {% if installation_running %}({% translate "after installation" %}){% endif %} {% translate "here at any time:" %} <a href="https://cert.{{ domain }}/lan.crt">https://cert.{{ domain }}/lan.crt</a>
+    </p>
+
+
+{% endif %}
+
+<br>
+
+{% if installation_running %}
+
+{% else %}
+    <div class="grid">
+    <a href="https://{{portal_domain}}" target="_blank" role="button">{% translate "To Libre-Workspace" %} ({{ portal_domain }}) </a>
+    </div>
+{% endif %}
+
+{% if domain == "int.de" %}
+<h2>{% translate "How to install certificates on your devices" %}</h2>
+<p>
+    {% translate "For connections to Libre Workspace to be authenticated, you must install the certificate on your devices." %}<br>
+    {% translate "You can download the lan.crt file here:" %} <a href="https://cert.int.de/lan.crt">https://cert.int.de/lan.crt</a><br>
+    {% translate "If you cannot reach https://cert.int.de/, make sure you are in the same network as Libre Workspace and have entered the IP address of Libre Workspace as the DNS server." %}
+</p>
+
+
+<h3>{% translate "Linux" %}</h3>
+<h4>{% translate "System-wide" %}</h4>
+<p>
+    <ol>
+        <li>{% translate "Copy the file" %} <strong>lan.crt</strong> {% translate "to" %} <strong>/usr/local/share/ca-certificates/</strong></li>
+        <li>{% translate "Open a terminal and run" %} <strong>sudo update-ca-certificates</strong></li>
+    </ol>
+</p>
+
+<h4>{% translate "For Firefox" %}</h4>
+<p>
+    <ol>
+        <li>{% translate "Open Firefox" %}</li>
+        <li>{% translate "Open Settings" %}</li>
+        <li>{% translate "Select" %} <strong>{% translate "Privacy & Security" %}</strong></li>
+        <li>{% translate "Scroll down and find the section" %} <strong>{% translate "Certificates" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "View Certificates" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Authorities" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Import..." %}</strong></li>
+        <li>{% translate "Select the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select all options" %}</li>
+        <li>{% translate "Click on" %} <strong>{% translate "OK" %}</strong></li>
+        <li>{% translate "Restart Firefox" %}</li>
+    </ol>
+</p>
+
+
+<h4>{% translate "For Chromium, Google Chrome, Brave, ..." %}</h4>
+<p>
+    <ol>
+        <li>{% translate "Open Settings" %}</li>
+        <li>{% translate "Select Privacy and Security" %}</li>
+        <li>{% translate "Select Security" %}</li>
+        <li>{% translate "Scroll down further and click on" %} <strong>{% translate "Manage Certificates" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Certificate Authorities" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Import" %}</strong></li>
+        <li>{% translate "Select the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select all options" %}</li>
+        <li>{% translate "Click on" %} <strong>{% translate "OK" %}</strong></li>
+        <li>{% translate "Restart the browser" %}</li>
+    </ol>
+</p>
+
+<h3>{% translate "MacOS" %}</h3>
+<p>
+    <ol>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "System" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Add" %}</strong></li>
+    </ol>
+
+<h3>{% translate "Windows" %}</h3>
+<p>
+    <ol>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Store all certificates in the following store" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Trusted Root Certification Authorities" %}</strong></li>
+        <li>{% translate "Click on" %} <strong>{% translate "OK" %}</strong></li>
+    </ol>
+</p>
+
+<h3>{% translate "Android" %}</h3>
+<p>
+    <ol>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "System" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "OK" %}</strong></li>
+    </ol>
+</p>
+
+<h3>{% translate "iOS" %}</h3>
+<p>
+    <ol>
+        <li>{% translate "Open the file" %} <strong>lan.crt</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Install" %}</strong></li>
+        <li>{% translate "Select" %} <strong>{% translate "Install" %}</strong></li>
+    </ol>
+</p>
+
+{% endif %}
+
+<script>
+    setTimeout(function(){
+        window.location.reload(1);
+     }, 60000);
+
+    // Copy to clipboard
+    document.getElementById('copy').style.cursor = 'pointer';
+    document.getElementById('copy').addEventListener('click', function(e) {
+        e.preventDefault();
+        var text = "{{ ip }}{% for _domain in all_domains %} {{ _domain }}\n{% endfor %}";
+        var input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        document.getElementById('copy').textContent = '{% translate "Text copied to clipboard!" %}';
+    });
+
+</script>
