@@ -12,7 +12,7 @@
     {% translate "To prevent such connection problems, you can ensure the following entry in the" %} <strong>/etc/hosts</strong> {% translate "file on Linux devices:" %}
     <pre>
 
-    {{ ip }}{% for _domain in all_domains %} {{ _domain }}{% endfor %}
+    {{ ip }}{% for caddy_domain in all_domains %} {{ caddy_domain }}{% endfor %}
     </pre>
 
     <small id="copy">{% translate "Click here to copy text" %}</small><br><br>
@@ -137,7 +137,7 @@
     document.getElementById('copy').style.cursor = 'pointer';
     document.getElementById('copy').addEventListener('click', function(e) {
         e.preventDefault();
-        var text = "{{ ip }}{% for _domain in all_domains %} {{ _domain }}\n{% endfor %}";
+        var text = "{{ ip }}{% for caddy_domain in all_domains %} {{ caddy_domain }}\n{% endfor %}";
         var input = document.createElement('input');
         input.value = text;
         document.body.appendChild(input);
