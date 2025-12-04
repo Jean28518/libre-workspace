@@ -63,6 +63,6 @@ chmod -w ./md5sum.txt
 cd ..
 
 # Generate new iso image
-genisoimage -r -J -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot -o libre-workspace.iso ./NEWISO
+xorrisofs -r -J -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot -o libre-workspace.iso ./NEWISO
 isohybrid --uefi libre-workspace.iso
 rm -rf ./ORIGISO ./NEWISO

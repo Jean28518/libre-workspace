@@ -40,7 +40,7 @@ Make sure to check the documentation in /docs or at <https://docs.libre-workspac
 ### Build .iso
 
 ```bash
-sudo apt install syslinux-utils git
+sudo apt install syslinux-utils git xorriso
 git clone https://github.com/Jean28518/libre-workspace
 cd libre-workspace
 bash download_debian_iso.sh
