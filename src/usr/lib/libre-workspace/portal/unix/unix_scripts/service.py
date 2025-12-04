@@ -248,7 +248,7 @@ while True:
 
         # In this state also some other folders are in the list, so we need to filter all folders out which don't have a patches folder
         possible_module_or_addon_folders = [folder for folder in possible_module_or_addon_folders if os.path.isdir(folder+"/patches")]
-      
+        possible_module_or_addon_folders.append("/usr/lib/libre-workspace/portal/unix/unix_scripts/general/patches")        
 
         # Now we have a list of all folders which have a patches folder
         # Let's get all patch.sh in all patches folders (absolute path)
