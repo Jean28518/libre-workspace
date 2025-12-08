@@ -259,3 +259,36 @@ After that you can save the file and restart the libre workspace portal service:
 .. warning::
 
     Do not forget to disable the debug mode for security reasons after you have fixed the problem.
+
+
+500 Errors at OIDC Authentication
+---------------------------------
+
+On very few instances we see problems with 500 errors while using the OIDC authentication.
+If we look in the logs of the libre-workspace-portal service we can see errors like this:
+
+.. code-block:: text
+
+    File "/var/lib/libre-workspace/portal/venv/lib/python3.13/site-packages/oidc_provider/views.py", line 351, in get
+    private_key = serialization.load_pem_private_key(
+        rsakey.key.encode("utf-8"), password=None
+    )
+
+This means that the private key for the OIDC provider is not available or corrupted.
+To fix this problem we can force the regeneration of the keys by deleting the existing keys in the database.
+
+.. code-block:: bash
+
+    sudo -i
+    systemctl stop libre-workspace-portal
+    . /etc/libre-workspace/portal/portal.conf
+    . /var/lib/libre-workspace/portal/venv/bin/activate
+    cd /usr/lib/libre-workspace/portal
+    python3 manage.py shell
+    from oidc_provider.models import RSAKey
+    RSAKey.objects.all().delete()
+    exit()
+    python manage.py creatersakey
+    systemctl restart libre-workspace-portal
+
+After that the OIDC keys are regenerated and the OIDC authentication should work again.
