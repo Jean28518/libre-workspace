@@ -13,8 +13,9 @@ Libre Workspace Documentation (for Administrators)
 
 .. toctree::
    :maxdepth: 2
-   :caption: Modules
+   :caption: Administration
 
+   administration/general_architecture
    modules/general_administration
    modules/libre-workspace-portal
    modules/nextcloud
