@@ -10,8 +10,14 @@ def process_overview_dict(overview : dict, request=None) -> dict:
         overview["add_url"] = reverse(overview["add_url_name"])
     else:
         overview["add_url"] = None
-    if "element_url_key" not in overview.keys() or overview["element_url_key"] is None:
+    if ("element_url_key" not in overview.keys() or overview["element_url_key"] is None) and "t_keys" in overview and len(overview["t_keys"]) > 0:
         overview["element_url_key"] = overview["t_keys"][0]
+    # If our elements appear to be a single list of strings, we convert them to a list of dicts
+    if "element_url_key" not in overview.keys() and not "t_keys" in overview.keys():
+        overview["t_keys"] = ["value"]
+        overview["t_headings"] = ["Value"]
+        overview["elements"] = [{"value": element} for element in overview["elements"]]
+        overview["element_url_key"] = "value"
     overview["table_content"] = []
     overview["heading_dicts"] = []
     
