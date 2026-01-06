@@ -41,7 +41,7 @@ The whole system is designed to be modular and is not as opinionated as you migh
 Here is an overview of the general architecture of Libre Workspace. It is meant to give you an idea of how the different components interact with each other but may not show every detail of the implementation:
 
 
-.. image:: _static/general_architecture_overview.png
+.. image:: _static/img/general_architecture_overview.drawio.png
    :alt: General Architecture Overview
    :align: center
 ..    :width: 600px
