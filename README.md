@@ -1,3 +1,7 @@
+# ⚠️ Repository moved to https://codeberg.org/Libre_Workspace/libre-workspace ⚠️
+
+---
+
 # Libre Workspace
 
 ### [Website](https://www.libre-workspace.org/)
